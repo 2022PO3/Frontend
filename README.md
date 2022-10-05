@@ -46,6 +46,12 @@ The preferred IDE is Android Studio for all major platforms, download it first b
   sudo snap install flutter --classic
   ```
 
+You can either run the application via the command line with
+```bash
+flutter run
+```
+from the root of this directory or by clicking `Run` in Android Studio.
+
   Resources:
   - https://dart.dev/get-dart
   - https://docs.flutter.dev/get-started/install
