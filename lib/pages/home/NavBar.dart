@@ -41,7 +41,9 @@ class NavBar extends StatelessWidget {
                 color: Colors.indigo,
               ),
               title: Text('Statistics'),
-              onTap: () => print('Fav')
+              onTap: () {
+                Navigator.pushNamed(context, '/statistics');
+              }
           ),
           Divider(),
           ListTile(
@@ -50,7 +52,9 @@ class NavBar extends StatelessWidget {
                   color: Colors.indigo
               ),
               title: Text('Profile'),
-              onTap: () => print('Fav')
+              onTap: () {
+                Navigator.pushNamed(context,'/profile');
+              }
           ),
           Divider(),
           ListTile(
@@ -59,7 +63,9 @@ class NavBar extends StatelessWidget {
                   color: Colors.indigo
               ),
               title: Text('Settings'),
-              onTap: () => print('Fav')
+              onTap: () {
+                Navigator.pushNamed(context, '/settings');
+              }
           ),
           Divider(),
           ListTile(
@@ -68,7 +74,9 @@ class NavBar extends StatelessWidget {
                   color: Colors.indigo
               ),
               title: Text('Sign Out'),
-              onTap: () => print('Fav')
+              onTap: () {
+                Navigator.pushNamed(context, "/sign_out");
+              }
           ),
           Divider(),
         ],
