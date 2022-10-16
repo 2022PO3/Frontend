@@ -2,6 +2,34 @@ import 'package:flutter/material.dart';
 class NavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Future openDialog() => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Dear [user],"),
+          content: Text("Are you sure you want to sign out?"),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.popUntil(context,ModalRoute.withName('/home'));
+                    },
+                    child: Text("Cancel")
+                ),
+                TextButton(
+                    onPressed: () {
+                      Navigator.popUntil(context,ModalRoute.withName('/login_page'));
+                    },
+                    child: Text("Confirm")
+                ),
+              ],
+            )
+          ],
+
+        )
+    );
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -37,23 +65,23 @@ class NavBar extends StatelessWidget {
           Divider(),
           ListTile(
               leading: Icon(
-                  Icons.query_stats,
-                color: Colors.indigo,
-              ),
-              title: Text('Statistics'),
-              onTap: () {
-                Navigator.pushNamed(context, '/statistics');
-              }
-          ),
-          Divider(),
-          ListTile(
-              leading: Icon(
                   Icons.account_circle,
                   color: Colors.indigo
               ),
               title: Text('Profile'),
               onTap: () {
                 Navigator.pushNamed(context,'/profile');
+              }
+          ),
+          Divider(),
+          ListTile(
+              leading: Icon(
+                  Icons.query_stats,
+                color: Colors.indigo,
+              ),
+              title: Text('Statistics'),
+              onTap: () {
+                Navigator.pushNamed(context, '/statistics');
               }
           ),
           Divider(),
@@ -70,12 +98,23 @@ class NavBar extends StatelessWidget {
           Divider(),
           ListTile(
               leading: Icon(
+                  Icons.help,
+                  color: Colors.indigo
+              ),
+              title: Text('Help'),
+              onTap: () {
+                Navigator.pushNamed(context, '/help');
+              }
+          ),
+          Divider(),
+          ListTile(
+              leading: Icon(
                   Icons.logout,
                   color: Colors.indigo
               ),
               title: Text('Sign Out'),
               onTap: () {
-                Navigator.pushNamed(context, "/sign_out");
+                openDialog();
               }
           ),
           Divider(),
