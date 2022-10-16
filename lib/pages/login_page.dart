@@ -50,8 +50,9 @@ class _Login_PageState extends State<Login_Page> {
             Text(
               "Hello Again!",
               style: TextStyle(
-                fontWeight: FontWeight.bold,
+                //fontWeight: FontWeight.bold,
                 fontSize: 24,
+                fontFamily: 'Roboto',
               ),
             ),
             SizedBox(
@@ -60,8 +61,9 @@ class _Login_PageState extends State<Login_Page> {
             Text(
               "Welcome back, you\'ve been missed!",
               style: TextStyle(
-                fontWeight: FontWeight.bold,
+                //fontWeight: FontWeight.bold,
                 fontSize: 24,
+                fontFamily: 'Roboto'
               ),
             ),
             //email textfield
