@@ -93,20 +93,20 @@ class _MyHomePageState extends State<MyHomePage> {
                     title: Text(
                       display_list[index].Garage_title!,
                       style: TextStyle(
-                        color: Colors.purple,
+                        color: Colors.indigo,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     subtitle: Text(
                       '${display_list[index].garage_number!}',
                       style: TextStyle(
-                          color: Colors.purple
+                          color: Colors.indigo
                       ),
                     ),
                     trailing: Text(
                       "${display_list[index].rating}",
                       style: TextStyle(
-                        color: Colors.purple,
+                        color: Colors.indigo,
                       ),
                     ),
                     leading: Image.network(display_list[index].garage_poster_url!),

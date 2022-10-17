@@ -63,7 +63,7 @@ class _Login_PageState extends State<Login_Page> {
               style: TextStyle(
                 //fontWeight: FontWeight.bold,
                 fontSize: 24,
-                fontFamily: 'Roboto'
+                fontFamily: 'Roboto',
               ),
             ),
             //email textfield
@@ -84,6 +84,9 @@ class _Login_PageState extends State<Login_Page> {
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Email',
+                      hintStyle: TextStyle(
+                          fontFamily: 'Roboto'
+                      ),
                       suffixIcon: IconButton(
                           onPressed: () {
                             _email_textcontroller.clear();
@@ -113,6 +116,9 @@ class _Login_PageState extends State<Login_Page> {
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Password',
+                      hintStyle: TextStyle(
+                          fontFamily: 'Roboto',
+                      ),
                       suffixIcon: IconButton(
                         onPressed: () {
                           _password_textcontroller.clear();
