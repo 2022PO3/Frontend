@@ -38,21 +38,39 @@ class _Login_PageState extends State<Login_Page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Colors.grey[50],
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+            child: IconButton(
+                onPressed: () {
+                  //
+                },
+                icon: Icon(
+                  Icons.help,
+                  size: 45,
+                )
+            ),
+          )
+        ],
+      ),
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              height: 25,
+              height: 10,
             ),
             //Hello again!
             Text(
               "Hello Again!",
               style: TextStyle(
                 //fontWeight: FontWeight.bold,
-                fontSize: 24,
-                fontFamily: 'Roboto',
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+                color: Colors.indigoAccent[100],
               ),
             ),
             SizedBox(
@@ -62,21 +80,22 @@ class _Login_PageState extends State<Login_Page> {
               "Welcome back, you\'ve been missed!",
               style: TextStyle(
                 //fontWeight: FontWeight.bold,
-                fontSize: 24,
-                fontFamily: 'Roboto',
+                fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.indigoAccent[100]
               ),
             ),
             //email textfield
             SizedBox(
-              height: 20,
+              height: 30,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
-                  border: Border.all(color: Colors.white),
-                  borderRadius:  BorderRadius.circular(12),
+                  border: Border.all(color: Colors.white,width: 4),
+                  borderRadius:  BorderRadius.circular(20),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20.0),
@@ -85,7 +104,7 @@ class _Login_PageState extends State<Login_Page> {
                       border: InputBorder.none,
                       hintText: 'Email',
                       hintStyle: TextStyle(
-                          fontFamily: 'Roboto'
+                          fontSize: 20
                       ),
                       suffixIcon: IconButton(
                           onPressed: () {
@@ -106,8 +125,8 @@ class _Login_PageState extends State<Login_Page> {
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
-                  border: Border.all(color: Colors.white),
-                  borderRadius:  BorderRadius.circular(12),
+                  border: Border.all(color: Colors.white,width: 4),
+                  borderRadius:  BorderRadius.circular(20),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20.0),
@@ -117,7 +136,7 @@ class _Login_PageState extends State<Login_Page> {
                       border: InputBorder.none,
                       hintText: 'Password',
                       hintStyle: TextStyle(
-                          fontFamily: 'Roboto',
+                          fontSize: 20
                       ),
                       suffixIcon: IconButton(
                         onPressed: () {
@@ -131,23 +150,29 @@ class _Login_PageState extends State<Login_Page> {
                 ),
               ),
             ),
-            SizedBox(height: 10,),
+            SizedBox(height: 20,),
             //sign in button
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Container(
-                height: 60,
+                height: 65,
                 padding: EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                    color: Colors.deepPurpleAccent,
+                    color: Colors.indigo,
                   borderRadius: BorderRadius.circular(20)
                 ),
                 child: TextButton(
                   style: TextButton.styleFrom(
-                    minimumSize: Size(500, 100)
+                    minimumSize: Size(500, 200)
                   ),
                   child: Text(
-                        "Sign in"
+                        "Sign in",
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.9),
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      
+                    ),
                     ),
                   onPressed: () {
                     setState(() {

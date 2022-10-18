@@ -5,7 +5,12 @@ class NavBar extends StatelessWidget {
     Future openDialog() => showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text("Dear [user],"),
+          title: Text(
+            "Dear [user],",
+            style: TextStyle(
+              color: Colors.indigoAccent
+            ),
+          ),
           content: Text("Are you sure you want to sign out?"),
           actions: [
             Row(
@@ -16,13 +21,25 @@ class NavBar extends StatelessWidget {
                     onPressed: () {
                       Navigator.popUntil(context,ModalRoute.withName('/home'));
                     },
-                    child: Text("Cancel")
+                    child: Text(
+                        "Cancel",
+                      style: TextStyle(
+                        color: Colors.indigo,
+                        fontSize: 15
+                      ),
+                    )
                 ),
                 TextButton(
                     onPressed: () {
                       Navigator.popUntil(context,ModalRoute.withName('/login_page'));
                     },
-                    child: Text("Confirm")
+                    child: Text(
+                        "Confirm",
+                        style: TextStyle(
+                            color: Colors.indigo,
+                          fontSize: 15
+                        ),
+                    ),
                 ),
               ],
             )
