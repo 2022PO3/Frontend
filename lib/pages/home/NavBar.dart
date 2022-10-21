@@ -60,7 +60,7 @@ class NavBar extends StatelessWidget {
               ),
             ),
             decoration: BoxDecoration(
-              color: Colors.amber,
+              color: Colors.indigoAccent,
               image: DecorationImage(
                 image: AssetImage('Afbeeldingen/Mountains.png'),
                 opacity: 0.95,

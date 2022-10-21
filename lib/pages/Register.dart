@@ -20,7 +20,15 @@ class _Register_NowState extends State<Register_Now> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [(Colors.indigo),(Colors.indigoAccent)],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              )
+          ),
+        ),
       ),
       body: Column(
         children: [
@@ -40,7 +48,7 @@ class _Register_NowState extends State<Register_Now> {
                 child: TextField(
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'Email',
+                      hintText: 'First Name',
                       hintStyle: TextStyle(
                           fontSize: 20
                       ),
@@ -72,7 +80,7 @@ class _Register_NowState extends State<Register_Now> {
                 child: TextField(
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'Email',
+                      hintText: 'Last Name',
                       hintStyle: TextStyle(
                           fontSize: 20
                       ),
@@ -104,7 +112,7 @@ class _Register_NowState extends State<Register_Now> {
                 child: TextField(
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'Email',
+                      hintText: 'Phone Number',
                       hintStyle: TextStyle(
                           fontSize: 20
                       ),
@@ -168,7 +176,7 @@ class _Register_NowState extends State<Register_Now> {
                 child: TextField(
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'Email',
+                      hintText: 'Password',
                       hintStyle: TextStyle(
                           fontSize: 20
                       ),
@@ -200,7 +208,7 @@ class _Register_NowState extends State<Register_Now> {
                 child: TextField(
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'Email',
+                      hintText: 'Confirm Password',
                       hintStyle: TextStyle(
                           fontSize: 20
                       ),

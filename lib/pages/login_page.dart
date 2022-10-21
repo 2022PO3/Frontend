@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:po_frontend/UserData/UserDataBase.dart';
+import 'package:simple_gradient_text/simple_gradient_text.dart';
 class Login_Page extends StatefulWidget {
   @override
   State<Login_Page> createState() => _Login_PageState();
@@ -74,26 +75,26 @@ class _Login_PageState extends State<Login_Page> {
               height: 10,
             ),
             //Hello again!
-            Text(
+            GradientText(
               "Hello Again!",
               style: TextStyle(
                 //fontWeight: FontWeight.bold,
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
-                color: Colors.indigoAccent[400],
               ),
+              colors: [(Colors.indigoAccent),(Colors.indigo)],
             ),
             SizedBox(
               height: 10,
             ),
-            Text(
+            GradientText(
               "Welcome back, you\'ve been missed!",
               style: TextStyle(
                 //fontWeight: FontWeight.bold,
                 fontSize: 30,
                   fontWeight: FontWeight.bold,
-                  color: Colors.indigoAccent[400]
               ),
+              colors: [(Colors.indigoAccent),(Colors.indigo)],
             ),
             //email textfield
             SizedBox(
@@ -104,7 +105,7 @@ class _Login_PageState extends State<Login_Page> {
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border.all(color: Colors.indigoAccent.withOpacity(0.3),width: 4),
+                  border: Border.all(color: Colors.indigoAccent.withOpacity(0.5),width: 4),
                   borderRadius:  BorderRadius.circular(20),
                 ),
                 child: Padding(
@@ -135,7 +136,7 @@ class _Login_PageState extends State<Login_Page> {
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border.all(color: Colors.indigoAccent.withOpacity(0.3),width: 4),
+                  border: Border.all(color: Colors.indigoAccent.withOpacity(0.5),width: 4),
                   borderRadius:  BorderRadius.circular(20),
                 ),
                 child: Padding(
