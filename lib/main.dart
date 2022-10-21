@@ -8,6 +8,7 @@ import 'package:po_frontend/pages/NavBar_Pages/Profile.dart';
 import 'package:po_frontend/pages/NavBar_Pages/Help.dart';
 import 'package:po_frontend/pages/Booking_System.dart';
 import 'package:po_frontend/pages/login_page.dart';
+import 'package:po_frontend/pages/Register.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
         '/profile': (context) => Profile(),
         '/help': (context) => HelpF(),
         '/booking_system': (context) => Booking_System(),
+        '/register': (context) => Register_Now(),
       },
       debugShowCheckedModeBanner: false,
     );

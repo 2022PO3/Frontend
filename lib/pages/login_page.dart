@@ -38,7 +38,7 @@ class _Login_PageState extends State<Login_Page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: Colors.indigoAccent.withOpacity(0.03),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         actions: [
@@ -55,6 +55,16 @@ class _Login_PageState extends State<Login_Page> {
             ),
           )
         ],
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [(Colors.indigo),(Colors.indigoAccent)],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            )
+          ),
+        ),
+
       ),
       body: SafeArea(
         child: Column(
@@ -70,7 +80,7 @@ class _Login_PageState extends State<Login_Page> {
                 //fontWeight: FontWeight.bold,
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
-                color: Colors.indigoAccent[100],
+                color: Colors.indigoAccent[400],
               ),
             ),
             SizedBox(
@@ -82,7 +92,7 @@ class _Login_PageState extends State<Login_Page> {
                 //fontWeight: FontWeight.bold,
                 fontSize: 30,
                   fontWeight: FontWeight.bold,
-                  color: Colors.indigoAccent[100]
+                  color: Colors.indigoAccent[400]
               ),
             ),
             //email textfield
@@ -93,8 +103,8 @@ class _Login_PageState extends State<Login_Page> {
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  border: Border.all(color: Colors.white,width: 4),
+                  color: Colors.white,
+                  border: Border.all(color: Colors.indigoAccent.withOpacity(0.3),width: 4),
                   borderRadius:  BorderRadius.circular(20),
                 ),
                 child: Padding(
@@ -124,8 +134,8 @@ class _Login_PageState extends State<Login_Page> {
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  border: Border.all(color: Colors.white,width: 4),
+                  color: Colors.white,
+                  border: Border.all(color: Colors.indigoAccent.withOpacity(0.3),width: 4),
                   borderRadius:  BorderRadius.circular(20),
                 ),
                 child: Padding(
@@ -158,7 +168,11 @@ class _Login_PageState extends State<Login_Page> {
                 height: 65,
                 padding: EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                    color: Colors.indigo,
+                    gradient: LinearGradient(
+                      colors: [(Colors.indigo),(Colors.indigoAccent)],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
                   borderRadius: BorderRadius.circular(20)
                 ),
                 child: TextButton(
@@ -212,11 +226,17 @@ class _Login_PageState extends State<Login_Page> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('Not a member? '),
-                Text('Register now',
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold
-                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, "/register");
+                  },
+                  child: Text(
+                    'Register now',
+                    style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold
+                    ),
+                  ),
                 ),
               ],
             ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'NavBar.dart';
 import 'package:po_frontend/pages/home/Garage_model.dart';
-
 class MyHomePage extends StatefulWidget {
 
   @override
@@ -38,6 +37,15 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
         endDrawer: NavBar(),
         appBar: AppBar(
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [(Colors.indigo),(Colors.indigoAccent)],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                )
+            ),
+          ),
           leading: Padding(
             padding: const EdgeInsets.all(6.0),
             child: CircleAvatar(

@@ -11,7 +11,21 @@ class _LoadingState extends State<Loading> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Text('loading screen'),
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.indigoAccent,
+              gradient: LinearGradient(
+                  colors: [(Colors.indigoAccent),(Colors.indigo)],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+
+            ),
+          )
+        ],
+      )
     );
   }
 }
