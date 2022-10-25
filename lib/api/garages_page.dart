@@ -68,7 +68,7 @@ class _GaragesPageState extends State<GaragesPage> {
   }
 }
 
-Future<List<Garage>?> getData() async {
+Future<List<Garage>> getData() async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.get,
     url: StaticValues.baseUrl + StaticValues.getGaragesSlug,
