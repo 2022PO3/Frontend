@@ -24,7 +24,7 @@ class Garage {
         name: json['name'] as String,
         isFull: json['isFull'] as bool,
         unoccupiedLots: json['unoccupiedLots'] as int,
-        parkingLots: json['padrkingLots'] as int);
+        parkingLots: json['parkingLots'] as int);
   }
 
   /// Serializes a Dart `Garage`-object to a JSON-object with the attributes defined in
