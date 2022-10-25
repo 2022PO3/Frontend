@@ -4,7 +4,3 @@ enum NetworkResponseErrorType {
   responseEmpty,
   didNotSucceed
 }
-
-enum CallbackParameterName {
-  all,
-}
