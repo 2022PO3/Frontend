@@ -31,7 +31,6 @@ class _GaragesPageState extends State<GaragesPage> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
-
             final List<Garage> garages = snapshot.data as List<Garage>;
 
             return ListView.builder(
@@ -72,7 +71,7 @@ class _GaragesPageState extends State<GaragesPage> {
 Future<List<Garage>?> getData() async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.get,
-    url: StaticValues.apiUrl,
+    url: StaticValues.baseUrl + StaticValues.getGaragesSlug,
   );
 
   debugPrint('Response ${response?.body}');
