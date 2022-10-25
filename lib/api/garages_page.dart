@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
-import 'package:po_frontend/api/network/network_enums.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
 import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
@@ -17,10 +15,8 @@ class GaragesPage extends StatefulWidget {
 }
 
 class _GaragesPageState extends State<GaragesPage> {
-  double width = 200, height = 200;
   @override
   Widget build(BuildContext context) {
-    RendererBinding.instance.setSemanticsEnabled(true);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Garages'),
@@ -35,9 +31,7 @@ class _GaragesPageState extends State<GaragesPage> {
 
             return ListView.builder(
               itemBuilder: (context, index) {
-                return Semantics(
-                    label: 'Article widget Title ${garages[index].name}',
-                    child: GarageWidget(garage: garages[index]));
+                return GarageWidget(garage: garages[index]);
               },
               itemCount: garages.length,
             );
@@ -54,7 +48,7 @@ class _GaragesPageState extends State<GaragesPage> {
                   SizedBox(
                     height: 10,
                   ),
-                  Text('Something Went Wrong')
+                  Text('Something went wrong')
                 ],
               ),
             );
