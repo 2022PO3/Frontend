@@ -2,5 +2,6 @@ enum NetworkResponseErrorType {
   socket,
   exception,
   responseEmpty,
-  didNotSucceed
+  didNotSucceed,
+  serverSideError
 }

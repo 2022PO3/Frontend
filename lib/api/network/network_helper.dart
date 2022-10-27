@@ -28,6 +28,10 @@ class NetworkHelper {
       if (response.statusCode == 200) {
         if (_isValidResponse(json)) {
           return callBack(json['data']);
+        } else {
+          return onFailureCallBackWithMessage(
+              NetworkResponseErrorType.serverSideError,
+              "An exception on the server happened with the following error message ${json['errors']}");
         }
       } else if (response.statusCode == 1708) {
         return onFailureCallBackWithMessage(

@@ -17,7 +17,6 @@ class Garage {
 
   /// Serializes a JSON-object into a Dart `Garage`-object with all properties.
   static Garage garageFromJson(Map<String, dynamic> json) {
-    print(json);
     return Garage(
         id: json['id'] as int,
         ownerId: json['ownerId'] as int,
