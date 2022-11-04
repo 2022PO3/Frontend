@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:po_frontend/api/garages_page.dart';
 import 'package:po_frontend/pages/NavBar_Pages/My_Reservations.dart';
 import 'pages/home/HomePage.dart';
 import 'pages/loading.dart';
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.indigo,
       ),
-      initialRoute: '/login_page',
+      initialRoute: '/garages_page',
       routes: {
         '/': (context) => Loading(),
         '/login_page': (context) => Login_Page(),
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
         '/profile': (context) => Profile(),
         '/help': (context) => HelpF(),
         '/booking_system': (context) => Booking_System(),
+        '/garages_page': (context) => GaragesPage(),
         '/register': (context) => Register_Now(),
       },
       debugShowCheckedModeBanner: false,
