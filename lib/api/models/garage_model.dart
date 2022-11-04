@@ -1,7 +1,7 @@
 /// Model which represents the backend `Garage`-model.
 class Garage {
   final int id;
-  final int ownerId;
+  final int owner;
   final String name;
   final bool isFull;
   final int unoccupiedLots;
@@ -9,7 +9,7 @@ class Garage {
 
   Garage(
       {required this.id,
-      required this.ownerId,
+      required this.owner,
       required this.name,
       required this.isFull,
       required this.unoccupiedLots,
@@ -19,7 +19,7 @@ class Garage {
   static Garage garageFromJson(Map<String, dynamic> json) {
     return Garage(
         id: json['id'] as int,
-        ownerId: json['ownerId'] as int,
+        owner: json['owner'] as int,
         name: json['name'] as String,
         isFull: json['isFull'] as bool,
         unoccupiedLots: json['unoccupiedLots'] as int,
@@ -30,7 +30,7 @@ class Garage {
   /// the database.
   static Map<String, dynamic> garageToJson(Garage garage) => <String, dynamic>{
         'id': garage.id,
-        'ownerId': garage.ownerId,
+        'ownerId': garage.owner,
         'name': garage.name,
       };
 }
