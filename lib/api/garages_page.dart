@@ -63,19 +63,21 @@ class _GaragesPageState extends State<GaragesPage> {
 }
 
 Future<List<Garage>> getData() async {
+  print("Executing function");
   final response = await NetworkService.sendRequest(
     requestType: RequestType.get,
     url: StaticValues.baseUrl + StaticValues.getGaragesSlug,
   );
 
-  debugPrint('Response ${response?.body}');
-  debugPrint('Response status code ${response?.statusCode}');
+  print("reponse $response");
+  print('Response ${response?.body}');
+  print('Response status code ${response?.statusCode}');
 
   return await NetworkHelper.filterResponse(
       callBack: garagesListFromJson,
       response: response,
       onFailureCallBackWithMessage: (errorType, msg) {
-        debugPrint('Error type: $errorType - Message: $msg');
+        print('Error type: $errorType - Message: $msg');
         throw Exception();
       });
 }

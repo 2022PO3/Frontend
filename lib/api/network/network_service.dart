@@ -18,6 +18,8 @@ class NetworkService {
   }) {
     switch (requestType) {
       case RequestType.get:
+        print("sending request");
+        print(uri);
         return http.get(uri, headers: headers);
       case RequestType.post:
         return http.post(uri, headers: headers, body: body);
@@ -34,12 +36,14 @@ class NetworkService {
     required String url,
     Map<String, dynamic>? body,
   }) async {
+    print("Sending request to $url");
     try {
       final response = _createRequest(
           requestType: requestType,
           uri: Uri.parse(url),
           headers: _getHeaders(),
           body: body);
+      print("Request sent");
 
       return response;
     } catch (e) {
