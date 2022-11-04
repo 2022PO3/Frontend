@@ -30,7 +30,7 @@ class Garage {
   /// the database.
   static Map<String, dynamic> garageToJson(Garage garage) => <String, dynamic>{
         'id': garage.id,
-        'ownerId': garage.owner,
+        'owner': garage.owner,
         'name': garage.name,
       };
 }
