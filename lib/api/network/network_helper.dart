@@ -13,7 +13,7 @@ class NetworkHelper {
     return json != null && json['data'] != null;
   }
 
-  static R filterResponse<R>({
+  static R? filterResponse<R>({
     required NetworkCallBack callBack,
     required http.Response? response,
     required NetworkOnFailureCallBackWithMessage onFailureCallBackWithMessage,
@@ -25,7 +25,7 @@ class NetworkHelper {
       }
 
       var json = jsonDecode(response.body);
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         if (_isValidResponse(json)) {
           return callBack(json['data']);
         } else {
@@ -33,6 +33,11 @@ class NetworkHelper {
               NetworkResponseErrorType.serverSideError,
               "An exception on the server happened with the following error message ${json['errors']}");
         }
+      } else if ([400, 401, 403].contains(response.statusCode)) {
+        return onFailureCallBackWithMessage(
+            NetworkResponseErrorType.exception, json['errors']);
+      } else if (response.statusCode == 204) {
+        return null;
       } else if (response.statusCode == 1708) {
         return onFailureCallBackWithMessage(
             NetworkResponseErrorType.socket, 'Socket exception');
