@@ -1,6 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:po_frontend/UserData/UserDataBase.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
+import 'package:po_frontend/api/models/user_model.dart';
+import 'package:po_frontend/api/network/network_helper.dart';
+import 'package:po_frontend/api/network/network_service.dart';
+import 'package:po_frontend/api/network/static_values.dart';
+import 'dart:convert';
 class Login_Page extends StatefulWidget {
   @override
   State<Login_Page> createState() => _Login_PageState();
@@ -189,34 +196,42 @@ class _Login_PageState extends State<Login_Page> {
                       
                     ),
                     ),
-                  onPressed: () {
+                  onPressed: () async {
                     setState(() {
                       userMail = _email_textcontroller.text;
                       userPassword = _password_textcontroller.text;
                     });
-                    bool EmailUserFound = false;
-                    print(userMail);
-                    int counter = 0;
-                    print(users[0].userEmail);
-                    for(int index = 0; index < UserDataBase.length && EmailUserFound == false; index++) {
-                      if (userMail == UserDataBase[index].userEmail) {
-                        print("email found");
-                        if (userPassword == UserDataBase[index].userPassword) {
-                          EmailUserFound = true;
-                          Navigator.pushNamed(context, '/home');
-                        }
-                        else {
-                          EmailUserFound = true;
-                          WrongPassword_popup();
-                        }
-                      }
-                    else {
-                      counter = counter + 1;
-                      }
+                    try {
+                      User user = await loginUser(userMail, userPassword);
+                    } catch(Exception) {
+                      print("Error occurred");
+                      return;
                     }
-                    if (counter == UserDataBase.length) {
-                      WrongPassword_popup();
-                    }
+                    Navigator.pushNamed(context, '/home');
+
+                  //   bool EmailUserFound = false;
+                  //   print(userMail);
+                  //   int counter = 0;
+                  //   print(users[0].userEmail);
+                  //   for(int index = 0; index < UserDataBase.length && EmailUserFound == false; index++) {
+                  //     if (userMail == UserDataBase[index].userEmail) {
+                  //       print("email found");
+                  //       if (userPassword == UserDataBase[index].userPassword) {
+                  //         EmailUserFound = true;
+                  //         Navigator.pushNamed(context, '/home');
+                  //       }
+                  //       else {
+                  //         EmailUserFound = true;
+                  //         WrongPassword_popup();
+                  //       }
+                  //     }
+                  //   else {
+                  //     counter = counter + 1;
+                  //     }
+                  //   }
+                  //   if (counter == UserDataBase.length) {
+                  //     WrongPassword_popup();
+                  //   }
                   },
                 ),
               ),
@@ -247,4 +262,22 @@ class _Login_PageState extends State<Login_Page> {
       ),
     );
   }
+}
+Future<User> loginUser(String emailUser, String passwordUser) async {
+  Map<String, dynamic> body = {
+    "email": emailUser,
+    "password": passwordUser
+  };
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.post,
+    url: StaticValues.baseUrl + StaticValues.postLoginUser,
+        body: jsonEncode(body)
+  );
+  return await NetworkHelper.filterResponse(
+      callBack: User.userFromJson,
+      response: response,
+      onFailureCallBackWithMessage: (errorType, msg) {
+        print('Error type: $errorType - Message: $msg');
+        throw Exception();
+      });
 }

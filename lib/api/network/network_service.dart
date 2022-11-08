@@ -14,7 +14,7 @@ class NetworkService {
     required RequestType requestType,
     required Uri uri,
     Map<String, String>? headers,
-    Map<String, dynamic>? body,
+    String? body,
   }) {
     switch (requestType) {
       case RequestType.get:
@@ -34,7 +34,7 @@ class NetworkService {
   static Future<http.Response?>? sendRequest({
     required RequestType requestType,
     required String url,
-    Map<String, dynamic>? body,
+    String? body,
   }) async {
     print("Sending request to $url");
     try {
