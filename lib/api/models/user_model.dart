@@ -25,6 +25,9 @@ class User {
         token: json["token"] as String
     );
   }
+  get_mail() {
+    return email;
+  }
 }
 //List<User> userListFromJson(json) => (json as List)
 //    .map((jsonUser) =>

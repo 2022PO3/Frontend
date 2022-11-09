@@ -7,7 +7,7 @@ import 'package:po_frontend/api/models/user_model.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
 import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 class Login_Page extends StatefulWidget {
   @override
   State<Login_Page> createState() => _Login_PageState();
@@ -195,6 +195,9 @@ class _Login_PageState extends State<Login_Page> {
                     try {
                       User user = await loginUser(userMail, userPassword);
                       print(user);
+                      final userinfo = await  SharedPreferences.getInstance();
+                      await userinfo.setString('email', user.get_mail());
+                      await userinfo.set
                     } catch (Exception) {
                       print("Error occurred $Exception");
                       return;

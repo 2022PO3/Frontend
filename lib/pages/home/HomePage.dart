@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:po_frontend/pages/login_page.dart';
 import 'NavBar.dart';
 //import 'package:po_frontend/pages/home/Garage_model.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:po_frontend/api/garages_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+String finalEmail = '';
 
 class Garage {
   final int id;
@@ -35,8 +38,10 @@ class MyHomePage extends StatefulWidget {
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
-
 class _MyHomePageState extends State<MyHomePage> {
+  //finalEmail
+
+
   Future<List<Garage>> getGarageData() async {
     var response = await http.get(Uri.parse('http://192.168.49:8000/api/garages'));
     var jsonDataGarage = jsonDecode(response.body);
@@ -72,6 +77,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   
   @override
+  void initState() {
+    getValidationData();
+  }
+
+  Future getValidationData() async {
+    final userInfo = await SharedPreferences.getInstance();
+    var obtainedEmail = userInfo.getString('email');
+    setState(() {
+      finalEmail = obtainedEmail as String;
+    });
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
         endDrawer: NavBar(),
@@ -86,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 )
             ),
           ),
-          title: Center(child: Text("[username]")),
+          title: Center(child: Text(finalEmail)),
         ),
         body: GaragesPage()           //FutureBuilder(
           //future: getGarageData(),
