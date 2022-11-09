@@ -196,8 +196,7 @@ class _Login_PageState extends State<Login_Page> {
                       User user = await loginUser(userMail, userPassword);
                       print(user);
                       final userinfo = await  SharedPreferences.getInstance();
-                      await userinfo.setString('email', user.get_mail());
-                      await userinfo.set
+                      await userinfo.setString('email', user.email);
                     } catch (Exception) {
                       print("Error occurred $Exception");
                       return;
@@ -261,7 +260,9 @@ Future<User> loginUser(String emailUser, String passwordUser) async {
   final response = await NetworkService.sendRequest(
       requestType: RequestType.post,
       url: StaticValues.baseUrl + StaticValues.postLoginUser,
-      body: jsonEncode(body));
+      body: jsonEncode(body),
+      useAuthToken: false,
+  );
   print(response);
   return await NetworkHelper.filterResponse(
     callBack: User.userFromJson,

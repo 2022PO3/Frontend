@@ -10,9 +10,17 @@ import 'package:po_frontend/pages/NavBar_Pages/Help.dart';
 import 'package:po_frontend/pages/Booking_System.dart';
 import 'package:po_frontend/pages/login_page.dart';
 import 'package:po_frontend/pages/Register.dart';
+import 'package:provider/provider.dart';
+import 'package:po_frontend/Providers/user_provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(providers: [
+      ChangeNotifierProvider(create: (_) => UserProvider())
+    ],
+      child: const MyApp(),
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {

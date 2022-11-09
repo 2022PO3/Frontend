@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:po_frontend/Providers/user_provider.dart';
 import 'package:po_frontend/pages/login_page.dart';
 import 'NavBar.dart';
 //import 'package:po_frontend/pages/home/Garage_model.dart';
@@ -8,7 +9,6 @@ import 'package:http/http.dart' as http;
 import 'package:po_frontend/api/garages_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-String finalEmail = '';
 
 class Garage {
   final int id;
@@ -85,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final userInfo = await SharedPreferences.getInstance();
     var obtainedEmail = userInfo.getString('email');
     setState(() {
-      finalEmail = obtainedEmail as String;
+      UserProvider.email = obtainedEmail as String;
     });
   }
 
