@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum RequestType { get, post, put, delete }
 
@@ -7,6 +8,15 @@ class NetworkService {
 
   static Map<String, String> _getHeaders() =>
       {"Content-Type": "application/json"};
+
+  static Future<Map<String, String>> _setAuthHeaders() async {
+    final userInfo = await SharedPreferences.getInstance();
+    final authToken = userInfo.getString('authToken');
+    return {
+      "Content-Type": "application/json",
+      "Authorization": "Token $authToken"
+    };
+  }
 
   /// Private method which creates a request based on the `RequestType` and adds the
   /// right headers.
@@ -32,6 +42,7 @@ class NetworkService {
   static Future<http.Response?>? sendRequest({
     required RequestType requestType,
     required String url,
+    required bool useAuthToken,
     String? body,
   }) async {
     print("Sending request to $url");
@@ -39,7 +50,7 @@ class NetworkService {
       final response = _createRequest(
           requestType: requestType,
           uri: Uri.parse(url),
-          headers: _getHeaders(),
+          headers: useAuthToken ? _getHeaders() : await _setAuthHeaders(),
           body: body);
       print(await response);
       return response;
