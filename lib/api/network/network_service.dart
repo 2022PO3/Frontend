@@ -18,8 +18,6 @@ class NetworkService {
   }) {
     switch (requestType) {
       case RequestType.get:
-        print("sending request");
-        print(uri);
         return http.get(uri, headers: headers);
       case RequestType.post:
         return http.post(uri, headers: headers, body: body);
@@ -43,8 +41,6 @@ class NetworkService {
           uri: Uri.parse(url),
           headers: _getHeaders(),
           body: body);
-      print("Request sent");
-
       return response;
     } catch (e) {
       print(e);
