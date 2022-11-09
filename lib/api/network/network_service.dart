@@ -50,7 +50,7 @@ class NetworkService {
       final response = _createRequest(
           requestType: requestType,
           uri: Uri.parse(url),
-          headers: useAuthToken ? _getHeaders() : await _setAuthHeaders(),
+          headers: useAuthToken ? await _setAuthHeaders() : _getHeaders(),
           body: body);
       print(await response);
       return response;
