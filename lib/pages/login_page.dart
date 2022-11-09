@@ -7,7 +7,6 @@ import 'package:po_frontend/api/models/user_model.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
 import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
-import 'dart:convert';
 
 class Login_Page extends StatefulWidget {
   @override
@@ -45,7 +44,7 @@ class _Login_PageState extends State<Login_Page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.indigoAccent.withOpacity(0.03),
+      //backgroundColor: ,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         actions: [
@@ -195,8 +194,9 @@ class _Login_PageState extends State<Login_Page> {
                     });
                     try {
                       User user = await loginUser(userMail, userPassword);
+                      print(user);
                     } catch (Exception) {
-                      print("Error occurred");
+                      print("Error occurred $Exception");
                       return;
                     }
                     Navigator.pushNamed(context, '/home');
@@ -259,6 +259,7 @@ Future<User> loginUser(String emailUser, String passwordUser) async {
       requestType: RequestType.post,
       url: StaticValues.baseUrl + StaticValues.postLoginUser,
       body: jsonEncode(body));
+  print(response);
   return await NetworkHelper.filterResponse(
     callBack: User.userFromJson,
     response: response,

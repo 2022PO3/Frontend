@@ -4,6 +4,7 @@ import 'NavBar.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:po_frontend/api/garages_page.dart';
 
 
 class Garage {
@@ -75,6 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
         endDrawer: NavBar(),
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           flexibleSpace: Container(
             decoration: const BoxDecoration(
                 gradient: LinearGradient(
@@ -84,96 +86,86 @@ class _MyHomePageState extends State<MyHomePage> {
                 )
             ),
           ),
-          leading: Padding(
-            padding: const EdgeInsets.all(6.0),
-            child: CircleAvatar(
-              child: ClipOval(
-                //Hier komt de profielfoto
-              ),
-            ),
-          ),
-
-          title: Text("[username]"),
+          title: Center(child: Text("[username]")),
         ),
-        backgroundColor: Colors.indigoAccent.withOpacity(0.06),
-        body: FutureBuilder(
-          future: getGarageData(),
-          builder: (context,snapshot) {
-            if (snapshot.data == null) {
-              return Container(
-                child: Text('loading...'),
-              );
-            } else {
-              return Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Search for....",
-                      style: TextStyle(
-                          color: Colors.indigo[400],
-                          fontSize: 22.0,
-                          fontWeight: FontWeight.bold
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    TextField(
-                      onChanged: (value) => print(value),
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.indigo[400],
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(80.0),
-                          borderSide: BorderSide.none,
-                        ),
-                        hintText: "Give the name of the city",
-                        prefixIcon: Icon(Icons.search),
-                        prefixIconColor: Colors.purpleAccent,
-                      ),
-                    ),
-                    SizedBox(height: 20.0,),
-                      ListView.builder(
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context,index) => ListTile(
-                          contentPadding: EdgeInsets.all(8.0),
-                          title: Text(
-                            snapshot.data![index].id.toString(),
-                            style: TextStyle(
-                              color: Colors.indigo,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          subtitle: Text(
-                              snapshot.data![index].ownerId.toString(),
-                            style: TextStyle(
-                                color: Colors.indigo
-                            ),
-                          ),
-                          trailing: Text(
-                              snapshot.data![index].unoccupied_slots.toString(),
-                            style: TextStyle(
-                              color: Colors.indigo,
-                            ),
-                          ),
-                         // leading: Image.network(display_list[index].garage_poster_url!),
-                          onTap: () {
-                            Navigator.pushNamed(context, '/booking_system');
-                          },
-                        ),
-                      ),
-                  ],
-                ),
-              );
-            }
-          }
-        )
+        body: GaragesPage()           //FutureBuilder(
+          //future: getGarageData(),
+          //builder: (context,snapshot) {
+          //   if (snapshot.data == null) {
+          //     return Container(
+          //       child: Text('loading...'),
+          //     );
+          //   } else {
+          //     return Padding(
+          //       padding: EdgeInsets.all(16),
+          //       child: Column(
+          //         mainAxisAlignment: MainAxisAlignment.start,
+          //         crossAxisAlignment: CrossAxisAlignment.start,
+          //         children: [
+          //           Text(
+          //             "Search for....",
+          //             style: TextStyle(
+          //                 color: Colors.indigo[400],
+          //                 fontSize: 22.0,
+          //                 fontWeight: FontWeight.bold
+          //             ),
+          //           ),
+          //           SizedBox(
+          //             height: 20.0,
+          //           ),
+          //           TextField(
+          //             onChanged: (value) => print(value),
+          //             style: TextStyle(
+          //               color: Colors.white,
+          //             ),
+          //             decoration: InputDecoration(
+          //               filled: true,
+          //               fillColor: Colors.indigo[400],
+          //               border: OutlineInputBorder(
+          //                 borderRadius: BorderRadius.circular(80.0),
+          //                 borderSide: BorderSide.none,
+          //               ),
+          //               hintText: "Give the name of the city",
+          //               prefixIcon: Icon(Icons.search),
+          //               prefixIconColor: Colors.purpleAccent,
+          //             ),
+          //           ),
+          //           SizedBox(height: 20.0,),
+          //             ListView.builder(
+          //               itemCount: snapshot.data!.length,
+          //               itemBuilder: (context,index) => ListTile(
+          //                 contentPadding: EdgeInsets.all(8.0),
+          //                 title: Text(
+          //                   snapshot.data![index].id.toString(),
+          //                   style: TextStyle(
+          //                     color: Colors.indigo,
+          //                     fontWeight: FontWeight.bold,
+          //                   ),
+          //                 ),
+          //                 subtitle: Text(
+          //                     snapshot.data![index].ownerId.toString(),
+          //                   style: TextStyle(
+          //                       color: Colors.indigo
+          //                   ),
+          //                 ),
+          //                 trailing: Text(
+          //                     snapshot.data![index].unoccupied_slots.toString(),
+          //                   style: TextStyle(
+          //                     color: Colors.indigo,
+          //                   ),
+          //                 ),
+          //                // leading: Image.network(display_list[index].garage_poster_url!),
+          //                 onTap: () {
+          //                   Navigator.pushNamed(context, '/booking_system');
+          //                 },
+          //               ),
+          //             ),
+          //         ],
+          //       ),
+          //     );
+          //   }
+           //}
+        //)
     );
   }
 }

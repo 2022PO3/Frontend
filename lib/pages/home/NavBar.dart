@@ -54,11 +54,6 @@ class NavBar extends StatelessWidget {
           UserAccountsDrawerHeader(
               accountName: Text("Default"),
               accountEmail: Text("Default@gmail.com"),
-            currentAccountPicture: CircleAvatar(
-              child: ClipOval(
-                // Hier komt de afbeelding te staan
-              ),
-            ),
             decoration: BoxDecoration(
               color: Colors.indigoAccent,
               image: DecorationImage(

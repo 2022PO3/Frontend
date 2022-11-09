@@ -41,6 +41,7 @@ class NetworkService {
           uri: Uri.parse(url),
           headers: _getHeaders(),
           body: body);
+      print(await response);
       return response;
     } catch (e) {
       print(e);

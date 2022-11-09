@@ -18,10 +18,6 @@ class _GaragesPageState extends State<GaragesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Garages'),
-        centerTitle: true,
-      ),
       body: FutureBuilder(
         future: getData(),
         builder: (context, snapshot) {
