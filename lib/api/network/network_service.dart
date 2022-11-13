@@ -6,14 +6,17 @@ enum RequestType { get, post, put, delete }
 class NetworkService {
   const NetworkService._();
 
-  static Map<String, String> _getHeaders() =>
-      {"Content-Type": "application/json"};
+  static Map<String, String> _getHeaders() => {
+        "Content-Type": "application/json",
+        "PO3-ORIGIN": "app",
+      };
 
   static Future<Map<String, String>> _setAuthHeaders() async {
     final userInfo = await SharedPreferences.getInstance();
     final authToken = userInfo.getString('authToken');
     return {
       "Content-Type": "application/json",
+      "PO3-ORIGIN": "app",
       "Authorization": "Token $authToken"
     };
   }
