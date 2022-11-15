@@ -12,7 +12,6 @@ class _Register_NowState extends State<Register_Now> {
   final _FirstNameR_textcontroller = TextEditingController();
   final _LastNameR_textcontroller = TextEditingController();
   final _EmailR_textcontroller = TextEditingController();
-  final _PhoneNumberR_textcontroller = TextEditingController();
   final _PasswordR_textcontroller = TextEditingController();
   final _ConfirmPasswordR_textcontroller = TextEditingController();
 
@@ -96,38 +95,7 @@ class _Register_NowState extends State<Register_Now> {
               ),
             ),
           ),
-          SizedBox(
-            height: 30,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                border: Border.all(color: Colors.white,width: 4),
-                borderRadius:  BorderRadius.circular(20),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Phone Number',
-                      hintStyle: TextStyle(
-                          fontSize: 20
-                      ),
-                      suffixIcon: IconButton(
-                          onPressed: () {
-                            _PhoneNumberR_textcontroller.clear();
-                          },
-                          icon: const Icon(Icons.clear)
-                      )
-                  ),
-                  controller: _PhoneNumberR_textcontroller,
-                ),
-              ),
-            ),
-          ),
+
           SizedBox(
             height: 30,
           ),
@@ -224,6 +192,37 @@ class _Register_NowState extends State<Register_Now> {
               ),
             ),
           ),
+          SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+            child: Container(
+              height: 65,
+              padding: EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [(Colors.indigo), (Colors.indigoAccent)],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                  borderRadius: BorderRadius.circular(20)),
+              child: TextButton(
+                style: TextButton.styleFrom(minimumSize: Size(500, 200)),
+                child: Text(
+                  "Register Now",
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.9),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onPressed: () async {
+                  },
+              ),
+            ),
+          ),
+
         ],
       )
     );
