@@ -17,15 +17,17 @@ class _LoadingState extends State<Loading> {
             decoration: BoxDecoration(
               color: Colors.indigoAccent,
               gradient: LinearGradient(
-                  colors: [(Colors.indigoAccent),(Colors.indigo)],
+                colors: [(Colors.indigoAccent), (Colors.indigo)],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
-
             ),
-          )
+          ),
+          Center(
+            child: CircularProgressIndicator(color: Colors.white),
+          ),
         ],
-      )
+      ),
     );
   }
 }

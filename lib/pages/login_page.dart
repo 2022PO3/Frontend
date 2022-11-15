@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:po_frontend/UserData/UserDataBase.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
+
 class Login_Page extends StatefulWidget {
   @override
   State<Login_Page> createState() => _Login_PageState();
@@ -10,24 +11,22 @@ class _Login_PageState extends State<Login_Page> {
   Future WrongPassword_popup() => showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Wrong userinfo..."),
-        actions: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.popUntil(context,ModalRoute.withName('/login_page'));
-                  },
-                  child: Text("Go Back")
-              ),
+            title: Text("Wrong userinfo..."),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.popUntil(
+                            context, ModalRoute.withName('/login_page'));
+                      },
+                      child: Text("Go Back")),
+                ],
+              )
             ],
-          )
-        ],
-
-      )
-  );
+          ));
   final _email_textcontroller = TextEditingController();
   final _password_textcontroller = TextEditingController();
 
@@ -52,20 +51,17 @@ class _Login_PageState extends State<Login_Page> {
                 icon: Icon(
                   Icons.help,
                   size: 45,
-                )
-            ),
+                )),
           )
         ],
         flexibleSpace: Container(
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [(Colors.indigo),(Colors.indigoAccent)],
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-            )
-          ),
+              gradient: LinearGradient(
+            colors: [(Colors.indigo), (Colors.indigoAccent)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          )),
         ),
-
       ),
       body: SafeArea(
         child: Column(
@@ -82,7 +78,7 @@ class _Login_PageState extends State<Login_Page> {
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
               ),
-              colors: [(Colors.indigoAccent),(Colors.indigo)],
+              colors: [(Colors.indigoAccent), (Colors.indigo)],
             ),
             SizedBox(
               height: 10,
@@ -92,9 +88,9 @@ class _Login_PageState extends State<Login_Page> {
               style: TextStyle(
                 //fontWeight: FontWeight.bold,
                 fontSize: 30,
-                  fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.bold,
               ),
-              colors: [(Colors.indigoAccent),(Colors.indigo)],
+              colors: [(Colors.indigoAccent), (Colors.indigo)],
             ),
             //email textfield
             SizedBox(
@@ -105,39 +101,39 @@ class _Login_PageState extends State<Login_Page> {
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border.all(color: Colors.indigoAccent.withOpacity(0.5),width: 4),
-                  borderRadius:  BorderRadius.circular(20),
+                  border: Border.all(
+                      color: Colors.indigoAccent.withOpacity(0.5), width: 4),
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20.0),
                   child: TextField(
                     decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Email',
-                      hintStyle: TextStyle(
-                          fontSize: 20
-                      ),
-                      suffixIcon: IconButton(
-                          onPressed: () {
-                            _email_textcontroller.clear();
-                          },
-                          icon: const Icon(Icons.clear)
-                      )
-                    ),
+                        border: InputBorder.none,
+                        hintText: 'Email',
+                        hintStyle: TextStyle(fontSize: 20),
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              _email_textcontroller.clear();
+                            },
+                            icon: const Icon(Icons.clear))),
                     controller: _email_textcontroller,
                   ),
                 ),
               ),
             ),
-            SizedBox(height: 10,),
+            SizedBox(
+              height: 10,
+            ),
             //password textfield
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border.all(color: Colors.indigoAccent.withOpacity(0.5),width: 4),
-                  borderRadius:  BorderRadius.circular(20),
+                  border: Border.all(
+                      color: Colors.indigoAccent.withOpacity(0.5), width: 4),
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20.0),
@@ -146,9 +142,7 @@ class _Login_PageState extends State<Login_Page> {
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Password',
-                      hintStyle: TextStyle(
-                          fontSize: 20
-                      ),
+                      hintStyle: TextStyle(fontSize: 20),
                       suffixIcon: IconButton(
                         onPressed: () {
                           _password_textcontroller.clear();
@@ -161,7 +155,9 @@ class _Login_PageState extends State<Login_Page> {
                 ),
               ),
             ),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             //sign in button
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -170,25 +166,21 @@ class _Login_PageState extends State<Login_Page> {
                 padding: EdgeInsets.all(20),
                 decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [(Colors.indigo),(Colors.indigoAccent)],
+                      colors: [(Colors.indigo), (Colors.indigoAccent)],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                     ),
-                  borderRadius: BorderRadius.circular(20)
-                ),
+                    borderRadius: BorderRadius.circular(20)),
                 child: TextButton(
-                  style: TextButton.styleFrom(
-                    minimumSize: Size(500, 200)
-                  ),
+                  style: TextButton.styleFrom(minimumSize: Size(500, 200)),
                   child: Text(
-                        "Sign in",
+                    "Sign in",
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.9),
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      
                     ),
-                    ),
+                  ),
                   onPressed: () {
                     setState(() {
                       userMail = _email_textcontroller.text;
@@ -198,20 +190,20 @@ class _Login_PageState extends State<Login_Page> {
                     print(userMail);
                     int counter = 0;
                     print(users[0].userEmail);
-                    for(int index = 0; index < UserDataBase.length && EmailUserFound == false; index++) {
+                    for (int index = 0;
+                        index < UserDataBase.length && EmailUserFound == false;
+                        index++) {
                       if (userMail == UserDataBase[index].userEmail) {
                         print("email found");
                         if (userPassword == UserDataBase[index].userPassword) {
                           EmailUserFound = true;
                           Navigator.pushNamed(context, '/home');
-                        }
-                        else {
+                        } else {
                           EmailUserFound = true;
                           WrongPassword_popup();
                         }
-                      }
-                    else {
-                      counter = counter + 1;
+                      } else {
+                        counter = counter + 1;
                       }
                     }
                     if (counter == UserDataBase.length) {
@@ -234,14 +226,11 @@ class _Login_PageState extends State<Login_Page> {
                   child: Text(
                     'Register now',
                     style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold
-                    ),
+                        color: Colors.blue, fontWeight: FontWeight.bold),
                   ),
                 ),
               ],
             ),
-
           ],
         ),
       ),

@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.indigo,
       ),
-      initialRoute: '/garages_page',
+      initialRoute: '/My_Reservations',
       routes: {
         '/': (context) => Loading(),
         '/login_page': (context) => Login_Page(),
