@@ -63,6 +63,7 @@ Future<List<Garage>> getData() async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.get,
     url: StaticValues.baseUrl + StaticValues.getGaragesSlug,
+    useAuthToken: true,
     //    body: body
   );
 

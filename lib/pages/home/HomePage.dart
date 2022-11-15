@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:po_frontend/Providers/user_provider.dart';
+import 'package:po_frontend/api/models/user_model.dart';
 import 'package:po_frontend/pages/login_page.dart';
 import 'NavBar.dart';
 //import 'package:po_frontend/pages/home/Garage_model.dart';
+import 'package:po_frontend/api/network/network_helper.dart';
+import 'package:po_frontend/api/network/network_service.dart';
+import 'package:po_frontend/api/network/static_values.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:po_frontend/api/garages_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:provider/provider.dart';
 
 class Garage {
   final int id;
@@ -40,8 +44,6 @@ class MyHomePage extends StatefulWidget {
 }
 class _MyHomePageState extends State<MyHomePage> {
   //finalEmail
-
-
   Future<List<Garage>> getGarageData() async {
     var response = await http.get(Uri.parse('http://192.168.49:8000/api/garages'));
     var jsonDataGarage = jsonDecode(response.body);
@@ -77,19 +79,27 @@ class _MyHomePageState extends State<MyHomePage> {
 
   
   @override
-  void initState() {
-    getValidationData();
-  }
-
-  Future getValidationData() async {
+  Future getValidationData(UserProvider userProvider) async {
     final userInfo = await SharedPreferences.getInstance();
     var obtainedEmail = userInfo.getString('email');
+    var obtainedToken = userInfo.getString('token');
+    // try {
+    //   User user = await getUserInfo(obtainedToken);
+    //
+    // } catch (Exception) {
+    //   print("Error occurred $Exception");
+    //   return;
+    // }
     setState(() {
-      UserProvider.email = obtainedEmail as String;
+      userProvider.Change_email(obtainedEmail as String);
+      userProvider.Change_token(obtainedToken as String);
     });
   }
 
   Widget build(BuildContext context) {
+    final UserProvider UserinfoPr = Provider.of<UserProvider>(context);
+    getValidationData(UserinfoPr);
+
     return Scaffold(
         endDrawer: NavBar(),
         appBar: AppBar(
@@ -103,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 )
             ),
           ),
-          title: Center(child: Text(finalEmail)),
+          title: Center(child: Text(UserinfoPr.email)),
         ),
         body: GaragesPage()           //FutureBuilder(
           //future: getGarageData(),
@@ -185,6 +195,20 @@ class _MyHomePageState extends State<MyHomePage> {
         //)
     );
   }
+}
+
+
+Future<UserProvider> getUserInfo() async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.get,
+    url: StaticValues.baseUrl + StaticValues.getUserSlug,
+    useAuthToken: true,
+  );
+  print(response);
+  return await NetworkHelper.filterResponse(
+    callBack: User.userFromJson,
+    response: response,
+  );
 }
 
 

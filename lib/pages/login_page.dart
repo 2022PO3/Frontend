@@ -197,6 +197,7 @@ class _Login_PageState extends State<Login_Page> {
                       print(user);
                       final userinfo = await  SharedPreferences.getInstance();
                       await userinfo.setString('email', user.email);
+                      await userinfo.setString('authToken',user.token);
                     } catch (Exception) {
                       print("Error occurred $Exception");
                       return;

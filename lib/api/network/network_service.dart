@@ -55,10 +55,8 @@ class NetworkService {
           uri: Uri.parse(url),
           headers: useAuthToken ? await _setAuthHeaders() : _getHeaders(),
           body: body);
-      print(await response);
       return response;
     } catch (e) {
-      print(e);
       return null;
     }
   }
