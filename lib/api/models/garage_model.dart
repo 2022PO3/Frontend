@@ -36,7 +36,7 @@ class Garage {
 }
 
 /// Serializes a list JSON-objects into a list of Dart `Garage`-objects.
-List<Garage> garagesListFromJson(json) => (json as List)
+List<Garage> garagesListFromJson(Map<String, dynamic> json) => (json as List)
     .map((jsonGarage) =>
         Garage.garageFromJson(jsonGarage as Map<String, dynamic>))
     .toList();

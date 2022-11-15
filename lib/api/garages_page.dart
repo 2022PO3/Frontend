@@ -18,10 +18,6 @@ class _GaragesPageState extends State<GaragesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Garages'),
-        centerTitle: true,
-      ),
       body: FutureBuilder(
         future: getData(),
         builder: (context, snapshot) {
@@ -39,16 +35,16 @@ class _GaragesPageState extends State<GaragesPage> {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(
+                children: [
+                  const Icon(
                     Icons.error_outline,
                     color: Colors.red,
                     size: 25,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
-                  Text('Something went wrong')
+                  Text(snapshot.error.toString()),
                 ],
               ),
             );
@@ -67,6 +63,7 @@ Future<List<Garage>> getData() async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.get,
     url: StaticValues.baseUrl + StaticValues.getGaragesSlug,
+    //    body: body
   );
 
   print("reponse $response");
@@ -74,10 +71,7 @@ Future<List<Garage>> getData() async {
   print('Response status code ${response?.statusCode}');
 
   return await NetworkHelper.filterResponse(
-      callBack: garagesListFromJson,
-      response: response,
-      onFailureCallBackWithMessage: (errorType, msg) {
-        print('Error type: $errorType - Message: $msg');
-        throw Exception();
-      });
+    callBack: garagesListFromJson,
+    response: response,
+  );
 }
