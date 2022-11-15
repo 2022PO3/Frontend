@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:http/http.dart' as http;
 
-typedef NetworkCallBack<R> = R Function(Map<String, dynamic>);
-
 class NetworkHelper {
   const NetworkHelper._();
 
@@ -14,14 +12,12 @@ class NetworkHelper {
   }
 
   static R? filterResponse<R>({
-    required NetworkCallBack callBack,
+    required Function callBack,
     required http.Response? response,
   }) {
     R onFailureCallBack(List<String> errors) {
       throw BackendException(errors);
     }
-
-    ;
 
     try {
       if (response == null || response.body.isEmpty) {

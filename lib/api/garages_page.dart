@@ -67,10 +67,6 @@ Future<List<Garage>> getData() async {
     //    body: body
   );
 
-  print("reponse $response");
-  print('Response ${response?.body}');
-  print('Response status code ${response?.statusCode}');
-
   return await NetworkHelper.filterResponse(
     callBack: garagesListFromJson,
     response: response,

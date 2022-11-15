@@ -1,5 +1,3 @@
-
-
 class User {
   final int id;
   final String email;
@@ -14,7 +12,7 @@ class User {
     required this.firstName,
     required this.lastName,
     required this.token,
-});
+  });
   static User userFromJson(Map<String, dynamic> json) {
     return User(
         id: json["user"]["id"] as int,
@@ -22,9 +20,9 @@ class User {
         role: json["user"]["role"] as int,
         firstName: json["user"]["firstName"] as String?,
         lastName: json["user"]["lastName"] as String?,
-        token: json["token"] as String
-    );
+        token: json["token"] as String);
   }
+
   get_mail() {
     return email;
   }

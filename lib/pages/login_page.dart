@@ -8,6 +8,7 @@ import 'package:po_frontend/api/network/network_helper.dart';
 import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 class Login_Page extends StatefulWidget {
   @override
   State<Login_Page> createState() => _Login_PageState();
@@ -195,9 +196,9 @@ class _Login_PageState extends State<Login_Page> {
                     try {
                       User user = await loginUser(userMail, userPassword);
                       print(user);
-                      final userinfo = await  SharedPreferences.getInstance();
+                      final userinfo = await SharedPreferences.getInstance();
                       await userinfo.setString('email', user.email);
-                      await userinfo.setString('authToken',user.token);
+                      await userinfo.setString('authToken', user.token);
                     } catch (Exception) {
                       print("Error occurred $Exception");
                       return;
@@ -259,10 +260,10 @@ class _Login_PageState extends State<Login_Page> {
 Future<User> loginUser(String emailUser, String passwordUser) async {
   Map<String, dynamic> body = {"email": emailUser, "password": passwordUser};
   final response = await NetworkService.sendRequest(
-      requestType: RequestType.post,
-      url: StaticValues.baseUrl + StaticValues.postLoginUser,
-      body: jsonEncode(body),
-      useAuthToken: false,
+    requestType: RequestType.post,
+    url: StaticValues.baseUrl + StaticValues.postLoginUser,
+    body: jsonEncode(body),
+    useAuthToken: false,
   );
   print(response);
   return await NetworkHelper.filterResponse(
