@@ -226,7 +226,7 @@ class _MyHomePageState extends State<MyHomePage> {
 Future<UserProvider> getUserInfo() async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.get,
-    url: StaticValues.baseUrl + StaticValues.getUserSlug,
+    apiSlug: StaticValues.getUserSlug,
     useAuthToken: true,
   );
   print(response);
@@ -237,15 +237,13 @@ Future<UserProvider> getUserInfo() async {
 }
 
 Future<List<Garage>> getData() async {
-  print("Executing function");
   final response = await NetworkService.sendRequest(
     requestType: RequestType.get,
-    url: StaticValues.baseUrl + StaticValues.getGaragesSlug,
+    apiSlug: StaticValues.getGaragesSlug,
     useAuthToken: true,
     //    body: body
   );
 
-  print("reponse $response");
   print('Response ${response?.body}');
   print('Response status code ${response?.statusCode}');
 

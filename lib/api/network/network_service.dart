@@ -14,7 +14,6 @@ class NetworkService {
   static Future<Map<String, String>> _setAuthHeaders() async {
     final userInfo = await SharedPreferences.getInstance();
     final authToken = userInfo.getString('authToken');
-    print("AuthToken $authToken");
     return {
       "Content-Type": "application/json",
       "PO3-ORIGIN": "app",
@@ -32,28 +31,39 @@ class NetworkService {
   }) {
     switch (requestType) {
       case RequestType.get:
-        return http.get(uri, headers: headers);
+        return http
+            .get(uri, headers: headers)
+            .timeout(const Duration(seconds: 5));
       case RequestType.post:
-        return http.post(uri, headers: headers, body: body);
+        return http
+            .post(uri, headers: headers, body: body)
+            .timeout(const Duration(seconds: 5));
       case RequestType.put:
-        return http.put(uri, headers: headers, body: body);
+        return http
+            .put(uri, headers: headers, body: body)
+            .timeout(const Duration(seconds: 5));
       case RequestType.delete:
-        return http.delete(uri, headers: headers, body: body);
+        return http
+            .delete(uri, headers: headers, body: body)
+            .timeout(const Duration(seconds: 5));
     }
   }
 
   /// Sends a request to `url` with the given `RequestType`.
   static Future<http.Response?>? sendRequest({
     required RequestType requestType,
-    required String url,
+    required String apiSlug,
     required bool useAuthToken,
     String? body,
   }) async {
-    print("Sending request to $url");
+    final pref = await SharedPreferences.getInstance();
+    String? serverUrl = pref.getString("serverUrl");
+    String requestUrl = "$serverUrl$apiSlug";
+    print("Sending request to $requestUrl");
     try {
       final response = _createRequest(
           requestType: requestType,
-          uri: Uri.parse(url),
+          uri: Uri.parse(requestUrl),
           headers: useAuthToken ? await _setAuthHeaders() : _getHeaders(),
           body: body);
       return response;

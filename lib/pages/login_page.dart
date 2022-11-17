@@ -262,7 +262,7 @@ class _Login_PageState extends State<Login_Page> {
     };
     final response = await NetworkService.sendRequest(
       requestType: RequestType.post,
-      url: StaticValues.baseUrl + StaticValues.postLoginUser,
+      apiSlug: StaticValues.postLoginUser,
       body: jsonEncode(body),
       useAuthToken: false,
     );
