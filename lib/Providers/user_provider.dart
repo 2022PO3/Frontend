@@ -1,16 +1,13 @@
 import 'package:flutter/cupertino.dart';
+import 'package:po_frontend/api/models/user_model.dart';
 
 class UserProvider with ChangeNotifier {
-  String _email = '';
-  String _token = '';
+  late final User _user;
 
-  String get email => _email;
-  String get token => _token;
+  User get getUser => _user;
 
-  void Change_email(String Mail) {
-    _email = Mail;
-  }
-  void Change_token(String Token) {
-    _token = Token;
+  void setUser(User user) {
+    _user = user;
+    notifyListeners();
   }
 }

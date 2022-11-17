@@ -14,6 +14,7 @@ class NetworkService {
   static Future<Map<String, String>> _setAuthHeaders() async {
     final userInfo = await SharedPreferences.getInstance();
     final authToken = userInfo.getString('authToken');
+    print("AuthToken $authToken");
     return {
       "Content-Type": "application/json",
       "PO3-ORIGIN": "app",
@@ -57,6 +58,7 @@ class NetworkService {
           body: body);
       return response;
     } catch (e) {
+      print("Response error $e");
       return null;
     }
   }

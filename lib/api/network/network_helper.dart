@@ -21,17 +21,20 @@ class NetworkHelper {
 
     try {
       if (response == null || response.body.isEmpty) {
-        return onFailureCallBack(['The request returned an empty response']);
+        return onFailureCallBack(['The request returned an empty response.']);
       }
 
       Map<String, dynamic> json = jsonDecode(response.body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         if (_isValidResponse(json)) {
+          print("Backend data: ${json['data']}");
           return callBack(json['data']);
         } else {
+          print("Backend errors: ${List<String>.from(json['errors'])}");
           return onFailureCallBack(List<String>.from(json['errors']));
         }
       } else if ([400, 401, 403].contains(response.statusCode)) {
+        print("Backend errors: ${List<String>.from(json['errors'])}");
         return onFailureCallBack(List<String>.from(json['errors']));
       } else if (response.statusCode == 204) {
         return null;
@@ -40,6 +43,7 @@ class NetworkHelper {
       }
       return onFailureCallBack(['An unknown error occurred.']);
     } catch (e) {
+      print('Exception: $e');
       return onFailureCallBack(['Exception: $e']);
     }
   }

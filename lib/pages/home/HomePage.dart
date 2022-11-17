@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:po_frontend/Providers/user_provider.dart';
 import 'package:po_frontend/api/models/user_model.dart';
-import 'package:po_frontend/pages/login_page.dart';
 import 'NavBar.dart';
-//import 'package:po_frontend/pages/home/Garage_model.dart';
+
 import 'package:po_frontend/api/network/network_helper.dart';
 import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
 import 'dart:async';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:po_frontend/api/garages_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
@@ -86,8 +82,8 @@ class _MyHomePageState extends State<MyHomePage> {
     print(obtainedEmail);
     print(obtainedToken);
     setState(() {
-      userProvider.Change_email(obtainedEmail as String);
-      userProvider.Change_token(obtainedToken as String);
+      // userProvider.Change_email(obtainedEmail as String);
+      // userProvider.Change_token(obtainedToken as String);
     });
   }
 
@@ -98,17 +94,17 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       endDrawer: NavBar(),
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(
-            colors: [(Colors.indigo), (Colors.indigoAccent)],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          )),
-        ),
-        title: Center(child: Text(UserinfoPr.email)),
-      ),
+          automaticallyImplyLeading: false,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+              colors: [(Colors.indigo), (Colors.indigoAccent)],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            )),
+          ),
+          title: Center(child: Text("Test")) //UserinfoPr._email)),
+          ),
       body: FutureBuilder(
         future: getData(),
         builder: (context, snapshot) {

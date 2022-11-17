@@ -19,7 +19,7 @@ class Garage {
   static Garage garageFromJson(Map<String, dynamic> json) {
     return Garage(
         id: json['id'] as int,
-        owner: json['owner'] as int,
+        owner: json['ownerId'] as int,
         name: json['name'] as String,
         isFull: json['isFull'] as bool,
         unoccupiedLots: json['unoccupiedLots'] as int,

@@ -2,12 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:po_frontend/UserData/UserDataBase.dart';
+import 'package:provider/provider.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:po_frontend/api/models/user_model.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
 import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../Providers/user_provider.dart';
 
 class Login_Page extends StatefulWidget {
   @override
@@ -194,11 +197,7 @@ class _Login_PageState extends State<Login_Page> {
                       userPassword = _password_textcontroller.text;
                     });
                     try {
-                      User user = await loginUser(userMail, userPassword);
-                      print(user);
-                      final userinfo = await SharedPreferences.getInstance();
-                      await userinfo.setString('email', user.email);
-                      await userinfo.setString('authToken', user.token);
+                      await loginUser(userMail, userPassword);
                     } catch (Exception) {
                       print("Error occurred $Exception");
                       return;
@@ -255,19 +254,34 @@ class _Login_PageState extends State<Login_Page> {
       ),
     );
   }
-}
 
-Future<User> loginUser(String emailUser, String passwordUser) async {
-  Map<String, dynamic> body = {"email": emailUser, "password": passwordUser};
-  final response = await NetworkService.sendRequest(
-    requestType: RequestType.post,
-    url: StaticValues.baseUrl + StaticValues.postLoginUser,
-    body: jsonEncode(body),
-    useAuthToken: false,
-  );
-  print(response);
-  return await NetworkHelper.filterResponse(
-    callBack: User.userFromJson,
-    response: response,
-  );
+  Future<void> loginUser(String emailUser, String passwordUser) async {
+    Map<String, dynamic> body = {
+      "email": emailUser,
+      "password": passwordUser,
+    };
+    final response = await NetworkService.sendRequest(
+      requestType: RequestType.post,
+      url: StaticValues.baseUrl + StaticValues.postLoginUser,
+      body: jsonEncode(body),
+      useAuthToken: false,
+    );
+
+    // Contains a list of the format [User, String].
+    List userResponse = await NetworkHelper.filterResponse(
+      callBack: User.loginUserFromJson,
+      response: response,
+    );
+
+    // Store the authToken in the Shared Preferences.
+    final pref = await SharedPreferences.getInstance();
+    await pref.setString('authToken', userResponse[1]);
+
+    // Store the user model in the Provider.
+    if (mounted) {
+      final UserProvider userProvider =
+          Provider.of<UserProvider>(context, listen: false);
+      userProvider.setUser(userResponse[0]);
+    }
+  }
 }
