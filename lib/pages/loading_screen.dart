@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
 import 'package:po_frontend/api/network/network_helper.dart';
@@ -26,8 +25,12 @@ class LoadingScreenState extends State<LoadingScreen> {
     checkLogin();
   }
 
+  /// Checks the accessToken of the user stored in memory to see if it's valid or not. If the
+  /// `accessToken` is valid, the user will be redirected to the `HomeScreen`, otherwise to the
+  /// `LoginScreen`.
+  /// Furthermore it sets the `serverUrl` for the application, which serves as a back-up in case
+  /// of the po3server failing.
   Future<void> checkLogin() async {
-    // This functions checks the accessToken, uid and client of the user stored in memory to see if it's valid or not.
     final UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);
     final pref = await SharedPreferences.getInstance();
@@ -65,7 +68,7 @@ class LoadingScreenState extends State<LoadingScreen> {
           return redirectToLoginScreen();
         }
       } on TimeoutException {
-        print("Server not found");
+        print("Server not found.");
         return redirectToLoginScreen();
       }
     }
