@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
@@ -25,18 +23,10 @@ class LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
     super.initState();
-    checkLogin().then(
-      (bool loggedIn) {
-        if (loggedIn) {
-          redirectToHomeScreen();
-        } else {
-          redirectToLoginScreen();
-        }
-      },
-    );
+    checkLogin();
   }
 
-  Future<bool> checkLogin() async {
+  Future<void> checkLogin() async {
     // This functions checks the accessToken, uid and client of the user stored in memory to see if it's valid or not.
     final UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);
@@ -45,7 +35,6 @@ class LoadingScreenState extends State<LoadingScreen> {
       'serverUrl',
       'https://po3backend.ddns.net/',
     );
-    Response? response;
     try {
       final response = await NetworkService.sendRequest(
         requestType: RequestType.get,
@@ -53,7 +42,8 @@ class LoadingScreenState extends State<LoadingScreen> {
         useAuthToken: true,
       );
     } on Exception {
-      print("Could not po3backend server, redirecting to localhost.");
+      print(
+          "Could not connect to po3backend server, redirecting to localhost.");
       await pref.setString(
         'serverUrl',
         'http://192.168.49.1:8000/',
@@ -64,21 +54,22 @@ class LoadingScreenState extends State<LoadingScreen> {
           apiSlug: StaticValues.getUserSlug,
           useAuthToken: true,
         );
+        try {
+          User user = await NetworkHelper.filterResponse(
+            callBack: User.userFromJson,
+            response: response,
+          );
+          userProvider.setUser(user);
+          return redirectToHomeScreen();
+        } on BackendException {
+          return redirectToLoginScreen();
+        }
       } on TimeoutException {
-        return false;
+        print("Server not found");
+        return redirectToLoginScreen();
       }
     }
-
-    try {
-      User user = await NetworkHelper.filterResponse(
-        callBack: User.userFromJson,
-        response: response,
-      );
-      userProvider.setUser(user);
-      return true;
-    } on BackendException {
-      return false;
-    }
+    redirectToLoginScreen();
   }
 
   void redirectToHomeScreen() {

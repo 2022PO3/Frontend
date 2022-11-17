@@ -27,7 +27,6 @@ class NetworkHelper {
       Map<String, dynamic> json = jsonDecode(response.body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         if (_isValidResponse(json)) {
-          print("Backend data: ${json['data']}");
           return callBack(json['data']);
         } else {
           print("Backend errors: ${List<String>.from(json['errors'])}");

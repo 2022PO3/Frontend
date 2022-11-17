@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 enum RequestType { get, post, put, delete }
 
@@ -9,6 +10,7 @@ class NetworkService {
   static Map<String, String> _getHeaders() => {
         "Content-Type": "application/json",
         "PO3-ORIGIN": "app",
+        "PO3-APP-KEY": dotenv.env['APP_SECRET_KEY'].toString(),
       };
 
   static Future<Map<String, String>> _setAuthHeaders() async {
@@ -17,7 +19,8 @@ class NetworkService {
     return {
       "Content-Type": "application/json",
       "PO3-ORIGIN": "app",
-      "Authorization": "Token $authToken"
+      "PO3-APP-KEY": dotenv.env['APP_SECRET_KEY'].toString(),
+      "Authorization": "Token $authToken",
     };
   }
 
@@ -33,19 +36,19 @@ class NetworkService {
       case RequestType.get:
         return http
             .get(uri, headers: headers)
-            .timeout(const Duration(seconds: 5));
+            .timeout(const Duration(seconds: 3));
       case RequestType.post:
         return http
             .post(uri, headers: headers, body: body)
-            .timeout(const Duration(seconds: 5));
+            .timeout(const Duration(seconds: 3));
       case RequestType.put:
         return http
             .put(uri, headers: headers, body: body)
-            .timeout(const Duration(seconds: 5));
+            .timeout(const Duration(seconds: 3));
       case RequestType.delete:
         return http
             .delete(uri, headers: headers, body: body)
-            .timeout(const Duration(seconds: 5));
+            .timeout(const Duration(seconds: 3));
     }
   }
 
