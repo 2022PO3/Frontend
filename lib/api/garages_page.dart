@@ -59,7 +59,6 @@ class _GaragesPageState extends State<GaragesPage> {
 }
 
 Future<List<Garage>> getData() async {
-  print("Executing function");
   final response = await NetworkService.sendRequest(
     requestType: RequestType.get,
     apiSlug: StaticValues.getGaragesSlug,

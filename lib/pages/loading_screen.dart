@@ -39,7 +39,7 @@ class LoadingScreenState extends State<LoadingScreen> {
       'https://po3backend.ddns.net/',
     );
     try {
-      final response = await NetworkService.sendRequest(
+      await NetworkService.sendRequest(
         requestType: RequestType.get,
         apiSlug: StaticValues.getUserSlug,
         useAuthToken: true,
@@ -51,6 +51,7 @@ class LoadingScreenState extends State<LoadingScreen> {
         'serverUrl',
         'http://192.168.49.1:8000/',
       );
+    } finally {
       try {
         final response = await NetworkService.sendRequest(
           requestType: RequestType.get,
@@ -72,7 +73,6 @@ class LoadingScreenState extends State<LoadingScreen> {
         return redirectToLoginScreen();
       }
     }
-    redirectToLoginScreen();
   }
 
   void redirectToHomeScreen() {
