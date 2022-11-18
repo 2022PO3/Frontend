@@ -19,7 +19,7 @@ class Garage {
   static Garage garageFromJson(Map<String, dynamic> json) {
     return Garage(
         id: json['id'] as int,
-        owner: json['owner'] as int,
+        owner: json['ownerId'] as int,
         name: json['name'] as String,
         isFull: json['isFull'] as bool,
         unoccupiedLots: json['unoccupiedLots'] as int,
@@ -36,7 +36,5 @@ class Garage {
 }
 
 /// Serializes a list JSON-objects into a list of Dart `Garage`-objects.
-List<Garage> garagesListFromJson(Map<String, dynamic> json) => (json as List)
-    .map((jsonGarage) =>
-        Garage.garageFromJson(jsonGarage as Map<String, dynamic>))
-    .toList();
+List<Garage> garagesListFromJson(List<dynamic> json) =>
+    (json).map((jsonGarage) => Garage.garageFromJson(jsonGarage)).toList();

@@ -11,7 +11,6 @@ class _Register_NowState extends State<Register_Now> {
   final _FirstNameR_textcontroller = TextEditingController();
   final _LastNameR_textcontroller = TextEditingController();
   final _EmailR_textcontroller = TextEditingController();
-  final _PhoneNumberR_textcontroller = TextEditingController();
   final _PasswordR_textcontroller = TextEditingController();
   final _ConfirmPasswordR_textcontroller = TextEditingController();
 
@@ -196,6 +195,8 @@ class _Register_NowState extends State<Register_Now> {
                     controller: _ConfirmPasswordR_textcontroller,
                   ),
                 ),
+                onPressed: () async {
+                  },
               ),
             ),
 /*TextButton(

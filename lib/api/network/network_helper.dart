@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:http/http.dart' as http;
 
-typedef NetworkCallBack<R> = R Function(Map<String, dynamic>);
-
 class NetworkHelper {
   const NetworkHelper._();
 
@@ -14,18 +12,16 @@ class NetworkHelper {
   }
 
   static R? filterResponse<R>({
-    required NetworkCallBack callBack,
+    required Function callBack,
     required http.Response? response,
   }) {
     R onFailureCallBack(List<String> errors) {
       throw BackendException(errors);
     }
 
-    ;
-
     try {
       if (response == null || response.body.isEmpty) {
-        return onFailureCallBack(['The request returned an empty response']);
+        return onFailureCallBack(['The request returned an empty response.']);
       }
 
       Map<String, dynamic> json = jsonDecode(response.body);
@@ -33,9 +29,11 @@ class NetworkHelper {
         if (_isValidResponse(json)) {
           return callBack(json['data']);
         } else {
+          print("Backend errors: ${List<String>.from(json['errors'])}");
           return onFailureCallBack(List<String>.from(json['errors']));
         }
       } else if ([400, 401, 403].contains(response.statusCode)) {
+        print("Backend errors: ${List<String>.from(json['errors'])}");
         return onFailureCallBack(List<String>.from(json['errors']));
       } else if (response.statusCode == 204) {
         return null;
@@ -44,6 +42,7 @@ class NetworkHelper {
       }
       return onFailureCallBack(['An unknown error occurred.']);
     } catch (e) {
+      print('Exception: $e');
       return onFailureCallBack(['Exception: $e']);
     }
   }

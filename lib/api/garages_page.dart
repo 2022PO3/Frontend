@@ -59,16 +59,12 @@ class _GaragesPageState extends State<GaragesPage> {
 }
 
 Future<List<Garage>> getData() async {
-  print("Executing function");
   final response = await NetworkService.sendRequest(
     requestType: RequestType.get,
-    url: StaticValues.baseUrl + StaticValues.getGaragesSlug,
+    apiSlug: StaticValues.getGaragesSlug,
+    useAuthToken: true,
     //    body: body
   );
-
-  print("reponse $response");
-  print('Response ${response?.body}');
-  print('Response status code ${response?.statusCode}');
 
   return await NetworkHelper.filterResponse(
     callBack: garagesListFromJson,
