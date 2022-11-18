@@ -13,6 +13,7 @@ class _Register_NowState extends State<Register_Now> {
   final _EmailR_textcontroller = TextEditingController();
   final _PasswordR_textcontroller = TextEditingController();
   final _ConfirmPasswordR_textcontroller = TextEditingController();
+  final _PhoneNumberR_textcontroller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -195,8 +196,6 @@ class _Register_NowState extends State<Register_Now> {
                     controller: _ConfirmPasswordR_textcontroller,
                   ),
                 ),
-                onPressed: () async {
-                  },
               ),
             ),
 /*TextButton(

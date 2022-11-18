@@ -8,25 +8,33 @@ class GarageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 300,
-            child: Text(garage.name),
-          ),
-          SizedBox(
-            width: 300,
-            child: Text(garage.isFull ? 'Full' : 'Empty places'),
-          ),
-          SizedBox(
-            width: 300,
-            child: Text('${garage.unoccupiedLots}/${garage.parkingLots}'),
-          ),
-        ],
+    return InkWell(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 300,
+              child: Text(
+                garage.name,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            SizedBox(
+              width: 300,
+              child: Text(garage.isFull ? 'Full' : 'Empty places'),
+            ),
+            SizedBox(
+              width: 300,
+              child: Text('${garage.unoccupiedLots}/${garage.parkingLots}'),
+            ),
+          ],
+        ),
       ),
+      onTap: () {
+        Navigator.pushNamed(context, '/New_Reservation');
+      },
     );
   }
 }

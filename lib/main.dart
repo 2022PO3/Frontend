@@ -14,6 +14,7 @@ import 'package:po_frontend/pages/Register.dart';
 import 'package:provider/provider.dart';
 import 'package:po_frontend/Providers/user_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:po_frontend/pages/New_Reservation.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");
@@ -45,7 +46,8 @@ class MyApp extends StatelessWidget {
         '/booking_system': (context) => Booking_System(),
         '/garages_page': (context) => const GaragesPage(),
         '/register': (context) => const Register_Now(),
-        '/loading_screen': ((context) => const LoadingScreen())
+        '/loading_screen': ((context) => const LoadingScreen()),
+        '/New_Reservation': (context) => New_Reservation(),
       },
       debugShowCheckedModeBanner: false,
     );
