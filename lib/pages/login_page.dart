@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:po_frontend/UserData/UserDataBase.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:po_frontend/api/models/user_model.dart';
@@ -43,7 +42,7 @@ class _Login_PageState extends State<Login_Page> {
   String userMail = '';
   String userPassword = '';
 
-  List<UserInfo> users = List.from(UserDataBase);
+  //List<UserInfo> users = List.from(UserDataBase);
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +111,7 @@ class _Login_PageState extends State<Login_Page> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   border: Border.all(
-                      color: Colors.indigoAccent.withOpacity(0.5), width: 4),
+                      color: Colors.white, width: 4),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Padding(
@@ -142,7 +141,7 @@ class _Login_PageState extends State<Login_Page> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   border: Border.all(
-                      color: Colors.indigoAccent.withOpacity(0.5), width: 4),
+                      color: Colors.white, width: 4),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Padding(
@@ -172,7 +171,6 @@ class _Login_PageState extends State<Login_Page> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Container(
-                height: 65,
                 padding: EdgeInsets.all(20),
                 decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -182,7 +180,9 @@ class _Login_PageState extends State<Login_Page> {
                     ),
                     borderRadius: BorderRadius.circular(20)),
                 child: TextButton(
-                  style: TextButton.styleFrom(minimumSize: Size(500, 200)),
+                  style: TextButton.styleFrom(
+                    minimumSize: const Size.fromHeight(40),
+                  ),
                   child: Text(
                     "Sign in",
                     style: TextStyle(
@@ -204,29 +204,6 @@ class _Login_PageState extends State<Login_Page> {
                     }
                     Navigator.pushNamed(context, '/home');
 
-                    //   bool EmailUserFound = false;
-                    //   print(userMail);
-                    //   int counter = 0;
-                    //   print(users[0].userEmail);
-                    //   for(int index = 0; index < UserDataBase.length && EmailUserFound == false; index++) {
-                    //     if (userMail == UserDataBase[index].userEmail) {
-                    //       print("email found");
-                    //       if (userPassword == UserDataBase[index].userPassword) {
-                    //         EmailUserFound = true;
-                    //         Navigator.pushNamed(context, '/home');
-                    //       }
-                    //       else {
-                    //         EmailUserFound = true;
-                    //         WrongPassword_popup();
-                    //       }
-                    //     }
-                    //   else {
-                    //     counter = counter + 1;
-                    //     }
-                    //   }
-                    //   if (counter == UserDataBase.length) {
-                    //     WrongPassword_popup();
-                    //   }
                   },
                 ),
               ),

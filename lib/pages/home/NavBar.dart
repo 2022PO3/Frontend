@@ -1,5 +1,33 @@
 import 'package:flutter/material.dart';
-class NavBar extends StatelessWidget {
+import 'package:po_frontend/api/network/network_helper.dart';
+import 'package:po_frontend/api/network/network_service.dart';
+import 'package:po_frontend/api/network/static_values.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+class Navbar extends StatefulWidget {
+  const Navbar({Key? key}) : super(key: key);
+
+  @override
+  State<Navbar> createState() => _NavbarState();
+}
+
+class _NavbarState extends State<Navbar> {
+
+  Future<void> LogoutUser() async {
+    final response = await NetworkService.sendRequest(
+      requestType: RequestType.post,
+      apiSlug: StaticValues.postLogoutUser,
+      useAuthToken: true,
+      //    body: body
+    );
+    if (response?.statusCode == 204) {
+      final userInfo = await SharedPreferences.getInstance();
+      userInfo.remove('authToken');
+      Navigator.popUntil(context,ModalRoute.withName('/login_page'));
+
+    } else {
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Future openDialog() => showDialog(
@@ -8,7 +36,7 @@ class NavBar extends StatelessWidget {
           title: Text(
             "Dear [user],",
             style: TextStyle(
-              color: Colors.indigoAccent
+                color: Colors.indigoAccent
             ),
           ),
           content: Text("Are you sure you want to sign out?"),
@@ -22,24 +50,24 @@ class NavBar extends StatelessWidget {
                       Navigator.popUntil(context,ModalRoute.withName('/home'));
                     },
                     child: Text(
-                        "Cancel",
+                      "Cancel",
                       style: TextStyle(
-                        color: Colors.indigo,
-                        fontSize: 15
+                          color: Colors.indigo,
+                          fontSize: 15
                       ),
                     )
                 ),
                 TextButton(
-                    onPressed: () {
-                      Navigator.popUntil(context,ModalRoute.withName('/login_page'));
-                    },
-                    child: Text(
-                        "Confirm",
-                        style: TextStyle(
-                            color: Colors.indigo,
-                          fontSize: 15
-                        ),
+                  onPressed: () {
+                    LogoutUser();
+                  },
+                  child: Text(
+                    "Confirm",
+                    style: TextStyle(
+                        color: Colors.indigo,
+                        fontSize: 15
                     ),
+                  ),
                 ),
               ],
             )
@@ -52,8 +80,8 @@ class NavBar extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-              accountName: Text("Default"),
-              accountEmail: Text("Default@gmail.com"),
+            accountName: Text("Default"),
+            accountEmail: Text("Default@gmail.com"),
             decoration: BoxDecoration(
               color: Colors.indigoAccent,
               image: DecorationImage(
@@ -65,14 +93,14 @@ class NavBar extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Icon(
-              Icons.event,
-              color: Colors.indigo,
-            ),
-            title: Text('My Reservations'),
-            onTap: () {
-              Navigator.pushNamed(context, '/My_Reservations');
-            }
+              leading: Icon(
+                Icons.event,
+                color: Colors.indigo,
+              ),
+              title: Text('My Reservations'),
+              onTap: () {
+                Navigator.pushNamed(context, '/My_Reservations');
+              }
           ),
           Divider(),
           ListTile(
@@ -88,7 +116,7 @@ class NavBar extends StatelessWidget {
           Divider(),
           ListTile(
               leading: Icon(
-                  Icons.query_stats,
+                Icons.query_stats,
                 color: Colors.indigo,
               ),
               title: Text('Statistics'),
@@ -134,4 +162,8 @@ class NavBar extends StatelessWidget {
       ),
     );
   }
+
 }
+
+
+

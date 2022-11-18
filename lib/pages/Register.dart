@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 class Register_Now extends StatefulWidget {
   const Register_Now({Key? key}) : super(key: key);
@@ -32,13 +33,25 @@ class _Register_NowState extends State<Register_Now> {
       body: Column(
         children: [
           SizedBox(
-            height: 30,
+            height: 40,
+          ),
+          GradientText(
+            "Create a new account",
+            style: TextStyle(
+              //fontWeight: FontWeight.bold,
+              fontSize: 40,
+              fontWeight: FontWeight.bold,
+            ),
+            colors: [(Colors.indigoAccent), (Colors.indigo)],
+          ),
+          SizedBox(
+            height: 20,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.grey[200],
+                color: Colors.white,
                 border: Border.all(color: Colors.white,width: 4),
                 borderRadius:  BorderRadius.circular(20),
               ),
@@ -64,13 +77,13 @@ class _Register_NowState extends State<Register_Now> {
             ),
           ),
           SizedBox(
-            height: 30,
+            height: 20,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.grey[200],
+                color: Colors.white,
                 border: Border.all(color: Colors.white,width: 4),
                 borderRadius:  BorderRadius.circular(20),
               ),
@@ -97,13 +110,13 @@ class _Register_NowState extends State<Register_Now> {
           ),
 
           SizedBox(
-            height: 30,
+            height: 20,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.grey[200],
+                color: Colors.white,
                 border: Border.all(color: Colors.white,width: 4),
                 borderRadius:  BorderRadius.circular(20),
               ),
@@ -129,13 +142,13 @@ class _Register_NowState extends State<Register_Now> {
             ),
           ),
           SizedBox(
-            height: 30,
+            height: 20,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.grey[200],
+                color: Colors.white,
                 border: Border.all(color: Colors.white,width: 4),
                 borderRadius:  BorderRadius.circular(20),
               ),
@@ -161,13 +174,13 @@ class _Register_NowState extends State<Register_Now> {
             ),
           ),
           SizedBox(
-            height: 30,
+            height: 20,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25.0),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.grey[200],
+                color: Colors.white,
                 border: Border.all(color: Colors.white,width: 4),
                 borderRadius:  BorderRadius.circular(20),
               ),
@@ -193,7 +206,7 @@ class _Register_NowState extends State<Register_Now> {
             ),
           ),
           SizedBox(
-            height: 20,
+            height: 50,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25.0),

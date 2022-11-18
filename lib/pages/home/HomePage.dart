@@ -92,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //getValidationData(UserinfoPr);
 
     return Scaffold(
-      endDrawer: NavBar(),
+      endDrawer: Navbar(),
       appBar: AppBar(
           automaticallyImplyLeading: false,
           flexibleSpace: Container(

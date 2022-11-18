@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.indigo[50]),
       initialRoute: '/loading_screen',
       routes: {
-        '/': (context) => const Loading(),
+        '/loading_screen': ((context) => const LoadingScreen()),
         '/login_page': (context) => Login_Page(),
         '/home': (context) => MyHomePage(),
         '/My_Reservations': (context) => My_Reservations(),
@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
         '/booking_system': (context) => Booking_System(),
         '/garages_page': (context) => const GaragesPage(),
         '/register': (context) => const Register_Now(),
-        '/loading_screen': ((context) => const LoadingScreen())
+
       },
       debugShowCheckedModeBanner: false,
     );
