@@ -80,26 +80,34 @@ class _Login_PageState extends State<Login_Page> {
               height: 10,
             ),
             //Hello again!
-            GradientText(
-              "Hello Again!",
-              style: TextStyle(
-                //fontWeight: FontWeight.bold,
-                fontSize: 40,
-                fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: GradientText(
+                "Hello Again!",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  //fontWeight: FontWeight.bold,
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                ),
+                colors: [(Colors.indigoAccent), (Colors.indigo)],
               ),
-              colors: [(Colors.indigoAccent), (Colors.indigo)],
             ),
             SizedBox(
               height: 10,
             ),
-            GradientText(
-              "Welcome back, you\'ve been missed!",
-              style: TextStyle(
-                //fontWeight: FontWeight.bold,
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: GradientText(
+                "Welcome back, you\'ve been missed!",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  //fontWeight: FontWeight.bold,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
+                colors: [(Colors.indigoAccent), (Colors.indigo)],
               ),
-              colors: [(Colors.indigoAccent), (Colors.indigo)],
             ),
             //email textfield
             SizedBox(
@@ -181,7 +189,7 @@ class _Login_PageState extends State<Login_Page> {
                     borderRadius: BorderRadius.circular(20)),
                 child: TextButton(
                   style: TextButton.styleFrom(
-                    minimumSize: const Size.fromHeight(40),
+                    minimumSize: const Size.fromHeight(30),
                   ),
                   child: Text(
                     "Sign in",
