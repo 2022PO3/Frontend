@@ -22,6 +22,12 @@ class _Register_NowState extends State<Register_Now> {
   final _PasswordR_textcontroller = TextEditingController();
   final _ConfirmPasswordR_textcontroller = TextEditingController();
 
+  bool _isPasswordEightCharacters = false;
+  bool _hasPasswordOneNumber = false;
+  bool _hasCapitalLetter = false;
+  bool _hasSpecialCharacter = false;
+  bool _passwordMatch = false;
+
 
   String R_userFirstname = '';
   String R_userLastname = '';
@@ -29,8 +35,73 @@ class _Register_NowState extends State<Register_Now> {
   String R_userPassword = '';
   String R_userConfirmPassword = '';
 
+  onPasswordChanged(String password, String passwordconfirmation) {
+    final numericRegex = RegExp(r'[0-9]');
+    final CapitalCharacter = RegExp(r'[A-Z]');
+    final SpecialCharacter = RegExp(r'[@_!#$%^&*()<>?/\|}{~:;]');
+
+    setState(() {
+      _isPasswordEightCharacters = false;
+      if (password.length >= 10) {
+        _isPasswordEightCharacters = true;
+      }
+      _hasPasswordOneNumber = false;
+      if (numericRegex.hasMatch(password)) {
+        _hasPasswordOneNumber = true;
+      }
+      _hasCapitalLetter = false;
+      if (CapitalCharacter.hasMatch(password)) {
+        _hasCapitalLetter = true;
+      }
+      _hasSpecialCharacter = false;
+      if (SpecialCharacter.hasMatch(password)) {
+        _hasSpecialCharacter = true;
+      }
+      _passwordMatch = false;
+      if (password == passwordconfirmation) {
+        _passwordMatch = true;
+      }
+    });
+  }
+
+  void onPasswordMatch(String password, String passwordConfirmation) {
+    setState(() {
+      _passwordMatch = false;
+      if (password == passwordConfirmation) {
+        _passwordMatch = true;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    Future openDialog() => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          content: Text("An error has occured"),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.popUntil(context,ModalRoute.withName('/register'));
+                    },
+                    child: Text(
+                      "Ok",
+                      style: TextStyle(
+                          color: Colors.indigo,
+                          fontSize: 15
+                      ),
+                    )
+                ),
+              ],
+            )
+          ],
+
+        )
+    );
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
@@ -45,10 +116,9 @@ class _Register_NowState extends State<Register_Now> {
       ),
       body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              height: 40,
+              height: 25,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -71,7 +141,7 @@ class _Register_NowState extends State<Register_Now> {
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border.all(color: Colors.white,width: 4),
+                  border: Border.all(color: Colors.white,width: 2),
                   borderRadius:  BorderRadius.circular(20),
                 ),
                 child: Padding(
@@ -96,14 +166,14 @@ class _Register_NowState extends State<Register_Now> {
               ),
             ),
             SizedBox(
-              height: 20,
+              height: 13,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border.all(color: Colors.white,width: 4),
+                  border: Border.all(color: Colors.white,width: 2),
                   borderRadius:  BorderRadius.circular(20),
                 ),
                 child: Padding(
@@ -129,14 +199,14 @@ class _Register_NowState extends State<Register_Now> {
             ),
 
             SizedBox(
-              height: 20,
+              height: 13,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border.all(color: Colors.white,width: 4),
+                  border: Border.all(color: Colors.white,width: 2),
                   borderRadius:  BorderRadius.circular(20),
                 ),
                 child: Padding(
@@ -161,19 +231,20 @@ class _Register_NowState extends State<Register_Now> {
               ),
             ),
             SizedBox(
-              height: 20,
+              height: 13,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border.all(color: Colors.white,width: 4),
+                  border: Border.all(color: Colors.white,width: 2),
                   borderRadius:  BorderRadius.circular(20),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20.0),
                   child: TextField(
+                    onChanged: (password) => onPasswordChanged(password, _ConfirmPasswordR_textcontroller.text),
                     obscureText: true,
                     decoration: InputDecoration(
                         border: InputBorder.none,
@@ -183,7 +254,14 @@ class _Register_NowState extends State<Register_Now> {
                         ),
                         suffixIcon: IconButton(
                             onPressed: () {
-                              _PasswordR_textcontroller.clear();
+                              setState(() {
+                                _PasswordR_textcontroller.clear();
+                                _passwordMatch = false;
+                                _isPasswordEightCharacters = false;
+                                _hasPasswordOneNumber = false;
+                                _hasCapitalLetter = false;
+                                _hasSpecialCharacter = false;
+                              });
                             },
                             icon: const Icon(Icons.clear)
                         )
@@ -193,20 +271,105 @@ class _Register_NowState extends State<Register_Now> {
                 ),
               ),
             ),
+            SizedBox(height: 10,),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20,0,0,0),
+              child: Row(
+                children: [
+                  AnimatedContainer(
+                      duration: Duration(milliseconds: 500),
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                          color: _hasCapitalLetter ? Colors.green : Colors.transparent,
+                          border: _hasCapitalLetter ? Border.all(color: Colors.transparent) :  Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(50)
+                      ),
+                      child: Center(child: Icon(Icons.check,color: Colors.white, size: 15), )
+                  ),
+                  SizedBox(width:10),
+                  Text("Contains a capital letter")
+                ],
+              ),
+            ),
+            SizedBox(height: 10,),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20,0,0,0),
+              child: Row(
+                children: [
+                  AnimatedContainer(
+                      duration: Duration(milliseconds: 500),
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        color: _isPasswordEightCharacters ? Colors.green : Colors.transparent,
+                          border: _isPasswordEightCharacters ? Border.all(color: Colors.transparent) :  Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(50)
+                      ),
+                      child: Center(child: Icon(Icons.check,color: Colors.white, size: 15), )
+                  ),
+                  SizedBox(width:10),
+                  Text("Contains at least 10 characters")
+                ],
+              ),
+            ),
+            SizedBox(height: 10,),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20,0,0,0),
+              child: Row(
+                children: [
+                  AnimatedContainer(
+                      duration: Duration(milliseconds: 500),
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                          color: _hasPasswordOneNumber ? Colors.green : Colors.transparent,
+                          border: _hasPasswordOneNumber ? Border.all(color: Colors.transparent) : Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(50)
+                      ),
+                      child: Center(child: Icon(Icons.check,color: Colors.white, size: 15), )
+                  ),
+                  SizedBox(width:10),
+                  Text("Contains at least 1 number")
+                ],
+              ),
+            ),
+            SizedBox(height: 10,),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20,0,0,0),
+              child: Row(
+                children: [
+                  AnimatedContainer(
+                      duration: Duration(milliseconds: 500),
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                          color: _hasSpecialCharacter ? Colors.green : Colors.transparent,
+                          border: _hasSpecialCharacter ? Border.all(color: Colors.transparent) :  Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(50)
+                      ),
+                      child: Center(child: Icon(Icons.check,color: Colors.white, size: 15), )
+                  ),
+                  SizedBox(width:10),
+                  Text("Contains a special character")
+                ],
+              ),
+            ),
             SizedBox(
-              height: 20,
+              height: 13,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border.all(color: Colors.white,width: 4),
+                  border: Border.all(color: Colors.white,width: 2),
                   borderRadius:  BorderRadius.circular(20),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20.0),
                   child: TextField(
+                    onChanged: (password) => onPasswordMatch(_PasswordR_textcontroller.text,password),
                     obscureText: true,
                     decoration: InputDecoration(
                         border: InputBorder.none,
@@ -216,7 +379,10 @@ class _Register_NowState extends State<Register_Now> {
                         ),
                         suffixIcon: IconButton(
                             onPressed: () {
-                              _ConfirmPasswordR_textcontroller.clear();
+                              setState(() {
+                                _ConfirmPasswordR_textcontroller.clear();
+                                _passwordMatch = false;
+                              });
                             },
                             icon: const Icon(Icons.clear)
                         )
@@ -226,8 +392,29 @@ class _Register_NowState extends State<Register_Now> {
                 ),
               ),
             ),
+            SizedBox(height: 10,),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20,0,0,0),
+              child: Row(
+                children: [
+                  AnimatedContainer(
+                      duration: Duration(milliseconds: 500),
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                          color: _passwordMatch ? Colors.green : Colors.transparent,
+                          border: _passwordMatch ? Border.all(color: Colors.transparent) :  Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(50)
+                      ),
+                      child: Center(child: Icon(Icons.check,color: Colors.white, size: 15), )
+                  ),
+                  SizedBox(width:10),
+                  Text("Both passwords match")
+                ],
+              ),
+            ),
             SizedBox(
-              height: 30,
+              height: 20,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -260,18 +447,23 @@ class _Register_NowState extends State<Register_Now> {
                       R_userPassword = _PasswordR_textcontroller.text;
                       R_userConfirmPassword = _ConfirmPasswordR_textcontroller.text;
                     });
-                    try {
-                      await RegisterUser(R_userMail, R_userPassword,R_userConfirmPassword,R_userFirstname,R_userLastname);
-                    } catch (BackendException) {
-                      print("Error occurred $BackendException");
-                      return;
-                    }
+                     if (_passwordMatch == true && _hasSpecialCharacter == true && _hasCapitalLetter == true && _hasPasswordOneNumber == true && _isPasswordEightCharacters == true) {
+                       try {
+                         await RegisterUser(R_userMail, R_userPassword,R_userConfirmPassword,R_userFirstname,R_userLastname);
+                       } catch (BackendException) {
+                         print("Error occurred $BackendException");
+                         return;
+                       }
+                     } else {
+                       openDialog();
+                     }
                     //Navigator.pushNamed(context, '/home');
 
                   },
                 ),
               ),
             ),
+
 
           ],
         ),
@@ -295,6 +487,7 @@ class _Register_NowState extends State<Register_Now> {
       useAuthToken: false,
     );
     print(response?.body);
+    await NetworkHelper.validateResponse(response);
 
     // Contains a list of the format [User, String].
     // if (response?.statusCode == 201) {
@@ -304,6 +497,5 @@ class _Register_NowState extends State<Register_Now> {
     // }
   }
 }
-
 
 

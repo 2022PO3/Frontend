@@ -11,7 +11,7 @@ class NetworkHelper {
     return json != null && json['data'] != null;
   }
 
-  static bool validateResponse(http.Response response) {
+  static bool validateResponse(http.Response? response) {
     bool onFailureCallBack(List<String> errors) {
       throw BackendException(errors);
     }
