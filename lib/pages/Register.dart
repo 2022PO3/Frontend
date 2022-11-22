@@ -1,5 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
+import 'package:po_frontend/api/network/network_helper.dart';
+import 'package:po_frontend/api/network/network_service.dart';
+import 'package:po_frontend/api/network/static_values.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Register_Now extends StatefulWidget {
   const Register_Now({Key? key}) : super(key: key);
@@ -15,6 +21,13 @@ class _Register_NowState extends State<Register_Now> {
   final _EmailR_textcontroller = TextEditingController();
   final _PasswordR_textcontroller = TextEditingController();
   final _ConfirmPasswordR_textcontroller = TextEditingController();
+
+
+  String R_userFirstname = '';
+  String R_userLastname = '';
+  String R_userMail = '';
+  String R_userPassword = '';
+  String R_userConfirmPassword = '';
 
   @override
   Widget build(BuildContext context) {
@@ -161,6 +174,7 @@ class _Register_NowState extends State<Register_Now> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20.0),
                   child: TextField(
+                    obscureText: true,
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Password',
@@ -193,6 +207,7 @@ class _Register_NowState extends State<Register_Now> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20.0),
                   child: TextField(
+                    obscureText: true,
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Confirm Password',
@@ -238,7 +253,22 @@ class _Register_NowState extends State<Register_Now> {
                     ),
                   ),
                   onPressed: () async {
-                    },
+                    setState(() {
+                      R_userFirstname = _FirstNameR_textcontroller.text;
+                      R_userLastname = _LastNameR_textcontroller.text;
+                      R_userMail = _EmailR_textcontroller.text;
+                      R_userPassword = _PasswordR_textcontroller.text;
+                      R_userConfirmPassword = _ConfirmPasswordR_textcontroller.text;
+                    });
+                    try {
+                      await RegisterUser(R_userMail, R_userPassword,R_userConfirmPassword,R_userFirstname,R_userLastname);
+                    } catch (BackendException) {
+                      print("Error occurred $BackendException");
+                      return;
+                    }
+                    //Navigator.pushNamed(context, '/home');
+
+                  },
                 ),
               ),
             ),
@@ -248,4 +278,32 @@ class _Register_NowState extends State<Register_Now> {
       )
     );
   }
+  Future<void> RegisterUser(String emailUser, String passwordUser, String confirmPasswordUser,String firstnameUser, String lastnameUser) async {
+    Map<String, dynamic> body = {
+      "email": emailUser,
+      "password": passwordUser,
+      "passwordConfirmation": confirmPasswordUser,
+      "role": 1,
+      "firstName": firstnameUser,
+      "lastName": lastnameUser,
+
+    };
+    final response = await NetworkService.sendRequest(
+      requestType: RequestType.post,
+      apiSlug: StaticValues.postRegisterUser,
+      body: jsonEncode(body),
+      useAuthToken: false,
+    );
+    print(response?.body);
+
+    // Contains a list of the format [User, String].
+    // if (response?.statusCode == 201) {
+    //   Navigator.popUntil(context,ModalRoute.withName('/login_page'));
+    //
+    // } else {
+    // }
+  }
 }
+
+
+

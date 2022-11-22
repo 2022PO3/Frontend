@@ -206,8 +206,8 @@ class _Login_PageState extends State<Login_Page> {
                     });
                     try {
                       await loginUser(userMail, userPassword);
-                    } catch (Exception) {
-                      print("Error occurred $Exception");
+                    } catch (BackendException) {
+                      print("Error occurred $BackendException");
                       return;
                     }
                     Navigator.pushNamed(context, '/home');
