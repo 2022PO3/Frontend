@@ -103,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
               end: Alignment.centerRight,
             )),
           ),
-          title: Center(child: Text("Test")) //UserinfoPr._email)),
+          title: Center(child: Text(UserinfoPr.getUser.firstName ?? "")) //UserinfoPr._email)),
           ),
       body: FutureBuilder(
         future: getData(),

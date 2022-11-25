@@ -131,6 +131,7 @@ class _Register_NowState extends State<Register_Now> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Container(
+                  height: 40,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     border: Border.all(color: Colors.white, width: 2),
@@ -159,6 +160,7 @@ class _Register_NowState extends State<Register_Now> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Container(
+                  height: 40,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     border: Border.all(color: Colors.white, width: 2),
@@ -187,6 +189,7 @@ class _Register_NowState extends State<Register_Now> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Container(
+                  height: 40,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     border: Border.all(color: Colors.white, width: 2),
@@ -215,6 +218,7 @@ class _Register_NowState extends State<Register_Now> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Container(
+                  height: 40,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     border: Border.all(color: Colors.white, width: 2),
@@ -256,8 +260,8 @@ class _Register_NowState extends State<Register_Now> {
                   children: [
                     AnimatedContainer(
                         duration: Duration(milliseconds: 500),
-                        width: 20,
-                        height: 20,
+                        width: 15,
+                        height: 15,
                         decoration: BoxDecoration(
                             color: _hasCapitalLetter
                                 ? Colors.green
@@ -268,10 +272,10 @@ class _Register_NowState extends State<Register_Now> {
                             borderRadius: BorderRadius.circular(50)),
                         child: Center(
                           child:
-                              Icon(Icons.check, color: Colors.white, size: 15),
+                              Icon(Icons.check, color: Colors.white, size: 12),
                         )),
                     SizedBox(width: 10),
-                    Text("Contains a capital letter")
+                    Text("Contains a capital letter",style: TextStyle(fontSize: 12),)
                   ],
                 ),
               ),
@@ -284,8 +288,8 @@ class _Register_NowState extends State<Register_Now> {
                   children: [
                     AnimatedContainer(
                         duration: Duration(milliseconds: 500),
-                        width: 20,
-                        height: 20,
+                        width: 15,
+                        height: 15,
                         decoration: BoxDecoration(
                             color: _isPasswordEightCharacters
                                 ? Colors.green
@@ -296,10 +300,10 @@ class _Register_NowState extends State<Register_Now> {
                             borderRadius: BorderRadius.circular(50)),
                         child: Center(
                           child:
-                              Icon(Icons.check, color: Colors.white, size: 15),
+                              Icon(Icons.check, color: Colors.white, size: 12),
                         )),
                     SizedBox(width: 10),
-                    Text("Contains at least 10 characters")
+                    Text("Contains at least 10 characters",style: TextStyle(fontSize: 12),)
                   ],
                 ),
               ),
@@ -312,8 +316,8 @@ class _Register_NowState extends State<Register_Now> {
                   children: [
                     AnimatedContainer(
                         duration: Duration(milliseconds: 500),
-                        width: 20,
-                        height: 20,
+                        width: 15,
+                        height: 15,
                         decoration: BoxDecoration(
                             color: _hasPasswordOneNumber
                                 ? Colors.green
@@ -324,10 +328,13 @@ class _Register_NowState extends State<Register_Now> {
                             borderRadius: BorderRadius.circular(50)),
                         child: Center(
                           child:
-                              Icon(Icons.check, color: Colors.white, size: 15),
+                              Icon(Icons.check, color: Colors.white, size: 12),
                         )),
                     SizedBox(width: 10),
-                    Text("Contains at least 1 number")
+                    Text(
+                        "Contains at least 1 number",
+                      style: TextStyle(fontSize: 12),
+                    )
                   ],
                 ),
               ),
@@ -340,8 +347,8 @@ class _Register_NowState extends State<Register_Now> {
                   children: [
                     AnimatedContainer(
                         duration: Duration(milliseconds: 500),
-                        width: 20,
-                        height: 20,
+                        width: 15,
+                        height: 15,
                         decoration: BoxDecoration(
                             color: _hasSpecialCharacter
                                 ? Colors.green
@@ -352,10 +359,10 @@ class _Register_NowState extends State<Register_Now> {
                             borderRadius: BorderRadius.circular(50)),
                         child: Center(
                           child:
-                              Icon(Icons.check, color: Colors.white, size: 15),
+                              Icon(Icons.check, color: Colors.white, size: 12),
                         )),
                     SizedBox(width: 10),
-                    Text("Contains a special character")
+                    Text("Contains a special character",style: TextStyle(fontSize: 12),)
                   ],
                 ),
               ),
@@ -365,6 +372,7 @@ class _Register_NowState extends State<Register_Now> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Container(
+                  height: 40,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     border: Border.all(color: Colors.white, width: 2),
@@ -402,8 +410,8 @@ class _Register_NowState extends State<Register_Now> {
                   children: [
                     AnimatedContainer(
                         duration: Duration(milliseconds: 500),
-                        width: 20,
-                        height: 20,
+                        width: 15,
+                        height: 15,
                         decoration: BoxDecoration(
                             color: _passwordMatch
                                 ? Colors.green
@@ -414,10 +422,10 @@ class _Register_NowState extends State<Register_Now> {
                             borderRadius: BorderRadius.circular(50)),
                         child: Center(
                           child:
-                              Icon(Icons.check, color: Colors.white, size: 15),
+                              Icon(Icons.check, color: Colors.white, size: 12),
                         )),
                     SizedBox(width: 10),
-                    Text("Both passwords match")
+                    Text("Both passwords match",style: TextStyle(fontSize: 12),)
                   ],
                 ),
               ),

@@ -13,6 +13,7 @@ import 'package:po_frontend/pages/login_page.dart';
 import 'package:po_frontend/pages/Register.dart';
 import 'package:provider/provider.dart';
 import 'package:po_frontend/Providers/user_provider.dart';
+import 'package:po_frontend/pages/Garage_Info.dart';
 
 void main() {
   runApp(MultiProvider(
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
         '/booking_system': (context) => Booking_System(),
         '/garages_page': (context) => const GaragesPage(),
         '/register': (context) => const Register_Now(),
+        '/garage_info': (context) => const Garage_Info(),
       },
       debugShowCheckedModeBanner: false,
     );

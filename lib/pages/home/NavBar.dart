@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
 import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
+import 'package:po_frontend/pages/home/HomePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+import 'package:po_frontend/Providers/user_provider.dart';
+import 'package:po_frontend/api/models/user_model.dart';
 
 class Navbar extends StatefulWidget {
   const Navbar({Key? key}) : super(key: key);
@@ -28,6 +32,8 @@ class _NavbarState extends State<Navbar> {
 
   @override
   Widget build(BuildContext context) {
+    final UserProvider UserinfoPr = Provider.of<UserProvider>(context);
+
     Future openDialog() => showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -68,8 +74,8 @@ class _NavbarState extends State<Navbar> {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            accountName: Text("Default"),
-            accountEmail: Text("Default@gmail.com"),
+            accountName: Text(""),
+            accountEmail: Text(UserinfoPr.getUser.email),
             decoration: BoxDecoration(
               color: Colors.indigoAccent,
               image: DecorationImage(
