@@ -78,12 +78,14 @@ class NetworkService {
     required RequestType requestType,
     required String apiSlug,
     required bool useAuthToken,
+    int? pk,
     String? body,
   }) async {
     final pref = await SharedPreferences.getInstance();
-    String? serverUrl = pref.getString("serverUrl");
-    String requestUrl = "$serverUrl$apiSlug";
-    print("Sending request to $requestUrl");
+    String? serverUrl = pref.getString('serverUrl');
+    String requestUrl =
+        "$serverUrl$apiSlug${pk != null ? '/${pk.toString()}' : ''}";
+    print('Sending request to $requestUrl');
     try {
       final response = _createRequest(
           requestType: requestType,
@@ -92,7 +94,7 @@ class NetworkService {
           body: body);
       return response;
     } catch (e) {
-      print("Response error $e");
+      print('Response error $e');
       return null;
     }
   }

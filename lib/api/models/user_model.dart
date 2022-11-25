@@ -27,7 +27,7 @@ class User {
       firstName: json["firstName"] as String?,
       lastName: json["lastName"] as String?,
       favGarageId: json["favGarageId"] as int?,
-      location: json["location"] as ProvinceEnum?,
+      location: Province.toProvinceEnum(json['province'] as String?),
     );
   }
 

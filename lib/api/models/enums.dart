@@ -1,9 +1,13 @@
+import 'package:enum_to_string/enum_to_string.dart';
+
+import '../network/network_exception.dart';
+
 enum ProvinceEnum { ANT, HAI, LIE, LIM, LUX, NAM, OVL, WVL, VBR, WBR }
 
 enum ValutaEnum { EUR, USD, GBP }
 
 class Province {
-  Map<ProvinceEnum, String> provinces = {
+  static Map<ProvinceEnum, String> provinces = {
     ProvinceEnum.ANT: "Antwerpen",
     ProvinceEnum.HAI: "Henegouwen",
     ProvinceEnum.LIE: "Luik",
@@ -16,12 +20,23 @@ class Province {
     ProvinceEnum.WBR: "Waals-Brabant",
   };
 
-  String getProvinceName(ProvinceEnum provinceAbr) {
+  static String getProvinceName(ProvinceEnum provinceAbr) {
     String? provinceName = provinces[provinceAbr];
     if (provinceName == null) {
       throw Exception("Province is not defined.");
     }
     return provinceName;
+  }
+
+  static ProvinceEnum? toProvinceEnum(String? province) {
+    if (province == null) {
+      return null;
+    }
+    ProvinceEnum? prov = EnumToString.fromString(ProvinceEnum.values, province);
+    if (prov == null) {
+      throw BackendException(['Province is not a valid value.']);
+    }
+    return prov;
   }
 }
 

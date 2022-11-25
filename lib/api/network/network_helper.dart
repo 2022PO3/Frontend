@@ -56,8 +56,8 @@ class NetworkHelper {
       if (response == null || response.body.isEmpty) {
         return onFailureCallBack(['The request returned an empty response.']);
       }
-
-      Map<String, dynamic> json = jsonDecode(response.body);
+      Map<String, dynamic> json =
+          jsonDecode(response.body.replaceAll('\\\\', '\\'));
       if (response.statusCode == 200 || response.statusCode == 201) {
         if (_isValidResponse(json)) {
           return callBack(json['data']);
