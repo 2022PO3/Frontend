@@ -13,10 +13,8 @@ import 'package:po_frontend/pages/login_page.dart';
 import 'package:po_frontend/pages/Register.dart';
 import 'package:provider/provider.dart';
 import 'package:po_frontend/Providers/user_provider.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() async {
-  await dotenv.load(fileName: ".env");
+void main() {
   runApp(MultiProvider(
     providers: [ChangeNotifierProvider(create: (_) => UserProvider())],
     child: const MyApp(),
@@ -45,7 +43,6 @@ class MyApp extends StatelessWidget {
         '/booking_system': (context) => Booking_System(),
         '/garages_page': (context) => const GaragesPage(),
         '/register': (context) => const Register_Now(),
-
       },
       debugShowCheckedModeBanner: false,
     );
