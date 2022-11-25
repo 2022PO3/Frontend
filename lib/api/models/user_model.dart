@@ -46,7 +46,3 @@ class User {
     ];
   }
 }
-//List<User> userListFromJson(json) => (json as List)
-//    .map((jsonUser) =>
-//    User.userFromJson(jsonUser as Map<String, dynamic>))
-//    .toList();

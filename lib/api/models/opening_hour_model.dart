@@ -1,4 +1,4 @@
-/// Model which represents the backend `Price`-model.
+/// Model which represents the backend `OpeningHour`-model.
 class OpeningHour {
   final int id;
   final int garageId;
@@ -15,7 +15,7 @@ class OpeningHour {
       required this.fromHour,
       required this.toHour});
 
-  /// Serializes a JSON-object into a Dart `Location`-object with all properties.
+  /// Serializes a JSON-object into a Dart `OpeningHour`-object with all properties.
   static OpeningHour fromJSON(Map<String, dynamic> json) {
     return OpeningHour(
       id: json['id'] as int,
@@ -27,7 +27,7 @@ class OpeningHour {
     );
   }
 
-  /// Serializes a Dart `Location`-object to a JSON-object with the attributes defined in
+  /// Serializes a Dart `OpeningHour`-object to a JSON-object with the attributes defined in
   /// the database.
   static Map<String, dynamic> toJSON(OpeningHour openingHour) =>
       <String, dynamic>{
