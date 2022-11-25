@@ -9,19 +9,19 @@ class NetworkService {
   const NetworkService._();
 
   static Map<String, String> _getHeaders() => {
-        "Content-Type": "application/json",
-        "PO3-ORIGIN": "app",
-        "PO3-APP-KEY": encodeKey(),
+        'Content-Type': 'application/json',
+        'PO3-ORIGIN': 'app',
+        'PO3-APP-KEY': encodeKey(),
       };
 
   static Future<Map<String, String>> _setAuthHeaders() async {
     final userInfo = await SharedPreferences.getInstance();
     final authToken = userInfo.getString('authToken');
     return {
-      "Content-Type": "application/json",
-      "PO3-ORIGIN": "app",
-      "PO3-APP-KEY": encodeKey(),
-      "Authorization": "Token $authToken",
+      'Content-Type': 'application/json',
+      'PO3-ORIGIN': 'app',
+      'PO3-APP-KEY': encodeKey(),
+      'Authorization': 'Token $authToken',
     };
   }
 
@@ -39,7 +39,7 @@ class NetworkService {
             .round(),
         'key': Env.appSecretKey.toString()
       },
-      issuer: "https://github.com/jonasroussel/dart_jsonwebtoken",
+      issuer: 'https://github.com/jonasroussel/dart_jsonwebtoken',
     );
     String token = jwt.sign(SecretKey(Env.jwtSecret.toString()));
     return token;
