@@ -97,24 +97,37 @@ class _Garage_InfoState extends State<Garage_Info> {
                   Text("opening times...")
                 ],
               ),
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: GradientText(
-                      "Price: ",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        //fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      colors: [(Colors.indigoAccent), (Colors.indigo)],
-                    ),
-                  ),
-                  Text("price...")
-                ],
-              ),
+              // FutureBuilder(
+              //   future: getGaragePriceData(),
+              //     builder: (context,snapshot) {
+              //       if (snapshot.connectionState == ConnectionState.done &&
+              //       snapshot.hasData) {
+              //         return Row(
+              //           children: [
+              //             Padding(
+              //               padding: const EdgeInsets.symmetric(horizontal: 20),
+              //               child: GradientText(
+              //                 "Price: ",
+              //                 textAlign: TextAlign.left,
+              //                 style: TextStyle(
+              //                   //fontWeight: FontWeight.bold,
+              //                   fontSize: 20,
+              //                   fontWeight: FontWeight.bold,
+              //                 ),
+              //                 colors: [(Colors.indigoAccent), (Colors.indigo)],
+              //               ),
+              //             ),
+              //             Text("price...")
+              //           ],
+              //         );
+              //       } else if (snapshot.hasError) {
+              //         return Text("Error...");
+              //       }
+              //       return const Center(
+              //           child: CircularProgressIndicator(),
+              //       );
+              //     }
+              // ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Container(
