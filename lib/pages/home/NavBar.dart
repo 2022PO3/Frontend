@@ -3,6 +3,7 @@ import 'package:po_frontend/api/network/network_helper.dart';
 import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 class Navbar extends StatefulWidget {
   const Navbar({Key? key}) : super(key: key);
 
@@ -11,7 +12,6 @@ class Navbar extends StatefulWidget {
 }
 
 class _NavbarState extends State<Navbar> {
-
   Future<void> LogoutUser() async {
     final response = await NetworkService.sendRequest(
       requestType: RequestType.post,
@@ -22,10 +22,8 @@ class _NavbarState extends State<Navbar> {
     if (response?.statusCode == 204) {
       final userInfo = await SharedPreferences.getInstance();
       userInfo.remove('authToken');
-      Navigator.popUntil(context,ModalRoute.withName('/login_page'));
-
-    } else {
-    }
+      Navigator.popUntil(context, ModalRoute.withName('/login_page'));
+    } else {}
   }
 
   @override
@@ -33,48 +31,38 @@ class _NavbarState extends State<Navbar> {
     Future openDialog() => showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(
-            "Dear [user],",
-            style: TextStyle(
-                color: Colors.indigoAccent
-            ),
-          ),
-          content: Text("Are you sure you want to sign out?"),
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                TextButton(
-                    onPressed: () {
-                      Navigator.popUntil(context,ModalRoute.withName('/home'));
-                    },
-                    child: Text(
-                      "Cancel",
-                      style: TextStyle(
-                          color: Colors.indigo,
-                          fontSize: 15
+              title: Text(
+                "Dear [user],",
+                style: TextStyle(color: Colors.indigoAccent),
+              ),
+              content: Text("Are you sure you want to sign out?"),
+              actions: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.popUntil(
+                              context, ModalRoute.withName('/home'));
+                        },
+                        child: Text(
+                          "Cancel",
+                          style: TextStyle(color: Colors.indigo, fontSize: 15),
+                        )),
+                    TextButton(
+                      onPressed: () {
+                        LogoutUser();
+                      },
+                      child: Text(
+                        "Confirm",
+                        style: TextStyle(color: Colors.indigo, fontSize: 15),
                       ),
-                    )
-                ),
-                TextButton(
-                  onPressed: () {
-                    LogoutUser();
-                  },
-                  child: Text(
-                    "Confirm",
-                    style: TextStyle(
-                        color: Colors.indigo,
-                        fontSize: 15
                     ),
-                  ),
-                ),
+                  ],
+                )
               ],
-            )
-          ],
-
-        )
-    );
+            ));
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -100,19 +88,14 @@ class _NavbarState extends State<Navbar> {
               title: Text('My Reservations'),
               onTap: () {
                 Navigator.pushNamed(context, '/My_Reservations');
-              }
-          ),
+              }),
           Divider(),
           ListTile(
-              leading: Icon(
-                  Icons.account_circle,
-                  color: Colors.indigo
-              ),
+              leading: Icon(Icons.account_circle, color: Colors.indigo),
               title: Text('Profile'),
               onTap: () {
-                Navigator.pushNamed(context,'/profile');
-              }
-          ),
+                Navigator.pushNamed(context, '/profile');
+              }),
           Divider(),
           ListTile(
               leading: Icon(
@@ -122,48 +105,31 @@ class _NavbarState extends State<Navbar> {
               title: Text('Statistics'),
               onTap: () {
                 Navigator.pushNamed(context, '/statistics');
-              }
-          ),
+              }),
           Divider(),
           ListTile(
-              leading: Icon(
-                  Icons.settings,
-                  color: Colors.indigo
-              ),
+              leading: Icon(Icons.settings, color: Colors.indigo),
               title: Text('Settings'),
               onTap: () {
                 Navigator.pushNamed(context, '/settings');
-              }
-          ),
+              }),
           Divider(),
           ListTile(
-              leading: Icon(
-                  Icons.help,
-                  color: Colors.indigo
-              ),
+              leading: Icon(Icons.help, color: Colors.indigo),
               title: Text('Help'),
               onTap: () {
                 Navigator.pushNamed(context, '/help');
-              }
-          ),
+              }),
           Divider(),
           ListTile(
-              leading: Icon(
-                  Icons.logout,
-                  color: Colors.indigo
-              ),
+              leading: Icon(Icons.logout, color: Colors.indigo),
               title: Text('Sign Out'),
               onTap: () {
                 openDialog();
-              }
-          ),
+              }),
           Divider(),
         ],
       ),
     );
   }
-
 }
-
-
-

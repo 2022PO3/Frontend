@@ -118,8 +118,7 @@ class _Login_PageState extends State<Login_Page> {
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border.all(
-                      color: Colors.white, width: 4),
+                  border: Border.all(color: Colors.white, width: 4),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Padding(
@@ -148,8 +147,7 @@ class _Login_PageState extends State<Login_Page> {
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border.all(
-                      color: Colors.white, width: 4),
+                  border: Border.all(color: Colors.white, width: 4),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Padding(
@@ -211,7 +209,6 @@ class _Login_PageState extends State<Login_Page> {
                       return;
                     }
                     Navigator.pushNamed(context, '/home');
-
                   },
                 ),
               ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 class Statistics extends StatefulWidget {
   const Statistics({Key? key}) : super(key: key);
 
@@ -11,8 +12,8 @@ class _StatisticsState extends State<Statistics> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //
-      ),
+          //
+          ),
       body: Text("Statistics"),
     );
   }

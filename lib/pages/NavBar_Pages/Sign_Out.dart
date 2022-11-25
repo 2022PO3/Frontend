@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 class Sign_Out extends StatefulWidget {
   const Sign_Out({Key? key}) : super(key: key);
 
@@ -11,8 +12,8 @@ class _Sign_OutState extends State<Sign_Out> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //
-      ),
+          //
+          ),
       body: Text("Sign_Out"),
     );
   }
