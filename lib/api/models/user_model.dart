@@ -40,7 +40,7 @@ class User {
         firstName: json['user']['firstName'] as String?,
         lastName: json['user']['lastName'] as String?,
         favGarageId: json['user']['favGarageId'] as int?,
-        location: json['user']['location'] as ProvinceEnum?,
+        location: Province.toProvinceEnum(json['user']['location'] as ProvinceEnum?),
       ),
       json['token']
     ];

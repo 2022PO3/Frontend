@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:po_frontend/env/env.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
@@ -79,12 +80,20 @@ class NetworkService {
     required String apiSlug,
     required bool useAuthToken,
     int? pk,
-    String? body,
+    Map<String, dynamic>? body,
   }) async {
     final pref = await SharedPreferences.getInstance();
     String? serverUrl = pref.getString('serverUrl');
     String requestUrl =
         "$serverUrl$apiSlug${pk != null ? '/${pk.toString()}' : ''}";
+    if ((requestType == RequestType.put || requestType == RequestType.post) &&
+        body == null) {
+      throw BackendException(
+          ['A body is required for a post or a put request.']);
+    }
+    if (requestType == RequestType.put) {
+      body['id'];
+    }
     print('Sending request to $requestUrl');
     try {
       final response = _createRequest(
