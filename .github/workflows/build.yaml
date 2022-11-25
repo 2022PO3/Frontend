@@ -16,7 +16,7 @@ jobs:
       - run: flutter pub get
       - run: flutter build web
       - name: Executing remote ssh commands using password
-        uses: appleboy/ssh-action@master
+        uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
@@ -25,4 +25,3 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSWORD }}
           source: "build/web/*"
           target: "/var/www/app"
-
