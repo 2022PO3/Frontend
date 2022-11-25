@@ -24,4 +24,4 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           passphrase: ${{ secrets.SSH_PASSWORD }}
           source: "build/web/*"
-          target: "/var/www/app"
+          target: "~/backend/flutter/build/web/"
