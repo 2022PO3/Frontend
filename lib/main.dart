@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:po_frontend/Providers/user_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:po_frontend/pages/New_Reservation.dart';
+import 'package:po_frontend/pages/Spot_Selection.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
         '/register': (context) => const Register_Now(),
         '/loading_screen': ((context) => const LoadingScreen()),
         '/New_Reservation': (context) => New_Reservation(),
+        '/Spot_Selection': (context) => Spot_Selection(),
       },
       debugShowCheckedModeBanner: false,
     );
