@@ -52,7 +52,7 @@ class NetworkService {
     required RequestType requestType,
     required Uri uri,
     Map<String, String>? headers,
-    String? body,
+    Map<String, dynamic>? body,
   }) {
     switch (requestType) {
       case RequestType.get:
@@ -92,7 +92,8 @@ class NetworkService {
           ['A body is required for a post or a put request.']);
     }
     if (requestType == RequestType.put) {
-      body['id'];
+      int id = body!['id'];
+      requestUrl = '$requestUrl/${pk.toString()}';
     }
     print('Sending request to $requestUrl');
     try {
