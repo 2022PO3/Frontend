@@ -1,4 +1,5 @@
 import 'package:po_frontend/api/models/enums.dart';
+import 'package:po_frontend/api/network/network_exception.dart';
 
 /// Model which represents the backend `Location`-model.
 class Location {
@@ -22,14 +23,17 @@ class Location {
 
   /// Serializes a JSON-object into a Dart `Location`-object with all properties.
   static Location fromJSON(Map<String, dynamic> json) {
+    ProvinceEnum? province =
+        Province.toProvinceEnum(json['province'] as String);
     return Location(
         id: json['id'] as int,
         country: json['country'] as String,
-        province: json['province'] as ProvinceEnum,
+        province:
+            province ?? (throw BackendException(['No valid province given.'])),
         municipality: json['municipality'] as String,
         postCode: json['postCode'] as int,
         street: json['street'] as String,
-        number: json["number"] as int);
+        number: json['number'] as int);
   }
 
   /// Serializes a Dart `Location`-object to a JSON-object with the attributes defined in
@@ -38,8 +42,8 @@ class Location {
         'id': location.id,
         'country': location.country,
         'province': location.province.toString(),
-        "municipality": location.municipality,
-        "postcode": location.postCode,
+        'municipality': location.municipality,
+        'postcode': location.postCode,
         'street': location.street,
         'number': location.number
       };

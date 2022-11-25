@@ -16,7 +16,7 @@ class Price {
     required this.valuta,
   });
 
-  /// Serializes a JSON-object into a Dart `Location`-object with all properties.
+  /// Serializes a JSON-object into a Dart `Price`-object with all properties.
   static Price fromJSON(Map<String, dynamic> json) {
     return Price(
       id: json['id'] as int,
@@ -27,7 +27,7 @@ class Price {
     );
   }
 
-  /// Serializes a Dart `Location`-object to a JSON-object with the attributes defined in
+  /// Serializes a Dart `Price`-object to a JSON-object with the attributes defined in
   /// the database.
   static Map<String, dynamic> toJSON(Price openingHour) => <String, dynamic>{
         'id': openingHour.id,

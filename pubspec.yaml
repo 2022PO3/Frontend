@@ -45,6 +45,7 @@ dependencies:
       ref: dev
       path: envify
   dart_jsonwebtoken: ^2.4.2
+  enum_to_string: ^2.0.1
 
 dev_dependencies:
   flutter_test:

@@ -9,19 +9,19 @@ class NetworkService {
   const NetworkService._();
 
   static Map<String, String> _getHeaders() => {
-        "Content-Type": "application/json",
-        "PO3-ORIGIN": "app",
-        "PO3-APP-KEY": encodeKey(),
+        'Content-Type': 'application/json',
+        'PO3-ORIGIN': 'app',
+        'PO3-APP-KEY': encodeKey(),
       };
 
   static Future<Map<String, String>> _setAuthHeaders() async {
     final userInfo = await SharedPreferences.getInstance();
     final authToken = userInfo.getString('authToken');
     return {
-      "Content-Type": "application/json",
-      "PO3-ORIGIN": "app",
-      "PO3-APP-KEY": encodeKey(),
-      "Authorization": "Token $authToken",
+      'Content-Type': 'application/json',
+      'PO3-ORIGIN': 'app',
+      'PO3-APP-KEY': encodeKey(),
+      'Authorization': 'Token $authToken',
     };
   }
 
@@ -39,7 +39,7 @@ class NetworkService {
             .round(),
         'key': Env.appSecretKey.toString()
       },
-      issuer: "https://github.com/jonasroussel/dart_jsonwebtoken",
+      issuer: 'https://github.com/jonasroussel/dart_jsonwebtoken',
     );
     String token = jwt.sign(SecretKey(Env.jwtSecret.toString()));
     return token;
@@ -78,12 +78,14 @@ class NetworkService {
     required RequestType requestType,
     required String apiSlug,
     required bool useAuthToken,
+    int? pk,
     String? body,
   }) async {
     final pref = await SharedPreferences.getInstance();
-    String? serverUrl = pref.getString("serverUrl");
-    String requestUrl = "$serverUrl$apiSlug";
-    print("Sending request to $requestUrl");
+    String? serverUrl = pref.getString('serverUrl');
+    String requestUrl =
+        "$serverUrl$apiSlug${pk != null ? '/${pk.toString()}' : ''}";
+    print('Sending request to $requestUrl');
     try {
       final response = _createRequest(
           requestType: requestType,
@@ -92,7 +94,7 @@ class NetworkService {
           body: body);
       return response;
     } catch (e) {
-      print("Response error $e");
+      print('Response error $e');
       return null;
     }
   }

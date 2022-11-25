@@ -34,7 +34,7 @@ class GarageSettings {
         'id': garageSettings.id,
         'location': Location.toJSON(garageSettings.location),
         'maxHeight': garageSettings.maxHeight,
-        "maxWidth": garageSettings.maxWidth,
-        "maxHandicappedLots": garageSettings.maxHandicappedLots,
+        'maxWidth': garageSettings.maxWidth,
+        'maxHandicappedLots': garageSettings.maxHandicappedLots,
       };
 }
