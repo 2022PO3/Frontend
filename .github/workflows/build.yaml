@@ -14,7 +14,7 @@ jobs:
           channel: "stable"
       - run: flutter pub get
       - run: flutter build web
-      - name: Executing remote ssh commands using password
+      - name: Copy build files with scp
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
