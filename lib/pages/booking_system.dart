@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 
-class Booking_System extends StatefulWidget {
+class BookingSystem extends StatefulWidget {
+  const BookingSystem({super.key});
+
   @override
-  State<Booking_System> createState() => _Booking_SystemState();
+  State<BookingSystem> createState() => _BookingSystemState();
 }
 
-class _Booking_SystemState extends State<Booking_System> {
+class _BookingSystemState extends State<BookingSystem> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
             //
             ),
-        body: Text('hello')
+        body: const Text('hello')
         //   child: FutureBuilder<Album>(
         //     future: futureAlbum,
         //     builder: (context, snapshot) {

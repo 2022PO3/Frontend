@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:po_frontend/api/network/network_helper.dart';
 import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
-import 'package:po_frontend/pages/home/HomePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
-import 'package:po_frontend/Providers/user_provider.dart';
-import 'package:po_frontend/api/models/user_model.dart';
+import 'package:po_frontend/providers/user_provider.dart';
 
 class Navbar extends StatefulWidget {
   const Navbar({Key? key}) : super(key: key);
@@ -16,7 +13,7 @@ class Navbar extends StatefulWidget {
 }
 
 class _NavbarState extends State<Navbar> {
-  Future<void> LogoutUser() async {
+  Future<void> logOutUser() async {
     final response = await NetworkService.sendRequest(
       requestType: RequestType.post,
       apiSlug: StaticValues.postLogoutUser,
@@ -32,16 +29,16 @@ class _NavbarState extends State<Navbar> {
 
   @override
   Widget build(BuildContext context) {
-    final UserProvider UserinfoPr = Provider.of<UserProvider>(context);
+    final UserProvider userProvider = Provider.of<UserProvider>(context);
 
     Future openDialog() => showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              title: Text(
-                "Dear [user],",
+              title: const Text(
+                'Dear [user],',
                 style: TextStyle(color: Colors.indigoAccent),
               ),
-              content: Text("Are you sure you want to sign out?"),
+              content: const Text('Are you sure you want to sign out?'),
               actions: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -52,16 +49,16 @@ class _NavbarState extends State<Navbar> {
                           Navigator.popUntil(
                               context, ModalRoute.withName('/home'));
                         },
-                        child: Text(
-                          "Cancel",
+                        child: const Text(
+                          'Cancel',
                           style: TextStyle(color: Colors.indigo, fontSize: 15),
                         )),
                     TextButton(
                       onPressed: () {
-                        LogoutUser();
+                        logOutUser();
                       },
-                      child: Text(
-                        "Confirm",
+                      child: const Text(
+                        'Confirm',
                         style: TextStyle(color: Colors.indigo, fontSize: 15),
                       ),
                     ),
@@ -74,9 +71,9 @@ class _NavbarState extends State<Navbar> {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            accountName: Text(""),
-            accountEmail: Text(UserinfoPr.getUser.email),
-            decoration: BoxDecoration(
+            accountName: const Text(''),
+            accountEmail: Text(userProvider.getUser.email),
+            decoration: const BoxDecoration(
               color: Colors.indigoAccent,
               image: DecorationImage(
                 image: AssetImage('Afbeeldingen/Mountains.png'),
@@ -85,55 +82,55 @@ class _NavbarState extends State<Navbar> {
               ),
             ),
           ),
-          Divider(),
+          const Divider(),
           ListTile(
-              leading: Icon(
+              leading: const Icon(
                 Icons.event,
                 color: Colors.indigo,
               ),
-              title: Text('My Reservations'),
+              title: const Text('My Reservations'),
               onTap: () {
-                Navigator.pushNamed(context, '/My_Reservations');
+                Navigator.pushNamed(context, '/my_Reservations');
               }),
-          Divider(),
+          const Divider(),
           ListTile(
-              leading: Icon(Icons.account_circle, color: Colors.indigo),
-              title: Text('Profile'),
+              leading: const Icon(Icons.account_circle, color: Colors.indigo),
+              title: const Text('Profile'),
               onTap: () {
                 Navigator.pushNamed(context, '/profile');
               }),
-          Divider(),
+          const Divider(),
           ListTile(
-              leading: Icon(
+              leading: const Icon(
                 Icons.query_stats,
                 color: Colors.indigo,
               ),
-              title: Text('Statistics'),
+              title: const Text('Statistics'),
               onTap: () {
                 Navigator.pushNamed(context, '/statistics');
               }),
-          Divider(),
+          const Divider(),
           ListTile(
-              leading: Icon(Icons.settings, color: Colors.indigo),
-              title: Text('Settings'),
+              leading: const Icon(Icons.settings, color: Colors.indigo),
+              title: const Text('Settings'),
               onTap: () {
                 Navigator.pushNamed(context, '/settings');
               }),
-          Divider(),
+          const Divider(),
           ListTile(
-              leading: Icon(Icons.help, color: Colors.indigo),
-              title: Text('Help'),
+              leading: const Icon(Icons.help, color: Colors.indigo),
+              title: const Text('Help'),
               onTap: () {
                 Navigator.pushNamed(context, '/help');
               }),
-          Divider(),
+          const Divider(),
           ListTile(
-              leading: Icon(Icons.logout, color: Colors.indigo),
-              title: Text('Sign Out'),
+              leading: const Icon(Icons.logout, color: Colors.indigo),
+              title: const Text('Sign Out'),
               onTap: () {
                 openDialog();
               }),
-          Divider(),
+          const Divider(),
         ],
       ),
     );

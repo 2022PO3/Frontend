@@ -1,6 +1,8 @@
-import "package:flutter/material.dart";
+import 'package:flutter/material.dart';
 
 class HelpF extends StatefulWidget {
+  const HelpF({super.key});
+
   @override
   State<HelpF> createState() => _HelpFState();
 }
@@ -12,7 +14,7 @@ class _HelpFState extends State<HelpF> {
       appBar: AppBar(
           //
           ),
-      body: Text("Help"),
+      body: const Text('Help'),
     );
   }
 }

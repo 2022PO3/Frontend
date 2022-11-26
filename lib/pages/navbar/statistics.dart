@@ -14,7 +14,7 @@ class _StatisticsState extends State<Statistics> {
       appBar: AppBar(
           //
           ),
-      body: Text("Statistics"),
+      body: const Text('Statistics'),
     );
   }
 }

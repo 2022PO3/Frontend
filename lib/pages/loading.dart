@@ -14,7 +14,7 @@ class _LoadingState extends State<Loading> {
         body: Stack(
       children: [
         Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.indigoAccent,
             gradient: LinearGradient(
               colors: [(Colors.indigoAccent), (Colors.indigo)],

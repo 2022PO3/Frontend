@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:po_frontend/api/garages_page.dart';
-import 'package:po_frontend/pages/NavBar_Pages/My_Reservations.dart';
-import 'package:po_frontend/pages/loading_screen.dart';
-import 'pages/home/HomePage.dart';
-import 'pages/loading.dart';
-import 'package:po_frontend/pages/NavBar_Pages/Settings.dart';
-import 'package:po_frontend/pages/NavBar_Pages/Statistics.dart';
-import 'package:po_frontend/pages/NavBar_Pages/Profile.dart';
-import 'package:po_frontend/pages/NavBar_Pages/Help.dart';
-import 'package:po_frontend/pages/Booking_System.dart';
-import 'package:po_frontend/pages/login_page.dart';
-import 'package:po_frontend/pages/Register.dart';
 import 'package:provider/provider.dart';
-import 'package:po_frontend/Providers/user_provider.dart';
-import 'package:po_frontend/pages/Garage_Info.dart';
+
+import 'pages/auth/login_page.dart';
+import 'pages/auth/register.dart';
+
+import 'pages/loading_screen.dart';
+import 'pages/home/home_page.dart';
+import 'pages/navbar/settings.dart';
+import 'pages/navbar/statistics.dart';
+import 'pages/navbar/profile.dart';
+import 'pages/navbar/help.dart';
+import 'pages/navbar/my_reservations.dart';
+import 'pages/booking_system.dart';
+
+import 'pages/garage_info.dart';
+
+import 'providers/user_provider.dart';
+import 'api/garages_page.dart';
 
 void main() {
   runApp(MultiProvider(
@@ -34,17 +37,17 @@ class MyApp extends StatelessWidget {
       initialRoute: '/loading_screen',
       routes: {
         '/loading_screen': ((context) => const LoadingScreen()),
-        '/login_page': (context) => Login_Page(),
-        '/home': (context) => MyHomePage(),
-        '/My_Reservations': (context) => My_Reservations(),
-        '/settings': (context) => Settings(),
+        '/login_page': (context) => const LoginPage(),
+        '/home': (context) => const MyHomePage(),
+        '/my_Reservations': (context) => const MyReservations(),
+        '/settings': (context) => const Settings(),
         '/statistics': (context) => const Statistics(),
-        '/profile': (context) => Profile(),
-        '/help': (context) => HelpF(),
-        '/booking_system': (context) => Booking_System(),
+        '/profile': (context) => const Profile(),
+        '/help': (context) => const HelpF(),
+        '/booking_system': (context) => const BookingSystem(),
         '/garages_page': (context) => const GaragesPage(),
-        '/register': (context) => const Register_Now(),
-        '/garage_info': (context) => const Garage_Info(),
+        '/register': (context) => const RegisterNow(),
+        '/garage_info': (context) => const GarageInfo(),
       },
       debugShowCheckedModeBanner: false,
     );

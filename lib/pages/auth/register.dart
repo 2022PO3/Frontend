@@ -1,25 +1,22 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
 import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class Register_Now extends StatefulWidget {
-  const Register_Now({Key? key}) : super(key: key);
+class RegisterNow extends StatefulWidget {
+  const RegisterNow({Key? key}) : super(key: key);
 
   @override
-  State<Register_Now> createState() => _Register_NowState();
+  State<RegisterNow> createState() => _RegisterNowState();
 }
 
-class _Register_NowState extends State<Register_Now> {
-  final _FirstNameR_textcontroller = TextEditingController();
-  final _LastNameR_textcontroller = TextEditingController();
-  final _EmailR_textcontroller = TextEditingController();
-  final _PasswordR_textcontroller = TextEditingController();
-  final _ConfirmPasswordR_textcontroller = TextEditingController();
+class _RegisterNowState extends State<RegisterNow> {
+  final _firstNameTextController = TextEditingController();
+  final _lastNameTextController = TextEditingController();
+  final _emailTextController = TextEditingController();
+  final _passwordTextController = TextEditingController();
+  final _confirmPasswordTextController = TextEditingController();
 
   bool _isPasswordEightCharacters = false;
   bool _hasPasswordOneNumber = false;
@@ -27,16 +24,16 @@ class _Register_NowState extends State<Register_Now> {
   bool _hasSpecialCharacter = false;
   bool _passwordMatch = false;
 
-  String R_userFirstname = '';
-  String R_userLastname = '';
-  String R_userMail = '';
-  String R_userPassword = '';
-  String R_userConfirmPassword = '';
+  String userFirstName = '';
+  String userLastName = '';
+  String userMail = '';
+  String userPassword = '';
+  String userConfirmPassword = '';
 
-  onPasswordChanged(String password, String passwordconfirmation) {
+  onPasswordChanged(String password, String passwordConfirmation) {
     final numericRegex = RegExp(r'[0-9]');
-    final CapitalCharacter = RegExp(r'[A-Z]');
-    final SpecialCharacter = RegExp(r'[@_!#$%^&*()<>?/\|}{~:;]');
+    final capitalCharacterRegex = RegExp(r'[A-Z]');
+    final specialCharacterRegex = RegExp(r'[@_!#$%^&*()<>?/\|}{~:;]');
 
     setState(() {
       _isPasswordEightCharacters = false;
@@ -48,15 +45,15 @@ class _Register_NowState extends State<Register_Now> {
         _hasPasswordOneNumber = true;
       }
       _hasCapitalLetter = false;
-      if (CapitalCharacter.hasMatch(password)) {
+      if (capitalCharacterRegex.hasMatch(password)) {
         _hasCapitalLetter = true;
       }
       _hasSpecialCharacter = false;
-      if (SpecialCharacter.hasMatch(password)) {
+      if (specialCharacterRegex.hasMatch(password)) {
         _hasSpecialCharacter = true;
       }
       _passwordMatch = false;
-      if (password == passwordconfirmation) {
+      if (password == passwordConfirmation) {
         _passwordMatch = true;
       }
     });
@@ -76,7 +73,7 @@ class _Register_NowState extends State<Register_Now> {
     Future openDialog() => showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              content: Text("An error has occured"),
+              content: const Text('An error has occured'),
               actions: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -87,8 +84,8 @@ class _Register_NowState extends State<Register_Now> {
                           Navigator.popUntil(
                               context, ModalRoute.withName('/register'));
                         },
-                        child: Text(
-                          "Ok",
+                        child: const Text(
+                          'Ok',
                           style: TextStyle(color: Colors.indigo, fontSize: 15),
                         )),
                   ],
@@ -109,23 +106,23 @@ class _Register_NowState extends State<Register_Now> {
         body: SafeArea(
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 25,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: GradientText(
-                  "Create a new account",
+                  'Create a new account',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     //fontWeight: FontWeight.bold,
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
                   ),
-                  colors: [(Colors.indigoAccent), (Colors.indigo)],
+                  colors: const [(Colors.indigoAccent), (Colors.indigo)],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Padding(
@@ -143,18 +140,18 @@ class _Register_NowState extends State<Register_Now> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'First Name',
-                          hintStyle: TextStyle(fontSize: 20),
+                          hintStyle: const TextStyle(fontSize: 20),
                           suffixIcon: IconButton(
                               onPressed: () {
-                                _FirstNameR_textcontroller.clear();
+                                _firstNameTextController.clear();
                               },
                               icon: const Icon(Icons.clear))),
-                      controller: _FirstNameR_textcontroller,
+                      controller: _firstNameTextController,
                     ),
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 13,
               ),
               Padding(
@@ -172,18 +169,18 @@ class _Register_NowState extends State<Register_Now> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Last Name',
-                          hintStyle: TextStyle(fontSize: 20),
+                          hintStyle: const TextStyle(fontSize: 20),
                           suffixIcon: IconButton(
                               onPressed: () {
-                                _LastNameR_textcontroller.clear();
+                                _lastNameTextController.clear();
                               },
                               icon: const Icon(Icons.clear))),
-                      controller: _LastNameR_textcontroller,
+                      controller: _lastNameTextController,
                     ),
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 13,
               ),
               Padding(
@@ -201,18 +198,18 @@ class _Register_NowState extends State<Register_Now> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Email',
-                          hintStyle: TextStyle(fontSize: 20),
+                          hintStyle: const TextStyle(fontSize: 20),
                           suffixIcon: IconButton(
                               onPressed: () {
-                                _EmailR_textcontroller.clear();
+                                _emailTextController.clear();
                               },
                               icon: const Icon(Icons.clear))),
-                      controller: _EmailR_textcontroller,
+                      controller: _emailTextController,
                     ),
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 13,
               ),
               Padding(
@@ -228,16 +225,16 @@ class _Register_NowState extends State<Register_Now> {
                     padding: const EdgeInsets.only(left: 20.0),
                     child: TextField(
                       onChanged: (password) => onPasswordChanged(
-                          password, _ConfirmPasswordR_textcontroller.text),
+                          password, _confirmPasswordTextController.text),
                       obscureText: true,
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Password',
-                          hintStyle: TextStyle(fontSize: 20),
+                          hintStyle: const TextStyle(fontSize: 20),
                           suffixIcon: IconButton(
                               onPressed: () {
                                 setState(() {
-                                  _PasswordR_textcontroller.clear();
+                                  _passwordTextController.clear();
                                   _passwordMatch = false;
                                   _isPasswordEightCharacters = false;
                                   _hasPasswordOneNumber = false;
@@ -246,12 +243,12 @@ class _Register_NowState extends State<Register_Now> {
                                 });
                               },
                               icon: const Icon(Icons.clear))),
-                      controller: _PasswordR_textcontroller,
+                      controller: _passwordTextController,
                     ),
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Padding(
@@ -259,7 +256,7 @@ class _Register_NowState extends State<Register_Now> {
                 child: Row(
                   children: [
                     AnimatedContainer(
-                        duration: Duration(milliseconds: 500),
+                        duration: const Duration(milliseconds: 500),
                         width: 15,
                         height: 15,
                         decoration: BoxDecoration(
@@ -270,16 +267,19 @@ class _Register_NowState extends State<Register_Now> {
                                 ? Border.all(color: Colors.transparent)
                                 : Border.all(color: Colors.grey),
                             borderRadius: BorderRadius.circular(50)),
-                        child: Center(
+                        child: const Center(
                           child:
                               Icon(Icons.check, color: Colors.white, size: 12),
                         )),
-                    SizedBox(width: 10),
-                    Text("Contains a capital letter",style: TextStyle(fontSize: 12),)
+                    const SizedBox(width: 10),
+                    const Text(
+                      'Contains a capital letter',
+                      style: TextStyle(fontSize: 12),
+                    )
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Padding(
@@ -287,7 +287,7 @@ class _Register_NowState extends State<Register_Now> {
                 child: Row(
                   children: [
                     AnimatedContainer(
-                        duration: Duration(milliseconds: 500),
+                        duration: const Duration(milliseconds: 500),
                         width: 15,
                         height: 15,
                         decoration: BoxDecoration(
@@ -298,16 +298,19 @@ class _Register_NowState extends State<Register_Now> {
                                 ? Border.all(color: Colors.transparent)
                                 : Border.all(color: Colors.grey),
                             borderRadius: BorderRadius.circular(50)),
-                        child: Center(
+                        child: const Center(
                           child:
                               Icon(Icons.check, color: Colors.white, size: 12),
                         )),
-                    SizedBox(width: 10),
-                    Text("Contains at least 10 characters",style: TextStyle(fontSize: 12),)
+                    const SizedBox(width: 10),
+                    const Text(
+                      'Contains at least 10 characters',
+                      style: TextStyle(fontSize: 12),
+                    )
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Padding(
@@ -315,7 +318,7 @@ class _Register_NowState extends State<Register_Now> {
                 child: Row(
                   children: [
                     AnimatedContainer(
-                        duration: Duration(milliseconds: 500),
+                        duration: const Duration(milliseconds: 500),
                         width: 15,
                         height: 15,
                         decoration: BoxDecoration(
@@ -326,19 +329,19 @@ class _Register_NowState extends State<Register_Now> {
                                 ? Border.all(color: Colors.transparent)
                                 : Border.all(color: Colors.grey),
                             borderRadius: BorderRadius.circular(50)),
-                        child: Center(
+                        child: const Center(
                           child:
                               Icon(Icons.check, color: Colors.white, size: 12),
                         )),
-                    SizedBox(width: 10),
-                    Text(
-                        "Contains at least 1 number",
+                    const SizedBox(width: 10),
+                    const Text(
+                      'Contains at least 1 number',
                       style: TextStyle(fontSize: 12),
                     )
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Padding(
@@ -346,7 +349,7 @@ class _Register_NowState extends State<Register_Now> {
                 child: Row(
                   children: [
                     AnimatedContainer(
-                        duration: Duration(milliseconds: 500),
+                        duration: const Duration(milliseconds: 500),
                         width: 15,
                         height: 15,
                         decoration: BoxDecoration(
@@ -357,16 +360,19 @@ class _Register_NowState extends State<Register_Now> {
                                 ? Border.all(color: Colors.transparent)
                                 : Border.all(color: Colors.grey),
                             borderRadius: BorderRadius.circular(50)),
-                        child: Center(
+                        child: const Center(
                           child:
                               Icon(Icons.check, color: Colors.white, size: 12),
                         )),
-                    SizedBox(width: 10),
-                    Text("Contains a special character",style: TextStyle(fontSize: 12),)
+                    const SizedBox(width: 10),
+                    const Text(
+                      'Contains a special character',
+                      style: TextStyle(fontSize: 12),
+                    )
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 13,
               ),
               Padding(
@@ -382,26 +388,26 @@ class _Register_NowState extends State<Register_Now> {
                     padding: const EdgeInsets.only(left: 20.0),
                     child: TextField(
                       onChanged: (password) => onPasswordMatch(
-                          _PasswordR_textcontroller.text, password),
+                          _passwordTextController.text, password),
                       obscureText: true,
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Confirm Password',
-                          hintStyle: TextStyle(fontSize: 20),
+                          hintStyle: const TextStyle(fontSize: 20),
                           suffixIcon: IconButton(
                               onPressed: () {
                                 setState(() {
-                                  _ConfirmPasswordR_textcontroller.clear();
+                                  _confirmPasswordTextController.clear();
                                   _passwordMatch = false;
                                 });
                               },
                               icon: const Icon(Icons.clear))),
-                      controller: _ConfirmPasswordR_textcontroller,
+                      controller: _confirmPasswordTextController,
                     ),
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Padding(
@@ -409,7 +415,7 @@ class _Register_NowState extends State<Register_Now> {
                 child: Row(
                   children: [
                     AnimatedContainer(
-                        duration: Duration(milliseconds: 500),
+                        duration: const Duration(milliseconds: 500),
                         width: 15,
                         height: 15,
                         decoration: BoxDecoration(
@@ -420,25 +426,28 @@ class _Register_NowState extends State<Register_Now> {
                                 ? Border.all(color: Colors.transparent)
                                 : Border.all(color: Colors.grey),
                             borderRadius: BorderRadius.circular(50)),
-                        child: Center(
+                        child: const Center(
                           child:
                               Icon(Icons.check, color: Colors.white, size: 12),
                         )),
-                    SizedBox(width: 10),
-                    Text("Both passwords match",style: TextStyle(fontSize: 12),)
+                    const SizedBox(width: 10),
+                    const Text(
+                      'Both passwords match',
+                      style: TextStyle(fontSize: 12),
+                    )
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Container(
                   height: 65,
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                      gradient: LinearGradient(
+                      gradient: const LinearGradient(
                         colors: [(Colors.indigo), (Colors.indigoAccent)],
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
@@ -449,7 +458,7 @@ class _Register_NowState extends State<Register_Now> {
                       minimumSize: const Size.fromHeight(30),
                     ),
                     child: Text(
-                      "Register Now",
+                      'Register Now',
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.9),
                         fontSize: 20,
@@ -458,12 +467,12 @@ class _Register_NowState extends State<Register_Now> {
                     ),
                     onPressed: () async {
                       setState(() {
-                        R_userFirstname = _FirstNameR_textcontroller.text;
-                        R_userLastname = _LastNameR_textcontroller.text;
-                        R_userMail = _EmailR_textcontroller.text;
-                        R_userPassword = _PasswordR_textcontroller.text;
-                        R_userConfirmPassword =
-                            _ConfirmPasswordR_textcontroller.text;
+                        userFirstName = _firstNameTextController.text;
+                        userLastName = _lastNameTextController.text;
+                        userMail = _emailTextController.text;
+                        userPassword = _passwordTextController.text;
+                        userConfirmPassword =
+                            _confirmPasswordTextController.text;
                       });
                       if (_passwordMatch == true &&
                           _hasSpecialCharacter == true &&
@@ -471,14 +480,10 @@ class _Register_NowState extends State<Register_Now> {
                           _hasPasswordOneNumber == true &&
                           _isPasswordEightCharacters == true) {
                         try {
-                          await RegisterUser(
-                              R_userMail,
-                              R_userPassword,
-                              R_userConfirmPassword,
-                              R_userFirstname,
-                              R_userLastname);
+                          await registerUser(userMail, userPassword,
+                              userConfirmPassword, userFirstName, userLastName);
                         } catch (BackendException) {
-                          print("Error occurred $BackendException");
+                          print('Error occurred $BackendException');
                           return;
                         }
                       } else {
@@ -494,28 +499,28 @@ class _Register_NowState extends State<Register_Now> {
         ));
   }
 
-  Future<void> RegisterUser(
+  Future<void> registerUser(
       String emailUser,
       String passwordUser,
       String confirmPasswordUser,
-      String firstnameUser,
-      String lastnameUser) async {
+      String firstNameUser,
+      String lastNameUser) async {
     Map<String, dynamic> body = {
-      "email": emailUser,
-      "password": passwordUser,
-      "passwordConfirmation": confirmPasswordUser,
-      "role": 1,
-      "firstName": firstnameUser,
-      "lastName": lastnameUser,
+      'email': emailUser,
+      'password': passwordUser,
+      'passwordConfirmation': confirmPasswordUser,
+      'role': 1,
+      'firstName': firstNameUser,
+      'lastName': lastNameUser,
     };
     final response = await NetworkService.sendRequest(
       requestType: RequestType.post,
       apiSlug: StaticValues.postRegisterUser,
-      body: jsonEncode(body),
+      body: body,
       useAuthToken: false,
     );
     print(response?.body);
-    await NetworkHelper.validateResponse(response);
+    NetworkHelper.validateResponse(response);
 
     // Contains a list of the format [User, String].
     // if (response?.statusCode == 201) {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Settings extends StatefulWidget {
+  const Settings({super.key});
+
   @override
   State<Settings> createState() => _SettingsState();
 }
@@ -12,7 +14,7 @@ class _SettingsState extends State<Settings> {
       appBar: AppBar(
           //
           ),
-      body: Text("Settings"),
+      body: const Text('Settings'),
     );
   }
 }
