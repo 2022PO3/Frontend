@@ -223,7 +223,6 @@ Future<UserProvider> getUserInfo() async {
     apiSlug: StaticValues.getUserSlug,
     useAuthToken: true,
   );
-  print(response);
   return await NetworkHelper.filterResponse(
     callBack: User.userFromJson,
     response: response,
@@ -237,9 +236,6 @@ Future<List<Garage>> getData() async {
     useAuthToken: true,
     //    body: body
   );
-
-  print('Response ${response?.body}');
-  print('Response status code ${response?.statusCode}');
 
   return await NetworkHelper.filterResponse(
     callBack: garagesListFromJson,

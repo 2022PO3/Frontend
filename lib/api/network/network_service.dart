@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,7 +14,7 @@ class NetworkService {
   static Map<String, String> _getHeaders() => {
         'Content-Type': 'application/json',
         'PO3-ORIGIN': 'app',
-        'PO3-APP-KEY': encodeKey(),
+        'PO3-APP-KEY': _encodeKey(),
       };
 
   static Future<Map<String, String>> _setAuthHeaders() async {
@@ -21,7 +23,7 @@ class NetworkService {
     return {
       'Content-Type': 'application/json',
       'PO3-ORIGIN': 'app',
-      'PO3-APP-KEY': encodeKey(),
+      'PO3-APP-KEY': _encodeKey(),
       'Authorization': 'Token $authToken',
     };
   }
@@ -29,7 +31,7 @@ class NetworkService {
   /// Private method which creates a JWT-token to provide a signature for the request to
   /// the Backend. The token will only life for 5 seconds. After that, it's not longer
   /// usable.
-  static String encodeKey() {
+  static String _encodeKey() {
     final jwt = JWT(
       {
         'iat': (DateTime.now().millisecondsSinceEpoch / 1000).round(),
@@ -52,7 +54,7 @@ class NetworkService {
     required RequestType requestType,
     required Uri uri,
     Map<String, String>? headers,
-    Map<String, dynamic>? body,
+    String? body,
   }) {
     switch (requestType) {
       case RequestType.get:
@@ -80,32 +82,62 @@ class NetworkService {
     required String apiSlug,
     required bool useAuthToken,
     int? pk,
+    Map<String, dynamic>? queryParams,
     Map<String, dynamic>? body,
   }) async {
-    final pref = await SharedPreferences.getInstance();
-    String? serverUrl = pref.getString('serverUrl');
-    String requestUrl =
-        "$serverUrl$apiSlug${pk != null ? '/${pk.toString()}' : ''}";
-    if ((requestType == RequestType.put || requestType == RequestType.post) &&
-        body == null) {
-      throw BackendException(
-          ['A body is required for a post or a put request.']);
-    }
-    if (requestType == RequestType.put) {
-      int id = body!['id'];
-      requestUrl = '$requestUrl/${pk.toString()}';
-    }
-    print('Sending request to $requestUrl');
+    String url = setPk(requestType, await setServerUrl(apiSlug), body, pk);
+    String queryParamsUrl = setQueryParams(requestType, url, queryParams);
+    print('Sending request to $queryParamsUrl');
     try {
       final response = _createRequest(
           requestType: requestType,
-          uri: Uri.parse(requestUrl),
+          uri: Uri.parse(queryParamsUrl),
           headers: useAuthToken ? await _setAuthHeaders() : _getHeaders(),
-          body: body);
+          body: json.encode(body));
       return response;
     } catch (e) {
       print('Response error $e');
       return null;
+    }
+  }
+
+  /// Determines the `serverUrl` from the user's device memory (this is set in the loading
+  /// page). If not url is set, an error will be raised.
+  static Future<String> setServerUrl(String apiSlug) async {
+    final pref = await SharedPreferences.getInstance();
+    String? serverUrl = pref.getString('serverUrl');
+    if (serverUrl == null) {
+      throw BackendException([
+        'The parameter `serverUrl` is not set, thus no requests can be sent.'
+      ]);
+    }
+    return '$serverUrl$apiSlug';
+  }
+
+  /// Adds a primary key to the request url in a GET-request when a pk is given and in a
+  /// PUT-request from the body that is given. If not, an error will be raised.
+  static String setPk(RequestType requestType, String url,
+      Map<String, dynamic>? body, int? pk) {
+    if (requestType == RequestType.get && pk != null) {
+      return '$url/${pk.toString()}';
+    } else if (requestType == RequestType.put) {
+      if (body == null) {
+        throw BackendException(['A body is required for a put request.']);
+      } else {
+        return '$url/${body['id'].toString()}';
+      }
+    }
+    return url;
+  }
+
+  /// Sets optional query params in a GET-request.
+  static String setQueryParams(
+      RequestType requestType, String url, Map<String, dynamic>? queryParams) {
+    if (requestType == RequestType.get && queryParams != null) {
+      String queryString = Uri(queryParameters: queryParams).query;
+      return '$url?$queryString';
+    } else {
+      return url;
     }
   }
 }

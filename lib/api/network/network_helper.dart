@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:http/http.dart' as http;
 
@@ -58,6 +57,8 @@ class NetworkHelper {
       }
       Map<String, dynamic> json =
           jsonDecode(response.body.replaceAll('\\\\', '\\'));
+      print('Response status code: ${response.statusCode}');
+      print('Response: $json');
       if (response.statusCode == 200 || response.statusCode == 201) {
         if (_isValidResponse(json)) {
           return callBack(json['data']);
