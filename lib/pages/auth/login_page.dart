@@ -119,7 +119,7 @@ class _LoginPageState extends State<LoginPage> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   border: Border.all(color: Colors.white, width: 4),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20.0),
@@ -148,7 +148,7 @@ class _LoginPageState extends State<LoginPage> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   border: Border.all(color: Colors.white, width: 4),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20.0),
@@ -177,17 +177,18 @@ class _LoginPageState extends State<LoginPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Container(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [(Colors.indigo), (Colors.indigoAccent)],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
-                    borderRadius: BorderRadius.circular(20)),
+                  gradient: const LinearGradient(
+                    colors: [(Colors.indigo), (Colors.indigoAccent)],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: TextButton(
                   style: TextButton.styleFrom(
-                    minimumSize: const Size.fromHeight(30),
+                    minimumSize: const Size.fromHeight(20),
                   ),
                   child: Text(
                     'Sign in',
@@ -248,7 +249,6 @@ class _LoginPageState extends State<LoginPage> {
       body: body,
       useAuthToken: false,
     );
-    print(response?.body);
     // Contains a list of the format [User, String].
     List userResponse = await NetworkHelper.filterResponse(
       callBack: User.loginUserFromJson,

@@ -14,6 +14,8 @@ import 'package:po_frontend/providers/user_provider.dart';
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({Key? key}) : super(key: key);
 
+  static const String route = '/';
+
   @override
   LoadingScreenState createState() => LoadingScreenState();
 }
@@ -44,9 +46,10 @@ class LoadingScreenState extends State<LoadingScreen> {
         apiSlug: StaticValues.getUserSlug,
         useAuthToken: true,
       );
-    } on Exception {
+    } on Exception catch (e) {
       print(
           'Could not connect to po3backend server, redirecting to localhost.');
+      print('The exception was: $e');
       await pref.setString(
         'serverUrl',
         'http://192.168.49.1:8000/',
@@ -76,11 +79,11 @@ class LoadingScreenState extends State<LoadingScreen> {
   }
 
   void redirectToHomeScreen() {
-    Navigator.popAndPushNamed(context, '/home');
+    Navigator.pushReplacementNamed(context, '/home');
   }
 
   void redirectToLoginScreen() {
-    Navigator.popAndPushNamed(context, '/login_page');
+    Navigator.pushReplacementNamed(context, '/login_page');
   }
 
   @override
