@@ -16,6 +16,9 @@ class NetworkHelper {
     }
 
     try {
+      if (response != null && response.statusCode == 204) {
+        return true;
+      }
       if (response == null || response.body.isEmpty) {
         return onFailureCallBack(['The request returned an empty response.']);
       }

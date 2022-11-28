@@ -50,29 +50,29 @@ class NetworkService {
 
   /// Private method which creates a request based on the `RequestType` and adds the
   /// right headers.
-  static Future<http.Response>? _createRequest({
+  static Future<http.Response>? createRequest({
     required RequestType requestType,
     required Uri uri,
     Map<String, String>? headers,
     String? body,
-  }) {
+  }) async {
     switch (requestType) {
       case RequestType.get:
         return http
             .get(uri, headers: headers)
-            .timeout(const Duration(seconds: 3));
+            .timeout(const Duration(seconds: 5));
       case RequestType.post:
         return http
             .post(uri, headers: headers, body: body)
-            .timeout(const Duration(seconds: 3));
+            .timeout(const Duration(seconds: 5));
       case RequestType.put:
         return http
             .put(uri, headers: headers, body: body)
-            .timeout(const Duration(seconds: 3));
+            .timeout(const Duration(seconds: 5));
       case RequestType.delete:
         return http
             .delete(uri, headers: headers, body: body)
-            .timeout(const Duration(seconds: 3));
+            .timeout(const Duration(seconds: 5));
     }
   }
 
@@ -89,14 +89,14 @@ class NetworkService {
     String queryParamsUrl = setQueryParams(requestType, url, queryParams);
     print('Sending request to $queryParamsUrl');
     try {
-      final response = _createRequest(
+      final response = createRequest(
           requestType: requestType,
           uri: Uri.parse(queryParamsUrl),
           headers: useAuthToken ? await _setAuthHeaders() : _getHeaders(),
           body: json.encode(body));
       return response;
     } catch (e) {
-      print('Response error $e');
+      print('Response error: $e');
       return null;
     }
   }
@@ -107,9 +107,7 @@ class NetworkService {
     final pref = await SharedPreferences.getInstance();
     String? serverUrl = pref.getString('serverUrl');
     if (serverUrl == null) {
-      throw BackendException([
-        'The parameter `serverUrl` is not set, thus no requests can be sent.'
-      ]);
+      return 'https://po3backend.ddns.net/$apiSlug';
     }
     return '$serverUrl$apiSlug';
   }
