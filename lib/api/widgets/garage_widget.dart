@@ -29,8 +29,7 @@ class GarageWidget extends StatelessWidget {
           ],
         ),
         onTap: () {
-          String garage_id = garage.id as String;
-          Navigator.pushNamed(context, '/garage_info',arguments: {'garageIDargument': garage_id});
+          Navigator.pushNamed(context, '/garage_info',arguments: {'garageIDargument': garage});
         },
       ),
     );
