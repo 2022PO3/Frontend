@@ -12,10 +12,10 @@ class NetworkService {
   const NetworkService._();
 
   static Map<String, String> _getHeaders() => {
-        'Content-Type': 'application/json',
-        'PO3-ORIGIN': 'app',
-        'PO3-APP-KEY': _encodeKey(),
-      };
+    'Content-Type': 'application/json',
+    'PO3-ORIGIN': 'app',
+    'PO3-APP-KEY': _encodeKey(),
+  };
 
   static Future<Map<String, String>> _setAuthHeaders() async {
     final userInfo = await SharedPreferences.getInstance();
@@ -36,9 +36,9 @@ class NetworkService {
       {
         'iat': (DateTime.now().millisecondsSinceEpoch / 1000).round(),
         'exp': (DateTime.now()
-                    .add(const Duration(seconds: 5))
-                    .millisecondsSinceEpoch /
-                1000)
+            .add(const Duration(seconds: 5))
+            .millisecondsSinceEpoch /
+            1000)
             .round(),
         'key': Env.appSecretKey.toString()
       },
@@ -116,7 +116,10 @@ class NetworkService {
   /// PUT-request from the body that is given. If not, an error will be raised.
   static String setPk(RequestType requestType, String url,
       Map<String, dynamic>? body, int? pk) {
-    if (requestType == RequestType.get && pk != null) {
+    if (url.contains('user')) {
+      return url;
+    }
+    else if (requestType == RequestType.get && pk != null) {
       return '$url/${pk.toString()}';
     } else if (requestType == RequestType.put) {
       if (body == null) {
@@ -131,7 +134,9 @@ class NetworkService {
   /// Sets optional query params in a GET-request.
   static String setQueryParams(
       RequestType requestType, String url, Map<String, dynamic>? queryParams) {
-    if (requestType == RequestType.get && queryParams != null) {
+    if (url.contains('user')) {
+      return url;
+    } else if (requestType == RequestType.get && queryParams != null) {
       String queryString = Uri(queryParameters: queryParams).query;
       return '$url?$queryString';
     } else {

@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
           '/my_Reservations': (context) => const MyReservations(),
           '/settings': (context) => const Settings(),
           '/statistics': (context) => const Statistics(),
-          '/profile': (context) => const Profile(),
+          '/profile': (context) => Profile(),
           '/help': (context) => const HelpF(),
           '/booking_system': (context) => const BookingSystem(),
           '/garages_page': (context) => const GaragesPage(),

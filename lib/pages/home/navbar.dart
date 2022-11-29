@@ -71,7 +71,13 @@ class _NavbarState extends State<Navbar> {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            accountName: const Text(''),
+            accountName: Row(
+              children: [
+                Text(userProvider.getUser.firstName ?? 'Firstname'),
+                const Text(' '),
+                Text(userProvider.getUser.lastName ?? 'LastName')
+              ]
+            ),
             accountEmail: Text(userProvider.getUser.email),
             decoration: const BoxDecoration(
               color: Colors.indigoAccent,
