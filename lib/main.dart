@@ -65,6 +65,7 @@ class MyApp extends StatelessWidget {
           '/register': (context) => const RegisterNow(),
           '/garage_info': (context) => const GarageInfo(),
           TwoFactorPage.route: (context) => const TwoFactorPage(),
+          '/add-two-factor-device': (context) => const 
         },
         debugShowCheckedModeBanner: false,
         onGenerateRoute: (settings) {

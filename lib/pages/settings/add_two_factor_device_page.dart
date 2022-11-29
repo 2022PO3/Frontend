@@ -11,7 +11,7 @@ enum ButtonState { init, loading, done, error }
 class AddTwoFactorDevicePage extends StatefulWidget {
   const AddTwoFactorDevicePage({super.key});
 
-  static const route = '/two-factor';
+  static const route = '/add-two-factor-device';
 
   @override
   State<AddTwoFactorDevicePage> createState() => _AddTwoFactorDevicePageState();
@@ -25,10 +25,6 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
 
   @override
   Widget build(BuildContext context) {
-    final isDone = state == ButtonState.done;
-    final isError = state == ButtonState.error;
-    final isStretched = state == ButtonState.init;
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -62,70 +58,35 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
                   colors: const [(Colors.indigoAccent), (Colors.indigo)],
                 ),
               ),
-              const SizedBox(
-                height: 5,
-              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: Form(
-                  key: _twoFactorFormKey,
-                  child: TextFormField(
-                    controller: twoFactorCodeController,
-                    keyboardType: TextInputType.number,
-                    maxLength: 6,
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.all(14),
-                      prefixIcon: Icon(
-                        Icons.phone_android_sharp,
-                        color: Colors.indigoAccent,
-                      ),
-                      hintText: 'xxxxxx',
-                      counterText: '',
-                      hintStyle: TextStyle(color: Colors.black38),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(
-                          color: Colors.indigo,
-                          width: 1,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(
-                          color: Colors.indigoAccent,
-                          width: 1,
-                        ),
-                      ),
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(
-                          color: Colors.redAccent,
-                          width: 1,
-                        ),
+                child: Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [(Colors.indigo), (Colors.indigoAccent)],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      minimumSize: const Size.fromHeight(35),
+                    ),
+                    child: const Text(
+                      'Add two factor device',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter an authentication code.';
-                      } else if (value.length < 6) {
-                        return 'The authentication code has a length of 6 digits.';
-                      }
-                      return null;
+                    onPressed: () async {
+                      Navigator.pushNamed(context, '/add-two-factor-device');
                     },
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: isStretched
-                    ? buildButton()
-                    : buildSmallButton(isDone, isError),
-              ),
-              const SizedBox(
-                height: 15,
               ),
             ],
           ),
