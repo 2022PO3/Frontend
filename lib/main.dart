@@ -9,7 +9,7 @@ import 'pages/auth/two_factor_page.dart';
 
 import 'pages/loading_screen.dart';
 import 'pages/home/home_page.dart';
-import 'pages/navbar/settings.dart';
+import 'pages/settings/user_settings.dart';
 import 'pages/navbar/statistics.dart';
 import 'pages/navbar/profile.dart';
 import 'pages/navbar/help.dart';
@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
           '/login_page': (context) => const LoginPage(),
           '/home': (context) => const MyHomePage(),
           '/my_Reservations': (context) => const MyReservations(),
-          '/settings': (context) => const Settings(),
+          '/settings': (context) => const UserSettings(),
           '/statistics': (context) => const Statistics(),
           '/profile': (context) => const Profile(),
           '/help': (context) => const HelpF(),

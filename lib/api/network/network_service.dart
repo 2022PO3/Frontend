@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
@@ -89,15 +90,16 @@ class NetworkService {
     String queryParamsUrl = setQueryParams(requestType, url, queryParams);
     print('Sending request to $queryParamsUrl');
     try {
-      final response = createRequest(
+      final response = await createRequest(
           requestType: requestType,
           uri: Uri.parse(queryParamsUrl),
           headers: useAuthToken ? await _setAuthHeaders() : _getHeaders(),
           body: json.encode(body));
       return response;
-    } catch (e) {
-      print('Response error: $e');
-      return null;
+    } on TimeoutException catch (e) {
+      throw BackendException(['Request timed out: $e']);
+    } on Exception catch (e) {
+      throw BackendException(['Unknown exception occurred: $e']);
     }
   }
 

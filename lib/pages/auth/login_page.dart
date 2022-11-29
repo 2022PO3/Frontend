@@ -211,7 +211,7 @@ class _LoginPageState extends State<LoginPage> {
                             context, user.twoFactor ? '/two-factor' : '/home');
                       }
                     } on BackendException catch (e) {
-                      print('Error occurred $e');
+                      print(e);
                       return;
                     }
                   },

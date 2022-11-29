@@ -44,7 +44,7 @@ class User {
         lastName: json['user']['lastName'] as String?,
         favGarageId: json['user']['favGarageId'] as int?,
         location: Province.toProvinceEnum(json['user']['location'] as String?),
-        twoFactor: json['twoFactor'] as bool,
+        twoFactor: json['user']['twoFactor'] as bool,
       ),
       json['token']
     ];
