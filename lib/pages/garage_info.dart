@@ -13,6 +13,8 @@ class GarageInfo extends StatefulWidget {
 class _GarageInfoState extends State<GarageInfo> {
   @override
   Widget build(BuildContext context) {
+    final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
+    print(arguments['garageIDargument']);
     final UserProvider userProvider = Provider.of<UserProvider>(context);
 
     return Scaffold(

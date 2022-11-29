@@ -10,7 +10,7 @@ class GarageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(24.0),
-      child: TextButton(
+      child: InkWell(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -28,8 +28,9 @@ class GarageWidget extends StatelessWidget {
             ),
           ],
         ),
-        onPressed: () {
-          Navigator.pushNamed(context, '/garage_info');
+        onTap: () {
+          String garage_id = garage.id as String;
+          Navigator.pushNamed(context, '/garage_info',arguments: {'garageIDargument': garage_id});
         },
       ),
     );
