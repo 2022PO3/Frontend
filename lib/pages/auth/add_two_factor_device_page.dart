@@ -8,16 +8,16 @@ import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 enum ButtonState { init, loading, done, error }
 
-class TwoFactorPage extends StatefulWidget {
-  const TwoFactorPage({super.key});
+class AddTwoFactorDevicePage extends StatefulWidget {
+  const AddTwoFactorDevicePage({super.key});
 
   static const route = '/two-factor';
 
   @override
-  State<TwoFactorPage> createState() => _TwoFactorPageState();
+  State<AddTwoFactorDevicePage> createState() => _AddTwoFactorDevicePageState();
 }
 
-class _TwoFactorPageState extends State<TwoFactorPage> {
+class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
   final _twoFactorFormKey = GlobalKey<FormState>();
   final twoFactorCodeController = TextEditingController();
 

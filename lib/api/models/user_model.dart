@@ -8,6 +8,7 @@ class User {
   final String? lastName;
   final int? favGarageId;
   final ProvinceEnum? location;
+  final bool twoFactor;
 
   User({
     required this.id,
@@ -17,6 +18,7 @@ class User {
     required this.lastName,
     required this.favGarageId,
     required this.location,
+    required this.twoFactor,
   });
 
   static User userFromJson(Map<String, dynamic> json) {
@@ -28,6 +30,7 @@ class User {
       lastName: json['lastName'] as String?,
       favGarageId: json['favGarageId'] as int?,
       location: Province.toProvinceEnum(json['province'] as String?),
+      twoFactor: json['twoFactor'] as bool,
     );
   }
 
@@ -41,6 +44,7 @@ class User {
         lastName: json['user']['lastName'] as String?,
         favGarageId: json['user']['favGarageId'] as int?,
         location: Province.toProvinceEnum(json['user']['location'] as String?),
+        twoFactor: json['twoFactor'] as bool,
       ),
       json['token']
     ];

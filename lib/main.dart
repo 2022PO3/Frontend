@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-// import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
 import 'pages/auth/login_page.dart';
 import 'pages/auth/register.dart';
@@ -25,17 +25,13 @@ List stripParameters(String? routeName) {
   if (routeName == null) {
     return [routeName];
   }
-  print('Routename $routeName');
   Map<String, String> queryParams =
       Uri.parse(routeName.replaceAll('#', '')).queryParameters;
-  print("Query params $queryParams");
   return [routeName.replaceAll(RegExp(r'\?.*'), ''), queryParams];
 }
 
 void main() {
-  print('Baseurl: ${Uri.base.toString()}');
-  print('Twofactorroute: ${TwoFactorPage.route}');
-  // usePathUrlStrategy();
+  usePathUrlStrategy();
   runApp(
     MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => UserProvider())],
@@ -55,9 +51,8 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
             primarySwatch: Colors.indigo,
             scaffoldBackgroundColor: Colors.indigo[50]),
-        initialRoute: 'two-factor',
+        home: const LoadingScreen(),
         routes: {
-          LoadingScreen.route: (context) => const LoadingScreen(),
           '/login_page': (context) => const LoginPage(),
           '/home': (context) => const MyHomePage(),
           '/my_Reservations': (context) => const MyReservations(),
@@ -69,7 +64,7 @@ class MyApp extends StatelessWidget {
           '/garages_page': (context) => const GaragesPage(),
           '/register': (context) => const RegisterNow(),
           '/garage_info': (context) => const GarageInfo(),
-          'two-factor': (context) => const TwoFactorPage(),
+          TwoFactorPage.route: (context) => const TwoFactorPage(),
         },
         debugShowCheckedModeBanner: false,
         onGenerateRoute: (settings) {
@@ -88,7 +83,6 @@ class MyApp extends StatelessWidget {
               ),
             );
           }
-          assert(false, 'Need to implement ${stripResult[0]}');
           return null;
         });
   }
