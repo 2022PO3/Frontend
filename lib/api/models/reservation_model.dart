@@ -24,7 +24,7 @@ class Reservation {
         fromDate: DateTime.parse(json['fromDate']),
         toDate: DateTime.parse(json['toDate']),
         spot: json['parkingLotId'] as int,
-        garage: Garage.garageFromJson(json['garage']));
+        garage: Garage.fromJSON(json['garage']));
   }
 
   static Map<String, dynamic> reservationToJson(Reservation reservation) =>

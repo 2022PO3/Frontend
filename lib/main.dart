@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:po_frontend/Providers/user_provider.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:po_frontend/pages/New_Reservation.dart';
 import 'package:po_frontend/pages/Spot_Selection.dart';
 
@@ -69,6 +67,8 @@ class MyApp extends StatelessWidget {
           '/garages_page': (context) => const GaragesPage(),
           '/register': (context) => const RegisterNow(),
           '/garage_info': (context) => const GarageInfo(),
+          '/New_Reservation': (context) => New_Reservation(),
+          '/Spot_Selection': (context) => Spot_Selection(),
         },
         debugShowCheckedModeBanner: false,
         onGenerateRoute: (settings) {
@@ -90,7 +90,5 @@ class MyApp extends StatelessWidget {
           assert(false, 'Need to implement ${stripResult[0]}');
           return null;
         });
-        '/New_Reservation': (context) => New_Reservation(),
-        '/Spot_Selection': (context) => Spot_Selection(),
   }
 }
