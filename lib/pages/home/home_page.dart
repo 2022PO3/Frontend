@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:po_frontend/Providers/user_provider.dart';
+import 'package:po_frontend/providers/user_provider.dart';
 import 'package:po_frontend/api/models/user_model.dart';
-import 'NavBar.dart';
+import 'navbar.dart';
 
 import 'package:po_frontend/api/network/network_helper.dart';
 import 'package:po_frontend/api/network/network_service.dart';
@@ -13,15 +13,10 @@ import 'package:provider/provider.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/widgets/garage_widget.dart';
 
-//factory Album.fromJson(Map<String, dynamic> json) {
-//  return Album(
-//    userId: json['userId'],
-//    id: json['id'],
-//    title: json['title'],
-//  );
-//}
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -67,7 +62,6 @@ class _MyHomePageState extends State<MyHomePage> {
   //   });
   // }
 
-  @override
   Future getValidationData(UserProvider userProvider) async {
     final userInfo = await SharedPreferences.getInstance();
     var obtainedEmail = userInfo.getString('email');
@@ -86,13 +80,13 @@ class _MyHomePageState extends State<MyHomePage> {
       // userProvider.Change_token(obtainedToken as String);
     });
   }
-
+  @override
   Widget build(BuildContext context) {
-    final UserProvider UserinfoPr = Provider.of<UserProvider>(context);
+    final UserProvider userProvider = Provider.of<UserProvider>(context);
     //getValidationData(UserinfoPr);
 
     return Scaffold(
-      endDrawer: NavBar(),
+      endDrawer: const Navbar(),
       appBar: AppBar(
           automaticallyImplyLeading: false,
           flexibleSpace: Container(
@@ -103,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
               end: Alignment.centerRight,
             )),
           ),
-          title: Center(child: Text("Test")) //UserinfoPr._email)),
+          title: Center(child: Text(userProvider.getUser.firstName ?? "")) //UserinfoPr._email)),
           ),
       body: FutureBuilder(
         future: getData(),
@@ -229,7 +223,6 @@ Future<UserProvider> getUserInfo() async {
     apiSlug: StaticValues.getUserSlug,
     useAuthToken: true,
   );
-  print(response);
   return await NetworkHelper.filterResponse(
     callBack: User.userFromJson,
     response: response,
@@ -243,9 +236,6 @@ Future<List<Garage>> getData() async {
     useAuthToken: true,
     //    body: body
   );
-
-  print('Response ${response?.body}');
-  print('Response status code ${response?.statusCode}');
 
   return await NetworkHelper.filterResponse(
     callBack: garagesListFromJson,

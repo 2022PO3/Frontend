@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:po_frontend/UserData/UserDataBase.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:po_frontend/api/models/user_model.dart';
@@ -10,18 +7,20 @@ import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../Providers/user_provider.dart';
+import '../../providers/user_provider.dart';
 
-class Login_Page extends StatefulWidget {
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
-  State<Login_Page> createState() => _Login_PageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _Login_PageState extends State<Login_Page> {
-  Future WrongPassword_popup() => showDialog(
+class _LoginPageState extends State<LoginPage> {
+  Future wrongPasswordPopUp() => showDialog(
       context: context,
       builder: (context) => AlertDialog(
-            title: Text("Wrong userinfo..."),
+            title: const Text('Wrong userinfo...'),
             actions: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -32,18 +31,18 @@ class _Login_PageState extends State<Login_Page> {
                         Navigator.popUntil(
                             context, ModalRoute.withName('/login_page'));
                       },
-                      child: Text("Go Back")),
+                      child: const Text('Go Back')),
                 ],
               )
             ],
           ));
-  final _email_textcontroller = TextEditingController();
-  final _password_textcontroller = TextEditingController();
+  final _emailTextController = TextEditingController();
+  final _passwordTextController = TextEditingController();
 
   String userMail = '';
   String userPassword = '';
 
-  List<UserInfo> users = List.from(UserDataBase);
+  //List<UserInfo> users = List.from(UserDataBase);
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +57,7 @@ class _Login_PageState extends State<Login_Page> {
                 onPressed: () {
                   //
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.help,
                   size: 45,
                 )),
@@ -77,33 +76,41 @@ class _Login_PageState extends State<Login_Page> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             //Hello again!
-            GradientText(
-              "Hello Again!",
-              style: TextStyle(
-                //fontWeight: FontWeight.bold,
-                fontSize: 40,
-                fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: GradientText(
+                'Hello Again!',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  //fontWeight: FontWeight.bold,
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                ),
+                colors: const [(Colors.indigoAccent), (Colors.indigo)],
               ),
-              colors: [(Colors.indigoAccent), (Colors.indigo)],
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
-            GradientText(
-              "Welcome back, you\'ve been missed!",
-              style: TextStyle(
-                //fontWeight: FontWeight.bold,
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: GradientText(
+                "Welcome back, you've been missed!",
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  //fontWeight: FontWeight.bold,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
+                colors: const [(Colors.indigoAccent), (Colors.indigo)],
               ),
-              colors: [(Colors.indigoAccent), (Colors.indigo)],
             ),
             //email textfield
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             Padding(
@@ -111,9 +118,8 @@ class _Login_PageState extends State<Login_Page> {
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border.all(
-                      color: Colors.indigoAccent.withOpacity(0.5), width: 4),
-                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.white, width: 4),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20.0),
@@ -121,18 +127,18 @@ class _Login_PageState extends State<Login_Page> {
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Email',
-                        hintStyle: TextStyle(fontSize: 20),
+                        hintStyle: const TextStyle(fontSize: 20),
                         suffixIcon: IconButton(
                             onPressed: () {
-                              _email_textcontroller.clear();
+                              _emailTextController.clear();
                             },
                             icon: const Icon(Icons.clear))),
-                    controller: _email_textcontroller,
+                    controller: _emailTextController,
                   ),
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             //password textfield
@@ -141,9 +147,8 @@ class _Login_PageState extends State<Login_Page> {
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  border: Border.all(
-                      color: Colors.indigoAccent.withOpacity(0.5), width: 4),
-                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.white, width: 4),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20.0),
@@ -152,39 +157,41 @@ class _Login_PageState extends State<Login_Page> {
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Password',
-                      hintStyle: TextStyle(fontSize: 20),
+                      hintStyle: const TextStyle(fontSize: 20),
                       suffixIcon: IconButton(
                         onPressed: () {
-                          _password_textcontroller.clear();
+                          _passwordTextController.clear();
                         },
                         icon: const Icon(Icons.clear),
                       ),
                     ),
-                    controller: _password_textcontroller,
+                    controller: _passwordTextController,
                   ),
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             //sign in button
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Container(
-                height: 65,
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [(Colors.indigo), (Colors.indigoAccent)],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
-                    borderRadius: BorderRadius.circular(20)),
+                  gradient: const LinearGradient(
+                    colors: [(Colors.indigo), (Colors.indigoAccent)],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: TextButton(
-                  style: TextButton.styleFrom(minimumSize: Size(500, 200)),
+                  style: TextButton.styleFrom(
+                    minimumSize: const Size.fromHeight(20),
+                  ),
                   child: Text(
-                    "Sign in",
+                    'Sign in',
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.9),
                       fontSize: 20,
@@ -193,55 +200,31 @@ class _Login_PageState extends State<Login_Page> {
                   ),
                   onPressed: () async {
                     setState(() {
-                      userMail = _email_textcontroller.text;
-                      userPassword = _password_textcontroller.text;
+                      userMail = _emailTextController.text;
+                      userPassword = _passwordTextController.text;
                     });
                     try {
                       await loginUser(userMail, userPassword);
-                    } catch (Exception) {
-                      print("Error occurred $Exception");
+                    } catch (BackendException) {
+                      print('Error occurred $BackendException');
                       return;
                     }
                     Navigator.pushNamed(context, '/home');
-
-                    //   bool EmailUserFound = false;
-                    //   print(userMail);
-                    //   int counter = 0;
-                    //   print(users[0].userEmail);
-                    //   for(int index = 0; index < UserDataBase.length && EmailUserFound == false; index++) {
-                    //     if (userMail == UserDataBase[index].userEmail) {
-                    //       print("email found");
-                    //       if (userPassword == UserDataBase[index].userPassword) {
-                    //         EmailUserFound = true;
-                    //         Navigator.pushNamed(context, '/home');
-                    //       }
-                    //       else {
-                    //         EmailUserFound = true;
-                    //         WrongPassword_popup();
-                    //       }
-                    //     }
-                    //   else {
-                    //     counter = counter + 1;
-                    //     }
-                    //   }
-                    //   if (counter == UserDataBase.length) {
-                    //     WrongPassword_popup();
-                    //   }
                   },
                 ),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             //not a member? register now
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Not a member? '),
+                const Text('Not a member? '),
                 TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, "/register");
+                    Navigator.pushNamed(context, '/register');
                   },
-                  child: Text(
+                  child: const Text(
                     'Register now',
                     style: TextStyle(
                         color: Colors.blue, fontWeight: FontWeight.bold),
@@ -257,16 +240,15 @@ class _Login_PageState extends State<Login_Page> {
 
   Future<void> loginUser(String emailUser, String passwordUser) async {
     Map<String, dynamic> body = {
-      "email": emailUser,
-      "password": passwordUser,
+      'email': emailUser,
+      'password': passwordUser,
     };
     final response = await NetworkService.sendRequest(
       requestType: RequestType.post,
       apiSlug: StaticValues.postLoginUser,
-      body: jsonEncode(body),
+      body: body,
       useAuthToken: false,
     );
-
     // Contains a list of the format [User, String].
     List userResponse = await NetworkHelper.filterResponse(
       callBack: User.loginUserFromJson,
