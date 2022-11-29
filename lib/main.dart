@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'pages/auth/login_page.dart';
 import 'pages/auth/register.dart';
 import 'pages/auth/user_activation_page.dart';
+import 'pages/auth/two_factor_page.dart';
 
 import 'pages/loading_screen.dart';
 import 'pages/home/home_page.dart';
@@ -32,6 +33,8 @@ List stripParameters(String? routeName) {
 }
 
 void main() {
+  print('Baseurl: ${Uri.base.toString()}');
+  print('Twofactorroute: ${TwoFactorPage.route}');
   // usePathUrlStrategy();
   runApp(
     MultiProvider(
@@ -52,7 +55,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
             primarySwatch: Colors.indigo,
             scaffoldBackgroundColor: Colors.indigo[50]),
-        initialRoute: LoadingScreen.route,
+        initialRoute: 'two-factor',
         routes: {
           LoadingScreen.route: (context) => const LoadingScreen(),
           '/login_page': (context) => const LoginPage(),
@@ -66,6 +69,7 @@ class MyApp extends StatelessWidget {
           '/garages_page': (context) => const GaragesPage(),
           '/register': (context) => const RegisterNow(),
           '/garage_info': (context) => const GarageInfo(),
+          'two-factor': (context) => const TwoFactorPage(),
         },
         debugShowCheckedModeBanner: false,
         onGenerateRoute: (settings) {
