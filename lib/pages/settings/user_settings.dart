@@ -35,17 +35,6 @@ class _UserSettingsState extends State<UserSettings> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: GradientText(
-                  'Authentication code',
-                  style: const TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  colors: const [(Colors.indigoAccent), (Colors.indigo)],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: Container(
                   height: 50,
                   decoration: BoxDecoration(

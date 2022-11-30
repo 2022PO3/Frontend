@@ -5,6 +5,7 @@ import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
 
 import 'package:simple_gradient_text/simple_gradient_text.dart';
+import 'package:po_frontend/utils/error_dialog.dart';
 
 enum ButtonState { init, loading, done, error }
 
@@ -144,7 +145,7 @@ class _UserActivationPageState extends State<UserActivationPage> {
             }
           } on BackendException catch (e) {
             setState(() => state = ButtonState.error);
-            _showFailureDialog(context, e.toString());
+            FailureDialog.showFailureDialog(context, e.toString());
           }
         },
       ),
@@ -192,30 +193,6 @@ class _UserActivationPageState extends State<UserActivationPage> {
           title: const Text('Account activated!'),
           content: const Text(
               'Your account has been successfully activated. You\'ll now be redirected to the login page where you can login.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                'OK',
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showFailureDialog(BuildContext context, String error) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Server exception'),
-          content:
-              Text('We\'re sorry, but the server returned an error: $error.'),
           actions: [
             TextButton(
               onPressed: () {
