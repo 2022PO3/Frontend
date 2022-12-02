@@ -137,7 +137,9 @@ class NetworkService {
   /// Sets optional query params in a GET-request.
   static String setQueryParams(
       RequestType requestType, String url, Map<String, dynamic>? queryParams) {
-    if (requestType == RequestType.get && queryParams != null) {
+    if (url.contains('user')) {
+      return url;
+    } else if (requestType == RequestType.get && queryParams != null) {
       String queryString = Uri(queryParameters: queryParams).query;
       return '$url?$queryString';
     } else {

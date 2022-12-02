@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:po_frontend/api/models/opening_hour_model.dart';
 import 'package:po_frontend/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
+import 'package:po_frontend/api/models/garage_model.dart';
+import 'package:po_frontend/api/network/network_helper.dart';
+import 'package:po_frontend/api/network/network_service.dart';
+import 'package:po_frontend/api/network/static_values.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:po_frontend/api/models/opening_hour_model.dart';
+import 'package:po_frontend/api/widgets/dayoftheweek_Widget.dart';
 
 class GarageInfo extends StatefulWidget {
   const GarageInfo({Key? key}) : super(key: key);
@@ -13,7 +21,13 @@ class GarageInfo extends StatefulWidget {
 class _GarageInfoState extends State<GarageInfo> {
   @override
   Widget build(BuildContext context) {
+    final arguments = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
+    print(arguments['garageIDargument'].id);
+    final Garage garage = arguments['garageIDargument'];
+
     final UserProvider userProvider = Provider.of<UserProvider>(context);
+    const Map<int, String> week_days = {};
 
     return Scaffold(
       appBar: AppBar(
@@ -26,7 +40,7 @@ class _GarageInfoState extends State<GarageInfo> {
             Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                   child: GradientText(
                     'Garage Name: ',
                     textAlign: TextAlign.left,
@@ -38,13 +52,13 @@ class _GarageInfoState extends State<GarageInfo> {
                     colors: const [(Colors.indigoAccent), (Colors.indigo)],
                   ),
                 ),
-                const Text('garage name...')
+                Text('${garage.name}')
               ],
             ),
             Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                   child: GradientText(
                     'Location: ',
                     textAlign: TextAlign.left,
@@ -62,9 +76,9 @@ class _GarageInfoState extends State<GarageInfo> {
             Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                   child: GradientText(
-                    'Amount of cars parked: ',
+                    'Empty spots left: ',
                     textAlign: TextAlign.left,
                     style: const TextStyle(
                       //fontWeight: FontWeight.bold,
@@ -74,13 +88,13 @@ class _GarageInfoState extends State<GarageInfo> {
                     colors: const [(Colors.indigoAccent), (Colors.indigo)],
                   ),
                 ),
-                const Text('slots... (129/200)')
+                Text('${garage.unoccupiedLots}/${garage.parkingLots}')
               ],
             ),
             Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                   child: GradientText(
                     'Opening hours: ',
                     textAlign: TextAlign.left,
@@ -92,7 +106,12 @@ class _GarageInfoState extends State<GarageInfo> {
                     colors: const [(Colors.indigoAccent), (Colors.indigo)],
                   ),
                 ),
-                const Text('opening times...')
+                FutureBuilder(
+                  future: getGarageOpening(garage.id.toString()),
+                  builder: (context, snapshot) {
+                    return Container();
+                  },
+                ),
               ],
             ),
             // FutureBuilder(
@@ -158,4 +177,15 @@ class _GarageInfoState extends State<GarageInfo> {
       ),
     );
   }
+}
+
+Future<List<OpeningHour>> getGarageOpening(String garage_ID) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.get,
+    apiSlug: "api/opening-hours/${garage_ID}",
+    useAuthToken: true,
+  );
+  print("api/opening-hours/${garage_ID}");
+  return await NetworkHelper.filterResponse(
+      callBack: OpeningHourListFromJson, response: response);
 }

@@ -26,8 +26,8 @@ class _RegisterNowState extends State<RegisterNow> {
   bool _hasSpecialCharacter = false;
   bool _passwordMatch = false;
 
-  String userFirstName = '';
-  String userLastName = '';
+  String? userFirstName = '';
+  String? userLastName = '';
   String userMail = '';
   String userPassword = '';
   String userConfirmPassword = '';
@@ -86,7 +86,7 @@ class _RegisterNowState extends State<RegisterNow> {
         ),
       ),
       body: SafeArea(
-        child: Column(
+        child: ListView(
           children: [
             const SizedBox(
               height: 25,
@@ -107,97 +107,31 @@ class _RegisterNowState extends State<RegisterNow> {
             const SizedBox(
               height: 20,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: Container(
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.white, width: 2),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'First Name',
-                        hintStyle: const TextStyle(fontSize: 20),
-                        suffixIcon: IconButton(
-                            onPressed: () {
-                              _firstNameTextController.clear();
-                            },
-                            icon: const Icon(Icons.clear))),
-                    controller: _firstNameTextController,
-                  ),
-                ),
-              ),
+            TextInput(
+              controller: _firstNameTextController,
+              label: 'First Name',
             ),
             const SizedBox(
               height: 13,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: Container(
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.white, width: 2),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Last Name',
-                        hintStyle: const TextStyle(fontSize: 20),
-                        suffixIcon: IconButton(
-                            onPressed: () {
-                              _lastNameTextController.clear();
-                            },
-                            icon: const Icon(Icons.clear))),
-                    controller: _lastNameTextController,
-                  ),
-                ),
-              ),
-            ),
+            TextInput(controller: _lastNameTextController, label: 'Last Name'),
             const SizedBox(
               height: 13,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: Container(
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.white, width: 2),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Email',
-                        hintStyle: const TextStyle(fontSize: 20),
-                        suffixIcon: IconButton(
-                            onPressed: () {
-                              _emailTextController.clear();
-                            },
-                            icon: const Icon(Icons.clear))),
-                    controller: _emailTextController,
-                  ),
-                ),
-              ),
-            ),
+            TextInput(controller: _emailTextController, label: 'Email'),
             const SizedBox(
               height: 13,
             ),
-            Padding(
+            PasswordInput(
+                controller: _passwordTextController,
+                label: 'Password',
+                onChanged: (String password) => onPasswordChanged(
+                    password, _confirmPasswordTextController.text)),
+
+            /*Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Container(
-                height: 40,
+                //height: 40,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   border: Border.all(color: Colors.white, width: 2),
@@ -206,8 +140,7 @@ class _RegisterNowState extends State<RegisterNow> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20.0),
                   child: TextField(
-                    onChanged: (password) => onPasswordChanged(
-                        password, _confirmPasswordTextController.text),
+                    onChanged: (password) => ,
                     obscureText: true,
                     decoration: InputDecoration(
                         border: InputBorder.none,
@@ -229,7 +162,7 @@ class _RegisterNowState extends State<RegisterNow> {
                   ),
                 ),
               ),
-            ),
+            ),*/
             const SizedBox(
               height: 10,
             ),
@@ -353,38 +286,11 @@ class _RegisterNowState extends State<RegisterNow> {
             const SizedBox(
               height: 13,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: Container(
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.white, width: 2),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: TextField(
-                    onChanged: (password) =>
-                        onPasswordMatch(_passwordTextController.text, password),
-                    obscureText: true,
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Confirm Password',
-                        hintStyle: const TextStyle(fontSize: 20),
-                        suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                _confirmPasswordTextController.clear();
-                                _passwordMatch = false;
-                              });
-                            },
-                            icon: const Icon(Icons.clear))),
-                    controller: _confirmPasswordTextController,
-                  ),
-                ),
-              ),
-            ),
+            PasswordInput(
+                controller: _confirmPasswordTextController,
+                label: 'Confirm Password',
+                onChanged: (String password) =>
+                    onPasswordChanged(_passwordTextController.text, password)),
             const SizedBox(
               height: 10,
             ),
@@ -421,7 +327,7 @@ class _RegisterNowState extends State<RegisterNow> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Container(
-                height: 65,
+                //height: 65,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                     gradient: const LinearGradient(
@@ -445,7 +351,13 @@ class _RegisterNowState extends State<RegisterNow> {
                   onPressed: () async {
                     setState(() {
                       userFirstName = _firstNameTextController.text;
+                      if (userFirstName == '') {
+                        userFirstName = null;
+                      }
                       userLastName = _lastNameTextController.text;
+                      if (userLastName == '') {
+                        userLastName = null;
+                      }
                       userMail = _emailTextController.text;
                       userPassword = _passwordTextController.text;
                       userConfirmPassword = _confirmPasswordTextController.text;
@@ -484,16 +396,17 @@ class _RegisterNowState extends State<RegisterNow> {
       String emailUser,
       String passwordUser,
       String confirmPasswordUser,
-      String firstNameUser,
-      String lastNameUser) async {
+      String? firstNameUser,
+      String? lastNameUser) async {
     Map<String, dynamic> body = {
       'email': emailUser,
       'password': passwordUser,
       'passwordConfirmation': confirmPasswordUser,
       'role': 1,
-      'firstName': firstNameUser,
-      'lastName': lastNameUser,
+      'firstName': firstNameUser == '' ? null : firstNameUser,
+      'lastName': lastNameUser == '' ? null : lastNameUser,
     };
+    print(body);
     final response = await NetworkService.sendRequest(
       requestType: RequestType.post,
       apiSlug: StaticValues.postRegisterUser,
@@ -548,6 +461,102 @@ class _RegisterNowState extends State<RegisterNow> {
           ],
         );
       },
+    );
+  }
+}
+
+class TextInput extends StatelessWidget {
+  const TextInput({
+    super.key,
+    required this.controller,
+    required this.label,
+  });
+
+  final String label;
+  final TextEditingController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+      child: Container(
+        //height: 40,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.white, width: 2),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20.0),
+          child: TextField(
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: label,
+                hintStyle: const TextStyle(fontSize: 20),
+                suffixIcon: IconButton(
+                    onPressed: () {
+                      controller.clear();
+                    },
+                    icon: const Icon(Icons.clear))),
+            controller: controller,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class PasswordInput extends StatefulWidget {
+  const PasswordInput({
+    super.key,
+    required this.controller,
+    required this.label,
+    this.onChanged,
+  });
+
+  final String label;
+  final TextEditingController controller;
+  final Function(String password)? onChanged;
+
+  @override
+  State<PasswordInput> createState() => _PasswordInputState();
+}
+
+class _PasswordInputState extends State<PasswordInput> {
+  bool _obscureText = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.white, width: 2),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20.0),
+          child: TextField(
+            obscureText: _obscureText,
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: widget.label,
+                hintStyle: const TextStyle(fontSize: 20),
+                suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _obscureText = !_obscureText;
+                      });
+                    },
+                    icon: Icon(_obscureText
+                        ? Icons.visibility
+                        : Icons.visibility_off))),
+            controller: widget.controller,
+            onChanged: (String password) => widget.onChanged?.call(password),
+          ),
+        ),
+      ),
     );
   }
 }
