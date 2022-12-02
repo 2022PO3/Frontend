@@ -144,7 +144,7 @@ class _UserActivationPageState extends State<UserActivationPage> {
             }
           } on BackendException catch (e) {
             setState(() => state = ButtonState.error);
-            _showFailureDialog(context, e.toString());
+            showFailureDialog(e.toString());
           }
         },
       ),
@@ -208,10 +208,10 @@ class _UserActivationPageState extends State<UserActivationPage> {
     );
   }
 
-  void _showFailureDialog(BuildContext context, String error) {
+  void showFailureDialog(String error) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return AlertDialog(
           title: const Text('Server exception'),
           content:

@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-// import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
 import 'pages/auth/login_page.dart';
 import 'pages/auth/register.dart';
 import 'pages/auth/user_activation_page.dart';
+import 'pages/auth/two_factor_page.dart';
 
 import 'pages/loading_screen.dart';
 import 'pages/home/home_page.dart';
-import 'pages/navbar/settings.dart';
+import 'pages/settings/user_settings.dart';
 import 'pages/navbar/statistics.dart';
 import 'pages/navbar/profile.dart';
 import 'pages/navbar/help.dart';
 import 'pages/navbar/my_reservations.dart';
 import 'pages/booking_system.dart';
+import 'pages/settings/add_two_factor_device_page.dart';
 
 import 'pages/garage_info.dart';
 
@@ -24,15 +26,13 @@ List stripParameters(String? routeName) {
   if (routeName == null) {
     return [routeName];
   }
-  print('Routename $routeName');
   Map<String, String> queryParams =
       Uri.parse(routeName.replaceAll('#', '')).queryParameters;
-  print("Query params $queryParams");
   return [routeName.replaceAll(RegExp(r'\?.*'), ''), queryParams];
 }
 
 void main() {
-  // usePathUrlStrategy();
+  usePathUrlStrategy();
   runApp(
     MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => UserProvider())],
@@ -52,13 +52,12 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
             primarySwatch: Colors.indigo,
             scaffoldBackgroundColor: Colors.indigo[50]),
-        initialRoute: LoadingScreen.route,
+        home: const LoadingScreen(),
         routes: {
-          LoadingScreen.route: (context) => const LoadingScreen(),
           '/login_page': (context) => const LoginPage(),
           '/home': (context) => const MyHomePage(),
           '/my_Reservations': (context) => const MyReservations(),
-          '/settings': (context) => const Settings(),
+          '/settings': (context) => const UserSettings(),
           '/statistics': (context) => const Statistics(),
           '/profile': (context) => const Profile(),
           '/help': (context) => const HelpF(),
@@ -66,6 +65,9 @@ class MyApp extends StatelessWidget {
           '/garages_page': (context) => const GaragesPage(),
           '/register': (context) => const RegisterNow(),
           '/garage_info': (context) => const GarageInfo(),
+          TwoFactorPage.route: (context) => const TwoFactorPage(),
+          AddTwoFactorDevicePage.route: (context) =>
+              const AddTwoFactorDevicePage(),
         },
         debugShowCheckedModeBanner: false,
         onGenerateRoute: (settings) {
@@ -84,7 +86,6 @@ class MyApp extends StatelessWidget {
               ),
             );
           }
-          assert(false, 'Need to implement ${stripResult[0]}');
           return null;
         });
   }

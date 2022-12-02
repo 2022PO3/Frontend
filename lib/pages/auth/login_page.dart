@@ -7,6 +7,7 @@ import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../api/network/network_exception.dart';
 import '../../providers/user_provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -204,12 +205,15 @@ class _LoginPageState extends State<LoginPage> {
                       userPassword = _passwordTextController.text;
                     });
                     try {
-                      await loginUser(userMail, userPassword);
-                    } catch (BackendException) {
-                      print('Error occurred $BackendException');
+                      User user = await loginUser(userMail, userPassword);
+                      if (mounted) {
+                        Navigator.pushNamed(
+                            context, user.twoFactor ? '/two-factor' : '/home');
+                      }
+                    } on BackendException catch (e) {
+                      print(e);
                       return;
                     }
-                    Navigator.pushNamed(context, '/home');
                   },
                 ),
               ),
@@ -238,7 +242,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future<void> loginUser(String emailUser, String passwordUser) async {
+  Future<User> loginUser(String emailUser, String passwordUser) async {
     Map<String, dynamic> body = {
       'email': emailUser,
       'password': passwordUser,
@@ -260,10 +264,12 @@ class _LoginPageState extends State<LoginPage> {
     await pref.setString('authToken', userResponse[1]);
 
     // Store the user model in the Provider.
+    User user = userResponse[0];
     if (mounted) {
       final UserProvider userProvider =
           Provider.of<UserProvider>(context, listen: false);
-      userProvider.setUser(userResponse[0]);
+      userProvider.setUser(user);
     }
+    return user;
   }
 }
