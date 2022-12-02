@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:po_frontend/api/models/opening_hour_model.dart';
 class Dayoftheweek extends StatelessWidget {
-  const Dayoftheweek({Key? key, required this.openingshours}) : super(key: key);
-  final OpeningHour openingshours;
+  Dayoftheweek({Key? key, required this.openingshours}) : super(key: key);
+  final OpeningHour? openingshours;
+  final List daysinaweek = ["Monday","Tuesday","Wednesday","Thursday",'Friday','Saturday','Sunday'];
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    List<Widget> list = [];
+    for(var i = openingshours!.fromDay; i <= openingshours!.toDay; i++){
+      list.add(new Text(daysinaweek[i] + ": open from " + openingshours?.fromHour.toString() + " until " + openingshours?.toHour.toString()));
+    }
+    return new Column(children: list,crossAxisAlignment: CrossAxisAlignment.start,);
   }
 }
 
