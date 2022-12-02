@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:po_frontend/api/models/garage_model.dart';
+import 'package:po_frontend/pages/Spot_Selection.dart';
 
 class New_Reservation extends StatefulWidget {
   const New_Reservation({Key? key}) : super(key: key);
-
   @override
   State<New_Reservation> createState() => _New_ReservationState();
 }
@@ -44,6 +45,10 @@ class _New_ReservationState extends State<New_Reservation> {
 
   @override
   Widget build(BuildContext context) {
+    final arguments = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
+    final Garage garage = arguments['garage'];
+
     return Scaffold(
       appBar: AppBar(
         title: Text('New Reservation'),
@@ -225,10 +230,15 @@ class _New_ReservationState extends State<New_Reservation> {
                         borderRadius: BorderRadius.circular(5)),
                     child: TextButton(
                       onPressed: () {
+                        print(_date.toString());
                         compareDates(_date, _date2)
-                            ? Navigator.pushNamed(context, '/Spot_Selection')
+                            ? Navigator.pushNamed(context, '/Spot_Selection',
+                                arguments: {
+                                    'selected_garage': garage,
+                                    'selected_startdate': _date,
+                                    'selected_enddate': _date2
+                                  })
                             : showDateErrorPopUp(context);
-
                         ;
                         //Checks for correct date and time, start and end !!! and availability of spots at the time
                       },
@@ -249,7 +259,12 @@ class _New_ReservationState extends State<New_Reservation> {
                     child: TextButton(
                       onPressed: () {
                         compareDates(_date, _date2)
-                            ? Navigator.pushNamed(context, '/Spot_Selection')
+                            ? Navigator.pushNamed(context, '/Spot_Selection',
+                                arguments: {
+                                    'selected_garage': garage,
+                                    'selected_startdate': _date,
+                                    'selected_enddate': _date2
+                                  })
                             : showDateErrorPopUp(context);
 
                         ;

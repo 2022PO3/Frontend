@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:po_frontend/api/models/garage_model.dart';
+import 'package:po_frontend/pages/Confirm_Reservation.dart';
 import 'package:provider/provider.dart';
 import 'package:po_frontend/pages/New_Reservation.dart';
 import 'package:po_frontend/pages/Spot_Selection.dart';
@@ -69,6 +71,7 @@ class MyApp extends StatelessWidget {
           '/garage_info': (context) => const GarageInfo(),
           '/New_Reservation': (context) => New_Reservation(),
           '/Spot_Selection': (context) => Spot_Selection(),
+          '/Confirm_Reservation': (context) => Confirm_Reservation(),
         },
         debugShowCheckedModeBanner: false,
         onGenerateRoute: (settings) {

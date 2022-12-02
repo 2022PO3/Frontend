@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
+import 'package:po_frontend/pages/New_Reservation.dart';
+import 'package:po_frontend/pages/Spot_Selection.dart';
 
 class GarageWidget extends StatelessWidget {
   const GarageWidget({Key? key, required this.garage}) : super(key: key);
@@ -33,7 +35,8 @@ class GarageWidget extends StatelessWidget {
         ),
       ),
       onTap: () {
-        Navigator.pushNamed(context, '/New_Reservation');
+        Navigator.pushNamed(context, '/New_Reservation',
+            arguments: {'garage': garage});
       },
     );
   }

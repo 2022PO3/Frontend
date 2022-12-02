@@ -9,19 +9,22 @@ class ParkingLotsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            child: Text("Floor: " + parking_lot.floorNumber.toString(),
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          ),
-          SizedBox(
-              child: Text("Spot: " + parking_lot.id.toString(),
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
-        ],
+    return InkWell(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              child: Text("Floor: " + parking_lot.floorNumber.toString(),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            ),
+            SizedBox(
+                child: Text("Spot: " + parking_lot.id.toString(),
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
+          ],
+        ),
       ),
     );
   }
