@@ -15,7 +15,7 @@ class Device {
     return Device(
       id: json['id'] as int,
       name: json['name'] as String,
-      confirmed: json['isFull'] as bool,
+      confirmed: json['confirmed'] as bool,
     );
   }
 
@@ -26,8 +26,8 @@ class Device {
         'name': device.name,
         'confirmed': device.confirmed
       };
-}
 
-/// Serializes a list JSON-objects into a list of Dart `Device`-objects.
-List<Device> devicesListFromJson(List<dynamic> json) =>
-    (json).map((jsonDevice) => Device.fromJSON(jsonDevice)).toList();
+  /// Serializes a list JSON-objects into a list of Dart `Device`-objects.
+  static List<Device> listFromJSON(List<dynamic> json) =>
+      (json).map((jsonDevice) => Device.fromJSON(jsonDevice)).toList();
+}

@@ -35,7 +35,11 @@ class NetworkService {
   static String _encodeKey() {
     final jwt = JWT(
       {
-        'iat': (DateTime.now().millisecondsSinceEpoch / 1000).round(),
+        'iat': (DateTime.now()
+                    .add(const Duration(seconds: -10))
+                    .millisecondsSinceEpoch /
+                1000)
+            .round(),
         'exp': (DateTime.now()
                     .add(const Duration(seconds: 5))
                     .millisecondsSinceEpoch /

@@ -1,10 +1,11 @@
+import 'package:po_frontend/api/models/device_model.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
 import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
 
 import 'package:flutter/material.dart';
-import 'package:po_frontend/utils/error_dialog.dart';
+import 'package:po_frontend/api/widgets/device_widget.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 import '../../utils/loading_page.dart';
@@ -44,72 +45,56 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
                 ),
               ),
               title: const Center(
-                child: Text('Two factor authentication'),
+                child: Text('Two factor devices'),
               ),
             ),
-            body: Center(
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 400),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: GradientText(
-                        'Authentication code',
-                        style: const TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
+            body: FutureBuilder(
+              future: getDevices(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done &&
+                    snapshot.hasData) {
+                  final List<Device> devices = snapshot.data as List<Device>;
+
+                  return ListView.builder(
+                    itemBuilder: (context, index) {
+                      return DeviceWidget(device: devices[index]);
+                    },
+                    itemCount: devices.length,
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.error_outline,
+                          color: Colors.red,
+                          size: 25,
                         ),
-                        colors: const [(Colors.indigoAccent), (Colors.indigo)],
-                      ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(snapshot.error.toString()),
+                      ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [(Colors.indigo), (Colors.indigoAccent)],
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: TextButton(
-                          style: TextButton.styleFrom(
-                            minimumSize: const Size.fromHeight(35),
-                          ),
-                          child: const Text(
-                            'Add two factor device',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          onPressed: () async {
-                            Navigator.pushNamed(
-                                context, '/add-two-factor-device');
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                  );
+                }
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
             ),
             floatingActionButton: FloatingActionButton(
               child: const Icon(Icons.add),
-              onPressed: () => _showEnterNameDialog(context),
+              onPressed: () => _showEnterNameDialog(),
             ),
           );
   }
 
-  void _showEnterNameDialog(BuildContext context) {
+  void _showEnterNameDialog() {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return AlertDialog(
           title: const Text('Enter the name of your device'),
           content: Form(
@@ -129,8 +114,8 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter an device name.';
-                } else if (!RegExp(r'^[a-z]+$').hasMatch(value)) {
-                  return 'The device name may only contains letters.';
+                } else if (!RegExp(r'^[A-z\s]+$').hasMatch(value)) {
+                  return 'Only use letters...';
                 }
                 return null;
               },
@@ -139,23 +124,25 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
           actions: [
             TextButton(
               onPressed: () async {
-                Navigator.of(context).pop();
-                setState(() {
-                  isLoading = true;
-                });
-                try {
-                  String secret =
-                      await addTwoFactorDevice(addNameController.text);
+                if (_addNameFormKey.currentState!.validate()) {
+                  Navigator.of(context).pop();
                   setState(() {
-                    isLoading = false;
+                    isLoading = true;
                   });
-                  if (mounted) _showSecretDialog(context, secret);
-                } on BackendException catch (e) {
-                  print(e);
-                  setState(() {
-                    isLoading = false;
-                  });
-                  FailureDialog.showFailureDialog(context, e.toString());
+                  try {
+                    String secret =
+                        await addTwoFactorDevice(addNameController.text);
+                    setState(() {
+                      isLoading = false;
+                    });
+                    if (mounted) _showSecretDialog(secret);
+                  } on BackendException catch (e) {
+                    print(e);
+                    setState(() {
+                      isLoading = false;
+                    });
+                    showFailureDialog(e.toString());
+                  }
                 }
               },
               child: const Text(
@@ -169,22 +156,56 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
     );
   }
 
-  void _showSecretDialog(BuildContext context, String secret) {
+  void _showSecretDialog(String secret) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return AlertDialog(
           title: const Text('Your secret key'),
-          content: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const Text(
-                  'Below you\'ll find your secret key. Open Google Authenticator and click the add icon. Then you click on \'Enter key\'. Copy and paste the key below and you\'re done! Make sure to do it now as you\'ll not be able to see this text another time.'),
-              SelectableText(secret),
-              const Text(
-                  'The device will become confirmed the first time you log in again.'),
-            ],
+          content: Container(
+            constraints: const BoxConstraints(maxHeight: 230),
+            child: Column(
+              children: [
+                const Text(
+                  'Below you\'ll find your secret key. Open Google Authenticator and click the add icon. Then you click on \'Enter key\'. Copy and paste the key below and you\'re done! Make sure to do it now as you\'ll not be able to see this text another time.',
+                  textAlign: TextAlign.justify,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                SelectableText(secret),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                    'The device will become confirmed the first time you log in again.'),
+              ],
+            ),
           ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'OK',
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showFailureDialog(String error) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Server exception'),
+          content:
+              Text('We\'re sorry, but the server returned an error: $error.'),
           actions: [
             TextButton(
               onPressed: () {
@@ -215,7 +236,7 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
   }
 
   String extractSecret(Map<String, dynamic> json) {
-    String otpAuthUrl = json['otpauth'];
+    String otpAuthUrl = json['oauthUrl'];
     Uri otpAuthUri = Uri.parse(otpAuthUrl);
     Map<String, String> queryParams = otpAuthUri.queryParameters;
     String? secret = queryParams['secret'];
@@ -225,14 +246,16 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
     return secret;
   }
 
-  Future<bool> sendAuthenticationCode() async {
+  Future<List<Device>> getDevices() async {
     final response = await NetworkService.sendRequest(
-      requestType: RequestType.post,
-      apiSlug:
-          '${StaticValues.sendAuthenticationCodeSlug}/${addNameController.text.toString()}',
+      requestType: RequestType.get,
+      apiSlug: StaticValues.getTwoFactorDevicesSlug,
       useAuthToken: true,
     );
 
-    return NetworkHelper.validateResponse(response);
+    return await NetworkHelper.filterResponse(
+      callBack: Device.listFromJSON,
+      response: response,
+    );
   }
 }

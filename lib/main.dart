@@ -15,6 +15,7 @@ import 'pages/navbar/profile.dart';
 import 'pages/navbar/help.dart';
 import 'pages/navbar/my_reservations.dart';
 import 'pages/booking_system.dart';
+import 'pages/settings/add_two_factor_device_page.dart';
 
 import 'pages/garage_info.dart';
 
@@ -65,6 +66,8 @@ class MyApp extends StatelessWidget {
           '/register': (context) => const RegisterNow(),
           '/garage_info': (context) => const GarageInfo(),
           TwoFactorPage.route: (context) => const TwoFactorPage(),
+          AddTwoFactorDevicePage.route: (context) =>
+              const AddTwoFactorDevicePage(),
         },
         debugShowCheckedModeBanner: false,
         onGenerateRoute: (settings) {
