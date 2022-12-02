@@ -9,6 +9,7 @@ import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:po_frontend/api/models/opening_hour_model.dart';
+import 'package:po_frontend/api/widgets/dayoftheweek_Widget.dart';
 
 class GarageInfo extends StatefulWidget {
   const GarageInfo({Key? key}) : super(key: key);
@@ -24,7 +25,7 @@ class _GarageInfoState extends State<GarageInfo> {
     print(arguments['garageIDargument'].id);
     final Garage garage = arguments['garageIDargument'];
 
-    final UserProvider userProvider = Provider.of<UserProvider>(context);µ
+    final UserProvider userProvider = Provider.of<UserProvider>(context);
     const Map<int, String> week_days = {} ;
 
     return Scaffold(
@@ -110,10 +111,12 @@ class _GarageInfoState extends State<GarageInfo> {
                     if (snapshot.connectionState == ConnectionState.done &&
                         snapshot.hasData) {
                       final openingshours = snapshot.data;
-                      return Column(
-                        children: [
-
-                        ],
+                      print(openingshours);
+                      return ListView.builder(
+                        itemBuilder: (context, index) {
+                          return Dayoftheweek(openingshours: openingshours?[index],);
+                        },
+                        itemCount: openingshours?.length,
                       );
                     } else if (snapshot.hasError) {
                       return Text("error");
