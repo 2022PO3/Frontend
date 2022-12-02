@@ -21,12 +21,13 @@ class GarageInfo extends StatefulWidget {
 class _GarageInfoState extends State<GarageInfo> {
   @override
   Widget build(BuildContext context) {
-    final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
+    final arguments = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
     print(arguments['garageIDargument'].id);
     final Garage garage = arguments['garageIDargument'];
 
     final UserProvider userProvider = Provider.of<UserProvider>(context);
-    const Map<int, String> week_days = {} ;
+    const Map<int, String> week_days = {};
 
     return Scaffold(
       appBar: AppBar(
@@ -108,22 +109,7 @@ class _GarageInfoState extends State<GarageInfo> {
                 FutureBuilder(
                   future: getGarageOpening(garage.id.toString()),
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done &&
-                        snapshot.hasData) {
-                      final openingshours = snapshot.data;
-                      print(openingshours);
-                      return ListView.builder(
-                        itemBuilder: (context, index) {
-                          return Dayoftheweek(openingshours: openingshours?[index],);
-                        },
-                        itemCount: openingshours?.length,
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text("error");
-                    }
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
+                    return Container();
                   },
                 ),
               ],
@@ -201,7 +187,5 @@ Future<List<OpeningHour>> getGarageOpening(String garage_ID) async {
   );
   print("api/opening-hours/${garage_ID}");
   return await NetworkHelper.filterResponse(
-      callBack: OpeningHourListFromJson,
-      response: response
-  );
+      callBack: OpeningHourListFromJson, response: response);
 }
