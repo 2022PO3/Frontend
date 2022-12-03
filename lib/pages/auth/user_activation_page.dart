@@ -15,7 +15,7 @@ class UserActivationPage extends StatefulWidget {
     required this.token,
   });
 
-  static const routeName = '/user-activation';
+  static const route = 'user-activation';
 
   final String uidB64;
   final String token;

@@ -36,7 +36,7 @@ class LoadingScreenState extends State<LoadingScreen> {
     final UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);
     final pref = await SharedPreferences.getInstance();
-    await setServerUrl(pref, 'https://po3backend.ddns.net');
+    await setServerUrl(pref, 'https://po3backend.ddns.net/');
     bool debug = StaticValues.debug;
     try {
       debug
