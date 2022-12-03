@@ -281,12 +281,12 @@ class _LoginPageState extends State<LoginPage> {
           title: Text(
             error.contains('credentials')
                 ? 'Invalid credentials entered'
-                : 'User already exists',
+                : error,
           ),
           content: Text(
             error.contains('credentials')
                 ? 'Either  your password or your email address is wrong. Please try again.'
-                : 'A user with this email address is already registered. Please login.',
+                : error,
           ),
           actions: [
             TextButton(

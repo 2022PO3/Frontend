@@ -34,7 +34,7 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
         ? const LoadingPage()
         : Scaffold(
             appBar: AppBar(
-              automaticallyImplyLeading: false,
+              automaticallyImplyLeading: true,
               flexibleSpace: Container(
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
@@ -44,8 +44,8 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
                   ),
                 ),
               ),
-              title: const Center(
-                child: Text('Two factor devices'),
+              title: Text(
+                'Two factor devices',
               ),
             ),
             body: FutureBuilder(
@@ -249,7 +249,7 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
   Future<List<Device>> getDevices() async {
     final response = await NetworkService.sendRequest(
       requestType: RequestType.get,
-      apiSlug: StaticValues.getTwoFactorDevicesSlug,
+      apiSlug: StaticValues.twoFactorDevicesSlug,
       useAuthToken: true,
     );
 

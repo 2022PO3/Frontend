@@ -10,7 +10,7 @@ class StaticValues {
   static const String activateUserSlug = 'api/auth/activate-account';
   static const String sendAuthenticationCodeSlug = 'api/auth/totp/login';
   static const String addTwoFactorDeviceSlug = 'api/auth/totp/create';
-  static const String getTwoFactorDevicesSlug = 'api/auth/totp';
+  static const String twoFactorDevicesSlug = 'api/auth/totp';
 
   static const bool debug = true;
 }

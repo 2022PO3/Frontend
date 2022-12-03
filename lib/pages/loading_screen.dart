@@ -65,8 +65,12 @@ class LoadingScreenState extends State<LoadingScreen> {
             callBack: User.userFromJson,
             response: response,
           );
-          userProvider.setUser(user);
-          return redirectToHomeScreen();
+          if (user.twoFactor) {
+            return redirectToTwoFactorScreen();
+          } else {
+            userProvider.setUser(user);
+            return redirectToHomeScreen();
+          }
         } on BackendException {
           return redirectToLoginScreen();
         }
@@ -83,6 +87,10 @@ class LoadingScreenState extends State<LoadingScreen> {
 
   void redirectToLoginScreen() {
     Navigator.pushReplacementNamed(context, '/login_page');
+  }
+
+  void redirectToTwoFactorScreen() {
+    Navigator.pushReplacementNamed(context, '/two-factor');
   }
 
   Future<void> setServerUrl(SharedPreferences pref, String serverUrl) async {
