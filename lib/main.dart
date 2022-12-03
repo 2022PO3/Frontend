@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
             primarySwatch: Colors.indigo,
             scaffoldBackgroundColor: Colors.indigo[50]),
-        initialRoute: LoadingScreen.route,
+        home: const LoadingScreen(),
         routes: {
           '/login_page': (context) => const LoginPage(),
           '/home': (context) => const MyHomePage(),
@@ -72,7 +72,8 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         onGenerateRoute: (settings) {
           List stripResult = stripParameters(settings.name);
-          if (stripResult[0] == UserActivationPage.route) {
+          print(stripResult);
+          if (stripResult[0] == '/${UserActivationPage.route}') {
             Map<String, String> args = stripResult[1];
             if (args['uidB64'] == null || args['token'] == null) {
               throw Exception(

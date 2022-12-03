@@ -212,7 +212,7 @@ class _LoginPageState extends State<LoginPage> {
                       }
                     } on BackendException catch (e) {
                       print(e);
-                      return;
+                      showFailureDialog(e.toString());
                     }
                   },
                 ),
@@ -271,5 +271,36 @@ class _LoginPageState extends State<LoginPage> {
       userProvider.setUser(user);
     }
     return user;
+  }
+
+  void showFailureDialog(String error) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(
+            error.contains('credentials')
+                ? 'Invalid credentials entered'
+                : 'User already exists',
+          ),
+          content: Text(
+            error.contains('credentials')
+                ? 'Either  your password or your email address is wrong. Please try again.'
+                : 'A user with this email address is already registered. Please login.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'OK',
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
