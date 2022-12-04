@@ -65,7 +65,8 @@ class _MyHomePageState extends State<MyHomePage> {
         body: RefreshIndicator(
           onRefresh: getFutures,
           child: CustomScrollView(
-            physics: BouncingScrollPhysics(),
+            physics: const AlwaysScrollableScrollPhysics()
+                .applyTo(const BouncingScrollPhysics()),
             slivers: [
               SliverPersistentHeader(
                 pinned: true,
@@ -89,7 +90,46 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+class SimpleHeaderDelegate extends SliverPersistentHeaderDelegate {
+  /// Delegate for a SliverPersistentHeader with a provided minimum and maximum
+  /// height.
+
+  SimpleHeaderDelegate({
+    required this.child,
+    required this.minHeight,
+    required this.maxHeight,
+  });
+
+  final double minHeight;
+  final double maxHeight;
+  final Widget child;
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Material(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      elevation: shrinkOffset > (maxExtent - minExtent) ? 5 : 0,
+      child: child,
+    );
+  }
+
+  @override
+  double get maxExtent => maxHeight;
+
+  @override
+  double get minExtent => minHeight;
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
+    return true;
+  }
+}
+
 class CurrentParkingSessionsListWidget extends StatelessWidget {
+  /// Horizontal scrollview with a CurrentParkingSessionWidget for every garage
+  /// the user is parked at.
+
   const CurrentParkingSessionsListWidget(
       {Key? key, required this.licencePlatesFuture})
       : super(key: key);
@@ -139,40 +179,10 @@ class CurrentParkingSessionsListWidget extends StatelessWidget {
   }
 }
 
-class SimpleHeaderDelegate extends SliverPersistentHeaderDelegate {
-  SimpleHeaderDelegate({
-    required this.child,
-    required this.minHeight,
-    required this.maxHeight,
-  });
-
-  final double minHeight;
-  final double maxHeight;
-  final Widget child;
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Material(
-      color: Theme.of(context).scaffoldBackgroundColor,
-      elevation: shrinkOffset > (maxExtent - minExtent) ? 5 : 0,
-      child: child,
-    );
-  }
-
-  @override
-  double get maxExtent => maxHeight;
-
-  @override
-  double get minExtent => minHeight;
-
-  @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
-    return true;
-  }
-}
-
 class CurrentParkingSessionWidget extends StatelessWidget {
+  /// Widget for showing information about a specific garage the user is parked
+  /// at, how long the user has parked there and providing a pay button.
+
   const CurrentParkingSessionWidget({Key? key, required this.licencePlate})
       : super(key: key);
 
@@ -223,10 +233,16 @@ class CurrentParkingSessionWidget extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Parked at ${garage.name}',
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w900),
+                      Hero(
+                        tag: 'title_${licencePlate.licencePlate}',
+                        child: Material(
+                          color: Colors.transparent,
+                          child: Text(
+                            'Parked at ${garage.name}',
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w900),
+                          ),
+                        ),
                       ),
                       Text(garage.garageSettings.location.toString())
                     ],
@@ -235,10 +251,9 @@ class CurrentParkingSessionWidget extends StatelessWidget {
                 if (constraints.maxHeight < 110)
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: PayButton(
+                    child: PayPreviewButton(
                       licencePlate: licencePlate,
                       garage: garage,
-                      isPreview: true,
                     ),
                   )
               ],
@@ -256,10 +271,15 @@ class CurrentParkingSessionWidget extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    TimerWidget(
-                      start: licencePlate.updatedAt,
-                      textStyle: const TextStyle(
-                          fontSize: 15, fontWeight: FontWeight.w900),
+                    Hero(
+                      tag: 'timer_${licencePlate.licencePlate}',
+                      child: TimerWidget(
+                        start: licencePlate.updatedAt,
+                        textStyle: TextStyle(
+                            fontSize:
+                                MediaQuery.of(context).size.shortestSide / 20,
+                            fontWeight: FontWeight.w900),
+                      ),
                     ),
                     SizedBox(
                       width: MediaQuery.of(context).size.shortestSide / 5,
@@ -267,10 +287,9 @@ class CurrentParkingSessionWidget extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8.0, vertical: 2),
-                      child: PayButton(
+                      child: PayPreviewButton(
                         licencePlate: licencePlate,
                         garage: garage,
-                        isPreview: true,
                       ),
                     ),
                   ],

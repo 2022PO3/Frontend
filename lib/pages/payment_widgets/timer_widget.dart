@@ -28,10 +28,14 @@ class _TimerWidgetState extends State<TimerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      DateTime.now().difference(widget.start).toPrettyString(),
-      maxLines: 2,
-      style: widget.textStyle,
+    // Material widget for nicer animations
+    return Material(
+      color: Colors.transparent,
+      child: Text(
+        DateTime.now().difference(widget.start).toPrettyString(),
+        maxLines: 2,
+        style: widget.textStyle,
+      ),
     );
   }
 

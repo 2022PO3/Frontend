@@ -4,7 +4,7 @@ import '../network/network_helper.dart';
 import '../network/network_service.dart';
 import '../network/static_values.dart';
 
-void startPaymentSession({required String licencePlate}) async {
+Future<void> startPaymentSession({required String licencePlate}) async {
   final response = await NetworkService.sendRequest(
       requestType: RequestType.get,
       apiSlug: StaticValues.createPaymentSessionSlug,
