@@ -6,10 +6,10 @@ import '../network/static_values.dart';
 
 Future<void> startPaymentSession({required String licencePlate}) async {
   final response = await NetworkService.sendRequest(
-      requestType: RequestType.get,
+      requestType: RequestType.post,
       apiSlug: StaticValues.createPaymentSessionSlug,
       useAuthToken: true,
-      queryParams: {'licence_plate': licencePlate});
+      body: {'licence_plate': licencePlate});
   await NetworkHelper.filterResponse(
     callBack: (Map<String, dynamic> json) async {
       Uri url = Uri.parse(json['url']);
