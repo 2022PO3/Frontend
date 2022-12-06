@@ -14,13 +14,13 @@ class Province {
     ProvinceEnum.LIM: "Limburg",
     ProvinceEnum.LUX: "Luxemburg",
     ProvinceEnum.NAM: "Namen",
-    ProvinceEnum.OVL: "Oost-Vlaandern",
+    ProvinceEnum.OVL: "Oost-Vlaanderen",
     ProvinceEnum.WVL: "West-Vlaanderen",
     ProvinceEnum.VBR: "Vlaams-Brabant",
     ProvinceEnum.WBR: "Waals-Brabant",
   };
 
-  static String getProvinceName(ProvinceEnum provinceAbr) {
+  static String getProvinceName(ProvinceEnum? provinceAbr) {
     String? provinceName = provinces[provinceAbr];
     if (provinceName == null) {
       throw Exception("Province is not defined.");

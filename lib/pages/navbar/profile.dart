@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:po_frontend/api/network/static_values.dart';
+import 'package:po_frontend/api/models/enums.dart';
 import 'package:provider/provider.dart';
 import 'package:po_frontend/providers/user_provider.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
@@ -7,20 +8,77 @@ import 'package:po_frontend/api/network/network_service.dart';
 import '../../api/network/network_exception.dart';
 import 'package:po_frontend/api/models/user_model.dart';
 
-
 class Profile extends StatefulWidget {
   @override
   State<Profile> createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
-  final NewFirstNametextcontroller = TextEditingController();
-  final NewLastNametextcontroller = TextEditingController();
-  final NewEmailtextcontroller = TextEditingController();
+  final newFirstNametextcontroller = TextEditingController();
+  final newLastNametextcontroller = TextEditingController();
+  final newEmailtextcontroller = TextEditingController();
+  final currentPasswordtextcontroller = TextEditingController();
+  final newPasswordtextcontroller = TextEditingController();
+  final checkPasswordtextcontroller = TextEditingController();
+
+  bool _isPasswordEightCharacters = false;
+  bool _hasPasswordOneNumber = false;
+  bool _hasCapitalLetter = false;
+  bool _hasSpecialCharacter = false;
+  bool _passwordMatch = false;
 
   String userFirstName = '';
   String userLastName = '';
   String userEmail = '';
+
+  String selectedValue = 'Select your province here';
+
+  String? province;
+  String? location;
+
+  onPasswordChanged(String password, String passwordConfirmation) {
+    final numericRegex = RegExp(r'[0-9]');
+    final capitalCharacterRegex = RegExp(r'[A-Z]');
+    final specialCharacterRegex = RegExp(r'[@_!#$%^&*()<>?/\|}{~:;]');
+
+    setState(() {
+      _isPasswordEightCharacters = false;
+      if (password.length >= 10) {
+        _isPasswordEightCharacters = true;
+      }
+      _hasPasswordOneNumber = false;
+      if (numericRegex.hasMatch(password)) {
+        _hasPasswordOneNumber = true;
+      }
+      _hasCapitalLetter = false;
+      if (capitalCharacterRegex.hasMatch(password)) {
+        _hasCapitalLetter = true;
+      }
+      _hasSpecialCharacter = false;
+      if (specialCharacterRegex.hasMatch(password)) {
+        _hasSpecialCharacter = true;
+      }
+      _passwordMatch = false;
+      if (password == passwordConfirmation &&
+          password != '' &&
+          passwordConfirmation != '') {
+        _passwordMatch = true;
+      }
+    });
+  }
+  void onPasswordMatch(String password, String passwordConfirmation) {
+    setState(() {
+      _passwordMatch = false;
+      if (password == passwordConfirmation) {
+        _passwordMatch = true;
+      }
+    });
+  }
+
+
+
+
+
 
 
   @override
@@ -51,10 +109,10 @@ class _ProfileState extends State<Profile> {
                       hintStyle: const TextStyle(fontSize: 15),
                       suffixIcon: IconButton(
                           onPressed: (){
-                            NewFirstNametextcontroller.clear();
+                            newFirstNametextcontroller.clear();
                           },
                           icon: const Icon(Icons.clear))),
-                  controller: NewFirstNametextcontroller,
+                  controller: newFirstNametextcontroller,
                 )
               ]
           ),
@@ -67,7 +125,7 @@ class _ProfileState extends State<Profile> {
                     onPressed: () {
                       Navigator.popUntil(
                           context, ModalRoute.withName('/profile'));
-                      NewFirstNametextcontroller.clear();
+                      newFirstNametextcontroller.clear();
                     },
                     child: const Text(
                       'Cancel',
@@ -76,7 +134,7 @@ class _ProfileState extends State<Profile> {
                 TextButton(
                   onPressed: () async {
                     setState((){
-                      userFirstName = NewFirstNametextcontroller.text;
+                      userFirstName = newFirstNametextcontroller.text;
                     });
                     try{
                       await setFirstName(userFirstName);
@@ -88,7 +146,7 @@ class _ProfileState extends State<Profile> {
                     } on BackendException catch (e) {
                       print('Error occurred $e');
                     };
-                    NewFirstNametextcontroller.clear();
+                    newFirstNametextcontroller.clear();
                   },
                   child: const Text(
                     'Confirm',
@@ -125,10 +183,10 @@ class _ProfileState extends State<Profile> {
                       hintStyle: const TextStyle(fontSize: 15),
                       suffixIcon: IconButton(
                           onPressed: (){
-                            NewLastNametextcontroller.clear();
+                            newLastNametextcontroller.clear();
                           },
                           icon: const Icon(Icons.clear))),
-                  controller: NewLastNametextcontroller,
+                  controller: newLastNametextcontroller,
                 )
               ]
           ),
@@ -141,7 +199,7 @@ class _ProfileState extends State<Profile> {
                     onPressed: () {
                       Navigator.popUntil(
                           context, ModalRoute.withName('/profile'));
-                      NewLastNametextcontroller.clear();
+                      newLastNametextcontroller.clear();
                     },
                     child: const Text(
                       'Cancel',
@@ -150,7 +208,7 @@ class _ProfileState extends State<Profile> {
                 TextButton(
                   onPressed: () async {
                     setState((){
-                      userLastName = NewLastNametextcontroller.text;
+                      userLastName = newLastNametextcontroller.text;
                     });
                     try{
                       await setLastName(userLastName);
@@ -162,7 +220,7 @@ class _ProfileState extends State<Profile> {
                     } on BackendException catch (e) {
                       print('Error occurred $e');
                     };
-                    NewLastNametextcontroller.clear();
+                    newLastNametextcontroller.clear();
                   },
                   child: const Text(
                     'Confirm',
@@ -199,10 +257,10 @@ class _ProfileState extends State<Profile> {
                       hintStyle: const TextStyle(fontSize: 15),
                       suffixIcon: IconButton(
                           onPressed: (){
-                            NewEmailtextcontroller.clear();
+                            newEmailtextcontroller.clear();
                           },
                           icon: const Icon(Icons.clear))),
-                  controller: NewEmailtextcontroller,
+                  controller: newEmailtextcontroller,
                 )
               ]
           ),
@@ -215,7 +273,7 @@ class _ProfileState extends State<Profile> {
                     onPressed: () {
                       Navigator.popUntil(
                           context, ModalRoute.withName('/profile'));
-                      NewEmailtextcontroller.clear();
+                      newEmailtextcontroller.clear();
                     },
                     child: const Text(
                       'Cancel',
@@ -224,7 +282,7 @@ class _ProfileState extends State<Profile> {
                 TextButton(
                   onPressed: () async {
                     setState((){
-                      userEmail = NewEmailtextcontroller.text;
+                      userEmail = newEmailtextcontroller.text;
                     });
                     try{
                       await setEmail(userEmail);
@@ -236,7 +294,350 @@ class _ProfileState extends State<Profile> {
                     } on BackendException catch (e) {
                       print('Error occurred $e');
                     };
-                    NewEmailtextcontroller.clear();
+                    newEmailtextcontroller.clear();
+                  },
+                  child: const Text(
+                    'Confirm',
+                    style: TextStyle(color: Colors.indigo, fontSize: 15),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ));
+
+    Future openLocationDialog() => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Row(
+              children: [
+                const Text(
+                  'Dear, ',
+                  style: TextStyle(color: Colors.indigoAccent),
+                ),
+                Text(
+                    UserinfoPr.getUser.firstName ?? 'User',
+                    style: const TextStyle(color: Colors.indigoAccent)
+                )
+              ]
+          ),
+          content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('what do you want to change your province to?'),
+                DropdownButton<String>(
+                  value: selectedValue,
+                    items: <String>[
+                      'Select your province here',
+                      'Antwerpen',
+                      'Henegouwen',
+                      'Limburg',
+                      'Luik',
+                      'Luxemburg',
+                      'Namen',
+                      'Oost-Vlaanderen',
+                      'Vlaams-Brabant',
+                      'Waals-Brabant',
+                      'West-Vlaanderen',
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: const TextStyle(fontSize: 20),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue){
+                      setState(() {
+                        selectedValue = newValue!;
+                      });
+                    }
+                )
+              ]
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.popUntil(
+                          context, ModalRoute.withName('/profile'));
+                      selectedValue = 'Select your province here';
+                    },
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(color: Colors.indigo, fontSize: 15),
+                    )),
+                TextButton(
+                  onPressed: () async {
+                    setState(() {
+                      province = abbreviateProvince(selectedValue);
+                    });
+                    try{
+                      await setLocation(province);
+                      if (mounted) {
+                        Navigator.popUntil(
+                            context, ModalRoute.withName('/profile')
+                        );
+                      }
+                    } on BackendException catch (e) {
+                      print('Error occurred $e');
+                    };
+                    selectedValue = 'Select your province here';
+                  },
+                  child: const Text(
+                    'Confirm',
+                    style: TextStyle(color: Colors.indigo, fontSize: 15),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ));
+
+    Future openPasswordDialog() => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Row(
+              children: [
+                const Text(
+                  'Dear, ',
+                  style: TextStyle(color: Colors.indigoAccent),
+                ),
+                Text(
+                    UserinfoPr.getUser.firstName ?? 'User',
+                    style: const TextStyle(color: Colors.indigoAccent)
+                )
+              ]
+          ),
+          content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Your are about to change your password',
+                  style: TextStyle(
+                    decoration: TextDecoration.underline,
+                  )
+                ),
+                const SizedBox(height: 20),
+                const Text('Enter your current password in the box below.'),
+                TextField(
+                  obscureText: true,
+                  decoration: InputDecoration(
+                      hintText: 'Current password',
+                      hintStyle: const TextStyle(fontSize: 15),
+                      suffixIcon: IconButton(
+                          onPressed: (){
+                            currentPasswordtextcontroller.clear();
+                          },
+                          icon: const Icon(Icons.clear))),
+                  controller: currentPasswordtextcontroller,
+                ),
+                const SizedBox(height: 25),
+                const Text('Enter your new password in both boxes below.'),
+                TextField(
+                  onChanged: (password) => onPasswordChanged(
+                      password, newPasswordtextcontroller.text),
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    hintText: 'New password',
+                    hintStyle: const TextStyle(fontSize: 15),
+                    suffixIcon: IconButton(
+                      onPressed: (){
+                        newPasswordtextcontroller.clear();
+                        _passwordMatch = false;
+                        _isPasswordEightCharacters = false;
+                        _hasPasswordOneNumber = false;
+                        _hasCapitalLetter = false;
+                        _hasSpecialCharacter = false;
+                      },
+                      icon: const Icon(Icons.clear))),
+                  controller: newPasswordtextcontroller,
+                ),
+                const SizedBox(height: 5),
+                Row(
+                  children: [
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 500),
+                        width: 12,
+                        height: 12,
+                        decoration: BoxDecoration(
+                            color: _hasCapitalLetter
+                                ? Colors.green
+                                : Colors.transparent,
+                            border: _hasCapitalLetter
+                                ? Border.all(color: Colors.transparent)
+                                : Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(50)),
+                        child: const Center(
+                          child: Icon(Icons.check, color: Colors.white, size: 12),
+                        )),
+                    const SizedBox(width: 5),
+                    const Text(
+                      'Contains a capital letter',
+                      style: TextStyle(fontSize: 12),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 5),
+                Row(
+                  children: [
+                    AnimatedContainer(
+                        duration: const Duration(milliseconds: 500),
+                        width: 12,
+                        height: 12,
+                        decoration: BoxDecoration(
+                            color: _isPasswordEightCharacters
+                                ? Colors.green
+                                : Colors.transparent,
+                            border: _isPasswordEightCharacters
+                                ? Border.all(color: Colors.transparent)
+                                : Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(50)),
+                        child: const Center(
+                          child: Icon(Icons.check, color: Colors.white, size: 12),
+                        )),
+                    const SizedBox(width: 10),
+                    const Text(
+                      'Contains at least 10 characters',
+                      style: TextStyle(fontSize: 12),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 5),
+                Row(
+                  children: [
+                    AnimatedContainer(
+                        duration: const Duration(milliseconds: 500),
+                        width: 12,
+                        height: 12,
+                        decoration: BoxDecoration(
+                            color: _hasPasswordOneNumber
+                                ? Colors.green
+                                : Colors.transparent,
+                            border: _hasPasswordOneNumber
+                                ? Border.all(color: Colors.transparent)
+                                : Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(50)),
+                        child: const Center(
+                          child: Icon(Icons.check, color: Colors.white, size: 12),
+                        )),
+                    const SizedBox(width: 10),
+                    const Text(
+                      'Contains at least 1 number',
+                      style: TextStyle(fontSize: 12),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 5),
+                Row(
+                  children: [
+                    AnimatedContainer(
+                        duration: const Duration(milliseconds: 500),
+                        width: 12,
+                        height: 12,
+                        decoration: BoxDecoration(
+                            color: _hasSpecialCharacter
+                                ? Colors.green
+                                : Colors.transparent,
+                            border: _hasSpecialCharacter
+                                ? Border.all(color: Colors.transparent)
+                                : Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(50)),
+                        child: const Center(
+                          child: Icon(Icons.check, color: Colors.white, size: 12),
+                        )),
+                    const SizedBox(width: 10),
+                    const Text(
+                      'Contains a special character',
+                      style: TextStyle(fontSize: 12),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  obscureText: true,
+                  decoration: InputDecoration(
+                      hintText: 'Confirm new password',
+                      hintStyle: const TextStyle(fontSize: 15),
+                      suffixIcon: IconButton(
+                          onPressed: (){
+                            checkPasswordtextcontroller.clear();
+                            _passwordMatch = false;
+                          },
+                          icon: const Icon(Icons.clear))),
+                  controller: checkPasswordtextcontroller,
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  children: [
+                    AnimatedContainer(
+                        duration: const Duration(milliseconds: 500),
+                        width: 12,
+                        height: 12,
+                        decoration: BoxDecoration(
+                            color: _passwordMatch
+                                ? Colors.green
+                               : Colors.transparent,
+                            border: _passwordMatch
+                                ? Border.all(color: Colors.transparent)
+                                : Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(50)),
+                        child: const Center(
+                          child: Icon(Icons.check, color: Colors.white, size: 12),
+                        )),
+                    const SizedBox(width: 10),
+                    const Text(
+                      'Both passwords match',
+                      style: TextStyle(fontSize: 12),
+                    )
+                  ],
+                ),
+              ]
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.popUntil(
+                          context, ModalRoute.withName('/profile'));
+                      newPasswordtextcontroller.clear();
+                      currentPasswordtextcontroller.clear();
+                      checkPasswordtextcontroller.clear();
+                      _passwordMatch = false;
+                      _isPasswordEightCharacters = false;
+                      _hasPasswordOneNumber = false;
+                      _hasCapitalLetter = false;
+                      _hasSpecialCharacter = false;
+                    },
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(color: Colors.indigo, fontSize: 15),
+                    )),
+                TextButton(
+                  onPressed: () async {
+                    setState((){
+                      userFirstName = newFirstNametextcontroller.text;
+                    });
+                    try{
+                      await setFirstName(userFirstName);
+                      if (mounted) {
+                        Navigator.popUntil(
+                            context, ModalRoute.withName('/profile')
+                        );
+                      }
+                    } on BackendException catch (e) {
+                      print('Error occurred $e');
+                    };
+                    newFirstNametextcontroller.clear();
                   },
                   child: const Text(
                     'Confirm',
@@ -379,31 +780,42 @@ class _ProfileState extends State<Profile> {
               const Divider(),
               const SizedBox(height: 10),
               Row(
-                  children: [
-                    const Text(
-                        'Province: ',
-                        style: TextStyle(
-                          fontSize: 20,
-                        )
-                    ),
-                    if (UserinfoPr.getUser.location.toString() == 'null')...[
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
                       const Text(
-                        'Not given',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold
-                        )
-                      )
-                    ]else...[
-                      Text(
-                        UserinfoPr.getUser.location.toString(),
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold
-                        )
-                      )
+                          'Province: ',
+                          style: TextStyle(
+                            fontSize: 20,
+                          )
+                      ),
+                      if (UserinfoPr.getUser.location == null)...[
+                        const Text(
+                            'Not given',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            )
+                        ),
+                      ]else...[
+                        Text(
+                            Province.getProvinceName(UserinfoPr.getUser.location),
+                            style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold
+                            )
+                        ),
+                      ]
                     ]
-                  ]
+                  ),
+                  TextButton(
+                      onPressed: (){
+                        openLocationDialog();
+                      },
+                      child: const Text('Change')
+                  )
+                ]
               ),
               const SizedBox(height: 10),
               const Divider(),
@@ -428,15 +840,16 @@ class _ProfileState extends State<Profile> {
               const SizedBox(height: 10),
               const Divider(),
               const SizedBox(height: 10),
-              Row(
-                  children: const [
-                    Text(
-                        'Password: ',
-                        style: TextStyle(
-                            fontSize: 20
-                        )
-                    )
-                  ]
+              TextButton(
+                onPressed: (){
+                  openPasswordDialog();
+                },
+                child: const Text(
+                  'Change you password',
+                  style: TextStyle(
+                    fontSize: 20
+                  )
+                )
               )
             ]
         )
@@ -445,13 +858,22 @@ class _ProfileState extends State<Profile> {
 
   Future<bool> setFirstName(String newFirstName) async{
     final UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
+    if (userProvider.getUser.location == null){
+      setState(() {
+        location = null;
+      });
+    }else{
+      setState((){
+        location = abbreviateProvince(Province.getProvinceName(userProvider.getUser.location));
+      });
+    }
     Map<String, dynamic> body = {
       'id': userProvider.getUser.id,
       'email': userProvider.getUser.email,
       'role': userProvider.getUser.role,
       'firstName': newFirstName,
       'lastName': userProvider.getUser.lastName,
-      'location': userProvider.getUser.location,
+      'location': location,
       'favGarageId': userProvider.getUser.favGarageId ?? 1,
     };
     final response = await NetworkService.sendRequest(
@@ -475,13 +897,22 @@ class _ProfileState extends State<Profile> {
 
   Future<bool> setLastName(String newLastName) async{
     final UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
+    if (userProvider.getUser.location == null){
+      setState(() {
+        location = null;
+      });
+    }else{
+      setState((){
+        location = abbreviateProvince(Province.getProvinceName(userProvider.getUser.location));
+      });
+    }
     Map<String, dynamic> body = {
       'id': userProvider.getUser.id,
       'email': userProvider.getUser.email,
       'role': userProvider.getUser.role,
       'firstName': userProvider.getUser.firstName,
       'lastName': newLastName,
-      'location': userProvider.getUser.location,
+      'location': location,
       'favGarageId': userProvider.getUser.favGarageId ?? 1,
     };
     final response = await NetworkService.sendRequest(
@@ -505,13 +936,22 @@ class _ProfileState extends State<Profile> {
 
   Future<bool> setEmail(String newEmail) async{
     final UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
+    if (userProvider.getUser.location == null){
+      setState(() {
+        location = null;
+      });
+    }else{
+      setState((){
+        location = abbreviateProvince(Province.getProvinceName(userProvider.getUser.location));
+      });
+    }
     Map<String, dynamic> body = {
       'id': userProvider.getUser.id,
       'email': newEmail,
       'role': userProvider.getUser.role,
       'firstName': userProvider.getUser.firstName,
       'lastName': userProvider.getUser.lastName,
-      'location': userProvider.getUser.location,
+      'location': location,
       'favGarageId': userProvider.getUser.favGarageId ?? 1,
     };
     final response = await NetworkService.sendRequest(
@@ -531,5 +971,71 @@ class _ProfileState extends State<Profile> {
     }
 
     return NetworkHelper.validateResponse(response);
+  }
+
+  Future<bool> setLocation(String? newProvince) async{
+    final UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
+    Map<String, dynamic> body = {
+      'id': userProvider.getUser.id,
+      'email': userProvider.getUser.email,
+      'role': userProvider.getUser.role,
+      'firstName': userProvider.getUser.firstName,
+      'lastName': userProvider.getUser.lastName,
+      'location': newProvince.toString(),
+      'favGarageId': userProvider.getUser.favGarageId ?? 1,
+    };
+    final response = await NetworkService.sendRequest(
+        requestType: RequestType.put,
+        apiSlug: StaticValues.getUserSlug,
+        body: body,
+        useAuthToken: true
+    );
+    final userNew = await NetworkHelper.filterResponse(
+      callBack: User.userFromJson,
+      response: response,
+    );
+    if (mounted){
+      final UserProvider userProvider =
+      Provider.of<UserProvider>(context, listen: false);
+      userProvider.setUser(userNew);
+    }
+
+    return NetworkHelper.validateResponse(response);
+  }
+
+  abbreviateProvince(String? province){
+    if (province == null){
+      return null;
+    }
+    else if (province == 'Antwerpen'){
+      return 'ANT';
+    }
+    else if (province == 'Henegouwen'){
+      return 'HAI';
+    }
+    else if (province == 'Luik'){
+      return 'LIE';
+    }
+    else if (province == 'Limburg'){
+      return 'LIM';
+    }
+    else if (province == 'Luxemburg'){
+      return 'LUX';
+    }
+    else if (province == 'Namen'){
+      return 'NAM';
+    }
+    else if (province == 'Oost-Vlaanderen'){
+      return 'OVL';
+    }
+    else if (province == 'West-Vlaanderen'){
+      return 'WVL';
+    }
+    else if (province == 'Vlaams-Brabant'){
+      return 'VBR';
+    }
+    else if (province == 'Waals-Brabant'){
+        return 'WBR';
+    }
   }
 }
