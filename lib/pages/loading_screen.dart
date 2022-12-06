@@ -65,12 +65,12 @@ class LoadingScreenState extends State<LoadingScreen> {
             callBack: User.userFromJson,
             response: response,
           );
-          if (user.twoFactor) {
-            return redirectToTwoFactorScreen();
-          } else {
-            userProvider.setUser(user);
-            return redirectToHomeScreen();
-          }
+          // if (user.twoFactor) {
+          //   return redirectToTwoFactorScreen();
+          // } else {
+          //   userProvider.setUser(user);
+          //   return redirectToHomeScreen();
+          // }
         } on BackendException {
           return redirectToLoginScreen();
         }

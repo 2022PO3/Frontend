@@ -11,7 +11,8 @@ class CurrentPrice extends StatelessWidget {
     return Text(
       "for " + curprice!.priceString + " " + curprice!.price.toString() + " " + Valuta().getValutaSymbol(curprice!.valuta),
       style: TextStyle(
-        color: Colors.indigo
+        color: Colors.indigoAccent,
+          fontWeight: FontWeight.w600
       ),//curprice!.valuta
     );
   }

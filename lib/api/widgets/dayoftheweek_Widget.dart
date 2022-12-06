@@ -12,7 +12,8 @@ class Dayoftheweek extends StatelessWidget {
       list.add(new Text(
           daysinaweek[i] + ": open from " + openingshours?.fromHour.toString() + " until " + openingshours?.toHour.toString(),
         style: TextStyle(
-            color: Colors.indigo,
+            color: Colors.indigoAccent,
+            fontWeight: FontWeight.w600
         ),
       )
       );

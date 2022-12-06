@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:po_frontend/utils/loading_page.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
@@ -10,7 +11,6 @@ import 'pages/auth/two_factor_page.dart';
 import 'pages/loading_screen.dart';
 import 'pages/home/home_page.dart';
 import 'pages/settings/user_settings.dart';
-import 'pages/navbar/statistics.dart';
 import 'pages/navbar/profile.dart';
 import 'pages/navbar/my_reservations.dart';
 import 'pages/booking_system.dart';
@@ -51,13 +51,12 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
             primarySwatch: Colors.indigo,
             scaffoldBackgroundColor: Colors.indigo[50]),
-        home: const UserActivationPage(uidB64: 'test', token: 'test'),
+        home: LoginPage(),
         routes: {
           '/login_page': (context) => const LoginPage(),
           '/home': (context) => const MyHomePage(),
           '/my_Reservations': (context) => const MyReservations(),
           '/settings': (context) => const UserSettings(),
-          '/statistics': (context) => const Statistics(),
           '/profile': (context) => const Profile(),
           '/booking_system': (context) => const BookingSystem(),
           '/garages_page': (context) => const GaragesPage(),

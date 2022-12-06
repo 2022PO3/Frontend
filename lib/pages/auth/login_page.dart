@@ -51,19 +51,6 @@ class _LoginPageState extends State<LoginPage> {
       //backgroundColor: ,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-            child: IconButton(
-                onPressed: () {
-                  //
-                },
-                icon: const Icon(
-                  Icons.help,
-                  size: 45,
-                )),
-          )
-        ],
         flexibleSpace: Container(
           decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -208,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
                       User user = await loginUser(userMail, userPassword);
                       if (mounted) {
                         Navigator.pushNamed(
-                            context, user.twoFactor ? '/two-factor' : '/home');
+                            context, '/home');
                       }
                     } on BackendException catch (e) {
                       print(e);

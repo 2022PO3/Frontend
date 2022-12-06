@@ -68,7 +68,8 @@ class _GarageInfoState extends State<GarageInfo> {
                 ),
                 Text('${garage.name}',
                   style: TextStyle(
-                      color: Colors.indigo
+                      color: Colors.indigoAccent,
+                      fontWeight: FontWeight.w600
                   ),
                 )
               ],
@@ -125,7 +126,12 @@ class _GarageInfoState extends State<GarageInfo> {
     ));
                     },
                     child: Text(
-                    "Press for details"
+                    "Press for details",
+                      style: TextStyle(
+                          color: Colors.indigoAccent,
+                          fontWeight: FontWeight.w700
+                      ),
+
                     )
                 )
               ],
@@ -142,7 +148,8 @@ class _GarageInfoState extends State<GarageInfo> {
                       final GarageSettings? garagesettings = snapshot.data;
                       return Text(garagesettings!.location.country + ", " + Province.getProvinceName(garagesettings!.location.province) + ", " + garagesettings!.location.street + " " + garagesettings!.location.number.toString() + ", " + garagesettings!.location.postCode.toString() + " " + garagesettings!.location.municipality + " ",
                         style: TextStyle(
-                            color: Colors.indigo
+                            color: Colors.indigoAccent,
+                            fontWeight: FontWeight.w600
                         ),
                       );
                     } else if (snapshot.hasError) {
@@ -176,7 +183,8 @@ class _GarageInfoState extends State<GarageInfo> {
                 ),
                 Text('${garage.unoccupiedLots}/${garage.parkingLots}',
                   style: TextStyle(
-                      color: Colors.indigo
+                      color: Colors.indigoAccent,
+                      fontWeight: FontWeight.w600
                   ),
                 )
               ],

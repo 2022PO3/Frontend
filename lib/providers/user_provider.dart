@@ -10,7 +10,8 @@ class UserProvider with ChangeNotifier {
       lastName: null,
       favGarageId: null,
       location: null,
-      twoFactor: false);
+      //twoFactor: false
+  );
 
   User get getUser => _user;
 

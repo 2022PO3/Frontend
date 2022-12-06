@@ -97,29 +97,20 @@ class _NavbarState extends State<Navbar> {
               onTap: () {
                 Navigator.pushNamed(context, '/profile');
               }),
-          const Divider(),
+          (userProvider.getUser.role == 2 || userProvider.getUser.role == 3)?(
           ListTile(
-              leading: const Icon(
-                Icons.query_stats,
-                color: Colors.indigo,
-              ),
-              title: const Text('Statistics'),
+            leading: const Icon(Icons.directions_car, color: Colors.indigo,),
+            title: const Text('My garages'),
               onTap: () {
-                Navigator.pushNamed(context, '/statistics');
-              }),
-          const Divider(),
+
+    }
+          )
+          ):(const Divider()),
           ListTile(
               leading: const Icon(Icons.settings, color: Colors.indigo),
               title: const Text('Settings'),
               onTap: () {
                 Navigator.pushNamed(context, '/settings');
-              }),
-          const Divider(),
-          ListTile(
-              leading: const Icon(Icons.help, color: Colors.indigo),
-              title: const Text('Help'),
-              onTap: () {
-                Navigator.pushNamed(context, '/help');
               }),
           const Divider(),
           ListTile(
