@@ -6,6 +6,7 @@ class StaticValues {
   static const String getUserSlug = 'api/user';
   static const String postLogoutUser = 'api/auth/logout';
   static const String postRegisterUser = 'api/auth/sign-up';
+  static const String changePassword = 'api/user/change-password';
 
   static const String activateUserSlug = 'api/auth/activate-account';
 }

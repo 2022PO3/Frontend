@@ -30,6 +30,9 @@ class _ProfileState extends State<Profile> {
   String userFirstName = '';
   String userLastName = '';
   String userEmail = '';
+  String newPassword = '';
+  String oldPassword = '';
+  String passwordConfirmation = '';
 
   String selectedValue = 'Select your province here';
 
@@ -74,12 +77,6 @@ class _ProfileState extends State<Profile> {
       }
     });
   }
-
-
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -398,6 +395,72 @@ class _ProfileState extends State<Profile> {
           ],
         ));
 
+    Future openDeleteUserDialog() => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Dear, ',
+                  style: TextStyle(color: Colors.indigoAccent),
+                ),
+                Text(
+                    UserinfoPr.getUser.firstName ?? 'User',
+                    style: const TextStyle(color: Colors.indigoAccent)
+                )
+              ]
+          ),
+          content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Text(
+                  'You are about to delete your account!',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold
+                  )
+                ),
+                Text('Are you sure you want to continue?'),
+                SizedBox(height: 10),
+                Text('Please note that this is a permanent action.'),
+                Text('You cannot restore this account after deleting it.'),
+                Text('If you want an account later on,'),
+                Text('you can always register a new one.')
+                ]
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.popUntil(
+                          context, ModalRoute.withName('/profile'));
+                      newLastNametextcontroller.clear();
+                    },
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(color: Colors.indigo, fontSize: 15),
+                    )),
+                TextButton(
+                  onPressed: () async {
+                     deleteUser();
+                     Navigator.popUntil(
+                       context, ModalRoute.withName('/login_page')
+                     );
+                  },
+                  child: const Text(
+                    'Confirm',
+                    style: TextStyle(color: Colors.indigo, fontSize: 15),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ));
+
     Future openPasswordDialog() => showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -419,7 +482,7 @@ class _ProfileState extends State<Profile> {
                 const Text(
                   'Your are about to change your password',
                   style: TextStyle(
-                    decoration: TextDecoration.underline,
+                    fontWeight: FontWeight.bold,
                   )
                 ),
                 const SizedBox(height: 20),
@@ -440,7 +503,7 @@ class _ProfileState extends State<Profile> {
                 const Text('Enter your new password in both boxes below.'),
                 TextField(
                   onChanged: (password) => onPasswordChanged(
-                      password, newPasswordtextcontroller.text),
+                      password, checkPasswordtextcontroller.text),
                   obscureText: true,
                   decoration: InputDecoration(
                     hintText: 'New password',
@@ -559,6 +622,8 @@ class _ProfileState extends State<Profile> {
                 ),
                 const SizedBox(height: 10),
                 TextField(
+                  onChanged: (password) =>
+                      onPasswordMatch(newPasswordtextcontroller.text, password),
                   obscureText: true,
                   decoration: InputDecoration(
                       hintText: 'Confirm new password',
@@ -624,20 +689,29 @@ class _ProfileState extends State<Profile> {
                     )),
                 TextButton(
                   onPressed: () async {
-                    setState((){
-                      userFirstName = newFirstNametextcontroller.text;
+                    setState(() {
+                      newPassword = newPasswordtextcontroller.text;
+                      oldPassword = currentPasswordtextcontroller.text;
+                      passwordConfirmation = checkPasswordtextcontroller.text;
                     });
-                    try{
-                      await setFirstName(userFirstName);
-                      if (mounted) {
-                        Navigator.popUntil(
-                            context, ModalRoute.withName('/profile')
-                        );
+                    if (_passwordMatch &&
+                        _hasSpecialCharacter &&
+                        _hasCapitalLetter &&
+                        _hasPasswordOneNumber &&
+                        _isPasswordEightCharacters) {
+                      try {
+                        await setUserPassword(newPassword, oldPassword, passwordConfirmation);
+                        if (mounted) {
+                          _showSuccessDialog(context);
+                          await Future.delayed(const Duration(seconds: 4));
+                          if (mounted) {
+                            Navigator.popAndPushNamed(context, '/login_page');
+                          }
+                        }
+                      } on BackendException catch (e) {
+                        print('Error occurred $e');
                       }
-                    } on BackendException catch (e) {
-                      print('Error occurred $e');
-                    };
-                    newFirstNametextcontroller.clear();
+                    }
                   },
                   child: const Text(
                     'Confirm',
@@ -654,204 +728,226 @@ class _ProfileState extends State<Profile> {
             title: const Text('Profile')
         ),
         body: Column(
-            children: [
-              const Text(
-                'User Info:',
-                style: TextStyle(
-                  fontSize: 35,
-                  fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.underline,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              children: [
+                const Text(
+                  'User Info:',
+                  style: TextStyle(
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 25),
-              Row(
-                  children: [
-                    const Text(
-                        'User-ID: ',
-                        style: TextStyle(
-                          fontSize: 20,
-                        )
-                    ),
-                    Text(
-                        UserinfoPr.getUser.id.toString(),
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        )
-                    )
-                  ]
-              ),
-              const SizedBox(height: 10),
-              const Divider(),
-              const SizedBox(height: 10),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                        children: [
-                          const Text(
-                            'First name: ',
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                          ),
-                          Text(
-                              UserinfoPr.getUser.firstName ?? 'No first name given',
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              )
-                          ),
-                        ]
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        openFirstnameDialog();
-                      },
-                      child: const Text('Change'),
-                    )
-                  ]
-              ),
-              const SizedBox(height: 10),
-              const Divider(),
-              const SizedBox(height: 10),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                        children: [
-                          const Text(
-                              'Last name: ',
-                              style: TextStyle(
-                                fontSize: 20,
-                              )
-                          ),
-                          Text(
-                              UserinfoPr.getUser.lastName ?? 'No last name given',
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              )
-                          )
-                        ]
-                    ),
-                    TextButton(
-                      onPressed: (){
-                        openLastnameDialog();
-                      },
-                      child: const Text('Change'),
-                    )
-
-                  ]
-              ),
-              const SizedBox(height: 10),
-              const Divider(),
-              const SizedBox(height: 10),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                        children: [
-                          const Text(
-                              'E-mail adress: ',
-                              style: TextStyle(
-                                  fontSize: 20
-                              )
-                          ),
-                          Text(
-                              UserinfoPr.getUser.email,
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              )
-                          )
-                        ]
-                    ),
-                    TextButton(
-                        onPressed: (){
-                          openEmailDialog();
-                        },
-                        child: const Text('Change')
-                    )
-                  ]
-              ),
-              const SizedBox(height: 10),
-              const Divider(),
-              const SizedBox(height: 10),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
+                const SizedBox(height: 25),
+                Row(
                     children: [
                       const Text(
-                          'Province: ',
+                          'User-ID: ',
                           style: TextStyle(
                             fontSize: 20,
                           )
                       ),
-                      if (UserinfoPr.getUser.location == null)...[
-                        const Text(
-                            'Not given',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            )
-                        ),
-                      ]else...[
-                        Text(
-                            Province.getProvinceName(UserinfoPr.getUser.location),
-                            style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold
-                            )
-                        ),
-                      ]
-                    ]
-                  ),
-                  TextButton(
-                      onPressed: (){
-                        openLocationDialog();
-                      },
-                      child: const Text('Change')
-                  )
-                ]
-              ),
-              const SizedBox(height: 10),
-              const Divider(),
-              const SizedBox(height: 10),
-              Row(
-                  children: [
-                    const Text(
-                        'Id favorite garage: ',
-                        style: TextStyle(
-                          fontSize: 20,
-                        )
-                    ),
-                    Text(
-                      UserinfoPr.getUser.favGarageId.toString(),
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold
+                      Text(
+                          UserinfoPr.getUser.id.toString(),
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          )
                       )
+                    ]
+                ),
+                const SizedBox(height: 10),
+                const Divider(),
+                const SizedBox(height: 10),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                          children: [
+                            const Text(
+                              'First name: ',
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                            ),
+                            Text(
+                                UserinfoPr.getUser.firstName ?? 'No first name given',
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                )
+                            ),
+                          ]
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          openFirstnameDialog();
+                        },
+                        child: const Text('Change'),
+                      )
+                    ]
+                ),
+                const SizedBox(height: 10),
+                const Divider(),
+                const SizedBox(height: 10),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                          children: [
+                            const Text(
+                                'Last name: ',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                )
+                            ),
+                            Text(
+                                UserinfoPr.getUser.lastName ?? 'No last name given',
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                )
+                            )
+                          ]
+                      ),
+                      TextButton(
+                        onPressed: (){
+                          openLastnameDialog();
+                        },
+                        child: const Text('Change'),
+                      )
+
+                    ]
+                ),
+                const SizedBox(height: 10),
+                const Divider(),
+                const SizedBox(height: 10),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                          children: [
+                            const Text(
+                                'E-mail adress: ',
+                                style: TextStyle(
+                                    fontSize: 20
+                                )
+                            ),
+                            Text(
+                                UserinfoPr.getUser.email,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                )
+                            )
+                          ]
+                      ),
+                      TextButton(
+                          onPressed: (){
+                            openEmailDialog();
+                          },
+                          child: const Text('Change')
+                      )
+                    ]
+                ),
+                const SizedBox(height: 10),
+                const Divider(),
+                const SizedBox(height: 10),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                          children: [
+                            const Text(
+                                'Province: ',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                )
+                            ),
+                            if (UserinfoPr.getUser.location == null)...[
+                              const Text(
+                                  'Not given',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  )
+                              ),
+                            ]else...[
+                              Text(
+                                  Province.getProvinceName(UserinfoPr.getUser.location),
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold
+                                  )
+                              ),
+                            ]
+                          ]
+                      ),
+                      TextButton(
+                          onPressed: (){
+                            openLocationDialog();
+                          },
+                          child: const Text('Change')
+                      )
+                    ]
+                ),
+                const SizedBox(height: 10),
+                const Divider(),
+                const SizedBox(height: 10),
+                Row(
+                    children: [
+                      const Text(
+                          'Id favorite garage: ',
+                          style: TextStyle(
+                            fontSize: 20,
+                          )
+                      ),
+                      Text(
+                          UserinfoPr.getUser.favGarageId.toString(),
+                          style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold
+                          )
+                      )
+                    ]
+                ),
+                const SizedBox(height: 10),
+                const Divider(),
+                const SizedBox(height: 10),
+                TextButton(
+                    onPressed: (){
+                      openPasswordDialog();
+                    },
+                    child: const Text(
+                        'Change you password',
+                        style: TextStyle(
+                            fontSize: 20
+                        )
                     )
-                  ]
-              ),
-              const SizedBox(height: 10),
-              const Divider(),
-              const SizedBox(height: 10),
+                ),
+              ],
+            ),
+            Column(
+            children: [
               TextButton(
                 onPressed: (){
-                  openPasswordDialog();
+                  openDeleteUserDialog();
                 },
                 child: const Text(
-                  'Change you password',
+                  'Delete your account',
                   style: TextStyle(
+                    color: Colors.red,
                     fontSize: 20
                   )
                 )
-              )
+              ),
+              const SizedBox(height: 20)
             ]
+          )
+          ]
         )
     );
   }
@@ -1003,6 +1099,34 @@ class _ProfileState extends State<Profile> {
     return NetworkHelper.validateResponse(response);
   }
 
+  Future<bool> deleteUser() async{
+    final response = await NetworkService.sendRequest(
+        requestType: RequestType.delete,
+        apiSlug: StaticValues.getUserSlug,
+        useAuthToken: true
+    );
+    return NetworkHelper.validateResponse(response);
+  }
+
+  Future<bool> setUserPassword(
+      String oldPassword,
+      String newPassword,
+      String passwordConfirmation) async{
+    Map<String, dynamic> body = {
+      'oldPassword': oldPassword,
+      'newPassword': newPassword,
+      'passwordConfirmation': passwordConfirmation,
+    };
+    final response = await NetworkService.sendRequest(
+        requestType: RequestType.put,
+        apiSlug: StaticValues.changePassword,
+        body: body,
+        useAuthToken: true
+    );
+    print(response);
+    return NetworkHelper.validateResponse(response);
+  }
+
   abbreviateProvince(String? province){
     if (province == null){
       return null;
@@ -1038,4 +1162,28 @@ class _ProfileState extends State<Profile> {
         return 'WBR';
     }
   }
+}
+
+void _showSuccessDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Password successfully changed!'),
+        content: const Text(
+            'You have successfully changed your password. You\'ll now be redirected to the login page.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text(
+              'OK',
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+        ],
+      );
+    },
+  );
 }

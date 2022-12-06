@@ -24,7 +24,7 @@ class _GarageInfoState extends State<GarageInfo> {
     print(arguments['garageIDargument'].id);
     final Garage garage = arguments['garageIDargument'];
 
-    final UserProvider userProvider = Provider.of<UserProvider>(context);µ
+    final UserProvider userProvider = Provider.of<UserProvider>(context);
     const Map<int, String> week_days = {} ;
 
     return Scaffold(
