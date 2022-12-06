@@ -54,6 +54,17 @@ class Valuta {
     }
     return valutaSymbol;
   }
+
+  static ValutaEnum? toValutaEnum(String? valuta) {
+    if (valuta == null) {
+      return null;
+    }
+    ValutaEnum? val = EnumToString.fromString(ValutaEnum.values, valuta);
+    if (val == null) {
+      throw BackendException(['Valuta is not a valid value.']);
+    }
+    return val;
+  }
 }
 
 class WeekDays {

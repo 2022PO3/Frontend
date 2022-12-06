@@ -26,8 +26,8 @@ class _RegisterNowState extends State<RegisterNow> {
   bool _hasSpecialCharacter = false;
   bool _passwordMatch = false;
 
-  String userFirstName = '';
-  String userLastName = '';
+  String? userFirstName = '';
+  String? userLastName = '';
   String userMail = '';
   String userPassword = '';
   String userConfirmPassword = '';
@@ -483,8 +483,8 @@ class _RegisterNowState extends State<RegisterNow> {
       String emailUser,
       String passwordUser,
       String confirmPasswordUser,
-      String firstNameUser,
-      String lastNameUser) async {
+      String? firstNameUser,
+      String? lastNameUser) async {
     Map<String, dynamic> body = {
       'email': emailUser,
       'password': passwordUser,
