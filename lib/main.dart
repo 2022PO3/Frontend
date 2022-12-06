@@ -11,7 +11,6 @@ import 'pages/home/home_page.dart';
 import 'pages/navbar/settings.dart';
 import 'pages/navbar/statistics.dart';
 import 'pages/navbar/profile.dart';
-import 'pages/navbar/help.dart';
 import 'pages/navbar/my_reservations.dart';
 import 'pages/booking_system.dart';
 
@@ -61,7 +60,6 @@ class MyApp extends StatelessWidget {
           '/settings': (context) => const Settings(),
           '/statistics': (context) => const Statistics(),
           '/profile': (context) => const Profile(),
-          '/help': (context) => const HelpF(),
           '/booking_system': (context) => const BookingSystem(),
           '/garages_page': (context) => const GaragesPage(),
           '/register': (context) => const RegisterNow(),
