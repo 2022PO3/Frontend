@@ -37,6 +37,14 @@ class _GarageInfoState extends State<GarageInfo> {
     return Scaffold(
       appBar: AppBar(
         title: Text(userProvider.getUser.firstName ?? ''),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [(Colors.indigo), (Colors.indigoAccent)],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              )),
+        ),
       ),
       body: SafeArea(
         child: Column(
@@ -58,7 +66,11 @@ class _GarageInfoState extends State<GarageInfo> {
                     colors: const [(Colors.indigoAccent), (Colors.indigo)],
                   ),
                 ),
-                Text('${garage.name}')
+                Text('${garage.name}',
+                  style: TextStyle(
+                      color: Colors.indigo
+                  ),
+                )
               ],
             ),
             Row(
@@ -94,8 +106,8 @@ class _GarageInfoState extends State<GarageInfo> {
         child: Column(
         children: [
         Text("Maximum amount of handicapped lots: " + garagesetting!.maxHandicappedLots.toString()),
-        Text("Maximum height: " + garagesetting!.maxHeight.toString()),
-        Text("Maximum width: " + garagesetting!.maxWidth.toString()),
+        Text("Maximum height: " + garagesetting!.maxHeight.toString() + " m"),
+        Text("Maximum width: " + garagesetting!.maxWidth.toString() + " m"),
         ],
         ),
       ),
@@ -128,7 +140,11 @@ class _GarageInfoState extends State<GarageInfo> {
                     if (snapshot.connectionState == ConnectionState.done &&
                         snapshot.hasData) {
                       final GarageSettings? garagesettings = snapshot.data;
-                      return Text(garagesettings!.location.country + ", " + Province.getProvinceName(garagesettings!.location.province) + ", " + garagesettings!.location.street + " " + garagesettings!.location.number.toString() + ", " + garagesettings!.location.postCode.toString() + " " + garagesettings!.location.municipality + " ");
+                      return Text(garagesettings!.location.country + ", " + Province.getProvinceName(garagesettings!.location.province) + ", " + garagesettings!.location.street + " " + garagesettings!.location.number.toString() + ", " + garagesettings!.location.postCode.toString() + " " + garagesettings!.location.municipality + " ",
+                        style: TextStyle(
+                            color: Colors.indigo
+                        ),
+                      );
                     } else if (snapshot.hasError) {
                       return Text("error");
                     }
@@ -158,7 +174,11 @@ class _GarageInfoState extends State<GarageInfo> {
                     colors: const [(Colors.indigoAccent), (Colors.indigo)],
                   ),
                 ),
-                Text('${garage.unoccupiedLots}/${garage.parkingLots}')
+                Text('${garage.unoccupiedLots}/${garage.parkingLots}',
+                  style: TextStyle(
+                      color: Colors.indigo
+                  ),
+                )
               ],
             ),
             Row(

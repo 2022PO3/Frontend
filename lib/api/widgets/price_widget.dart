@@ -9,7 +9,10 @@ class CurrentPrice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      "for " + curprice!.priceString + " " + curprice!.price.toString() + " " + Valuta().getValutaSymbol(curprice!.valuta)  //curprice!.valuta
+      "for " + curprice!.priceString + " " + curprice!.price.toString() + " " + Valuta().getValutaSymbol(curprice!.valuta),
+      style: TextStyle(
+        color: Colors.indigo
+      ),//curprice!.valuta
     );
   }
 }

@@ -9,7 +9,13 @@ class Dayoftheweek extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> list = [];
     for(var i = openingshours!.fromDay; i <= openingshours!.toDay; i++){
-      list.add(new Text(daysinaweek[i] + ": open from " + openingshours?.fromHour.toString() + " until " + openingshours?.toHour.toString()));
+      list.add(new Text(
+          daysinaweek[i] + ": open from " + openingshours?.fromHour.toString() + " until " + openingshours?.toHour.toString(),
+        style: TextStyle(
+            color: Colors.indigo,
+        ),
+      )
+      );
     }
     return new Column(children: list,crossAxisAlignment: CrossAxisAlignment.start,);
   }
