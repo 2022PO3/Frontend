@@ -15,7 +15,7 @@ class UserActivationPage extends StatefulWidget {
     required this.token,
   });
 
-  static const routeName = '/user-activation';
+  static const route = 'user-activation';
 
   final String uidB64;
   final String token;
@@ -33,6 +33,7 @@ class _UserActivationPageState extends State<UserActivationPage> {
     final isDone = state == ButtonState.done;
     final isError = state == ButtonState.error;
     final isStretched = isAnimating || state == ButtonState.init;
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -144,7 +145,7 @@ class _UserActivationPageState extends State<UserActivationPage> {
             }
           } on BackendException catch (e) {
             setState(() => state = ButtonState.error);
-            _showFailureDialog(context, e.toString());
+            showFailureDialog(e.toString());
           }
         },
       ),
@@ -208,10 +209,10 @@ class _UserActivationPageState extends State<UserActivationPage> {
     );
   }
 
-  void _showFailureDialog(BuildContext context, String error) {
+  void showFailureDialog(String error) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return AlertDialog(
           title: const Text('Server exception'),
           content:

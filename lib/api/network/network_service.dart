@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
@@ -34,7 +35,11 @@ class NetworkService {
   static String _encodeKey() {
     final jwt = JWT(
       {
-        'iat': (DateTime.now().millisecondsSinceEpoch / 1000).round(),
+        'iat': (DateTime.now()
+                    .add(const Duration(seconds: -10))
+                    .millisecondsSinceEpoch /
+                1000)
+            .round(),
         'exp': (DateTime.now()
                     .add(const Duration(seconds: 5))
                     .millisecondsSinceEpoch /
@@ -87,17 +92,18 @@ class NetworkService {
   }) async {
     String url = setPk(requestType, await setServerUrl(apiSlug), body, pk);
     String queryParamsUrl = setQueryParams(requestType, url, queryParams);
-    print('Sending request to $queryParamsUrl');
+    print('Sending $requestType to $queryParamsUrl');
     try {
-      final response = createRequest(
+      final response = await createRequest(
           requestType: requestType,
           uri: Uri.parse(queryParamsUrl),
           headers: useAuthToken ? await _setAuthHeaders() : _getHeaders(),
           body: json.encode(body));
       return response;
-    } catch (e) {
-      print('Response error: $e');
-      return null;
+    } on TimeoutException catch (e) {
+      throw BackendException(['Request timed out: $e']);
+    } on Exception catch (e) {
+      throw BackendException(['Unknown exception occurred: $e']);
     }
   }
 
@@ -116,7 +122,8 @@ class NetworkService {
   /// PUT-request from the body that is given. If not, an error will be raised.
   static String setPk(RequestType requestType, String url,
       Map<String, dynamic>? body, int? pk) {
-    if (requestType == RequestType.get && pk != null) {
+    if ((requestType == RequestType.get || requestType == RequestType.delete) &&
+        pk != null) {
       return '$url/${pk.toString()}';
     } else if (requestType == RequestType.put) {
       if (body == null) {
