@@ -9,6 +9,11 @@ import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:po_frontend/api/models/opening_hour_model.dart';
+import 'package:po_frontend/api/widgets/dayoftheweek_Widget.dart';
+import 'package:po_frontend/api/models/price_model.dart';
+import 'package:po_frontend/api/widgets/price_widget.dart';
+import 'package:po_frontend/api/models/garage_settings_model.dart';
+import 'package:po_frontend/api/models/enums.dart';
 
 class GarageInfo extends StatefulWidget {
   const GarageInfo({Key? key}) : super(key: key);
@@ -18,22 +23,33 @@ class GarageInfo extends StatefulWidget {
 }
 
 class _GarageInfoState extends State<GarageInfo> {
+
+
   @override
   Widget build(BuildContext context) {
     final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
     print(arguments['garageIDargument'].id);
     final Garage garage = arguments['garageIDargument'];
 
-    final UserProvider userProvider = Provider.of<UserProvider>(context);µ
+    final UserProvider userProvider = Provider.of<UserProvider>(context);
     const Map<int, String> week_days = {} ;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(userProvider.getUser.firstName ?? ''),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [(Colors.indigo), (Colors.indigoAccent)],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              )),
+        ),
       ),
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
@@ -50,7 +66,11 @@ class _GarageInfoState extends State<GarageInfo> {
                     colors: const [(Colors.indigoAccent), (Colors.indigo)],
                   ),
                 ),
-                Text('${garage.name}')
+                Text('${garage.name}',
+                  style: TextStyle(
+                      color: Colors.indigo
+                  ),
+                )
               ],
             ),
             Row(
@@ -68,8 +88,76 @@ class _GarageInfoState extends State<GarageInfo> {
                     colors: const [(Colors.indigoAccent), (Colors.indigo)],
                   ),
                 ),
-                const Text('location...')
+                TextButton(
+                    onPressed: () {
+                      showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+    content: FutureBuilder(
+    future: getGarageSettings(garage.id.toString()),
+    builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.done &&
+    snapshot.hasData) {
+    final GarageSettings? garagesetting = snapshot.data;
+    return SizedBox(
+      height: 70,
+      width: 300,
+      child: Center(
+        child: Column(
+        children: [
+        Text("Maximum amount of handicapped lots: " + garagesetting!.maxHandicappedLots.toString()),
+        Text("Maximum height: " + garagesetting!.maxHeight.toString() + " m"),
+        Text("Maximum width: " + garagesetting!.maxWidth.toString() + " m"),
+        ],
+        ),
+      ),
+    );
+    } else if (snapshot.hasError) {
+    return Text("error");
+    }
+    return  Container( height: 70,
+    width: 300,
+    child: Center(child: CircularProgressIndicator()),
+    alignment: Alignment.center,
+    );
+    },
+    ),
+    ));
+                    },
+                    child: Text(
+                    "Press for details"
+                    )
+                )
               ],
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+              child: SizedBox(
+                height: 40,
+                child: FutureBuilder(
+                  future: getGarageSettings(garage.id.toString()),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done &&
+                        snapshot.hasData) {
+                      final GarageSettings? garagesettings = snapshot.data;
+                      return Text(garagesettings!.location.country + ", " + Province.getProvinceName(garagesettings!.location.province) + ", " + garagesettings!.location.street + " " + garagesettings!.location.number.toString() + ", " + garagesettings!.location.postCode.toString() + " " + garagesettings!.location.municipality + " ",
+                        style: TextStyle(
+                            color: Colors.indigo
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text("error");
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
+                      child: Container(
+                        child: CircularProgressIndicator(),
+                        alignment: Alignment.topLeft,
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
             Row(
               children: [
@@ -86,8 +174,59 @@ class _GarageInfoState extends State<GarageInfo> {
                     colors: const [(Colors.indigoAccent), (Colors.indigo)],
                   ),
                 ),
-                Text('${garage.unoccupiedLots}/${garage.parkingLots}')
+                Text('${garage.unoccupiedLots}/${garage.parkingLots}',
+                  style: TextStyle(
+                      color: Colors.indigo
+                  ),
+                )
               ],
+            ),
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                  child: GradientText(
+                    'Garage Price: ',
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(
+                      //fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    colors: const [(Colors.indigoAccent), (Colors.indigo)],
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+              child: SizedBox(
+                height: 70,
+                child: FutureBuilder(
+                  future: getGaragePrice(garage.id.toString()),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done &&
+                        snapshot.hasData) {
+                      final List<Price>? garageprice = snapshot.data;
+                      return ListView.builder(
+                        itemBuilder: (context, index) {
+                          return CurrentPrice(curprice: garageprice?[index],);
+                        },
+                        itemCount: garageprice?.length,
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text("error");
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
+                      child: Container(
+                        child: CircularProgressIndicator(),
+                        alignment: Alignment.topLeft,
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
             Row(
               children: [
@@ -104,26 +243,38 @@ class _GarageInfoState extends State<GarageInfo> {
                     colors: const [(Colors.indigoAccent), (Colors.indigo)],
                   ),
                 ),
-                FutureBuilder(
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+              child: SizedBox(
+                height: 190,
+                child: FutureBuilder(
                   future: getGarageOpening(garage.id.toString()),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done &&
                         snapshot.hasData) {
-                      final openingshours = snapshot.data;
-                      return Column(
-                        children: [
-
-                        ],
+                      final List<OpeningHour>? openingshours = snapshot.data;
+                      print(openingshours);
+                      return ListView.builder(
+                        itemBuilder: (context, index) {
+                          return Dayoftheweek(openingshours: openingshours?[index],);
+                        },
+                        itemCount: openingshours?.length,
                       );
                     } else if (snapshot.hasError) {
                       return Text("error");
                     }
-                    return const Center(
-                      child: CircularProgressIndicator(),
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
+                      child: Container(
+                          child: CircularProgressIndicator(),
+                        alignment: Alignment.topLeft,
+                      ),
                     );
                   },
                 ),
-              ],
+              ),
             ),
             // FutureBuilder(
             //   future: getGaragePriceData(),
@@ -199,6 +350,30 @@ Future<List<OpeningHour>> getGarageOpening(String garage_ID) async {
   print("api/opening-hours/${garage_ID}");
   return await NetworkHelper.filterResponse(
       callBack: OpeningHourListFromJson,
+      response: response
+  );
+}
+
+Future<List<Price>> getGaragePrice(String garage_ID) async {
+  final response = await NetworkService.sendRequest(
+      requestType: RequestType.get,
+      apiSlug: "api/prices/${garage_ID}",
+      useAuthToken: true,
+  );
+  return await NetworkHelper.filterResponse(
+      callBack: PriceListFromJson,
+      response: response
+  );
+}
+
+Future<GarageSettings> getGarageSettings(String garage_ID) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.get,
+    apiSlug: "api/garage-settings/${garage_ID}",
+    useAuthToken: true,
+  );
+  return await NetworkHelper.filterResponse(
+      callBack: GarageSettings.fromJSON,
       response: response
   );
 }

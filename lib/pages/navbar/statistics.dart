@@ -12,7 +12,14 @@ class _StatisticsState extends State<Statistics> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          //
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [(Colors.indigo), (Colors.indigoAccent)],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              )),
+        ),
           ),
       body: const Text('Statistics'),
     );
