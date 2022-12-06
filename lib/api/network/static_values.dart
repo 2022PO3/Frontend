@@ -12,5 +12,5 @@ class StaticValues {
   static const String addTwoFactorDeviceSlug = 'api/auth/totp/create';
   static const String twoFactorDevicesSlug = 'api/auth/totp';
 
-  static const bool debug = true;
+  static const bool debug = false;
 }

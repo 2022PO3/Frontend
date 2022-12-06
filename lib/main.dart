@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
             primarySwatch: Colors.indigo,
             scaffoldBackgroundColor: Colors.indigo[50]),
-        home: const LoadingScreen(),
+        home: const UserActivationPage(uidB64: 'test', token: 'test'),
         routes: {
           '/login_page': (context) => const LoginPage(),
           '/home': (context) => const MyHomePage(),
