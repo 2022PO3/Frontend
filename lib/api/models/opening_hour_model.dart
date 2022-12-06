@@ -39,3 +39,6 @@ class OpeningHour {
         'toHour': openingHour.toHour,
       };
 }
+
+List<OpeningHour> OpeningHourListFromJson(List<dynamic> json) =>
+    (json).map((jsonopeninghour) => OpeningHour.fromJSON(jsonopeninghour)).toList();

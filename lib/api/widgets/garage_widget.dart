@@ -10,22 +10,27 @@ class GarageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 300,
-            child: Text(garage.name),
-          ),
-          SizedBox(
-            width: 300,
-            child: Text(garage.isFull ? 'Full' : 'Empty places'),
-          ),
-          SizedBox(
-            width: 300,
-            child: Text('${garage.unoccupiedLots}/${garage.parkingLots}'),
-          ),
-        ],
+      child: InkWell(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 300,
+              child: Text(garage.name),
+            ),
+            SizedBox(
+              width: 300,
+              child: Text(garage.isFull ? 'Full' : 'Empty places'),
+            ),
+            SizedBox(
+              width: 300,
+              child: Text('${garage.unoccupiedLots}/${garage.parkingLots}'),
+            ),
+          ],
+        ),
+        onTap: () {
+          Navigator.pushNamed(context, '/garage_info',arguments: {'garageIDargument': garage});
+        },
       ),
     );
   }
