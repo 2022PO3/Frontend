@@ -16,6 +16,7 @@ import 'pages/navbar/statistics.dart';
 import 'pages/navbar/profile.dart';
 import 'pages/navbar/help.dart';
 import 'pages/navbar/my_reservations.dart';
+import 'pages/NavBar_Pages/My_Reservations.dart';
 import 'pages/booking_system.dart';
 
 import 'pages/garage_info.dart';
@@ -60,7 +61,7 @@ class MyApp extends StatelessWidget {
           LoadingScreen.route: (context) => const LoadingScreen(),
           '/login_page': (context) => const LoginPage(),
           '/home': (context) => const MyHomePage(),
-          '/my_Reservations': (context) => const MyReservations(),
+          '/my_Reservations': (context) => My_Reservations(),
           '/settings': (context) => const Settings(),
           '/statistics': (context) => const Statistics(),
           '/profile': (context) => const Profile(),

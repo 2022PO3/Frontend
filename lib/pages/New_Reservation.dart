@@ -230,7 +230,6 @@ class _New_ReservationState extends State<New_Reservation> {
                         borderRadius: BorderRadius.circular(5)),
                     child: TextButton(
                       onPressed: () {
-                        print(_date.toString());
                         compareDates(_date, _date2)
                             ? Navigator.pushNamed(context, '/Spot_Selection',
                                 arguments: {
@@ -258,6 +257,10 @@ class _New_ReservationState extends State<New_Reservation> {
                         borderRadius: BorderRadius.circular(5)),
                     child: TextButton(
                       onPressed: () {
+                        print(garage.id);
+                        print(_date.toString());
+                        print(_date2.toString());
+
                         compareDates(_date, _date2)
                             ? Navigator.pushNamed(context, '/Spot_Selection',
                                 arguments: {
