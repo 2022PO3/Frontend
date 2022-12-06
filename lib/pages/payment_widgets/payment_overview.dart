@@ -67,7 +67,7 @@ class _PaymentOverviewState extends State<PaymentOverview> {
     super.dispose();
   }
 
-  Future reloadFuture() async {
+  Future<Map<Price, int>> reloadFuture() async {
     setState(() {
       previewFuture = getPaymentPreview();
     });

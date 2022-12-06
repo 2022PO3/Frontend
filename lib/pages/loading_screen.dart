@@ -52,7 +52,7 @@ class LoadingScreenState extends State<LoadingScreen> {
           : print(
               'Could not connect to po3backend server, redirecting to localhost.');
       print('The exception was: $e');
-      await setServerUrl(pref, 'http://192.168.135.56:8000/');
+      await setServerUrl(pref, 'http://192.168.208.131:8000/');
     } finally {
       try {
         final response = await NetworkService.sendRequest(
