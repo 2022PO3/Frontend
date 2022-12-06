@@ -26,8 +26,8 @@ class _RegisterNowState extends State<RegisterNow> {
   bool _hasSpecialCharacter = false;
   bool _passwordMatch = false;
 
-  String userFirstName = '';
-  String userLastName = '';
+  String? userFirstName = '';
+  String? userLastName = '';
   String userMail = '';
   String userPassword = '';
   String userConfirmPassword = '';
@@ -444,8 +444,12 @@ class _RegisterNowState extends State<RegisterNow> {
                   ),
                   onPressed: () async {
                     setState(() {
-                      userFirstName = _firstNameTextController.text;
-                      userLastName = _lastNameTextController.text;
+                      if (_firstNameTextController.text == "") {
+                        userFirstName = null;
+                      }
+                      if (_lastNameTextController.text == "") {
+                        userLastName = null;
+                      }
                       userMail = _emailTextController.text;
                       userPassword = _passwordTextController.text;
                       userConfirmPassword = _confirmPasswordTextController.text;
@@ -484,8 +488,8 @@ class _RegisterNowState extends State<RegisterNow> {
       String emailUser,
       String passwordUser,
       String confirmPasswordUser,
-      String firstNameUser,
-      String lastNameUser) async {
+      String? firstNameUser,
+      String? lastNameUser) async {
     Map<String, dynamic> body = {
       'email': emailUser,
       'password': passwordUser,
