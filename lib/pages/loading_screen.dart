@@ -14,7 +14,7 @@ import 'package:po_frontend/providers/user_provider.dart';
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({Key? key}) : super(key: key);
 
-  static const String route = '/';
+  static const String route = '/loading-screen';
 
   @override
   LoadingScreenState createState() => LoadingScreenState();
@@ -36,24 +36,23 @@ class LoadingScreenState extends State<LoadingScreen> {
     final UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);
     final pref = await SharedPreferences.getInstance();
-    await pref.setString(
-      'serverUrl',
-      'https://po3backend.ddns.net/',
-    );
+    await setServerUrl(pref, 'https://po3backend.ddns.net/');
+    bool debug = StaticValues.debug;
     try {
-      await NetworkService.sendRequest(
-        requestType: RequestType.get,
-        apiSlug: StaticValues.getUserSlug,
-        useAuthToken: true,
-      );
+      debug
+          ? throw Exception('Debug is enabled, so redirecting to localhost.')
+          : await NetworkService.sendRequest(
+              requestType: RequestType.get,
+              apiSlug: StaticValues.getUserSlug,
+              useAuthToken: true,
+            );
     } on Exception catch (e) {
-      print(
-          'Could not connect to po3backend server, redirecting to localhost.');
+      debug
+          ? print(e)
+          : print(
+              'Could not connect to po3backend server, redirecting to localhost.');
       print('The exception was: $e');
-      await pref.setString(
-        'serverUrl',
-        'http://192.168.49.1:8000/',
-      );
+      await setServerUrl(pref, 'http://192.168.49.1:8000/');
     } finally {
       try {
         final response = await NetworkService.sendRequest(
@@ -66,8 +65,12 @@ class LoadingScreenState extends State<LoadingScreen> {
             callBack: User.userFromJson,
             response: response,
           );
-          userProvider.setUser(user);
-          return redirectToHomeScreen();
+          if (user.twoFactor) {
+            return redirectToTwoFactorScreen();
+          } else {
+            userProvider.setUser(user);
+            return redirectToHomeScreen();
+          }
         } on BackendException {
           return redirectToLoginScreen();
         }
@@ -84,6 +87,14 @@ class LoadingScreenState extends State<LoadingScreen> {
 
   void redirectToLoginScreen() {
     Navigator.pushReplacementNamed(context, '/login_page');
+  }
+
+  void redirectToTwoFactorScreen() {
+    Navigator.pushReplacementNamed(context, '/two-factor');
+  }
+
+  Future<void> setServerUrl(SharedPreferences pref, String serverUrl) async {
+    await pref.setString('serverUrl', serverUrl);
   }
 
   @override
