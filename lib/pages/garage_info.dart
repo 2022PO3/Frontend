@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:po_frontend/api/models/opening_hour_model.dart';
 import 'package:po_frontend/providers/user_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
 import 'package:po_frontend/api/network/network_service.dart';
-import 'package:po_frontend/api/network/static_values.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:po_frontend/api/models/opening_hour_model.dart';
-import 'package:po_frontend/api/widgets/dayoftheweek_Widget.dart';
+import 'package:po_frontend/api/widgets/garage_opening_hours_widget.dart';
 import 'package:po_frontend/api/models/price_model.dart';
 import 'package:po_frontend/api/widgets/price_widget.dart';
 import 'package:po_frontend/api/models/garage_settings_model.dart';
@@ -23,27 +21,26 @@ class GarageInfo extends StatefulWidget {
 }
 
 class _GarageInfoState extends State<GarageInfo> {
-
-
   @override
   Widget build(BuildContext context) {
-    final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
+    final arguments = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
     print(arguments['garageIDargument'].id);
     final Garage garage = arguments['garageIDargument'];
 
     final UserProvider userProvider = Provider.of<UserProvider>(context);
-    const Map<int, String> week_days = {} ;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(userProvider.getUser.firstName ?? ''),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [(Colors.indigo), (Colors.indigoAccent)],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-              )),
+            gradient: LinearGradient(
+              colors: [(Colors.indigo), (Colors.indigoAccent)],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+          ),
         ),
       ),
       body: SafeArea(
@@ -66,10 +63,9 @@ class _GarageInfoState extends State<GarageInfo> {
                     colors: const [(Colors.indigoAccent), (Colors.indigo)],
                   ),
                 ),
-                Text('${garage.name}',
-                  style: TextStyle(
-                      color: Colors.indigo
-                  ),
+                Text(
+                  garage.name,
+                  style: const TextStyle(color: Colors.indigo),
                 )
               ],
             ),
@@ -91,43 +87,48 @@ class _GarageInfoState extends State<GarageInfo> {
                 TextButton(
                     onPressed: () {
                       showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-    content: FutureBuilder(
-    future: getGarageSettings(garage.id.toString()),
-    builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.done &&
-    snapshot.hasData) {
-    final GarageSettings? garagesetting = snapshot.data;
-    return SizedBox(
-      height: 70,
-      width: 300,
-      child: Center(
-        child: Column(
-        children: [
-        Text("Maximum amount of handicapped lots: " + garagesetting!.maxHandicappedLots.toString()),
-        Text("Maximum height: " + garagesetting!.maxHeight.toString() + " m"),
-        Text("Maximum width: " + garagesetting!.maxWidth.toString() + " m"),
-        ],
-        ),
-      ),
-    );
-    } else if (snapshot.hasError) {
-    return Text("error");
-    }
-    return  Container( height: 70,
-    width: 300,
-    child: Center(child: CircularProgressIndicator()),
-    alignment: Alignment.center,
-    );
-    },
-    ),
-    ));
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          content: FutureBuilder(
+                            future: getGarageSettings(garage.id.toString()),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                      ConnectionState.done &&
+                                  snapshot.hasData) {
+                                final GarageSettings? garageSettings =
+                                    snapshot.data;
+                                return SizedBox(
+                                  height: 70,
+                                  width: 300,
+                                  child: Center(
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                            'Maximum amount of handicapped lots: ${garageSettings!.maxHandicappedLots}'),
+                                        Text(
+                                            'Maximum height: ${garageSettings.maxHeight} m'),
+                                        Text(
+                                            'Maximum width: ${garageSettings.maxWidth} m'),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              } else if (snapshot.hasError) {
+                                return const Text('error');
+                              }
+                              return Container(
+                                height: 70,
+                                width: 300,
+                                alignment: Alignment.center,
+                                child: const Center(
+                                    child: CircularProgressIndicator()),
+                              );
+                            },
+                          ),
+                        ),
+                      );
                     },
-                    child: Text(
-                    "Press for details"
-                    )
-                )
+                    child: const Text('Press for details'))
               ],
             ),
             Padding(
@@ -139,20 +140,21 @@ class _GarageInfoState extends State<GarageInfo> {
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done &&
                         snapshot.hasData) {
-                      final GarageSettings? garagesettings = snapshot.data;
-                      return Text(garagesettings!.location.country + ", " + Province.getProvinceName(garagesettings!.location.province) + ", " + garagesettings!.location.street + " " + garagesettings!.location.number.toString() + ", " + garagesettings!.location.postCode.toString() + " " + garagesettings!.location.municipality + " ",
-                        style: TextStyle(
-                            color: Colors.indigo
+                      final GarageSettings? garageSettings = snapshot.data;
+                      return Text(
+                        '${garageSettings!.location.country}, ${Province.getProvinceName(garageSettings.location.province)}, ${garageSettings.location.street} ${garageSettings.location.number}, ${garageSettings.location.postCode} ${garageSettings.location.municipality}',
+                        style: const TextStyle(
+                          color: Colors.indigo,
                         ),
                       );
                     } else if (snapshot.hasError) {
-                      return Text("error");
+                      return const Text('error');
                     }
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
                       child: Container(
-                        child: CircularProgressIndicator(),
                         alignment: Alignment.topLeft,
+                        child: const CircularProgressIndicator(),
                       ),
                     );
                   },
@@ -174,10 +176,9 @@ class _GarageInfoState extends State<GarageInfo> {
                     colors: const [(Colors.indigoAccent), (Colors.indigo)],
                   ),
                 ),
-                Text('${garage.unoccupiedLots}/${garage.parkingLots}',
-                  style: TextStyle(
-                      color: Colors.indigo
-                  ),
+                Text(
+                  '${garage.unoccupiedLots}/${garage.parkingLots}',
+                  style: const TextStyle(color: Colors.indigo),
                 )
               ],
             ),
@@ -207,21 +208,23 @@ class _GarageInfoState extends State<GarageInfo> {
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done &&
                         snapshot.hasData) {
-                      final List<Price>? garageprice = snapshot.data;
+                      final List<Price>? garagePrice = snapshot.data;
                       return ListView.builder(
                         itemBuilder: (context, index) {
-                          return CurrentPrice(curprice: garageprice?[index],);
+                          return CurrentPrice(
+                            price: garagePrice?[index],
+                          );
                         },
-                        itemCount: garageprice?.length,
+                        itemCount: garagePrice?.length,
                       );
                     } else if (snapshot.hasError) {
-                      return Text("error");
+                      return const Text('error');
                     }
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
                       child: Container(
-                        child: CircularProgressIndicator(),
                         alignment: Alignment.topLeft,
+                        child: const CircularProgressIndicator(),
                       ),
                     );
                   },
@@ -254,59 +257,30 @@ class _GarageInfoState extends State<GarageInfo> {
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done &&
                         snapshot.hasData) {
-                      final List<OpeningHour>? openingshours = snapshot.data;
-                      print(openingshours);
+                      final List<OpeningHour>? openingsHours = snapshot.data;
+                      print(openingsHours);
                       return ListView.builder(
                         itemBuilder: (context, index) {
-                          return Dayoftheweek(openingshours: openingshours?[index],);
+                          return GarageOpeningHoursWidget(
+                            openingsHours: openingsHours?[index],
+                          );
                         },
-                        itemCount: openingshours?.length,
+                        itemCount: openingsHours?.length,
                       );
                     } else if (snapshot.hasError) {
-                      return Text("error");
+                      return const Text('error');
                     }
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
                       child: Container(
-                          child: CircularProgressIndicator(),
                         alignment: Alignment.topLeft,
+                        child: const CircularProgressIndicator(),
                       ),
                     );
                   },
                 ),
               ),
             ),
-            // FutureBuilder(
-            //   future: getGaragePriceData(),
-            //     builder: (context,snapshot) {
-            //       if (snapshot.connectionState == ConnectionState.done &&
-            //       snapshot.hasData) {
-            //         return Row(
-            //           children: [
-            //             Padding(
-            //               padding: const EdgeInsets.symmetric(horizontal: 20),
-            //               child: GradientText(
-            //                 "Price: ",
-            //                 textAlign: TextAlign.left,
-            //                 style: TextStyle(
-            //                   //fontWeight: FontWeight.bold,
-            //                   fontSize: 20,
-            //                   fontWeight: FontWeight.bold,
-            //                 ),
-            //                 colors: [(Colors.indigoAccent), (Colors.indigo)],
-            //               ),
-            //             ),
-            //             Text("price...")
-            //           ],
-            //         );
-            //       } else if (snapshot.hasError) {
-            //         return Text("Error...");
-            //       }
-            //       return const Center(
-            //           child: CircularProgressIndicator(),
-            //       );
-            //     }
-            // ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Container(
@@ -341,39 +315,33 @@ class _GarageInfoState extends State<GarageInfo> {
   }
 }
 
-Future<List<OpeningHour>> getGarageOpening(String garage_ID) async {
+Future<List<OpeningHour>> getGarageOpening(String garageId) async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.get,
-    apiSlug: "api/opening-hours/${garage_ID}",
+    apiSlug: 'api/opening-hours/$garageId',
     useAuthToken: true,
   );
-  print("api/opening-hours/${garage_ID}");
+  print('api/opening-hours/$garageId');
   return await NetworkHelper.filterResponse(
-      callBack: OpeningHourListFromJson,
-      response: response
-  );
+      callBack: OpeningHourListFromJson, response: response);
 }
 
-Future<List<Price>> getGaragePrice(String garage_ID) async {
-  final response = await NetworkService.sendRequest(
-      requestType: RequestType.get,
-      apiSlug: "api/prices/${garage_ID}",
-      useAuthToken: true,
-  );
-  return await NetworkHelper.filterResponse(
-      callBack: PriceListFromJson,
-      response: response
-  );
-}
-
-Future<GarageSettings> getGarageSettings(String garage_ID) async {
+Future<List<Price>> getGaragePrice(String garageId) async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.get,
-    apiSlug: "api/garage-settings/${garage_ID}",
+    apiSlug: 'api/prices/$garageId',
     useAuthToken: true,
   );
   return await NetworkHelper.filterResponse(
-      callBack: GarageSettings.fromJSON,
-      response: response
+      callBack: PriceListFromJson, response: response);
+}
+
+Future<GarageSettings> getGarageSettings(String garageId) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.get,
+    apiSlug: 'api/garage-settings/$garageId',
+    useAuthToken: true,
   );
+  return await NetworkHelper.filterResponse(
+      callBack: GarageSettings.fromJSON, response: response);
 }

@@ -49,45 +49,46 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        theme: ThemeData(
-            primarySwatch: Colors.indigo,
-            scaffoldBackgroundColor: Colors.indigo[50]),
-        home: const UserActivationPage(uidB64: 'test', token: 'test'),
-        routes: {
-          '/login_page': (context) => const LoginPage(),
-          '/home': (context) => const MyHomePage(),
-          '/my_Reservations': (context) => const MyReservations(),
-          '/settings': (context) => const UserSettings(),
-          '/statistics': (context) => const Statistics(),
-          '/profile': (context) => const Profile(),
-          '/help': (context) => const HelpF(),
-          '/booking_system': (context) => const BookingSystem(),
-          '/garages_page': (context) => const GaragesPage(),
-          '/register': (context) => const RegisterNow(),
-          '/garage_info': (context) => const GarageInfo(),
-          TwoFactorPage.route: (context) => const TwoFactorPage(),
-          AddTwoFactorDevicePage.route: (context) =>
-              const AddTwoFactorDevicePage(),
-        },
-        debugShowCheckedModeBanner: false,
-        onGenerateRoute: (settings) {
-          List stripResult = stripParameters(settings.name);
-          print(stripResult);
-          if (stripResult[0] == '/${UserActivationPage.route}') {
-            Map<String, String> args = stripResult[1];
-            if (args['uidB64'] == null || args['token'] == null) {
-              throw Exception(
-                  'Either `uidB64` or `token`-parameters is not given to the url!');
-            }
-            return MaterialPageRoute(
-              settings: settings,
-              builder: (context) => UserActivationPage(
-                uidB64: args['uidB64']!,
-                token: args['token']!,
-              ),
-            );
+      theme: ThemeData(
+          primarySwatch: Colors.indigo,
+          scaffoldBackgroundColor: Colors.indigo[50]),
+      home: const UserActivationPage(uidB64: 'test', token: 'test'),
+      routes: {
+        '/login_page': (context) => const LoginPage(),
+        '/home': (context) => const MyHomePage(),
+        '/my_Reservations': (context) => const MyReservations(),
+        '/settings': (context) => const UserSettings(),
+        '/statistics': (context) => const Statistics(),
+        '/profile': (context) => const Profile(),
+        '/help': (context) => const HelpF(),
+        '/booking_system': (context) => const BookingSystem(),
+        '/garages_page': (context) => const GaragesPage(),
+        '/register': (context) => const RegisterNow(),
+        '/garage_info': (context) => const GarageInfo(),
+        TwoFactorPage.route: (context) => const TwoFactorPage(),
+        AddTwoFactorDevicePage.route: (context) =>
+            const AddTwoFactorDevicePage(),
+      },
+      debugShowCheckedModeBanner: false,
+      onGenerateRoute: (settings) {
+        List stripResult = stripParameters(settings.name);
+        print(stripResult);
+        if (stripResult[0] == '/${UserActivationPage.route}') {
+          Map<String, String> args = stripResult[1];
+          if (args['uidB64'] == null || args['token'] == null) {
+            throw Exception(
+                'Either `uidB64` or `token`-parameters is not given to the url!');
           }
-          return null;
-        });
+          return MaterialPageRoute(
+            settings: settings,
+            builder: (context) => UserActivationPage(
+              uidB64: args['uidB64']!,
+              token: args['token']!,
+            ),
+          );
+        }
+        return null;
+      },
+    );
   }
 }
