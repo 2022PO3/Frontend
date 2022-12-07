@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:po_frontend/api/models/opening_hour_model.dart';
 import 'package:po_frontend/providers/user_provider.dart';
@@ -28,11 +30,11 @@ class _GarageInfoState extends State<GarageInfo> {
     print(arguments['garageIDargument'].id);
     final Garage garage = arguments['garageIDargument'];
 
-    final UserProvider userProvider = Provider.of<UserProvider>(context);
+    final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(userProvider.getUser.firstName ?? ''),
+        title: Text(garage.name),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -42,49 +44,107 @@ class _GarageInfoState extends State<GarageInfo> {
             ),
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              setState(() {});
+            },
+            icon: const FaIcon(FontAwesomeIcons.arrowsRotate),
+          ),
+        ],
       ),
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                  child: GradientText(
-                    'Garage Name: ',
-                    textAlign: TextAlign.left,
-                    style: const TextStyle(
-                      //fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    constraints: BoxConstraints(
+                      maxWidth: width - 50,
+                      maxHeight: 200,
                     ),
-                    colors: const [(Colors.indigoAccent), (Colors.indigo)],
-                  ),
-                ),
-                Text(
-                  garage.name,
-                  style: const TextStyle(color: Colors.indigo),
-                )
-              ],
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                  child: GradientText(
-                    'Location: ',
-                    textAlign: TextAlign.left,
-                    style: const TextStyle(
-                      //fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                      child: SfRadialGauge(
+                        axes: <RadialAxis>[
+                          RadialAxis(
+                            minimum: 0,
+                            maximum: garage.parkingLots.toDouble(),
+                            showLabels: false,
+                            showTicks: false,
+                            axisLineStyle: const AxisLineStyle(
+                              thickness: 0.2,
+                              cornerStyle: CornerStyle.bothCurve,
+                              color: Colors.grey,
+                              thicknessUnit: GaugeSizeUnit.factor,
+                            ),
+                            pointers: <GaugePointer>[
+                              RangePointer(
+                                value: garage.unoccupiedLots.toDouble(),
+                                cornerStyle: CornerStyle.bothCurve,
+                                width: 0.2,
+                                sizeUnit: GaugeSizeUnit.factor,
+                              )
+                            ],
+                            annotations: <GaugeAnnotation>[
+                              GaugeAnnotation(
+                                positionFactor: 0.1,
+                                angle: 90,
+                                widget: Text(
+                                  '${garage.unoccupiedLots.toStringAsFixed(0)} / ${garage.parkingLots}',
+                                  style: const TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                    colors: const [(Colors.indigoAccent), (Colors.indigo)],
                   ),
-                ),
-                TextButton(
+                ],
+              ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                    child: GradientText(
+                      'Garage Name: ',
+                      textAlign: TextAlign.left,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      colors: const [(Colors.indigoAccent), (Colors.indigo)],
+                    ),
+                  ),
+                  Text(
+                    garage.name,
+                    style: const TextStyle(color: Colors.indigo),
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                    child: GradientText(
+                      'Location: ',
+                      textAlign: TextAlign.left,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      colors: const [(Colors.indigoAccent), (Colors.indigo)],
+                    ),
+                  ),
+                  TextButton(
                     onPressed: () {
                       showDialog(
                         context: context,
@@ -128,40 +188,41 @@ class _GarageInfoState extends State<GarageInfo> {
                         ),
                       );
                     },
-                    child: const Text('Press for details'))
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-              child: SizedBox(
-                height: 40,
-                child: FutureBuilder(
-                  future: getGarageSettings(garage.id.toString()),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done &&
-                        snapshot.hasData) {
-                      final GarageSettings? garageSettings = snapshot.data;
-                      return Text(
-                        '${garageSettings!.location.country}, ${Province.getProvinceName(garageSettings.location.province)}, ${garageSettings.location.street} ${garageSettings.location.number}, ${garageSettings.location.postCode} ${garageSettings.location.municipality}',
-                        style: const TextStyle(
-                          color: Colors.indigo,
+                    child: const Text('Press for details'),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: SizedBox(
+                  height: 65,
+                  child: FutureBuilder(
+                    future: getGarageSettings(garage.id.toString()),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done &&
+                          snapshot.hasData) {
+                        final GarageSettings? garageSettings = snapshot.data;
+                        return Text(
+                          '${garageSettings!.location.country}, ${Province.getProvinceName(garageSettings.location.province)}, ${garageSettings.location.street} ${garageSettings.location.number}, ${garageSettings.location.postCode} ${garageSettings.location.municipality}',
+                          style: const TextStyle(
+                            color: Colors.indigo,
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        return const Text('error');
+                      }
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
+                        child: Container(
+                          alignment: Alignment.topLeft,
+                          child: const CircularProgressIndicator(),
                         ),
                       );
-                    } else if (snapshot.hasError) {
-                      return const Text('error');
-                    }
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
-                      child: Container(
-                        alignment: Alignment.topLeft,
-                        child: const CircularProgressIndicator(),
-                      ),
-                    );
-                  },
+                    },
+                  ),
                 ),
               ),
-            ),
-            Row(
+              /*Row(
               children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
@@ -181,119 +242,166 @@ class _GarageInfoState extends State<GarageInfo> {
                   style: const TextStyle(color: Colors.indigo),
                 )
               ],
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                  child: GradientText(
-                    'Garage Price: ',
-                    textAlign: TextAlign.left,
-                    style: const TextStyle(
-                      //fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+            ),*/
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                    child: GradientText(
+                      'Garage Price: ',
+                      textAlign: TextAlign.left,
+                      style: const TextStyle(
+                        //fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      colors: const [(Colors.indigoAccent), (Colors.indigo)],
                     ),
-                    colors: const [(Colors.indigoAccent), (Colors.indigo)],
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                child: SizedBox(
+                  height: 70,
+                  child: FutureBuilder(
+                    future: getGaragePrice(garage.id.toString()),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done &&
+                          snapshot.hasData) {
+                        final List<Price>? garagePrice = snapshot.data;
+                        return ListView.builder(
+                          itemBuilder: (context, index) {
+                            return CurrentPrice(
+                              price: garagePrice?[index],
+                            );
+                          },
+                          itemCount: garagePrice?.length,
+                        );
+                      } else if (snapshot.hasError) {
+                        return const Text('error');
+                      }
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
+                        child: Container(
+                          alignment: Alignment.topLeft,
+                          child: const CircularProgressIndicator(),
+                        ),
+                      );
+                    },
                   ),
                 ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-              child: SizedBox(
-                height: 70,
-                child: FutureBuilder(
-                  future: getGaragePrice(garage.id.toString()),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done &&
-                        snapshot.hasData) {
-                      final List<Price>? garagePrice = snapshot.data;
-                      return ListView.builder(
-                        itemBuilder: (context, index) {
-                          return CurrentPrice(
-                            price: garagePrice?[index],
-                          );
-                        },
-                        itemCount: garagePrice?.length,
-                      );
-                    } else if (snapshot.hasError) {
-                      return const Text('error');
-                    }
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
-                      child: Container(
-                        alignment: Alignment.topLeft,
-                        child: const CircularProgressIndicator(),
-                      ),
-                    );
-                  },
-                ),
               ),
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                  child: GradientText(
-                    'Opening hours: ',
-                    textAlign: TextAlign.left,
-                    style: const TextStyle(
-                      //fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                    child: GradientText(
+                      'Opening hours: ',
+                      textAlign: TextAlign.left,
+                      style: const TextStyle(
+                        //fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      colors: const [(Colors.indigoAccent), (Colors.indigo)],
                     ),
-                    colors: const [(Colors.indigoAccent), (Colors.indigo)],
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                child: SizedBox(
+                  height: 190,
+                  child: FutureBuilder(
+                    future: getGarageOpening(garage.id.toString()),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done &&
+                          snapshot.hasData) {
+                        final List<OpeningHour>? openingsHours = snapshot.data;
+                        print(openingsHours);
+                        return ListView.builder(
+                          itemBuilder: (context, index) {
+                            return GarageOpeningHoursWidget(
+                              openingsHours: openingsHours?[index],
+                            );
+                          },
+                          itemCount: openingsHours?.length,
+                        );
+                      } else if (snapshot.hasError) {
+                        return const Text('error');
+                      }
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
+                        child: Container(
+                          alignment: Alignment.topLeft,
+                          child: const CircularProgressIndicator(),
+                        ),
+                      );
+                    },
                   ),
                 ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-              child: SizedBox(
-                height: 190,
-                child: FutureBuilder(
-                  future: getGarageOpening(garage.id.toString()),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done &&
-                        snapshot.hasData) {
-                      final List<OpeningHour>? openingsHours = snapshot.data;
-                      print(openingsHours);
-                      return ListView.builder(
-                        itemBuilder: (context, index) {
-                          return GarageOpeningHoursWidget(
-                            openingsHours: openingsHours?[index],
-                          );
-                        },
-                        itemCount: openingsHours?.length,
-                      );
-                    } else if (snapshot.hasError) {
-                      return const Text('error');
-                    }
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
-                      child: Container(
-                        alignment: Alignment.topLeft,
-                        child: const CircularProgressIndicator(),
-                      ),
-                    );
-                  },
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        buildIconWithText(
+                          FontAwesomeIcons.wheelchair,
+                          garage.garageSettings.maxHandicappedLots.toString(),
+                        ),
+                        const SizedBox(
+                          width: 30,
+                        ),
+                        buildIconWithText(
+                          FontAwesomeIcons.chargingStation,
+                          garage.garageSettings.maxHandicappedLots.toString(),
+                        ),
+                        const SizedBox(
+                          width: 30,
+                        ),
+                        buildIconWithText(
+                          FontAwesomeIcons.arrowsLeftRight,
+                          '${garage.garageSettings.maxWidth.toString()} m',
+                        ),
+                        const SizedBox(
+                          width: 30,
+                        ),
+                        buildIconWithText(
+                          FontAwesomeIcons.arrowsUpDown,
+                          '${garage.garageSettings.maxHeight.toString()} m',
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: Container(
-                height: 65,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [(Colors.indigo), (Colors.indigoAccent)],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
-                    borderRadius: BorderRadius.circular(20)),
-                child: TextButton(
+              const SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Container(
+                  height: 65,
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [(Colors.indigo), (Colors.indigoAccent)],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ),
+                      borderRadius: BorderRadius.circular(20)),
+                  child: TextButton(
                     style: TextButton.styleFrom(
                       minimumSize: const Size.fromHeight(30),
                     ),
@@ -305,12 +413,36 @@ class _GarageInfoState extends State<GarageInfo> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    onPressed: () async {}),
+                    onPressed: () async {},
+                  ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget buildIconWithText(dynamic icon, String text) {
+    return Column(
+      children: [
+        FaIcon(
+          icon,
+          size: 30,
+          color: Colors.black,
+        ),
+        const SizedBox(
+          width: 3,
+        ),
+        Text(
+          text,
+          style: const TextStyle(
+            fontSize: 20,
+            color: Colors.black,
+          ),
+        ),
+      ],
     );
   }
 }

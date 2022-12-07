@@ -22,6 +22,5 @@ class StaticValues {
   static const bool debug = true;
   static const String twoFactorDevicesSlug = 'api/auth/totp';
 
-  static const bool debug = false;
-
+  static const bool debug = true;
 }
