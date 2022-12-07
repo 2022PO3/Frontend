@@ -36,7 +36,8 @@ class LoadingScreenState extends State<LoadingScreen> {
     final UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);
     final pref = await SharedPreferences.getInstance();
-    await setServerUrl(pref, 'https://po3backend.ddns.net');
+
+    await setServerUrl(pref, 'https://po3backend.ddns.net/');
     bool debug = StaticValues.debug;
     try {
       debug
@@ -52,7 +53,7 @@ class LoadingScreenState extends State<LoadingScreen> {
           : print(
               'Could not connect to po3backend server, redirecting to localhost.');
       print('The exception was: $e');
-      await setServerUrl(pref, 'http://192.168.208.131:8000/');
+      await setServerUrl(pref, 'http://192.168.49.1:8000/');
     } finally {
       try {
         final response = await NetworkService.sendRequest(
@@ -65,8 +66,12 @@ class LoadingScreenState extends State<LoadingScreen> {
             callBack: User.userFromJson,
             response: response,
           );
-          userProvider.setUser(user);
-          return redirectToHomeScreen();
+          if (user.twoFactor) {
+            return redirectToTwoFactorScreen();
+          } else {
+            userProvider.setUser(user);
+            return redirectToHomeScreen();
+          }
         } on BackendException {
           return redirectToLoginScreen();
         }
@@ -83,6 +88,10 @@ class LoadingScreenState extends State<LoadingScreen> {
 
   void redirectToLoginScreen() {
     Navigator.pushReplacementNamed(context, '/login_page');
+  }
+
+  void redirectToTwoFactorScreen() {
+    Navigator.pushReplacementNamed(context, '/two-factor');
   }
 
   Future<void> setServerUrl(SharedPreferences pref, String serverUrl) async {

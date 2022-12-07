@@ -6,7 +6,6 @@ import 'package:po_frontend/api/network/static_values.dart';
 
 import 'package:flutter/material.dart';
 import 'package:po_frontend/api/widgets/device_widget.dart';
-import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 import '../../utils/loading_page.dart';
 
@@ -34,7 +33,7 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
         ? const LoadingPage()
         : Scaffold(
             appBar: AppBar(
-              automaticallyImplyLeading: false,
+              automaticallyImplyLeading: true,
               flexibleSpace: Container(
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
@@ -44,9 +43,17 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
                   ),
                 ),
               ),
-              title: const Center(
-                child: Text('Two factor devices'),
+              title: const Text(
+                'Two factor devices',
               ),
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    setState(() {});
+                  },
+                  icon: const Icon(Icons.refresh_rounded),
+                ),
+              ],
             ),
             body: FutureBuilder(
               future: getDevices(),
@@ -249,7 +256,7 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
   Future<List<Device>> getDevices() async {
     final response = await NetworkService.sendRequest(
       requestType: RequestType.get,
-      apiSlug: StaticValues.getTwoFactorDevicesSlug,
+      apiSlug: StaticValues.twoFactorDevicesSlug,
       useAuthToken: true,
     );
 

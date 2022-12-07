@@ -92,7 +92,7 @@ class NetworkService {
   }) async {
     String url = setPk(requestType, await setServerUrl(apiSlug), body, pk);
     String queryParamsUrl = setQueryParams(requestType, url, queryParams);
-    print('Sending request to $queryParamsUrl');
+    print('Sending $requestType to $queryParamsUrl');
     try {
       final response = await createRequest(
           requestType: requestType,
@@ -122,7 +122,8 @@ class NetworkService {
   /// PUT-request from the body that is given. If not, an error will be raised.
   static String setPk(RequestType requestType, String url,
       Map<String, dynamic>? body, int? pk) {
-    if (requestType == RequestType.get && pk != null) {
+    if ((requestType == RequestType.get || requestType == RequestType.delete) &&
+        pk != null) {
       return '$url/${pk.toString()}';
     } else if (requestType == RequestType.put) {
       if (body == null) {

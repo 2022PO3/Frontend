@@ -18,4 +18,8 @@ class StaticValues {
   static const String getPaymentPreviewSlug = 'api/checkout/preview';
 
   static const bool debug = true;
+  static const String twoFactorDevicesSlug = 'api/auth/totp';
+
+  static const bool debug = false;
+
 }

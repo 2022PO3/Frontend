@@ -55,17 +55,15 @@ class Valuta {
     return valutaSymbol;
   }
 
-  static ValutaEnum toValutaEnum(String string) {
-    switch (string) {
-      case 'EUR':
-        return ValutaEnum.EUR;
-      case 'USD':
-        return ValutaEnum.USD;
-      case 'GBP':
-        return ValutaEnum.GBP;
-      default:
-        throw UnimplementedError('Valuta $string is not yet implemented.');
+  static ValutaEnum? toValutaEnum(String? valuta) {
+    if (valuta == null) {
+      return null;
     }
+    ValutaEnum? val = EnumToString.fromString(ValutaEnum.values, valuta);
+    if (val == null) {
+      throw BackendException(['Valuta is not a valid value.']);
+    }
+    return val;
   }
 }
 

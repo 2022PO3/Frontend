@@ -6,10 +6,25 @@ class LoadingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.indigoAccent.withOpacity(0.5),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [(Colors.indigo), (Colors.indigoAccent)],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+          ),
+        ),
+        title: const Center(
+          child: Text('Two factor devices'),
+        ),
+      ),
       body: const Center(
         child: CircularProgressIndicator(
-          color: Colors.white,
+          color: Colors.indigoAccent,
         ),
       ),
     );

@@ -15,7 +15,7 @@ class UserActivationPage extends StatefulWidget {
     required this.token,
   });
 
-  static const routeName = '/user-activation';
+  static const route = 'user-activation';
 
   final String uidB64;
   final String token;
@@ -33,6 +33,7 @@ class _UserActivationPageState extends State<UserActivationPage> {
     final isDone = state == ButtonState.done;
     final isError = state == ButtonState.error;
     final isStretched = isAnimating || state == ButtonState.init;
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,

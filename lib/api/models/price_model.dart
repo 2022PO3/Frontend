@@ -1,4 +1,9 @@
 import 'package:po_frontend/api/models/enums.dart';
+import 'package:enum_to_string/enum_to_string.dart';
+
+import '../network/network_exception.dart';
+import 'enums.dart';
+import 'enums.dart';
 
 /// Model which represents the backend `Price`-model.
 class Price {
@@ -26,7 +31,7 @@ class Price {
       priceString: json['priceString'] as String,
       price: json['price'] as double,
       duration: Duration(seconds: json['duration'] as int),
-      valuta: Valuta.toValutaEnum(json['valuta'] as String),
+      valuta: Valuta.toValutaEnum(json['valuta']) ?? (throw BackendException(['No valid province given.'])),
     );
   }
 
@@ -41,3 +46,6 @@ class Price {
         'valuta': price.valuta.toString(),
       };
 }
+
+List<Price> PriceListFromJson(List<dynamic> json) =>
+    (json).map((jsonprice) => Price.fromJSON(jsonprice)).toList();
