@@ -32,7 +32,21 @@ class ParkingLot {
         'floorNumber': parkingLot.floorNumber,
         'occupied': parkingLot.occupied
       };
+  static ParkingLot parkingLotsFromJson(Map<String, dynamic> json) {
+    return ParkingLot(
+        id: json['id'] as int,
+        garageId: json['garageId'] as int,
+        floorNumber: json['floorNumber'] as int,
+        occupied: json['occupied'] as bool,
+        parkingLotNo: json['parkingLotNo'] as int,
+        booked: json['booked'] as bool?);
+  }
 }
 
 List<ParkingLot> garagesListFromJson(List<dynamic> json) =>
     (json).map((jsonGarage) => ParkingLot.fromJSON(jsonGarage)).toList();
+
+List<ParkingLot> parking_lotsListFromJson(json) => (json as List)
+    .map((jsonParking_lot) =>
+        ParkingLot.parkingLotsFromJson(jsonParking_lot as Map<String, dynamic>))
+    .toList();

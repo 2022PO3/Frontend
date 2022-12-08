@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
+import 'package:po_frontend/pages/New_Reservation.dart';
+import 'package:po_frontend/pages/Spot_Selection.dart';
 
 class GarageWidget extends StatelessWidget {
   const GarageWidget({Key? key, required this.garage}) : super(key: key);
@@ -8,15 +10,18 @@ class GarageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: InkWell(
+    return InkWell(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
               width: 300,
-              child: Text(garage.name),
+              child: Text(
+                garage.name,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
             SizedBox(
               width: 300,
@@ -32,6 +37,10 @@ class GarageWidget extends StatelessWidget {
           Navigator.pushNamed(context, '/garage_info',arguments: {'garageIDargument': garage});
         },
       ),
+      onTap: () {
+        Navigator.pushNamed(context, '/New_Reservation',
+            arguments: {'garage': garage});
+      },
     );
   }
 }
