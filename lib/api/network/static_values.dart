@@ -2,6 +2,9 @@ class StaticValues {
   const StaticValues._();
   static const String getGaragesSlug = 'api/garages?format=json';
   static const String getGarageSlug = 'api/garage/';
+  static const String getGarageOpeningHoursSlug = 'api/opening-hours';
+  static const String getGaragePricesSlug = 'api/prices';
+  static const String getGarageSettingsSlug = 'api/garage-settings';
   static const String getParkingLotsSlug = 'api/parking-lots/';
 
   static const String postLoginUser = 'api/auth/login';

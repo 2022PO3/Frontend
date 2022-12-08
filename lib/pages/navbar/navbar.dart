@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -113,7 +114,7 @@ class _NavbarState extends State<Navbar> {
               leading: const Icon(Icons.settings, color: Colors.indigo),
               title: const Text('Settings'),
               onTap: () {
-                Navigator.pushNamed(context, '/settings');
+                context.go('/home/settings');
               }),
           const Divider(),
           ListTile(

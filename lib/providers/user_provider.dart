@@ -3,14 +3,16 @@ import 'package:po_frontend/api/models/user_model.dart';
 
 class UserProvider with ChangeNotifier {
   User _user = User(
-      id: 0,
-      email: '',
-      role: 0,
-      firstName: null,
-      lastName: null,
-      favGarageId: null,
-      location: null,
-      twoFactor: false);
+    id: 0,
+    email: '',
+    role: 0,
+    firstName: null,
+    lastName: null,
+    favGarageId: null,
+    location: null,
+    twoFactor: false,
+    twoFactorValidated: null,
+  );
 
   User get getUser => _user;
 

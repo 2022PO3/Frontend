@@ -1,3 +1,4 @@
+import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/device_model.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
@@ -132,7 +133,7 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
             TextButton(
               onPressed: () async {
                 if (_addNameFormKey.currentState!.validate()) {
-                  Navigator.of(context).pop();
+                  context.pop();
                   setState(() {
                     isLoading = true;
                   });
@@ -192,7 +193,7 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                context.pop();
               },
               child: const Text(
                 'OK',
@@ -216,7 +217,7 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                context.pop();
               },
               child: const Text(
                 'OK',

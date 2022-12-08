@@ -83,8 +83,11 @@ class AuthService {
           callBack: User.userFromJson,
           response: response,
         );
-        if (user.twoFactor) {
-          return LoginStatus.authenticated;
+        bool? twoFactorValidated = user.twoFactorValidated;
+        if (user.twoFactor && twoFactorValidated != null) {
+          return twoFactorValidated
+              ? LoginStatus.verified
+              : LoginStatus.authenticated;
         } else {
           return LoginStatus.verified;
         }

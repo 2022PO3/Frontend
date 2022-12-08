@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/pages/New_Reservation.dart';
 import 'package:po_frontend/pages/Spot_Selection.dart';
@@ -34,7 +35,7 @@ class GarageWidget extends StatelessWidget {
           ],
         ),
         onTap: () {
-          Navigator.pushNamed(context, '/garage_info',arguments: {'garageIDargument': garage});
+          context.go('/home/garage-info/${garage.id}');
         },
       ),
       onTap: () {

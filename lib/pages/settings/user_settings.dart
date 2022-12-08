@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class UserSettings extends StatefulWidget {
   const UserSettings({super.key});
@@ -57,7 +58,7 @@ class _UserSettingsState extends State<UserSettings> {
                       ),
                     ),
                     onPressed: () async {
-                      Navigator.pushNamed(context, '/add-two-factor-device');
+                      context.go('/home/settings/two-factor');
                     },
                   ),
                 ),

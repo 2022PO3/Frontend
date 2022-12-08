@@ -31,84 +31,26 @@ class _HomePageState extends State<HomePage> {
       saveUserToProvider(context);
     });
   }
-  //finalEmail
-  /*
-  Future<List<Garage>> getGarageData() async {
-    var response =
-        await http.get(Uri.parse('http://192.168.49:8000/api/garages'));
-    var jsonDataGarage = jsonDecode(response.body);
-class _MyHomePageState extends State<MyHomePage> {
-  // Save futures here to use refresh indicator
-  late Future<List<LicencePlate>> licencePlatesFuture;
-  late Future<List<Garage>> garagesFuture;
-
-  @override
-  void initState() {
-    super.initState();
-
-    getFutures();
-  }
-
-  Future getFutures() async {
-    setState(() {
-      licencePlatesFuture = getLicencePlates();
-      garagesFuture = getGarages();
-    });
-
-    return Future.wait([licencePlatesFuture, garagesFuture]);
-  }
 
   @override
   Widget build(BuildContext context) {
-    final UserProvider userProvider = Provider.of<UserProvider>(context);
-    //getValidationData(UserinfoPr);
-    //saveUserToProvider(
-    //  context,
-    //  Provider.of<UserProvider>(context, listen: false),
-    //);
     return Scaffold(
-        endDrawer: const Navbar(),
-        appBar: AppBar(
-            automaticallyImplyLeading: false,
-            flexibleSpace: Container(
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                colors: [(Colors.indigo), (Colors.indigoAccent)],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-              )),
+      endDrawer: const Navbar(),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [(Colors.indigo), (Colors.indigoAccent)],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
             ),
-            title: Center(
-                child: Text(userProvider.getUser.firstName ??
-                    '')) //UserinfoPr._email)),
-            ),
-        body: RefreshIndicator(
-          onRefresh: getFutures,
-          child: CustomScrollView(
-            physics: const AlwaysScrollableScrollPhysics()
-                .applyTo(const BouncingScrollPhysics()),
-            slivers: [
-              SliverPersistentHeader(
-                pinned: true,
-                floating: true,
-                delegate: SimpleHeaderDelegate(
-                  child: CurrentParkingSessionsListWidget(
-                    licencePlatesFuture: licencePlatesFuture,
-                  ),
-                  maxHeight: MediaQuery.of(context).size.shortestSide / 2,
-                  minHeight: MediaQuery.of(context).size.shortestSide / 4,
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: GarageListWidget(
-                  garagesFuture: garagesFuture,
-                ),
-              ),
-            ],
           ),
-          title: Center(
-            child: Text(userProvider.getUser.firstName ?? ''),
-          )),
+        ),
+        title: const Center(
+          child: Text('Garages'),
+        ),
+      ),
       body: FutureBuilder(
         future: getData(),
         builder: (context, snapshot) {
@@ -245,88 +187,6 @@ class CurrentParkingSessionWidget extends StatelessWidget {
       ),
     );
   }
-
-  Widget _buildData(BuildContext context, Garage garage) {
-    return Card(
-      child: LayoutBuilder(builder: (context, constraints) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Spacer(),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Hero(
-                        tag: 'title_${licencePlate.licencePlate}',
-                        child: Material(
-                          color: Colors.transparent,
-                          child: Text(
-                            'Parked at ${garage.name}',
-                            style: const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w900),
-                          ),
-                        ),
-                      ),
-                      Text(garage.garageSettings.location.toString())
-                    ],
-                  ),
-                ),
-                if (constraints.maxHeight < 110)
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: PayPreviewButton(
-                      licencePlate: licencePlate,
-                      garage: garage,
-                    ),
-                  )
-              ],
-            ),
-            Spacer(
-              flex: constraints.maxHeight > 131 ? 3 : 1,
-            ),
-            if (constraints.maxHeight > 160)
-              Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Text(licencePlate.licencePlate)),
-            if (constraints.maxHeight > 110)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Hero(
-                      tag: 'timer_${licencePlate.licencePlate}',
-                      child: TimerWidget(
-                        start: licencePlate.updatedAt,
-                        textStyle: TextStyle(
-                            fontSize:
-                                MediaQuery.of(context).size.shortestSide / 20,
-                            fontWeight: FontWeight.w900),
-                      ),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.shortestSide / 5,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 2),
-                      child: PayPreviewButton(
-                        licencePlate: licencePlate,
-                        garage: garage,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-          ],
-        );
-      }),
-    );
-  }
 }
 
 class GarageListWidget extends StatelessWidget {
@@ -344,7 +204,12 @@ Future<User> getUserInfo() async {
   );
 }
 
-  final Future<List<Garage>> garagesFuture;
+Future<List<Garage>> getData() async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.get,
+    apiSlug: StaticValues.getGaragesSlug,
+    useAuthToken: true,
+  );
 
   @override
   Widget build(BuildContext context) {
