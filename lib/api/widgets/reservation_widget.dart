@@ -67,6 +67,7 @@ class ReservationWidget extends StatelessWidget {
 
 Widget buildReservationTime(Reservation reservation) {
   return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
     children: [
       const Icon(
         Icons.access_time,

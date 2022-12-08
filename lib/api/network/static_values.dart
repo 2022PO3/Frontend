@@ -7,6 +7,7 @@ class StaticValues {
   static const String getGaragePricesSlug = 'api/prices';
   static const String getGarageSettingsSlug = 'api/garage-settings';
   static const String getParkingLotsSlug = 'api/parking-lots';
+  static const String assignParkingLotSlug = 'api/assign-parking-lot';
 
   // Auth slugs
   static const String postLoginUser = 'api/auth/login';

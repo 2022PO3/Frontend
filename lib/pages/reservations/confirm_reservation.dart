@@ -6,7 +6,7 @@ import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/api/widgets/reservation_widget.dart';
 import 'package:po_frontend/pages/reservations/spot_selection.dart';
-import 'package:po_frontend/api/widgets/parking_lots_widget.dart';
+import 'package:po_frontend/api/widgets/parking_lot_widget.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
 import 'package:po_frontend/api/network/network_service.dart';

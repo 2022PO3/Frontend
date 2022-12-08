@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
 import 'package:po_frontend/api/requests/garage_requests.dart';
 
-import 'package:po_frontend/api/widgets/parking_lots_widget.dart';
+import 'package:po_frontend/api/widgets/parking_lot_widget.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/parking_lot_model.dart';
 import 'package:po_frontend/pages/reservations/make_reservation_page.dart';
@@ -33,7 +33,10 @@ class _SpotSelectionPageState extends State<SpotSelectionPage> {
         title: const Text('Spot Selection'),
       ),
       body: FutureBuilder(
-        future: getGarageParkingLots(garage.id),
+        future: getGarageParkingLots(garage.id, {
+          'startDate': startDate.toIso8601String(),
+          'endDate': endDate.toIso8601String(),
+        }),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
@@ -95,43 +98,17 @@ class _SpotSelectionPageState extends State<SpotSelectionPage> {
         final UserProvider userProvider =
             Provider.of<UserProvider>(context, listen: false);
 
-        parkingLot.occupied
-            ? showSpotErrorPopUp(context)
-            : context.push(
-                '/home/reserve/confirm-reservation',
-                extra: Reservation(
-                  userId: userProvider.getUser.id,
-                  fromDate: startDate,
-                  toDate: endDate,
-                  parkingLot: parkingLot,
-                  garage: garage,
-                ),
-              );
+        context.push(
+          '/home/reserve/confirm-reservation',
+          extra: Reservation(
+            userId: userProvider.getUser.id,
+            fromDate: startDate,
+            toDate: endDate,
+            parkingLot: parkingLot,
+            garage: garage,
+          ),
+        );
       },
     );
   }
-}
-
-void showSpotErrorPopUp(BuildContext context) {
-  Widget backButton = TextButton(
-    child: const Text('Back'),
-    onPressed: () {
-      context.pop();
-    },
-  );
-
-  AlertDialog alert = AlertDialog(
-    title: const Text('Error'),
-    content: const Text('This spot is occupied.'),
-    actions: [
-      backButton,
-    ],
-  );
-
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
-  );
 }

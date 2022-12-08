@@ -2,6 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
+import 'package:po_frontend/api/models/parking_lot_model.dart';
+import 'package:po_frontend/api/models/reservation_model.dart';
+import 'package:po_frontend/api/network/network_exception.dart';
+import 'package:po_frontend/api/requests/garage_requests.dart';
+import 'package:po_frontend/providers/user_provider.dart';
+import 'package:po_frontend/utils/dialogs.dart';
+import 'package:provider/provider.dart';
 
 class MakeReservationPage extends StatefulWidget {
   const MakeReservationPage({
@@ -213,58 +220,69 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.indigo,
-                      borderRadius: BorderRadius.circular(5)),
-                  child: TextButton(
-                    onPressed: () {
-                      compareDates(startDate, endDate)
-                          ? context.push(
-                              '/home/garage-info/${widget.garage.id}/reserve/spot-selection',
-                              extra: GarageAndTime(
-                                garage: widget.garage,
-                                startDate: startDate,
-                                endDate: endDate,
-                              ),
-                            )
-                          : showDateErrorPopUp(context);
-                      //Checks for correct date and time, start and end !!! and availability of spots at the time
-                    },
-                    child: const Text(
-                      'Random spot',
-                      style: TextStyle(
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.indigo,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: TextButton(
+                      onPressed: () async {
+                        if (compareDates(startDate, endDate)) {
+                          Reservation reservation = await assignReservation(
+                            widget.garage,
+                            startDate,
+                            endDate,
+                          );
+                          if (mounted) {
+                            context.push('/home/reserve/confirm-reservation',
+                                extra: reservation);
+                          }
+                        } else {
+                          showDateErrorPopUp(context);
+                        }
+                      },
+                      child: const Text(
+                        'Random spot',
+                        style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-                const Text('   '),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.indigo,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: TextButton(
-                    onPressed: () {
-                      compareDates(startDate, endDate)
-                          ? context.push(
-                              '/home/reserve/spot-selection',
-                              extra: GarageAndTime(
-                                garage: widget.garage,
-                                startDate: startDate,
-                                endDate: endDate,
-                              ),
-                            )
-                          : showDateErrorPopUp(context);
-                    },
-                    child: const Text(
-                      'Select a spot',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                const SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.indigo,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: TextButton(
+                      onPressed: () async {
+                        if (compareDates(startDate, endDate)) {
+                          context.push(
+                            '/home/reserve/spot-selection',
+                            extra: GarageAndTime(
+                              garage: widget.garage,
+                              startDate: startDate,
+                              endDate: endDate,
+                            ),
+                          );
+                        } else {
+                          showDateErrorPopUp(context);
+                        }
+                      },
+                      child: const Text(
+                        'Select a spot',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
@@ -275,6 +293,36 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
         ),
       ),
     );
+  }
+
+  Future<Reservation> assignReservation(
+    Garage garage,
+    DateTime startDate,
+    DateTime endDate,
+  ) async {
+    try {
+      ParkingLot parkingLot = await assignParkingLot(
+        garage.id,
+        {
+          'fromDate': startDate.toIso8601String(),
+          'toDate': endDate.toIso8601String(),
+        },
+      );
+      final UserProvider userProvider =
+          Provider.of<UserProvider>(context, listen: false);
+
+      return Reservation(
+        userId: userProvider.getUser.id,
+        fromDate: startDate,
+        toDate: endDate,
+        parkingLot: parkingLot,
+        garage: garage,
+      );
+    } on BackendException catch (e) {
+      print(e);
+      showFailureDialog(context, e);
+    }
+    throw Exception();
   }
 
   var now = DateTime.now();

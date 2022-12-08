@@ -93,16 +93,38 @@ Future<GarageData> getGarageData(int garageId) async {
   );
 }
 
-Future<List<ParkingLot>> getGarageParkingLots(int garageId) async {
+Future<List<ParkingLot>> getGarageParkingLots(
+  int garageId,
+  Map<String, String> queryParams,
+) async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.get,
     apiSlug: StaticValues.getParkingLotsSlug,
     useAuthToken: true,
     pk: garageId,
+    queryParams: queryParams,
   );
 
   return await NetworkHelper.filterResponse(
     callBack: ParkingLot.listFromJSON,
+    response: response,
+  );
+}
+
+Future<ParkingLot> assignParkingLot(
+  int garageId,
+  Map<String, String> queryParams,
+) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.get,
+    apiSlug: StaticValues.assignParkingLotSlug,
+    useAuthToken: true,
+    pk: garageId,
+    queryParams: queryParams,
+  );
+
+  return await NetworkHelper.filterResponse(
+    callBack: ParkingLot.fromJSON,
     response: response,
   );
 }
