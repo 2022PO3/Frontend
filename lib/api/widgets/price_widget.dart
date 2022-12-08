@@ -9,7 +9,7 @@ class CurrentPrice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      'For ${price!.priceString} ${Valuta().getValutaSymbol(price!.valuta)} ${price!.price} ',
+      'For ${price!.priceString} ${Valuta.getValutaSymbol(price!.valuta)} ${price!.price} ',
       style: const TextStyle(
         color: Colors.indigo,
       ),

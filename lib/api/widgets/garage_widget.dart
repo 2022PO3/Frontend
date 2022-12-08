@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
-import 'package:po_frontend/pages/New_Reservation.dart';
-import 'package:po_frontend/pages/Spot_Selection.dart';
 
 class GarageWidget extends StatelessWidget {
   const GarageWidget({Key? key, required this.garage}) : super(key: key);
@@ -21,7 +19,7 @@ class GarageWidget extends StatelessWidget {
               width: 300,
               child: Text(
                 garage.name,
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
             SizedBox(
@@ -34,13 +32,9 @@ class GarageWidget extends StatelessWidget {
             ),
           ],
         ),
-        onTap: () {
-          context.push('/home/garage-info/${garage.id}');
-        },
       ),
       onTap: () {
-        Navigator.pushNamed(context, '/New_Reservation',
-            arguments: {'garage': garage});
+        context.push('/home/garage-info/${garage.id}');
       },
     );
   }

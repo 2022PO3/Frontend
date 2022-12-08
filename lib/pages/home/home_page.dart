@@ -15,14 +15,14 @@ import 'package:provider/provider.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/widgets/garage_widget.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomePageState extends State<HomePage> {
   // Save futures here to use refresh indicator
   late Future<List<LicencePlate>> licencePlatesFuture;
   late Future<List<Garage>> garagesFuture;
