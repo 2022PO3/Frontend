@@ -89,14 +89,14 @@ class _NavbarState extends State<Navbar> {
               ),
               title: const Text('My Reservations'),
               onTap: () {
-                context.push('reservations');
+                context.push('/home/reservations');
               }),
           const Divider(),
           ListTile(
               leading: const Icon(Icons.account_circle, color: Colors.indigo),
               title: const Text('Profile'),
               onTap: () {
-                context.push('profile');
+                context.push('/home/profile');
               }),
           const Divider(),
           ListTile(
@@ -106,7 +106,7 @@ class _NavbarState extends State<Navbar> {
               ),
               title: const Text('Statistics'),
               onTap: () {
-                context.push('statistics');
+                context.push('/home/statistics');
               }),
           const Divider(),
           ListTile(
@@ -120,7 +120,7 @@ class _NavbarState extends State<Navbar> {
               leading: const Icon(Icons.help, color: Colors.indigo),
               title: const Text('Help'),
               onTap: () {
-                context.push('help');
+                context.push('/home/help');
               }),
           const Divider(),
           ListTile(

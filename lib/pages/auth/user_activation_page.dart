@@ -147,6 +147,7 @@ class _UserActivationPageState extends State<UserActivationPage> {
             TextButton(
               onPressed: () {
                 context.pop();
+                context.go('/login');
               },
               child: const Text(
                 'OK',

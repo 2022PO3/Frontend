@@ -58,7 +58,7 @@ class _UserSettingsState extends State<UserSettings> {
                       ),
                     ),
                     onPressed: () async {
-                      context.push('two-factor');
+                      context.push('/home/settings/two-factor');
                     },
                   ),
                 ),
