@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:po_frontend/pages/auth/register.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:po_frontend/api/models/user_model.dart';
@@ -74,8 +75,8 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: ListView(
+          //mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(
               height: 10,
@@ -114,63 +115,17 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(
               height: 30,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.white, width: 4),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Email',
-                        hintStyle: const TextStyle(fontSize: 20),
-                        suffixIcon: IconButton(
-                            onPressed: () {
-                              _emailTextController.clear();
-                            },
-                            icon: const Icon(Icons.clear))),
-                    controller: _emailTextController,
-                  ),
-                ),
-              ),
-            ),
+            TextInput(controller: _emailTextController, label: 'Email'),
             const SizedBox(
               height: 10,
             ),
             //password textfield
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.white, width: 4),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: TextField(
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Password',
-                      hintStyle: const TextStyle(fontSize: 20),
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          _passwordTextController.clear();
-                        },
-                        icon: const Icon(Icons.clear),
-                      ),
-                    ),
-                    controller: _passwordTextController,
-                  ),
-                ),
-              ),
+
+            PasswordInput(
+              controller: _passwordTextController,
+              label: 'Password',
             ),
+
             const SizedBox(
               height: 20,
             ),
@@ -247,6 +202,7 @@ class _LoginPageState extends State<LoginPage> {
       'email': emailUser,
       'password': passwordUser,
     };
+    print(body);
     final response = await NetworkService.sendRequest(
       requestType: RequestType.post,
       apiSlug: StaticValues.postLoginUser,

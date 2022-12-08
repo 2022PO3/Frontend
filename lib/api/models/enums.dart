@@ -41,13 +41,13 @@ class Province {
 }
 
 class Valuta {
-  Map<ValutaEnum, String> valutas = {
+  static Map<ValutaEnum, String> valutas = {
     ValutaEnum.EUR: '€',
     ValutaEnum.USD: '\$',
     ValutaEnum.GBP: '£',
   };
 
-  String getValutaSymbol(ValutaEnum valuta) {
+  static String getValutaSymbol(ValutaEnum valuta) {
     String? valutaSymbol = valutas[valuta];
     if (valutaSymbol == null) {
       throw Exception("Province is not defined.");
