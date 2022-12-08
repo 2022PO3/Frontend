@@ -33,6 +33,7 @@ env.g.dart
 .pub-cache/
 .pub/
 /build/
+env.g.dart
 
 # Symbolication related
 app.*.symbols

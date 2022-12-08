@@ -4,20 +4,23 @@ import 'package:po_frontend/pages/Confirm_Reservation.dart';
 import 'package:provider/provider.dart';
 import 'package:po_frontend/pages/New_Reservation.dart';
 import 'package:po_frontend/pages/Spot_Selection.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
 import 'pages/auth/login_page.dart';
 import 'pages/auth/register.dart';
 import 'pages/auth/user_activation_page.dart';
+import 'pages/auth/two_factor_page.dart';
 
 import 'pages/loading_screen.dart';
 import 'pages/home/home_page.dart';
-import 'pages/navbar/settings.dart';
+import 'pages/settings/user_settings.dart';
 import 'pages/navbar/statistics.dart';
 import 'pages/navbar/profile.dart';
 import 'pages/navbar/help.dart';
 import 'pages/navbar/my_reservations.dart';
 import 'pages/NavBar_Pages/My_Reservations.dart';
 import 'pages/booking_system.dart';
+import 'pages/settings/add_two_factor_device_page.dart';
 
 import 'pages/garage_info.dart';
 
@@ -28,15 +31,13 @@ List stripParameters(String? routeName) {
   if (routeName == null) {
     return [routeName];
   }
-  print('Routename $routeName');
   Map<String, String> queryParams =
       Uri.parse(routeName.replaceAll('#', '')).queryParameters;
-  print("Query params $queryParams");
   return [routeName.replaceAll(RegExp(r'\?.*'), ''), queryParams];
 }
 
 void main() {
-  // usePathUrlStrategy();
+  usePathUrlStrategy();
   runApp(
     MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => UserProvider())],
@@ -73,26 +74,21 @@ class MyApp extends StatelessWidget {
           '/New_Reservation': (context) => New_Reservation(),
           '/Spot_Selection': (context) => Spot_Selection(),
           '/Confirm_Reservation': (context) => Confirm_Reservation(),
-        },
-        debugShowCheckedModeBanner: false,
-        onGenerateRoute: (settings) {
-          List stripResult = stripParameters(settings.name);
-          if (stripResult[0] == UserActivationPage.routeName) {
-            Map<String, String> args = stripResult[1];
-            if (args['uidB64'] == null || args['token'] == null) {
-              throw Exception(
-                  'Either `uidB64` or `token`-parameters is not given to the url!');
-            }
-            return MaterialPageRoute(
-              settings: settings,
-              builder: (context) => UserActivationPage(
-                uidB64: args['uidB64']!,
-                token: args['token']!,
-              ),
-            );
+        TwoFactorPage.route: (context) => const TwoFactorPage(),
+        AddTwoFactorDevicePage.route: (context) =>
+            const AddTwoFactorDevicePage(),
+      },
           }
-          assert(false, 'Need to implement ${stripResult[0]}');
-          return null;
-        });
+          return MaterialPageRoute(
+            settings: settings,
+            builder: (context) => UserActivationPage(
+              uidB64: args['uidB64']!,
+              token: args['token']!,
+            ),
+          );
+        }
+        return null;
+      },
+    );
   }
 }

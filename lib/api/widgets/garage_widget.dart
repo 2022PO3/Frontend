@@ -33,6 +33,9 @@ class GarageWidget extends StatelessWidget {
             ),
           ],
         ),
+        onTap: () {
+          Navigator.pushNamed(context, '/garage_info',arguments: {'garageIDargument': garage});
+        },
       ),
       onTap: () {
         Navigator.pushNamed(context, '/New_Reservation',
