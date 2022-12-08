@@ -69,13 +69,13 @@ class _PayButtonState extends State<PayButton> {
   Future<void> checkoutFuture = Future(() {});
 
   void onPressed(BuildContext context) {
-    setState(() {
-      checkoutFuture =
-          startPaymentSession(licencePlate: widget.licencePlate.licencePlate);
-
-      // For testing error state
-      //checkoutFuture = Future.error(Exception('test'));
-    });
+    setState(
+      () {
+        checkoutFuture = startPaymentSession(
+          licencePlate: widget.licencePlate.licencePlate,
+        );
+      },
+    );
   }
 
   @override
@@ -114,7 +114,9 @@ class _PayButtonState extends State<PayButton> {
       widthFactor: 1,
       child: ElevatedButton(
           style: ButtonStyle(
-            shape: MaterialStateProperty.all(const StadiumBorder()),
+            shape: MaterialStateProperty.all(
+              const StadiumBorder(),
+            ),
           ),
           onPressed: () => onPressed(context),
           child: Text(text)),

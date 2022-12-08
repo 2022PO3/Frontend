@@ -3,10 +3,10 @@ import 'package:po_frontend/core/routes.dart';
 import 'package:po_frontend/pages/auth/auth_service.dart';
 import 'package:provider/provider.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
-import 'package:po_frontend/pages/Confirm_Reservation.dart';
+import 'package:po_frontend/pages/confirm_reservation.dart';
 import 'package:provider/provider.dart';
-import 'package:po_frontend/pages/New_Reservation.dart';
-import 'package:po_frontend/pages/Spot_Selection.dart';
+import 'package:po_frontend/pages/make_reservation_page.dart';
+import 'package:po_frontend/pages/spot_selection.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
 import 'pages/auth/login_page.dart';
@@ -14,21 +14,18 @@ import 'pages/auth/register.dart';
 import 'pages/auth/user_activation_page.dart';
 import 'pages/auth/two_factor_page.dart';
 
-import 'pages/loading_screen.dart';
 import 'pages/home/home_page.dart';
 import 'pages/settings/user_settings.dart';
 import 'pages/navbar/statistics.dart';
 import 'pages/navbar/profile.dart';
 import 'pages/navbar/help.dart';
 import 'pages/navbar/my_reservations.dart';
-import 'pages/NavBar_Pages/My_Reservations.dart';
 import 'pages/booking_system.dart';
 import 'pages/settings/add_two_factor_device_page.dart';
 
 import 'pages/garage_info.dart';
 
 import 'providers/user_provider.dart';
-import 'api/garages_page.dart';
 
 List stripParameters(String? routeName) {
   if (routeName == null) {

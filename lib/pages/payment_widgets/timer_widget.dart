@@ -3,8 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class TimerWidget extends StatefulWidget {
-  const TimerWidget({Key? key, required this.start, this.textStyle})
-      : super(key: key);
+  const TimerWidget({
+    Key? key,
+    required this.start,
+    this.textStyle,
+  }) : super(key: key);
 
   final TextStyle? textStyle;
   final DateTime start;

@@ -9,13 +9,14 @@ class Garage {
   final int parkingLots;
   final GarageSettings garageSettings;
 
-  Garage(
-      {required this.id,
-      required this.name,
-      required this.isFull,
-      required this.unoccupiedLots,
-      required this.parkingLots,
-      required this.garageSettings});
+  Garage({
+    required this.id,
+    required this.name,
+    required this.isFull,
+    required this.unoccupiedLots,
+    required this.parkingLots,
+    required this.garageSettings,
+  });
 
   /// Serializes a JSON-object into a Dart `Garage`-object with all properties.
   static Garage fromJSON(Map<String, dynamic> json) {
@@ -34,10 +35,10 @@ class Garage {
   static Map<String, dynamic> toJSON(Garage garage) => <String, dynamic>{
         'id': garage.id,
         'name': garage.name,
-        'garageSettings': GarageSettings.toJSON(garage.garageSettings)
+        'garageSettings': GarageSettings.toJSON(garage.garageSettings),
       };
-}
 
-/// Serializes a list JSON-objects into a list of Dart `Garage`-objects.
-List<Garage> garagesListFromJson(List<dynamic> json) =>
-    (json).map((jsonGarage) => Garage.fromJSON(jsonGarage)).toList();
+  /// Serializes a list JSON-objects into a list of Dart `Garage`-objects.
+  static List<Garage> listFromJSON(List<dynamic> json) =>
+      (json).map((jsonGarage) => Garage.fromJSON(jsonGarage)).toList();
+}

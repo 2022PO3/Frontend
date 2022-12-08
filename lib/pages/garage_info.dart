@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:po_frontend/api/network/static_values.dart';
+import 'package:po_frontend/api/requests/garage_requests.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -440,40 +441,6 @@ Future<GarageData> getGarageData(int garageId) async {
     prices: prices,
     garageSettings: garageSettings,
   );
-}
-
-Future<List<OpeningHour>> getGarageOpeningHours(int garageId) async {
-  final response = await NetworkService.sendRequest(
-    requestType: RequestType.get,
-    apiSlug: StaticValues.getGarageOpeningHoursSlug,
-    useAuthToken: true,
-    pk: garageId,
-  );
-  return await NetworkHelper.filterResponse(
-      callBack: OpeningHourListFromJson, response: response);
-}
-
-Future<List<Price>> getGaragePrices(int garageId) async {
-  final response = await NetworkService.sendRequest(
-    requestType: RequestType.get,
-    apiSlug: StaticValues.getGaragePricesSlug,
-    useAuthToken: true,
-    pk: garageId,
-  );
-  return await NetworkHelper.filterResponse(
-      callBack: PriceListFromJson, response: response);
-}
-
-Future<GarageSettings> getGarageSettings(int garageId) async {
-  final response = await NetworkService.sendRequest(
-    requestType: RequestType.get,
-    apiSlug: StaticValues.getGarageSettingsSlug,
-    useAuthToken: true,
-    pk: garageId,
-  );
-
-  return await NetworkHelper.filterResponse(
-      callBack: GarageSettings.fromJSON, response: response);
 }
 
 class GarageData {

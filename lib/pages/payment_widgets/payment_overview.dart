@@ -16,8 +16,10 @@ class PaymentOverview extends StatefulWidget {
   /// in the response it knows when to send another request to keep the price
   /// up-to-date.
 
-  const PaymentOverview({Key? key, required this.licencePlate})
-      : super(key: key);
+  const PaymentOverview({
+    Key? key,
+    required this.licencePlate,
+  }) : super(key: key);
 
   final LicencePlate licencePlate;
 
@@ -222,9 +224,11 @@ class _PreviewItemWidget extends StatelessWidget {
   /// parking in the garage (eg. €3 for 1 hour, €0,5 for 15 minutes). It also
   /// shows the total of this rate.
 
-  const _PreviewItemWidget(
-      {Key? key, required this.price, required this.quantity})
-      : super(key: key);
+  const _PreviewItemWidget({
+    Key? key,
+    required this.price,
+    required this.quantity,
+  }) : super(key: key);
 
   final Price price;
   final int quantity;
@@ -260,11 +264,10 @@ class _PreviewItemWidget extends StatelessWidget {
         Text(
           _totalPriceString,
           style: TextStyle(
-              fontSize: shortestSide / 25,
-              fontWeight: FontWeight.w900,
-              color: Theme.of(context).primaryColor
-              //color: Theme.of(context).primaryColor,
-              ),
+            fontSize: shortestSide / 25,
+            fontWeight: FontWeight.w900,
+            color: Theme.of(context).primaryColor,
+          ),
         ),
       ],
     );

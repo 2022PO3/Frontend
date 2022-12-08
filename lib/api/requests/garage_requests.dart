@@ -1,13 +1,18 @@
+import 'package:po_frontend/api/models/garage_settings_model.dart';
+import 'package:po_frontend/api/models/opening_hour_model.dart';
+import 'package:po_frontend/api/models/price_model.dart';
+
 import '../models/garage_model.dart';
 import '../network/network_helper.dart';
 import '../network/network_service.dart';
 import '../network/static_values.dart';
 
-Future<Garage> getGarage(int id) async {
+Future<Garage> getGarage(int garageId) async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.get,
-    apiSlug: StaticValues.getGarageSlug + id.toString(),
+    apiSlug: StaticValues.getGarageSlug,
     useAuthToken: true,
+    pk: garageId,
   );
   return await NetworkHelper.filterResponse(
     callBack: Garage.fromJSON,
@@ -15,16 +20,48 @@ Future<Garage> getGarage(int id) async {
   );
 }
 
-Future<List<Garage>> getGarages() async {
+Future<List<Garage>> getAllGarages() async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.get,
     apiSlug: StaticValues.getGaragesSlug,
     useAuthToken: true,
-    //    body: body
+  );
+  return await NetworkHelper.filterResponse(
+    callBack: Garage.listFromJSON,
+    response: response,
+  );
+}
+
+Future<List<Price>> getGaragePrices(int garageId) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.get,
+    apiSlug: StaticValues.getGaragePricesSlug,
+    useAuthToken: true,
+    pk: garageId,
+  );
+  return await NetworkHelper.filterResponse(
+      callBack: Price.listFromJSON, response: response);
+}
+
+Future<GarageSettings> getGarageSettings(int garageId) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.get,
+    apiSlug: StaticValues.getGarageSettingsSlug,
+    useAuthToken: true,
+    pk: garageId,
   );
 
   return await NetworkHelper.filterResponse(
-    callBack: garagesListFromJson,
-    response: response,
+      callBack: GarageSettings.fromJSON, response: response);
+}
+
+Future<List<OpeningHour>> getGarageOpeningHours(int garageId) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.get,
+    apiSlug: StaticValues.getGarageOpeningHoursSlug,
+    useAuthToken: true,
+    pk: garageId,
   );
+  return await NetworkHelper.filterResponse(
+      callBack: OpeningHourListFromJson, response: response);
 }

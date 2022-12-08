@@ -1,30 +1,35 @@
 class StaticValues {
   const StaticValues._();
-  static const String getGaragesSlug = 'api/garages?format=json';
-  static const String getGarageSlug = 'api/garage/';
+  // Garage slugs
+  static const String getGaragesSlug = 'api/garages';
+  static const String getGarageSlug = 'api/garage';
   static const String getGarageOpeningHoursSlug = 'api/opening-hours';
   static const String getGaragePricesSlug = 'api/prices';
   static const String getGarageSettingsSlug = 'api/garage-settings';
-  static const String getParkingLotsSlug = 'api/parking-lots/';
+  static const String getParkingLotsSlug = 'api/parking-lots';
 
+  // Auth slugs
   static const String postLoginUser = 'api/auth/login';
   static const String getUserSlug = 'api/user';
   static const String postLogoutUser = 'api/auth/logout';
   static const String postRegisterUser = 'api/auth/sign-up';
-
   static const String activateUserSlug = 'api/auth/activate-account';
-  static const String getReservationSlug = 'api/reservations';
-  static const String sendAuthenticationCodeSlug = 'api/auth/totp/login';
-  static const String addTwoFactorDeviceSlug = 'api/auth/totp/create';
-  static const String getTwoFactorDevicesSlug = 'api/auth/totp';
 
+  // Reservation slugs
+  static const String getReservationSlug = 'api/reservations';
+
+  // Payment slugs
   static const String getLicencePlatesSlug = 'api/licence-plates';
   static const String createPaymentSessionSlug = 'api/checkout/create-session';
   static const String getPaymentPreviewSlug = 'api/checkout/preview';
 
-  static const bool debug = true;
+  // Two factor slugs
+  static const String addTwoFactorDeviceSlug = 'api/auth/totp/create';
+  static const String getTwoFactorDevicesSlug = 'api/auth/totp';
   static const String twoFactorDevicesSlug = 'api/auth/totp';
+  static const String sendAuthenticationCodeSlug = 'api/auth/totp/login';
 
+  // Custom settings
   static const bool debug = true;
   static const bool overrideServerUrl = true;
 }

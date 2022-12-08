@@ -44,7 +44,7 @@ class Routes {
             ),
             GoRoute(
               path: 'reservations',
-              builder: (context, state) => const MyReservations(),
+              builder: (context, state) => const Reservations(),
             ),
             GoRoute(
               path: 'profile',

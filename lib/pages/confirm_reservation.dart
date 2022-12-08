@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/user_model.dart';
-import 'package:po_frontend/pages/Spot_Selection.dart';
+import 'package:po_frontend/pages/spot_selection.dart';
 import 'package:po_frontend/api/widgets/parking_lots_widget.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
@@ -12,13 +13,13 @@ import 'package:po_frontend/api/models/parking_lot_model.dart';
 import 'package:po_frontend/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
-class Confirm_Reservation extends StatefulWidget {
-  const Confirm_Reservation({Key? key}) : super(key: key);
+class ConfirmReservationPage extends StatefulWidget {
+  const ConfirmReservationPage({Key? key}) : super(key: key);
   @override
-  State<Confirm_Reservation> createState() => _Confirm_ReservationState();
+  State<ConfirmReservationPage> createState() => _ConfirmReservationPageState();
 }
 
-class _Confirm_ReservationState extends State<Confirm_Reservation> {
+class _ConfirmReservationPageState extends State<ConfirmReservationPage> {
   @override
   void initState() {
     super.initState();
@@ -42,7 +43,7 @@ class _Confirm_ReservationState extends State<Confirm_Reservation> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Overview Reservation'),
+        title: const Text('Overview Reservation'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -53,7 +54,7 @@ class _Confirm_ReservationState extends State<Confirm_Reservation> {
             children: <Widget>[
               Column(
                 children: [
-                  Text("Your selected garage:",
+                  const Text('Your selected garage:',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
@@ -62,7 +63,7 @@ class _Confirm_ReservationState extends State<Confirm_Reservation> {
                 ],
               ),
               Column(children: [
-                Text("Your selected time and date:",
+                const Text('Your selected time and date:',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
@@ -70,22 +71,22 @@ class _Confirm_ReservationState extends State<Confirm_Reservation> {
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                   Text(
                       _date.toIso8601String().substring(0, 10) +
-                          "        " +
+                          '        ' +
                           _date.toIso8601String().substring(11, 16),
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 12,
                       )),
-                  Text(" Until ",
+                  const Text(' Until ',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 12,
                       )),
                   Text(
                       _date2.toIso8601String().substring(0, 10) +
-                          "        " +
+                          '        ' +
                           _date2.toIso8601String().substring(11, 16),
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 12,
                       )),
@@ -94,7 +95,7 @@ class _Confirm_ReservationState extends State<Confirm_Reservation> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Your selected spot:",
+                  const Text('Your selected spot:',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
@@ -113,14 +114,14 @@ class _Confirm_ReservationState extends State<Confirm_Reservation> {
                     print(_date2.toString());
 
                     checkReservation(_date, _date2, parkinglot)
-                        ? Navigator.pushNamed(context, "/home")
+                        ? context.go('/home')
                         : showReservationErrorPopUp(context);
                     postData(reservation);
 
                     //CHECKS FOR CORRECT INFO BEFORE TRYING TO POST!!
                   },
-                  child: Text(
-                    "Confirm reservation",
+                  child: const Text(
+                    'Confirm reservation',
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -158,17 +159,17 @@ class _Confirm_ReservationState extends State<Confirm_Reservation> {
 void showReservationErrorPopUp(BuildContext context) {
   // set up the buttons
   Widget backButton = TextButton(
-    child: Text("Back"),
+    child: const Text('Back'),
     onPressed: () {
-      Navigator.pop(context);
+      context.pop();
     },
   );
 
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
-    title: Text("Error"),
-    content: Text(
-        "The time selected is before the current time or the selected spot is already occupied (perhaps reserved by another user while making this reservation). Try changing the time or spot."),
+    title: const Text('Error'),
+    content: const Text(
+        'The time selected is before the current time or the selected spot is already occupied (perhaps reserved by another user while making this reservation). Try changing the time or spot.'),
     actions: [
       backButton,
     ],
@@ -184,22 +185,18 @@ void showReservationErrorPopUp(BuildContext context) {
 }
 
 postData(Reservation reservation) async {
-  print("Executing function");
   final response = await NetworkService.sendRequest(
-      requestType: RequestType.post,
-      apiSlug: StaticValues.getReservationSlug,
-      useAuthToken: true,
-      body: {
-        'garageId': reservation.garage.id,
-        'userId': reservation.owner,
-        'parkingLotId': reservation.spot,
-        'fromDate': reservation.fromDate.toIso8601String(),
-        'toDate': reservation.toDate.toIso8601String(),
-      });
-
-  print("reponse $response");
-  print('Response ${response?.body}');
-  print('Response status code ${response?.statusCode}');
+    requestType: RequestType.post,
+    apiSlug: StaticValues.getReservationSlug,
+    useAuthToken: true,
+    body: {
+      'garageId': reservation.garage.id,
+      'userId': reservation.owner,
+      'parkingLotId': reservation.spot,
+      'fromDate': reservation.fromDate.toIso8601String(),
+      'toDate': reservation.toDate.toIso8601String(),
+    },
+  );
 
   return NetworkHelper.validateResponse(response);
 }
@@ -207,16 +204,16 @@ postData(Reservation reservation) async {
 void showPostErrorPopUp(BuildContext context) {
   // set up the buttons
   Widget backButton = TextButton(
-    child: Text("Back"),
+    child: const Text('Back'),
     onPressed: () {
-      Navigator.pop(context);
+      context.pop();
     },
   );
 
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
-    title: Text("Error"),
-    content: Text("Reservation wasn't booked, try again."),
+    title: const Text('Error'),
+    content: const Text("Reservation wasn't booked, try again."),
     actions: [
       backButton,
     ],

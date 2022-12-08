@@ -30,8 +30,11 @@ class Price {
       garageId: json['garageId'] as int,
       priceString: json['priceString'] as String,
       price: json['price'] as double,
-      duration: Duration(seconds: json['duration'] as int),
-      valuta: Valuta.toValutaEnum(json['valuta']) ?? (throw BackendException(['No valid province given.'])),
+      duration: parseDuration(json['duration'] as String),
+      valuta: Valuta.toValutaEnum(json['valuta']) ??
+          (throw BackendException(
+            ['No valid province given.'],
+          )),
     );
   }
 
@@ -45,7 +48,18 @@ class Price {
         'duration': price.duration.inSeconds,
         'valuta': price.valuta.toString(),
       };
+
+  static List<Price> listFromJSON(List<dynamic> json) =>
+      (json).map((jsonPrice) => Price.fromJSON(jsonPrice)).toList();
 }
 
-List<Price> PriceListFromJson(List<dynamic> json) =>
-    (json).map((jsonprice) => Price.fromJSON(jsonprice)).toList();
+Duration parseDuration(String s) {
+  List<String> parts = s.split(':');
+  return Duration(
+    hours: int.parse(parts[0]),
+    minutes: int.parse(parts[1]),
+    seconds: int.parse(
+      parts[2],
+    ),
+  );
+}

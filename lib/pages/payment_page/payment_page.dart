@@ -16,9 +16,11 @@ import '../payment_widgets/payment_overview.dart';
 import '../payment_widgets/timer_widget.dart';
 
 class PaymentPage extends StatelessWidget {
-  const PaymentPage(
-      {Key? key, required this.licencePlate, required this.garage})
-      : super(key: key);
+  const PaymentPage({
+    Key? key,
+    required this.licencePlate,
+    required this.garage,
+  }) : super(key: key);
 
   final LicencePlate licencePlate;
   final Garage garage;
@@ -47,13 +49,17 @@ class PaymentPage extends StatelessWidget {
               //const Divider(),
               const Spacer(),
               Expanded(
-                  flex: 20,
-                  child: PaymentOverview(
-                    licencePlate: licencePlate,
-                  )),
+                flex: 20,
+                child: PaymentOverview(
+                  licencePlate: licencePlate,
+                ),
+              ),
               // const Divider(),
               const Spacer(),
-              _CompletionButtons(licencePlate: licencePlate, garage: garage),
+              _CompletionButtons(
+                licencePlate: licencePlate,
+                garage: garage,
+              ),
               const Spacer(),
             ],
           ),
@@ -85,9 +91,11 @@ class _CompletionButtons extends StatelessWidget {
             flex: 2,
             child: ElevatedButton(
               style: ButtonStyle(
-                  shape: MaterialStateProperty.all(const StadiumBorder()),
-                  backgroundColor:
-                      MaterialStateProperty.all(Colors.red.shade900)),
+                shape: MaterialStateProperty.all(
+                  const StadiumBorder(),
+                ),
+                backgroundColor: MaterialStateProperty.all(Colors.red.shade900),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -138,7 +146,9 @@ class _Header extends StatelessWidget {
                   maxLines: 3,
                   textAlign: TextAlign.start,
                   style: TextStyle(
-                      fontWeight: FontWeight.w700, fontSize: shortestSide / 12),
+                    fontWeight: FontWeight.w700,
+                    fontSize: shortestSide / 12,
+                  ),
                 ),
               ),
             ),
@@ -149,7 +159,9 @@ class _Header extends StatelessWidget {
           child: TimerWidget(
             start: licencePlate.updatedAt,
             textStyle: TextStyle(
-                fontSize: shortestSide / 20, fontWeight: FontWeight.w900),
+              fontSize: shortestSide / 20,
+              fontWeight: FontWeight.w900,
+            ),
           ),
         ),
         const SizedBox(

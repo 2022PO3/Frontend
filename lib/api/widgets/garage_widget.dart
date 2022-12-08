@@ -16,18 +16,15 @@ class GarageWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              width: 300,
               child: Text(
                 garage.name,
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
             SizedBox(
-              width: 300,
               child: Text(garage.isFull ? 'Full' : 'Empty places'),
             ),
             SizedBox(
-              width: 300,
               child: Text('${garage.unoccupiedLots}/${garage.parkingLots}'),
             ),
           ],
