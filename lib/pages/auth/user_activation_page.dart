@@ -16,10 +16,8 @@ class UserActivationPage extends StatefulWidget {
     required this.token,
   });
 
-  static const route = 'user-activation';
-
-  final String uidB64;
-  final String token;
+  final String? uidB64;
+  final String? token;
 
   @override
   State<UserActivationPage> createState() => _UserActivationPageState();

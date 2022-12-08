@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:po_frontend/pages/auth/login_page.dart';
 import 'package:po_frontend/pages/auth/register.dart';
 import 'package:po_frontend/pages/auth/two_factor_page.dart';
+import 'package:po_frontend/pages/auth/user_activation_page.dart';
 import 'package:po_frontend/pages/garage_info.dart';
 import 'package:po_frontend/pages/home/home_page.dart';
 import 'package:po_frontend/pages/navbar/help.dart';
@@ -76,6 +77,13 @@ class Routes {
             ),
           ],
         ),
+        GoRoute(
+          path: '/user-activation',
+          builder: (context, state) => UserActivationPage(
+            uidB64: state.queryParams['uidB64'],
+            token: state.queryParams['token'],
+          ),
+        )
       ],
     );
   }

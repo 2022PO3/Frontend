@@ -43,7 +43,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   String initialLocation = '/login';
-
   LoginStatus loginStatus = await AuthService.checkLogin();
 
   switch (loginStatus) {
@@ -79,6 +78,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      title: 'Parking Boys',
       theme: ThemeData(
         primarySwatch: Colors.indigo,
         scaffoldBackgroundColor: Colors.indigo[50],

@@ -26,4 +26,5 @@ class StaticValues {
   static const String twoFactorDevicesSlug = 'api/auth/totp';
 
   static const bool debug = true;
+  static const bool overrideServerUrl = true;
 }

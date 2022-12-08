@@ -1,16 +1,12 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-import 'package:po_frontend/api/models/enums.dart';
 import 'package:po_frontend/api/models/user_model.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
 import 'package:po_frontend/api/network/network_service.dart';
 
 import 'package:po_frontend/api/network/static_values.dart';
-import 'package:po_frontend/providers/user_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum LoginStatus { unAuthenticated, authenticated, verified }
@@ -43,7 +39,7 @@ class AuthService {
   }
 
   static Future<String?> _determineHost(SharedPreferences pref) async {
-    if (_isHostSet(pref)) {
+    if (_isHostSet(pref) && !StaticValues.overrideServerUrl) {
       return null;
     }
     bool debug = StaticValues.debug;
@@ -68,10 +64,17 @@ class AuthService {
         'Host returned a non 200 status code to the liveliness request.');
   }
 
+  static Future<void> _setServerUrl(
+      SharedPreferences pref, String serverUrl) async {
+    await pref.setString('serverUrl', serverUrl);
+  }
+
   static Future<LoginStatus> checkLogin() async {
     final pref = await SharedPreferences.getInstance();
-    await _determineHost(pref);
-
+    String? serverUrl = await _determineHost(pref);
+    if (serverUrl != null) {
+      AuthService._setServerUrl(pref, serverUrl);
+    }
     try {
       final response = await NetworkService.sendRequest(
         requestType: RequestType.get,
