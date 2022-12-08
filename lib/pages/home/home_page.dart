@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:po_frontend/api/models/enums.dart';
+import 'package:po_frontend/core/post_frame_mixin.dart';
 import 'package:po_frontend/providers/user_provider.dart';
 import '../../api/models/licence_plate_model.dart';
 import '../../api/requests/garage_requests.dart';
@@ -14,13 +16,28 @@ import 'package:provider/provider.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/widgets/garage_widget.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
+class _HomePageState extends State<HomePage> with PostFrameMixin {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      saveUserToProvider(context);
+    });
+  }
+  //finalEmail
+  /*
+  Future<List<Garage>> getGarageData() async {
+    var response =
+        await http.get(Uri.parse('http://192.168.49:8000/api/garages'));
+    var jsonDataGarage = jsonDecode(response.body);
 class _MyHomePageState extends State<MyHomePage> {
   // Save futures here to use refresh indicator
   late Future<List<LicencePlate>> licencePlatesFuture;
@@ -45,7 +62,11 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final UserProvider userProvider = Provider.of<UserProvider>(context);
-
+    //getValidationData(UserinfoPr);
+    //saveUserToProvider(
+    //  context,
+    //  Provider.of<UserProvider>(context, listen: false),
+    //);
     return Scaffold(
         endDrawer: const Navbar(),
         appBar: AppBar(
@@ -86,9 +107,16 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ],
           ),
-        ));
-  }
-}
+          title: Center(
+            child: Text(userProvider.getUser.firstName ?? ''),
+          )),
+      body: FutureBuilder(
+        future: getData(),
+        builder: (context, snapshot) {
+          print(ModalRoute.of(context)?.settings.name);
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.hasData) {
+            final List<Garage> garages = snapshot.data as List<Garage>;
 
 class SimpleHeaderDelegate extends SliverPersistentHeaderDelegate {
   /// Delegate for a SliverPersistentHeader with a provided minimum and maximum
@@ -305,6 +333,17 @@ class CurrentParkingSessionWidget extends StatelessWidget {
 class GarageListWidget extends StatelessWidget {
   const GarageListWidget({Key? key, required this.garagesFuture})
       : super(key: key);
+Future<User> getUserInfo() async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.get,
+    apiSlug: StaticValues.getUserSlug,
+    useAuthToken: true,
+  );
+  return await NetworkHelper.filterResponse(
+    callBack: User.userFromJson,
+    response: response,
+  );
+}
 
   final Future<List<Garage>> garagesFuture;
 
@@ -335,4 +374,10 @@ class GarageListWidget extends StatelessWidget {
       },
     );
   }
+}
+
+void saveUserToProvider(BuildContext context) async {
+  final UserProvider userProvider =
+      Provider.of<UserProvider>(context, listen: false);
+  userProvider.setUser(await getUserInfo());
 }

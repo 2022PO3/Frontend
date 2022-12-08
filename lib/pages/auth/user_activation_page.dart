@@ -141,7 +141,7 @@ class _UserActivationPageState extends State<UserActivationPage> {
             if (mounted) {
               _showSuccessDialog(context);
               await Future.delayed(const Duration(seconds: 2));
-              if (mounted) Navigator.popAndPushNamed(context, '/login_page');
+              if (mounted) Navigator.popAndPushNamed(context, '/login-page');
             }
           } on BackendException catch (e) {
             setState(() => state = ButtonState.error);

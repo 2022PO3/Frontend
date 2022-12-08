@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:po_frontend/core/routes.dart';
+import 'package:po_frontend/pages/auth/auth_service.dart';
 import 'package:provider/provider.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/pages/Confirm_Reservation.dart';
@@ -37,12 +39,31 @@ List stripParameters(String? routeName) {
   return [routeName.replaceAll(RegExp(r'\?.*'), ''), queryParams];
 }
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  String initialLocation = '/login';
+
+  LoginStatus loginStatus = await AuthService.checkLogin();
+
+  switch (loginStatus) {
+    case LoginStatus.unAuthenticated:
+      break;
+    case LoginStatus.authenticated:
+      initialLocation = '/login/two-factor';
+      break;
+    case LoginStatus.verified:
+      initialLocation = '/home';
+      break;
+  }
+
   usePathUrlStrategy();
   runApp(
     MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => UserProvider())],
-      child: const MyApp(),
+      child: MyApp(
+        initialLocation: initialLocation,
+      ),
     ),
   );
 }
@@ -50,18 +71,30 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({
     super.key,
+    required this.initialLocation,
   });
+
+  final String initialLocation;
 
   @override
   Widget build(BuildContext context) {
+    return MaterialApp.router(
+      theme: ThemeData(
+        primarySwatch: Colors.indigo,
+        scaffoldBackgroundColor: Colors.indigo[50],
+      ),
+      debugShowCheckedModeBanner: false,
+      routerConfig: Routes.generateRoutes(initialLocation),
+    );
+    /*
     return MaterialApp(
       theme: ThemeData(
           primarySwatch: Colors.indigo,
           scaffoldBackgroundColor: Colors.indigo[50]),
-      home: const LoadingScreen(),
+      home: defaultHome,
       routes: {
-        '/login_page': (context) => const LoginPage(),
-        '/home': (context) => const MyHomePage(),
+        LoginPage.route: (context) => const LoginPage(),
+        'home': (context) => const HomePage(),
         '/my_Reservations': (context) => const MyReservations(),
         '/settings': (context) => const UserSettings(),
         '/statistics': (context) => const Statistics(),
@@ -69,7 +102,7 @@ class MyApp extends StatelessWidget {
         '/help': (context) => const HelpF(),
         '/booking_system': (context) => const BookingSystem(),
         '/garages_page': (context) => const GaragesPage(),
-        '/register': (context) => const RegisterNow(),
+        'login/register': (context) => const RegisterPage(),
         '/garage_info': (context) => const GarageInfo(),
           '/New_Reservation': (context) => New_Reservation(),
           '/Spot_Selection': (context) => Spot_Selection(),
@@ -78,6 +111,32 @@ class MyApp extends StatelessWidget {
         AddTwoFactorDevicePage.route: (context) =>
             const AddTwoFactorDevicePage(),
       },
+      debugShowCheckedModeBanner: false,
+      onGenerateRoute: (settings) {
+        List stripResult = stripParameters(settings.name);
+        print(stripResult);
+        if (stripResult[0] == '/') {
+          Map<String, String> args = stripResult[1];
+          if (args['email'] == null || args['password'] == null) {
+            return MaterialPageRoute(
+              settings: settings,
+              builder: (context) => LoadingScreen(
+                email: args['email']!,
+                password: args['password']!,
+              ),
+            );
+          }
+          return MaterialPageRoute(
+            settings: settings,
+            builder: (context) => UserActivationPage(
+              uidB64: args['uidB64']!,
+              token: args['token']!,
+            ),
+          );
+        }
+        return null;
+      },
     );
+    */
   }
 }

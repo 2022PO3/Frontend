@@ -23,18 +23,19 @@ class _NavbarState extends State<Navbar> {
     if (response?.statusCode == 204) {
       final userInfo = await SharedPreferences.getInstance();
       userInfo.remove('authToken');
-      Navigator.popUntil(context, ModalRoute.withName('/login_page'));
+      Navigator.popUntil(context, ModalRoute.withName('/login-page'));
     } else {}
   }
+
   @override
   Widget build(BuildContext context) {
     final UserProvider userProvider = Provider.of<UserProvider>(context);
-        Future openDialog() => showDialog(
+    Future openDialog() => showDialog(
         context: context,
         builder: (context) => AlertDialog(
               title: Text(
-                'Dear ' + (userProvider.getUser.firstName ?? "user") + ",",
-                style: TextStyle(color: Colors.indigoAccent),
+                'Dear ${userProvider.getUser.firstName ?? 'user'},',
+                style: const TextStyle(color: Colors.indigoAccent),
               ),
               content: const Text('Are you sure you want to sign out?'),
               actions: [

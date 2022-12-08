@@ -6,14 +6,14 @@ import 'package:po_frontend/api/network/static_values.dart';
 
 import '../../api/network/network_exception.dart';
 
-class RegisterNow extends StatefulWidget {
-  const RegisterNow({Key? key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  State<RegisterNow> createState() => _RegisterNowState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _RegisterNowState extends State<RegisterNow> {
+class _RegisterPageState extends State<RegisterPage> {
   final _firstNameTextController = TextEditingController();
   final _lastNameTextController = TextEditingController();
   final _emailTextController = TextEditingController();
@@ -466,7 +466,7 @@ class _RegisterNowState extends State<RegisterNow> {
                             _showSuccessDialog(context);
                             await Future.delayed(const Duration(seconds: 4));
                             if (mounted) {
-                              Navigator.popAndPushNamed(context, '/login_page');
+                              Navigator.popAndPushNamed(context, '/login-page');
                             }
                           }
                         } on BackendException catch (e) {

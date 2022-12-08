@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:po_frontend/pages/auth/register.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
@@ -14,30 +15,32 @@ import '../../providers/user_provider.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
+  static const route = 'login';
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
   Future wrongPasswordPopUp() => showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-            title: const Text('Wrong userinfo...'),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.popUntil(
-                            context, ModalRoute.withName('/login_page'));
-                      },
-                      child: const Text('Go Back')),
-                ],
-              )
-            ],
-          ));
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Wrong userinfo...'),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    context.pop();
+                  },
+                  child: const Text('Go Back'),
+                ),
+              ],
+            )
+          ],
+        ),
+      );
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
 
@@ -56,22 +59,24 @@ class _LoginPageState extends State<LoginPage> {
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
             child: IconButton(
-                onPressed: () {
-                  //
-                },
-                icon: const Icon(
-                  Icons.help,
-                  size: 45,
-                )),
-          )
+              onPressed: () {
+                //
+              },
+              icon: const Icon(
+                Icons.help,
+                size: 45,
+              ),
+            ),
+          ),
         ],
         flexibleSpace: Container(
           decoration: const BoxDecoration(
-              gradient: LinearGradient(
-            colors: [(Colors.indigo), (Colors.indigoAccent)],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          )),
+            gradient: LinearGradient(
+              colors: [(Colors.indigo), (Colors.indigoAccent)],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+          ),
         ),
       ),
       body: SafeArea(
@@ -162,8 +167,8 @@ class _LoginPageState extends State<LoginPage> {
                     try {
                       User user = await loginUser(userMail, userPassword);
                       if (mounted) {
-                        Navigator.pushNamed(
-                            context, user.twoFactor ? '/two-factor' : '/home');
+                        context
+                            .go(user.twoFactor ? '/login/two-factor' : '/home');
                       }
                     } on BackendException catch (e) {
                       print(e);
@@ -181,7 +186,7 @@ class _LoginPageState extends State<LoginPage> {
                 const Text('Not a member? '),
                 TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/register');
+                    context.go('/login/register');
                   },
                   child: const Text(
                     'Register now',
@@ -247,7 +252,7 @@ class _LoginPageState extends State<LoginPage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                context.pop();
               },
               child: const Text(
                 'OK',
