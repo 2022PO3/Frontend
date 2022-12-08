@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/device_model.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
@@ -103,9 +104,7 @@ class _DeviceWidgetState extends State<DeviceWidget> {
           actions: [
             TextButton(
               onPressed: () async {
-                Navigator.pop(
-                  context,
-                );
+                context.pop();
                 setState(() {});
                 try {
                   await removeDevice(device);
@@ -125,7 +124,7 @@ class _DeviceWidgetState extends State<DeviceWidget> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
+                context.pop();
               },
               child: const Text(
                 'Cancel',
@@ -154,7 +153,7 @@ class _DeviceWidgetState extends State<DeviceWidget> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                context.pop();
               },
               child: const Text(
                 'OK',
@@ -183,7 +182,7 @@ class _DeviceWidgetState extends State<DeviceWidget> {
               onPressed: () {
                 // Used to refresh the page.
                 setState(() {});
-                Navigator.of(context).pop();
+                context.pop();
               },
               child: const Text(
                 'OK',

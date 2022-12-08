@@ -13,46 +13,71 @@ import '../../api/network/network_exception.dart';
 import '../../providers/user_provider.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({super.key, required this.email, required this.password});
 
-  static const route = 'login';
+  final String? email;
+  final String? password;
+
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  Future wrongPasswordPopUp() => showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Wrong userinfo...'),
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    context.pop();
-                  },
-                  child: const Text('Go Back'),
-                ),
-              ],
-            )
-          ],
-        ),
-      );
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
 
   String userMail = '';
   String userPassword = '';
 
-  //List<UserInfo> users = List.from(UserDataBase);
-
   @override
   Widget build(BuildContext context) {
+    if (automaticLogin(widget.email, widget.password)) {
+      String email = widget.email as String;
+      String password = widget.password as String;
+      return FutureBuilder(
+        future: loginUser(email, password),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.hasData) {
+            context.go('/home');
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.error_outline,
+                    color: Colors.red,
+                    size: 25,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(snapshot.error.toString()),
+                ],
+              ),
+            );
+          }
+          return Scaffold(
+            appBar: AppBar(
+              flexibleSpace: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [(Colors.indigo), (Colors.indigoAccent)],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                ),
+              ),
+            ),
+            body: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        },
+      );
+    }
     return Scaffold(
-      //backgroundColor: ,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         actions: [
@@ -86,14 +111,12 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(
               height: 10,
             ),
-            //Hello again!
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: GradientText(
                 'Hello Again!',
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  //fontWeight: FontWeight.bold,
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
                 ),
@@ -109,14 +132,12 @@ class _LoginPageState extends State<LoginPage> {
                 "Welcome back, you've been missed!",
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  //fontWeight: FontWeight.bold,
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                 ),
                 colors: const [(Colors.indigoAccent), (Colors.indigo)],
               ),
             ),
-            //email textfield
             const SizedBox(
               height: 30,
             ),
@@ -263,5 +284,9 @@ class _LoginPageState extends State<LoginPage> {
         );
       },
     );
+  }
+
+  bool automaticLogin(String? email, String? password) {
+    return email != null && password != null;
   }
 }

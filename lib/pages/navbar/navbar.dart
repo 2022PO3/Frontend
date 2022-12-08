@@ -24,7 +24,7 @@ class _NavbarState extends State<Navbar> {
     if (response?.statusCode == 204) {
       final userInfo = await SharedPreferences.getInstance();
       userInfo.remove('authToken');
-      Navigator.popUntil(context, ModalRoute.withName('/login-page'));
+      if (mounted) context.go("/login");
     } else {}
   }
 
@@ -46,8 +46,7 @@ class _NavbarState extends State<Navbar> {
                   children: [
                     TextButton(
                         onPressed: () {
-                          Navigator.popUntil(
-                              context, ModalRoute.withName('/home'));
+                          context.pop();
                         },
                         child: const Text(
                           'Cancel',
@@ -90,14 +89,14 @@ class _NavbarState extends State<Navbar> {
               ),
               title: const Text('My Reservations'),
               onTap: () {
-                Navigator.pushNamed(context, '/my_Reservations');
+                context.push('reservations');
               }),
           const Divider(),
           ListTile(
               leading: const Icon(Icons.account_circle, color: Colors.indigo),
               title: const Text('Profile'),
               onTap: () {
-                Navigator.pushNamed(context, '/profile');
+                context.push('profile');
               }),
           const Divider(),
           ListTile(
@@ -107,7 +106,7 @@ class _NavbarState extends State<Navbar> {
               ),
               title: const Text('Statistics'),
               onTap: () {
-                Navigator.pushNamed(context, '/statistics');
+                context.push('statistics');
               }),
           const Divider(),
           ListTile(
@@ -121,7 +120,7 @@ class _NavbarState extends State<Navbar> {
               leading: const Icon(Icons.help, color: Colors.indigo),
               title: const Text('Help'),
               onTap: () {
-                Navigator.pushNamed(context, '/help');
+                context.push('help');
               }),
           const Divider(),
           ListTile(

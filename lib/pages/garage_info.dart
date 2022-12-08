@@ -34,6 +34,12 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {
           final GarageData garageData = snapshot.data as GarageData;
+
+          Garage garage = garageData.garage;
+          GarageSettings garageSettings = garageData.garageSettings;
+          List<OpeningHour> openingHours = garageData.openingHours;
+          List<Price> prices = garageData.prices;
+
           return Scaffold(
             appBar: AppBar(
               title: Text(garageData.garage.name),
@@ -76,8 +82,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                               axes: <RadialAxis>[
                                 RadialAxis(
                                   minimum: 0,
-                                  maximum:
-                                      garageData.garage.parkingLots.toDouble(),
+                                  maximum: garage.parkingLots.toDouble(),
                                   showLabels: false,
                                   showTicks: false,
                                   axisLineStyle: const AxisLineStyle(
@@ -88,8 +93,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                                   ),
                                   pointers: <GaugePointer>[
                                     RangePointer(
-                                      value: garageData.garage.unoccupiedLots
-                                          .toDouble(),
+                                      value: garage.unoccupiedLots.toDouble(),
                                       cornerStyle: CornerStyle.bothCurve,
                                       width: 0.2,
                                       sizeUnit: GaugeSizeUnit.factor,
@@ -100,7 +104,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                                       positionFactor: 0.1,
                                       angle: 90,
                                       widget: Text(
-                                        '${garageData.garage.unoccupiedLots.toStringAsFixed(0)} / ${garageData.garage.parkingLots}',
+                                        '${garage.unoccupiedLots.toStringAsFixed(0)} / ${garage.parkingLots}',
                                         style: const TextStyle(
                                           fontSize: 30,
                                           fontWeight: FontWeight.bold,
@@ -133,7 +137,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                           ),
                         ),
                         Text(
-                          garageData.garage.name,
+                          garage.name,
                           style: const TextStyle(color: Colors.indigo),
                         )
                       ],
@@ -162,7 +166,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                       child: SizedBox(
                         height: 65,
                         child: Text(
-                          '${garageData.garageSettings.location.country}, ${Province.getProvinceName(garageData.garageSettings.location.province)}, ${garageData.garageSettings.location.street} ${garageData.garageSettings.location.number}, ${garageData.garageSettings.location.postCode} ${garageData.garageSettings.location.municipality}',
+                          '${garageSettings.location.country}, ${Province.getProvinceName(garageSettings.location.province)}, ${garageSettings.location.street} ${garageSettings.location.number}, ${garageSettings.location.postCode} ${garageSettings.location.municipality}',
                           style: const TextStyle(
                             color: Colors.indigo,
                           ),
@@ -218,10 +222,10 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                         child: ListView.builder(
                           itemBuilder: (context, index) {
                             return CurrentPrice(
-                              price: garageData.prices[index],
+                              price: prices[index],
                             );
                           },
-                          itemCount: garageData.prices.length,
+                          itemCount: prices.length,
                         ),
                       ),
                     ),
@@ -252,10 +256,10 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                         child: ListView.builder(
                           itemBuilder: (context, index) {
                             return GarageOpeningHoursWidget(
-                              openingsHours: garageData.openingHours[index],
+                              openingsHours: openingHours[index],
                             );
                           },
-                          itemCount: garageData.openingHours.length,
+                          itemCount: openingHours.length,
                         ),
                       ),
                     ),
@@ -293,14 +297,14 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                               ),
                               buildIconWithText(
                                 FontAwesomeIcons.arrowsLeftRight,
-                                '${garageData.garage.garageSettings.maxWidth.toString()} m',
+                                '${garage.garageSettings.maxWidth.toString()} m',
                               ),
                               const SizedBox(
                                 width: 30,
                               ),
                               buildIconWithText(
                                 FontAwesomeIcons.arrowsUpDown,
-                                '${garageData.garage.garageSettings.maxHeight.toString()} m',
+                                '${garage.garageSettings.maxHeight.toString()} m',
                               ),
                             ],
                           ),
@@ -337,6 +341,9 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                           onPressed: () async {},
                         ),
                       ),
+                    ),
+                    const SizedBox(
+                      height: 25,
                     ),
                   ],
                 ),

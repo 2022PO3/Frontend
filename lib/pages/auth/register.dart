@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
 import 'package:po_frontend/api/network/network_service.dart';
@@ -465,9 +466,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           if (mounted) {
                             _showSuccessDialog(context);
                             await Future.delayed(const Duration(seconds: 4));
-                            if (mounted) {
-                              Navigator.popAndPushNamed(context, '/login-page');
-                            }
+                            if (mounted) context.pop();
                           }
                         } on BackendException catch (e) {
                           print('Error occurred $e');
@@ -521,7 +520,7 @@ class _RegisterPageState extends State<RegisterPage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                context.pop();
               },
               child: const Text(
                 'OK',
@@ -545,7 +544,7 @@ class _RegisterPageState extends State<RegisterPage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                context.pop();
               },
               child: const Text(
                 'OK',

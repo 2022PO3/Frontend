@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
 import 'package:po_frontend/api/network/network_service.dart';
@@ -141,7 +142,7 @@ class _UserActivationPageState extends State<UserActivationPage> {
             if (mounted) {
               _showSuccessDialog(context);
               await Future.delayed(const Duration(seconds: 2));
-              if (mounted) Navigator.popAndPushNamed(context, '/login-page');
+              if (mounted) context.go('/login');
             }
           } on BackendException catch (e) {
             setState(() => state = ButtonState.error);
@@ -196,7 +197,7 @@ class _UserActivationPageState extends State<UserActivationPage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                context.pop();
               },
               child: const Text(
                 'OK',
@@ -220,7 +221,7 @@ class _UserActivationPageState extends State<UserActivationPage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                context.pop();
               },
               child: const Text(
                 'OK',

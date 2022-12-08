@@ -35,7 +35,7 @@ class GarageWidget extends StatelessWidget {
           ],
         ),
         onTap: () {
-          context.go('/home/garage-info/${garage.id}');
+          context.push('garage-info/${garage.id}');
         },
       ),
       onTap: () {
