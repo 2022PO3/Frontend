@@ -23,6 +23,7 @@ dependencies:
       path: envify
   dart_jsonwebtoken: ^2.4.2
   enum_to_string: ^2.0.1
+  flutter_datetime_picker: ^1.5.1
 
 dev_dependencies:
   flutter_test:
