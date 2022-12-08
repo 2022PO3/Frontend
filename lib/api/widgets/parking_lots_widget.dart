@@ -11,9 +11,9 @@ class ParkingLotsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool occupied = parkingLot.occupied || (parkingLot.booked ?? false);
+    bool booked = parkingLot.booked ?? false;
     return Card(
-      color: occupied ? Colors.red.shade300 : Colors.lightGreen.shade400,
+      color: booked ? Colors.red.shade300 : Colors.lightGreen.shade400,
       child: Padding(
         padding: const EdgeInsets.symmetric(
           vertical: 8,

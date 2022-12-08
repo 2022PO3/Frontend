@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
+import 'package:po_frontend/api/requests/garage_requests.dart';
 
-import 'package:po_frontend/api/requests/parking_lots_requests.dart';
 import 'package:po_frontend/api/widgets/parking_lots_widget.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/parking_lot_model.dart';

@@ -1,8 +1,10 @@
 import 'package:po_frontend/api/models/garage_settings_model.dart';
 import 'package:po_frontend/api/models/opening_hour_model.dart';
 import 'package:po_frontend/api/models/price_model.dart';
+import 'package:po_frontend/pages/garage_info.dart';
 
 import '../models/garage_model.dart';
+import '../models/parking_lot_model.dart';
 import '../network/network_helper.dart';
 import '../network/network_service.dart';
 import '../network/static_values.dart';
@@ -64,4 +66,43 @@ Future<List<OpeningHour>> getGarageOpeningHours(int garageId) async {
   );
   return await NetworkHelper.filterResponse(
       callBack: OpeningHourListFromJson, response: response);
+}
+
+Future<GarageData> getGarageData(int garageId) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.get,
+    apiSlug: StaticValues.getGarageSlug,
+    useAuthToken: true,
+    pk: garageId,
+  );
+
+  Garage garage = await NetworkHelper.filterResponse(
+    callBack: Garage.fromJSON,
+    response: response,
+  );
+
+  List<OpeningHour> openingHours = await getGarageOpeningHours(garageId);
+  List<Price> prices = await getGaragePrices(garageId);
+  GarageSettings garageSettings = await getGarageSettings(garageId);
+
+  return GarageData(
+    garage: garage,
+    openingHours: openingHours,
+    prices: prices,
+    garageSettings: garageSettings,
+  );
+}
+
+Future<List<ParkingLot>> getGarageParkingLots(int garageId) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.get,
+    apiSlug: StaticValues.getParkingLotsSlug,
+    useAuthToken: true,
+    pk: garageId,
+  );
+
+  return await NetworkHelper.filterResponse(
+    callBack: ParkingLot.listFromJSON,
+    response: response,
+  );
 }

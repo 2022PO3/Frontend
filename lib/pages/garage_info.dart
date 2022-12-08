@@ -67,213 +67,145 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
               child: SafeArea(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          constraints: BoxConstraints(
-                            maxWidth: width - 50,
-                            maxHeight: 200,
-                          ),
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 25.0),
-                            child: SfRadialGauge(
-                              axes: <RadialAxis>[
-                                RadialAxis(
-                                  minimum: 0,
-                                  maximum: garage.parkingLots.toDouble(),
-                                  showLabels: false,
-                                  showTicks: false,
-                                  axisLineStyle: const AxisLineStyle(
-                                    thickness: 0.2,
-                                    cornerStyle: CornerStyle.bothCurve,
-                                    color: Colors.grey,
-                                    thicknessUnit: GaugeSizeUnit.factor,
-                                  ),
-                                  pointers: <GaugePointer>[
-                                    RangePointer(
-                                      value: garage.unoccupiedLots.toDouble(),
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            gradientText('Free spots:'),
+                            Container(
+                              constraints: const BoxConstraints(
+                                maxHeight: 150,
+                              ),
+                              child: SfRadialGauge(
+                                axes: <RadialAxis>[
+                                  RadialAxis(
+                                    minimum: 0,
+                                    maximum: garage.parkingLots.toDouble(),
+                                    showLabels: false,
+                                    showTicks: false,
+                                    axisLineStyle: const AxisLineStyle(
+                                      thickness: 0.2,
                                       cornerStyle: CornerStyle.bothCurve,
-                                      width: 0.2,
-                                      sizeUnit: GaugeSizeUnit.factor,
-                                    )
-                                  ],
-                                  annotations: <GaugeAnnotation>[
-                                    GaugeAnnotation(
-                                      positionFactor: 0.1,
-                                      angle: 90,
-                                      widget: Text(
-                                        '${garage.unoccupiedLots.toStringAsFixed(0)} / ${garage.parkingLots}',
-                                        style: const TextStyle(
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.bold,
+                                      color: Colors.grey,
+                                      thicknessUnit: GaugeSizeUnit.factor,
+                                    ),
+                                    pointers: <GaugePointer>[
+                                      RangePointer(
+                                        value: garage.unoccupiedLots.toDouble(),
+                                        cornerStyle: CornerStyle.bothCurve,
+                                        width: 0.2,
+                                        sizeUnit: GaugeSizeUnit.factor,
+                                      )
+                                    ],
+                                    annotations: <GaugeAnnotation>[
+                                      GaugeAnnotation(
+                                        positionFactor: 0.1,
+                                        angle: 90,
+                                        widget: Text(
+                                          '${garage.unoccupiedLots.toStringAsFixed(0)} / ${garage.parkingLots}',
+                                          style: const TextStyle(
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                      ),
-                                    )
-                                  ],
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 20,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            gradientText('Location'),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            SizedBox(
+                              height: 65,
+                              child: Text(
+                                '${garageSettings.location.country}, ${Province.getProvinceName(garageSettings.location.province)}, ${garageSettings.location.street} ${garageSettings.location.number}, ${garageSettings.location.postCode} ${garageSettings.location.municipality}',
+                                style: const TextStyle(
+                                  color: Colors.indigo,
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                          child: GradientText(
-                            'Garage Name: ',
-                            textAlign: TextAlign.left,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            colors: const [
-                              (Colors.indigoAccent),
-                              (Colors.indigo)
-                            ],
-                          ),
-                        ),
-                        Text(
-                          garage.name,
-                          style: const TextStyle(color: Colors.indigo),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                          child: GradientText(
-                            'Location: ',
-                            textAlign: TextAlign.left,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            colors: const [
-                              (Colors.indigoAccent),
-                              (Colors.indigo)
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                      child: SizedBox(
-                        height: 65,
-                        child: Text(
-                          '${garageSettings.location.country}, ${Province.getProvinceName(garageSettings.location.province)}, ${garageSettings.location.street} ${garageSettings.location.number}, ${garageSettings.location.postCode} ${garageSettings.location.municipality}',
-                          style: const TextStyle(
-                            color: Colors.indigo,
-                          ),
+                          ],
                         ),
                       ),
                     ),
-
-                    /*Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                  child: GradientText(
-                    'Empty spots left: ',
-                    textAlign: TextAlign.left,
-                    style: const TextStyle(
-                      //fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    colors: const [(Colors.indigoAccent), (Colors.indigo)],
-                  ),
-                ),
-                Text(
-                  '${garage.unoccupiedLots}/${garage.parkingLots}',
-                  style: const TextStyle(color: Colors.indigo),
-                )
-              ],
-            ),*/
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                          child: GradientText(
-                            'Garage Price: ',
-                            textAlign: TextAlign.left,
-                            style: const TextStyle(
-                              //fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            colors: const [
-                              (Colors.indigoAccent),
-                              (Colors.indigo)
-                            ],
-                          ),
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 20,
                         ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                      child: SizedBox(
-                        height: 70,
-                        child: ListView.builder(
-                          itemBuilder: (context, index) {
-                            return CurrentPrice(
-                              price: prices[index],
-                            );
-                          },
-                          itemCount: prices.length,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            gradientText('Garage prices:'),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            SizedBox(
+                              height: 70,
+                              child: ListView.builder(
+                                itemBuilder: (context, index) {
+                                  return CurrentPrice(
+                                    price: prices[index],
+                                  );
+                                },
+                                itemCount: prices.length,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                          child: GradientText(
-                            'Opening hours: ',
-                            textAlign: TextAlign.left,
-                            style: const TextStyle(
-                              //fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            colors: const [
-                              (Colors.indigoAccent),
-                              (Colors.indigo)
-                            ],
-                          ),
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 20,
                         ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                      child: SizedBox(
-                        height: 190,
-                        child: ListView.builder(
-                          itemBuilder: (context, index) {
-                            return GarageOpeningHoursWidget(
-                              openingsHours: openingHours[index],
-                            );
-                          },
-                          itemCount: openingHours.length,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            gradientText('Opening hours'),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            SizedBox(
+                              height: 190,
+                              child: ListView.builder(
+                                itemBuilder: (context, index) {
+                                  return GarageOpeningHoursWidget(
+                                    openingsHours: openingHours[index],
+                                  );
+                                },
+                                itemCount: openingHours.length,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.grey,
-                          ),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
                         child: Padding(
                           padding: const EdgeInsets.all(10),
                           child: Row(
@@ -403,6 +335,18 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
     );
   }
 
+  Widget gradientText(String text) {
+    return GradientText(
+      text,
+      textAlign: TextAlign.left,
+      style: const TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
+      colors: const [(Colors.indigoAccent), (Colors.indigo)],
+    );
+  }
+
   Widget buildIconWithText(dynamic icon, String text) {
     return Column(
       children: [
@@ -424,31 +368,6 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
       ],
     );
   }
-}
-
-Future<GarageData> getGarageData(int garageId) async {
-  final response = await NetworkService.sendRequest(
-    requestType: RequestType.get,
-    apiSlug: StaticValues.getGarageSlug,
-    useAuthToken: true,
-    pk: garageId,
-  );
-
-  Garage garage = await NetworkHelper.filterResponse(
-    callBack: Garage.fromJSON,
-    response: response,
-  );
-
-  List<OpeningHour> openingHours = await getGarageOpeningHours(garageId);
-  List<Price> prices = await getGaragePrices(garageId);
-  GarageSettings garageSettings = await getGarageSettings(garageId);
-
-  return GarageData(
-    garage: garage,
-    openingHours: openingHours,
-    prices: prices,
-    garageSettings: garageSettings,
-  );
 }
 
 class GarageData {
