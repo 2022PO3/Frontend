@@ -10,7 +10,7 @@ import 'package:po_frontend/pages/home/home_page.dart';
 import 'package:po_frontend/pages/reservations/confirm_reservation.dart';
 import 'package:po_frontend/pages/reservations/make_reservation_page.dart';
 import 'package:po_frontend/pages/navbar/help.dart';
-import 'package:po_frontend/pages/navbar/my_reservations.dart';
+import 'package:po_frontend/pages/reservations/user_reservations.dart';
 import 'package:po_frontend/pages/navbar/profile.dart';
 import 'package:po_frontend/pages/navbar/statistics.dart';
 import 'package:po_frontend/pages/settings/add_two_factor_device_page.dart';
@@ -69,7 +69,7 @@ class Routes {
             ),
             GoRoute(
               path: 'reservations',
-              builder: (context, state) => const Reservations(),
+              builder: (context, state) => const UserReservations(),
             ),
             GoRoute(
               path: 'profile',

@@ -1,20 +1,16 @@
-import 'package:po_frontend/api/network/network_helper.dart';
-import 'package:po_frontend/api/network/network_service.dart';
-import 'package:po_frontend/api/network/static_values.dart';
 import 'package:flutter/material.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/api/widgets/reservation_widget.dart';
-import 'package:po_frontend/api/models/garage_model.dart';
 
-class Reservations extends StatefulWidget {
-  const Reservations({super.key});
+class UserReservations extends StatefulWidget {
+  const UserReservations({super.key});
 
   @override
-  State<Reservations> createState() => _ReservationsState();
+  State<UserReservations> createState() => _UserReservationsState();
 }
 
-class _ReservationsState extends State<Reservations> {
+class _UserReservationsState extends State<UserReservations> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
