@@ -10,6 +10,7 @@ import 'package:po_frontend/pages/home/home_page.dart';
 import 'package:po_frontend/pages/reservations/confirm_reservation.dart';
 import 'package:po_frontend/pages/reservations/make_reservation_page.dart';
 import 'package:po_frontend/pages/navbar/help.dart';
+import 'package:po_frontend/pages/reservations/select_licecence_plate.dart';
 import 'package:po_frontend/pages/reservations/user_reservations.dart';
 import 'package:po_frontend/pages/navbar/profile.dart';
 import 'package:po_frontend/pages/navbar/statistics.dart';
@@ -48,15 +49,22 @@ class Routes {
               ),
             ),
             GoRoute(
+              path: 'select-licence-plate',
+              builder: (context, state) => SelectLicencePlatePage(
+                garage: state.extra as Garage,
+              ),
+            ),
+            GoRoute(
               path: 'reserve',
               builder: (context, state) => MakeReservationPage(
-                garage: state.extra as Garage,
+                garageAndLicencePlate: state.extra as GarageAndLicencePlate,
               ),
               routes: [
                 GoRoute(
                   path: 'spot-selection',
                   builder: (context, state) => SpotSelectionPage(
-                    garageAndTime: state.extra as GarageAndTime,
+                    garageLicenceAndTime:
+                        state.extra as GarageLicencePlateAndTime,
                   ),
                 ),
                 GoRoute(

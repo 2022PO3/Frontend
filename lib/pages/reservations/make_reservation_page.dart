@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
+import 'package:po_frontend/api/models/licence_plate_model.dart';
 import 'package:po_frontend/api/models/parking_lot_model.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
@@ -13,12 +14,22 @@ import 'package:provider/provider.dart';
 class MakeReservationPage extends StatefulWidget {
   const MakeReservationPage({
     Key? key,
-    required this.garage,
+    required this.garageAndLicencePlate,
   }) : super(key: key);
 
-  final Garage garage;
+  final GarageAndLicencePlate garageAndLicencePlate;
   @override
   State<MakeReservationPage> createState() => _MakeReservationPageState();
+}
+
+class GarageAndLicencePlate {
+  const GarageAndLicencePlate({
+    required this.garage,
+    required this.licencePlate,
+  });
+
+  final Garage garage;
+  final LicencePlate licencePlate;
 }
 
 class _MakeReservationPageState extends State<MakeReservationPage> {
@@ -229,7 +240,7 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
                       onPressed: () async {
                         if (compareDates(startDate, endDate)) {
                           Reservation reservation = await assignReservation(
-                            widget.garage,
+                            widget.garageAndLicencePlate.garage,
                             startDate,
                             endDate,
                           );
@@ -266,8 +277,10 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
                         if (compareDates(startDate, endDate)) {
                           context.push(
                             '/home/reserve/spot-selection',
-                            extra: GarageAndTime(
-                              garage: widget.garage,
+                            extra: GarageLicencePlateAndTime(
+                              licencePlate:
+                                  widget.garageAndLicencePlate.licencePlate,
+                              garage: widget.garageAndLicencePlate.garage,
                               startDate: startDate,
                               endDate: endDate,
                             ),
@@ -312,7 +325,7 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
           Provider.of<UserProvider>(context, listen: false);
 
       return Reservation(
-        userId: userProvider.getUser.id,
+        licencePlate: widget.garageAndLicencePlate.licencePlate,
         fromDate: startDate,
         toDate: endDate,
         parkingLot: parkingLot,
@@ -370,14 +383,16 @@ void showDateErrorPopUp(BuildContext context) {
   );
 }
 
-class GarageAndTime {
-  const GarageAndTime({
+class GarageLicencePlateAndTime {
+  const GarageLicencePlateAndTime({
     Key? key,
+    required this.licencePlate,
     required this.garage,
     required this.startDate,
     required this.endDate,
   });
 
+  final LicencePlate licencePlate;
   final Garage garage;
   final DateTime startDate;
   final DateTime endDate;

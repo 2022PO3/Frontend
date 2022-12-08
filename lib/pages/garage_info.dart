@@ -274,7 +274,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                           ),
                           onPressed: () {
                             context.go(
-                              '/home/reserve',
+                              '/home/select-licence-plate',
                               extra: garage,
                             );
                           },

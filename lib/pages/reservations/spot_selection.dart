@@ -13,10 +13,10 @@ import 'package:provider/provider.dart';
 class SpotSelectionPage extends StatefulWidget {
   const SpotSelectionPage({
     Key? key,
-    required this.garageAndTime,
+    required this.garageLicenceAndTime,
   }) : super(key: key);
 
-  final GarageAndTime garageAndTime;
+  final GarageLicencePlateAndTime garageLicenceAndTime;
   @override
   State<SpotSelectionPage> createState() => _SpotSelectionPageState();
 }
@@ -24,9 +24,9 @@ class SpotSelectionPage extends StatefulWidget {
 class _SpotSelectionPageState extends State<SpotSelectionPage> {
   @override
   Widget build(BuildContext context) {
-    final Garage garage = widget.garageAndTime.garage;
-    final DateTime startDate = widget.garageAndTime.startDate;
-    final DateTime endDate = widget.garageAndTime.endDate;
+    final Garage garage = widget.garageLicenceAndTime.garage;
+    final DateTime startDate = widget.garageLicenceAndTime.startDate;
+    final DateTime endDate = widget.garageLicenceAndTime.endDate;
 
     return Scaffold(
       appBar: AppBar(
@@ -101,7 +101,7 @@ class _SpotSelectionPageState extends State<SpotSelectionPage> {
         context.push(
           '/home/reserve/confirm-reservation',
           extra: Reservation(
-            userId: userProvider.getUser.id,
+            licencePlate: widget.garageLicenceAndTime.licencePlate,
             fromDate: startDate,
             toDate: endDate,
             parkingLot: parkingLot,

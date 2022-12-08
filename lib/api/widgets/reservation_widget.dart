@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
 
 class ReservationWidget extends StatelessWidget {
-  const ReservationWidget({Key? key, required this.reservation})
-      : super(key: key);
+  const ReservationWidget({
+    Key? key,
+    required this.reservation,
+  }) : super(key: key);
 
   final Reservation reservation;
 
