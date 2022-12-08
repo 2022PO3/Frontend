@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:po_frontend/api/models/enums.dart';
-import 'package:po_frontend/core/post_frame_mixin.dart';
 import 'package:po_frontend/providers/user_provider.dart';
 import '../../api/models/licence_plate_model.dart';
 import '../../api/requests/garage_requests.dart';
@@ -23,7 +22,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with PostFrameMixin {
+class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
