@@ -3,7 +3,6 @@ import 'package:po_frontend/api/garages_page.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
 import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
-import 'package:po_frontend/api/models/parking_lots_model.dart';
 import 'package:po_frontend/api/widgets/parking_lots_widget.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/parking_lot_model.dart';

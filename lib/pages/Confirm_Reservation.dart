@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
+import 'package:po_frontend/api/models/user_model.dart';
 import 'package:po_frontend/pages/Spot_Selection.dart';
 import 'package:po_frontend/api/widgets/parking_lots_widget.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
@@ -8,6 +9,8 @@ import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
 import 'package:po_frontend/api/models/parking_lot_model.dart';
+import 'package:po_frontend/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class Confirm_Reservation extends StatefulWidget {
   const Confirm_Reservation({Key? key}) : super(key: key);
@@ -23,6 +26,7 @@ class _Confirm_ReservationState extends State<Confirm_Reservation> {
 
   @override
   Widget build(BuildContext context) {
+    final UserProvider userProvider = Provider.of<UserProvider>(context);
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
         <String, dynamic>{}) as Map;
     final Garage garage = arguments['selected_garage'];
@@ -30,11 +34,11 @@ class _Confirm_ReservationState extends State<Confirm_Reservation> {
     final DateTime _date2 = arguments['selected_enddate'];
     final ParkingLot parkinglot = arguments['selected_spot'];
     final Reservation reservation = Reservation(
-      garage: garage,
-      fromDate: _date,
-      toDate: _date2,
-      spot: parkinglot,
-    );
+        garage: garage,
+        fromDate: _date,
+        toDate: _date2,
+        spot: parkinglot.id,
+        owner: userProvider.getUser.id);
 
     return Scaffold(
       appBar: AppBar(
@@ -88,6 +92,7 @@ class _Confirm_ReservationState extends State<Confirm_Reservation> {
                 ])
               ]),
               Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text("Your selected spot:",
                       style: TextStyle(
@@ -108,8 +113,9 @@ class _Confirm_ReservationState extends State<Confirm_Reservation> {
                     print(_date2.toString());
 
                     checkReservation(_date, _date2, parkinglot)
-                        ? postData()
+                        ? Navigator.pushNamed(context, "/home")
                         : showReservationErrorPopUp(context);
+                    postData(reservation);
 
                     //CHECKS FOR CORRECT INFO BEFORE TRYING TO POST!!
                   },
@@ -177,26 +183,50 @@ void showReservationErrorPopUp(BuildContext context) {
   );
 }
 
-postData() async {
+postData(Reservation reservation) async {
   print("Executing function");
   final response = await NetworkService.sendRequest(
       requestType: RequestType.post,
       apiSlug: StaticValues.getReservationSlug,
       useAuthToken: true,
       body: {
-        'garageId': reservation.garage,
+        'garageId': reservation.garage.id,
         'userId': reservation.owner,
         'parkingLotId': reservation.spot,
-        'fromDate': reservation.fromDate,
-        'toDate': reservation.toDate,
+        'fromDate': reservation.fromDate.toIso8601String(),
+        'toDate': reservation.toDate.toIso8601String(),
       });
 
   print("reponse $response");
   print('Response ${response?.body}');
   print('Response status code ${response?.statusCode}');
 
-  return await NetworkHelper.filterResponse(
-    callBack: parking_lotsListFromJson,
-    response: response,
+  return NetworkHelper.validateResponse(response);
+}
+
+void showPostErrorPopUp(BuildContext context) {
+  // set up the buttons
+  Widget backButton = TextButton(
+    child: Text("Back"),
+    onPressed: () {
+      Navigator.pop(context);
+    },
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Error"),
+    content: Text("Reservation wasn't booked, try again."),
+    actions: [
+      backButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
   );
 }
