@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
-import 'package:po_frontend/api/models/garage_model.dart';
 
 class ReservationWidget extends StatelessWidget {
   const ReservationWidget({Key? key, required this.reservation})
@@ -10,36 +9,102 @@ class ReservationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.shortestSide;
     return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 300,
-            child: Text(reservation.garage.name,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+      padding: const EdgeInsets.all(5),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    reservation.garage.name,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              const Divider(
+                indent: 5,
+                endIndent: 5,
+              ),
+              IntrinsicHeight(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'No.',
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                    Text(
+                      reservation.parkingLot.parkingLotNo.toString(),
+                      style: const TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                    const VerticalDivider(),
+                    buildReservationTime(reservation),
+                  ],
+                ),
+              ),
+            ],
           ),
-          SizedBox(
-            width: 300,
-            child: Text("From: " +
-                reservation.fromDate.toIso8601String().substring(0, 10) +
-                "        " +
-                reservation.fromDate.toIso8601String().substring(11, 16)),
-          ),
-          SizedBox(
-            width: 300,
-            child: Text("        "),
-          ),
-          SizedBox(
-            width: 300,
-            child: Text("Until: " +
-                reservation.toDate.toIso8601String().substring(0, 10) +
-                "        " +
-                reservation.toDate.toIso8601String().substring(11, 16)),
-          ),
-        ],
+        ),
       ),
     );
   }
+}
+
+Widget buildReservationTime(Reservation reservation) {
+  return Row(
+    children: [
+      const Icon(
+        Icons.access_time,
+        size: 40,
+      ),
+      const SizedBox(
+        width: 10,
+      ),
+      buildDateAndTime(
+        reservation.fromDate.toIso8601String().substring(11, 16),
+        reservation.fromDate.toIso8601String().substring(0, 10),
+      ),
+      const Icon(
+        Icons.arrow_right_alt_outlined,
+        size: 40,
+      ),
+      buildDateAndTime(
+        reservation.toDate.toIso8601String().substring(11, 16),
+        reservation.toDate.toIso8601String().substring(0, 10),
+      ),
+    ],
+  );
+}
+
+Widget buildDateAndTime(String time, String date) {
+  return Column(
+    children: [
+      Text(
+        time,
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      Text(
+        date,
+      ),
+    ],
+  );
 }

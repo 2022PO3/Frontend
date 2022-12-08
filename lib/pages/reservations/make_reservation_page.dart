@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 
 class MakeReservationPage extends StatefulWidget {
-  const MakeReservationPage({Key? key}) : super(key: key);
+  const MakeReservationPage({
+    Key? key,
+    required this.garage,
+  }) : super(key: key);
+
+  final Garage garage;
   @override
   State<MakeReservationPage> createState() => _MakeReservationPageState();
 }
 
 class _MakeReservationPageState extends State<MakeReservationPage> {
-  DateTime _date = DateTime.now();
-  DateTime _date2 = DateTime.now();
-  @override
-  void initState() {
-    super.initState();
-  }
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +26,6 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
 
     List<String> hours = range(1, 23);
     hours.add('0');
-    final arguments = (ModalRoute.of(context)?.settings.arguments ??
-        <String, dynamic>{}) as Map;
-    final Garage garage = arguments['garage'];
 
     return Scaffold(
       appBar: AppBar(
@@ -46,24 +45,33 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('From:',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    )),
+                const Text(
+                  'From:',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
                 ElevatedButton(
                   onPressed: () {
-                    DatePicker.showDateTimePicker(context,
-                        theme: const DatePickerTheme(
-                          containerHeight: 210.0,
-                        ),
-                        showTitleActions: true,
-                        minTime: DateTime(2022, 11, 10),
-                        maxTime: DateTime(2030, 12, 31), onConfirm: (date) {
-                      setState(() {
-                        _date = date;
-                      });
-                    }, currentTime: DateTime.now(), locale: LocaleType.en);
+                    DatePicker.showDateTimePicker(
+                      context,
+                      theme: const DatePickerTheme(
+                        containerHeight: 210.0,
+                      ),
+                      showTitleActions: true,
+                      minTime: DateTime(2022, 11, 10),
+                      maxTime: DateTime(2030, 12, 31),
+                      onConfirm: (date) {
+                        setState(
+                          () {
+                            startDate = date;
+                          },
+                        );
+                      },
+                      currentTime: startDate,
+                      locale: LocaleType.en,
+                    );
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -81,11 +89,12 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
                                   color: Colors.white,
                                 ),
                                 Text(
-                                  _date.toString().substring(0, 10),
+                                  startDate.toString().substring(0, 10),
                                   style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18.0),
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18.0,
+                                  ),
                                 ),
                               ],
                             )
@@ -99,11 +108,12 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
                               color: Colors.white,
                             ),
                             Text(
-                              _date.toString().substring(10, 16),
+                              startDate.toString().substring(10, 16),
                               style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18.0),
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.0,
+                              ),
                             )
                           ],
                         ),
@@ -128,18 +138,22 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
                     )),
                 ElevatedButton(
                   onPressed: () {
-                    DatePicker.showDateTimePicker(context,
-                        theme: const DatePickerTheme(
-                          containerHeight: 210.0,
-                        ),
-                        showTitleActions: true,
-                        minTime: DateTime(2022, 11, 1),
-                        maxTime: DateTime(2030, 12, 31), onConfirm: (date) {
-                      print('confirm $date');
-                      setState(() {
-                        _date2 = date;
-                      });
-                    }, currentTime: DateTime.now(), locale: LocaleType.en);
+                    DatePicker.showDateTimePicker(
+                      context,
+                      theme: const DatePickerTheme(
+                        containerHeight: 210.0,
+                      ),
+                      showTitleActions: true,
+                      minTime: DateTime(2022, 11, 1),
+                      maxTime: DateTime(2030, 12, 31),
+                      onConfirm: (date) {
+                        setState(() {
+                          endDate = date;
+                        });
+                      },
+                      currentTime: endDate,
+                      locale: LocaleType.en,
+                    );
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -157,11 +171,12 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
                                   color: Colors.white,
                                 ),
                                 Text(
-                                  _date2.toString().substring(0, 10),
+                                  endDate.toString().substring(0, 10),
                                   style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18.0),
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18.0,
+                                  ),
                                 ),
                               ],
                             )
@@ -175,11 +190,12 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
                               color: Colors.white,
                             ),
                             Text(
-                              _date2.toString().substring(10, 16),
+                              endDate.toString().substring(10, 16),
                               style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18.0),
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.0,
+                              ),
                             )
                           ],
                         ),
@@ -203,15 +219,16 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
                       borderRadius: BorderRadius.circular(5)),
                   child: TextButton(
                     onPressed: () {
-                      compareDates(_date, _date2)
-                          ? Navigator.pushNamed(context, '/Spot_Selection',
-                              arguments: {
-                                  'selected_garage': garage,
-                                  'selected_startdate': _date,
-                                  'selected_enddate': _date2
-                                })
+                      compareDates(startDate, endDate)
+                          ? context.push(
+                              '/home/garage-info/${widget.garage.id}/reserve/spot-selection',
+                              extra: GarageAndTime(
+                                garage: widget.garage,
+                                startDate: startDate,
+                                endDate: endDate,
+                              ),
+                            )
                           : showDateErrorPopUp(context);
-                      ;
                       //Checks for correct date and time, start and end !!! and availability of spots at the time
                     },
                     child: const Text(
@@ -226,25 +243,21 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
                 const Text('   '),
                 Container(
                   decoration: BoxDecoration(
-                      color: Colors.indigo,
-                      borderRadius: BorderRadius.circular(5)),
+                    color: Colors.indigo,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
                   child: TextButton(
                     onPressed: () {
-                      print(garage.id);
-                      print(_date.toString());
-                      print(_date2.toString());
-
-                      compareDates(_date, _date2)
-                          ? Navigator.pushNamed(context, '/Spot_Selection',
-                              arguments: {
-                                  'selected_garage': garage,
-                                  'selected_startdate': _date,
-                                  'selected_enddate': _date2
-                                })
+                      compareDates(startDate, endDate)
+                          ? context.push(
+                              '/home/reserve/spot-selection',
+                              extra: GarageAndTime(
+                                garage: widget.garage,
+                                startDate: startDate,
+                                endDate: endDate,
+                              ),
+                            )
                           : showDateErrorPopUp(context);
-
-                      ;
-                      //Checks for correct date and time, start and end !!! and availability of spots at the time
                     },
                     child: const Text(
                       'Select a spot',
@@ -307,4 +320,17 @@ void showDateErrorPopUp(BuildContext context) {
       return alert;
     },
   );
+}
+
+class GarageAndTime {
+  const GarageAndTime({
+    Key? key,
+    required this.garage,
+    required this.startDate,
+    required this.endDate,
+  });
+
+  final Garage garage;
+  final DateTime startDate;
+  final DateTime endDate;
 }

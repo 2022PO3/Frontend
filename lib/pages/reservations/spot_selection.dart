@@ -1,32 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:po_frontend/api/network/network_helper.dart';
-import 'package:po_frontend/api/network/network_service.dart';
-import 'package:po_frontend/api/network/static_values.dart';
+import 'package:po_frontend/api/models/reservation_model.dart';
+
 import 'package:po_frontend/api/requests/parking_lots_requests.dart';
 import 'package:po_frontend/api/widgets/parking_lots_widget.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/parking_lot_model.dart';
+import 'package:po_frontend/pages/reservations/make_reservation_page.dart';
+import 'package:po_frontend/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
-class Spot_Selection extends StatefulWidget {
-  const Spot_Selection({Key? key}) : super(key: key);
+class SpotSelectionPage extends StatefulWidget {
+  const SpotSelectionPage({
+    Key? key,
+    required this.garageAndTime,
+  }) : super(key: key);
+
+  final GarageAndTime garageAndTime;
   @override
-  State<Spot_Selection> createState() => _Spot_SelectionState();
+  State<SpotSelectionPage> createState() => _SpotSelectionPageState();
 }
 
-class _Spot_SelectionState extends State<Spot_Selection> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
+class _SpotSelectionPageState extends State<SpotSelectionPage> {
   @override
   Widget build(BuildContext context) {
-    final arguments = (ModalRoute.of(context)?.settings.arguments ??
-        <String, dynamic>{}) as Map;
-    final Garage garage = arguments['selected_garage'];
-    final DateTime _date = arguments['selected_startdate'];
-    final DateTime _date2 = arguments['selected_enddate'];
+    final Garage garage = widget.garageAndTime.garage;
+    final DateTime startDate = widget.garageAndTime.startDate;
+    final DateTime endDate = widget.garageAndTime.endDate;
 
     return Scaffold(
       appBar: AppBar(
@@ -40,27 +40,20 @@ class _Spot_SelectionState extends State<Spot_Selection> {
             final List<ParkingLot> parkingLots =
                 snapshot.data as List<ParkingLot>;
 
-            return ListView.builder(
-              itemBuilder: (context, index) {
-                return InkWell(
-                  child: ParkingLotsWidget(parking_lot: parkingLots[index]),
-                  onTap: () {
-                    parkingLots[index].occupied
-                        ? showSpotErrorPopUp(context)
-                        : Navigator.pushNamed(
-                            context,
-                            '/Confirm_Reservation',
-                            arguments: {
-                              'selected_garage': garage,
-                              'selected_startdate': _date,
-                              'selected_enddate': _date2,
-                              'selected_spot': parkingLots[index],
-                            },
-                          );
-                  },
-                );
-              },
-              itemCount: parkingLots.length,
+            return GridView.count(
+              crossAxisCount: 4,
+              crossAxisSpacing: 5,
+              mainAxisSpacing: 5,
+              children: parkingLots
+                  .map(
+                    (parkingLot) => buildClickableParkingLotWidget(
+                      parkingLot,
+                      garage,
+                      startDate,
+                      endDate,
+                    ),
+                  )
+                  .toList(),
             );
           } else if (snapshot.hasError) {
             return Center(
@@ -89,10 +82,37 @@ class _Spot_SelectionState extends State<Spot_Selection> {
       ),
     );
   }
+
+  Widget buildClickableParkingLotWidget(
+    ParkingLot parkingLot,
+    Garage garage,
+    DateTime startDate,
+    DateTime endDate,
+  ) {
+    return InkWell(
+      child: ParkingLotsWidget(parkingLot: parkingLot),
+      onTap: () {
+        final UserProvider userProvider =
+            Provider.of<UserProvider>(context, listen: false);
+
+        parkingLot.occupied
+            ? showSpotErrorPopUp(context)
+            : context.push(
+                '/home/reserve/confirm-reservation',
+                extra: Reservation(
+                  userId: userProvider.getUser.id,
+                  fromDate: startDate,
+                  toDate: endDate,
+                  parkingLot: parkingLot,
+                  garage: garage,
+                ),
+              );
+      },
+    );
+  }
 }
 
 void showSpotErrorPopUp(BuildContext context) {
-  // set up the buttons
   Widget backButton = TextButton(
     child: const Text('Back'),
     onPressed: () {

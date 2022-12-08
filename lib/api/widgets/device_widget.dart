@@ -20,73 +20,71 @@ class _DeviceWidgetState extends State<DeviceWidget> {
     return InkWell(
       onLongPress: () => showDeviceDeletionPopUp(widget.device),
       child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            IntrinsicHeight(
-              child: Row(
-                children: [
-                  Text(
-                    widget.device.id.toString(),
-                    style: const TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                  const VerticalDivider(
-                    width: 15,
-                    thickness: 1,
-                    color: Colors.black,
-                    indent: 5,
-                    endIndent: 5,
-                  ),
-                  const Icon(
-                    Icons.phone_android_outlined,
-                    size: 40,
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            widget.device.name,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
+        padding: const EdgeInsets.all(5),
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.phone_android_outlined,
+                        size: 40,
+                      ),
+                      const VerticalDivider(
+                        width: 15,
+                        thickness: 1,
+                        color: Colors.black,
+                        indent: 5,
+                        endIndent: 5,
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                widget.device.name,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                          width: 0,
-                        ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            widget.device.confirmed
-                                ? 'Confirmed'
-                                : 'Not confirmed',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              color: widget.device.confirmed
-                                  ? Colors.green
-                                  : Colors.red,
-                              fontSize: 15,
+                            const SizedBox(
+                              height: 5,
+                              width: 0,
                             ),
-                          ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                widget.device.confirmed
+                                    ? 'Confirmed'
+                                    : 'Not confirmed',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: widget.device.confirmed
+                                      ? Colors.green
+                                      : Colors.red,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            const Divider()
-          ],
+          ),
         ),
       ),
     );

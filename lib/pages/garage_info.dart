@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/network/static_values.dart';
 import 'package:po_frontend/api/requests/garage_requests.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
@@ -274,7 +275,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: Padding(
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -339,7 +340,12 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          onPressed: () async {},
+                          onPressed: () {
+                            context.go(
+                              '/home/reserve',
+                              extra: garage,
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -429,7 +435,9 @@ Future<GarageData> getGarageData(int garageId) async {
   );
 
   Garage garage = await NetworkHelper.filterResponse(
-      callBack: Garage.fromJSON, response: response);
+    callBack: Garage.fromJSON,
+    response: response,
+  );
 
   List<OpeningHour> openingHours = await getGarageOpeningHours(garageId);
   List<Price> prices = await getGaragePrices(garageId);

@@ -7,7 +7,7 @@ import '../../api/network/network_helper.dart';
 import '../../api/network/network_service.dart';
 import '../../api/network/static_values.dart';
 import '../../api/requests/payment_requests.dart';
-import '../error_widget.dart';
+import '../../utils/error_widget.dart';
 import '../payment_page/payment_page.dart';
 
 class PayPreviewButton extends StatelessWidget {

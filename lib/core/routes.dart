@@ -1,16 +1,21 @@
 import 'package:go_router/go_router.dart';
+import 'package:po_frontend/api/models/garage_model.dart';
+import 'package:po_frontend/api/models/reservation_model.dart';
 import 'package:po_frontend/pages/auth/login_page.dart';
 import 'package:po_frontend/pages/auth/register.dart';
 import 'package:po_frontend/pages/auth/two_factor_page.dart';
 import 'package:po_frontend/pages/auth/user_activation_page.dart';
 import 'package:po_frontend/pages/garage_info.dart';
 import 'package:po_frontend/pages/home/home_page.dart';
+import 'package:po_frontend/pages/reservations/confirm_reservation.dart';
+import 'package:po_frontend/pages/reservations/make_reservation_page.dart';
 import 'package:po_frontend/pages/navbar/help.dart';
 import 'package:po_frontend/pages/navbar/my_reservations.dart';
 import 'package:po_frontend/pages/navbar/profile.dart';
 import 'package:po_frontend/pages/navbar/statistics.dart';
 import 'package:po_frontend/pages/settings/add_two_factor_device_page.dart';
 import 'package:po_frontend/pages/settings/user_settings.dart';
+import 'package:po_frontend/pages/reservations/spot_selection.dart';
 import 'package:po_frontend/utils/loading_page.dart';
 
 class Routes {
@@ -41,6 +46,26 @@ class Routes {
               builder: (context, state) => GarageInfoPage(
                 garageId: int.parse(state.params['garageId']!),
               ),
+            ),
+            GoRoute(
+              path: 'reserve',
+              builder: (context, state) => MakeReservationPage(
+                garage: state.extra as Garage,
+              ),
+              routes: [
+                GoRoute(
+                  path: 'spot-selection',
+                  builder: (context, state) => SpotSelectionPage(
+                    garageAndTime: state.extra as GarageAndTime,
+                  ),
+                ),
+                GoRoute(
+                  path: 'confirm-reservation',
+                  builder: (context, state) => ConfirmReservationPage(
+                    reservation: state.extra as Reservation,
+                  ),
+                ),
+              ],
             ),
             GoRoute(
               path: 'reservations',

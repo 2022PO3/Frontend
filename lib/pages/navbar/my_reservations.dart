@@ -3,6 +3,7 @@ import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
 import 'package:flutter/material.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
+import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/api/widgets/reservation_widget.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 
@@ -21,7 +22,7 @@ class _ReservationsState extends State<Reservations> {
         title: const Text('My Reservations'),
       ),
       body: FutureBuilder(
-        future: getData(),
+        future: getReservations(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
@@ -59,16 +60,4 @@ class _ReservationsState extends State<Reservations> {
       ),
     );
   }
-}
-
-Future<List<Reservation>> getData() async {
-  final response = await NetworkService.sendRequest(
-      requestType: RequestType.get,
-      apiSlug: StaticValues.getReservationSlug,
-      useAuthToken: true);
-
-  return await NetworkHelper.filterResponse(
-    callBack: reservationListFromJson,
-    response: response,
-  );
 }

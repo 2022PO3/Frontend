@@ -4,7 +4,7 @@ import '../../api/models/licence_plate_model.dart';
 import '../../api/requests/garage_requests.dart';
 import '../../api/requests/licence_plate_requests.dart';
 import '../../api/requests/user_requests.dart';
-import '../error_widget.dart';
+import '../../utils/error_widget.dart';
 import '../navbar/navbar.dart';
 import '../payment_widgets/pay_button.dart';
 import '../payment_widgets/timer_widget.dart';

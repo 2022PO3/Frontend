@@ -8,7 +8,7 @@ import '../../api/models/price_model.dart';
 import '../../api/network/network_helper.dart';
 import '../../api/network/network_service.dart';
 import '../../api/network/static_values.dart';
-import '../error_widget.dart';
+import '../../utils/error_widget.dart';
 
 class PaymentOverview extends StatefulWidget {
   /// Widget to show an overview of the bill the user has to pay. It gets the
