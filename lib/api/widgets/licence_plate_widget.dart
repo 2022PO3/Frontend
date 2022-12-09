@@ -31,7 +31,7 @@ class LicencePlateWidget extends StatelessWidget {
                 width: 10,
               ),
               Text(
-                licencePlate.licencePlate,
+                licencePlate.formatLicencePlate(),
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

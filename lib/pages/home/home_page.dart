@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:po_frontend/providers/user_provider.dart';
+import 'package:po_frontend/utils/user_data.dart';
 import '../../api/models/licence_plate_model.dart';
 import '../../api/requests/garage_requests.dart';
 import '../../api/requests/licence_plate_requests.dart';
@@ -39,6 +40,7 @@ class _HomePageState extends State<HomePage> {
       licencePlatesFuture = getLicencePlates();
       garagesFuture = getAllGarages();
     });
+    saveUserToProvider(context);
 
     return Future.wait([licencePlatesFuture, garagesFuture]);
   }
@@ -367,7 +369,9 @@ class GarageListWidget extends StatelessWidget {
 }
 
 void saveUserToProvider(BuildContext context) async {
-  final UserProvider userProvider =
-      Provider.of<UserProvider>(context, listen: false);
-  userProvider.setUser(await getUserInfo());
+  if (getUserId(context) != 0) {
+    final UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+    userProvider.setUser(await getUserInfo());
+  }
 }

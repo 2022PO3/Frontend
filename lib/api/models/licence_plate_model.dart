@@ -26,13 +26,16 @@ class LicencePlate {
 
   /// Serializes a Dart `Device`-object to a JSON-object with the attributes defined in
   /// the database.
-  static Map<String, dynamic> toJSON(LicencePlate licencePlate) =>
-      <String, dynamic>{
-        'id': licencePlate.id,
-        'licence_plate': licencePlate.licencePlate,
-        'garage_id': licencePlate.garageId,
-        'user_id': licencePlate.userId,
+  Map<String, dynamic> toJSON() => <String, dynamic>{
+        'id': id,
+        'licence_plate': licencePlate,
+        'garage_id': garageId,
+        'user_id': userId,
       };
+      
+  String formatLicencePlate() {
+    return '${licencePlate.substring(0, 1)}-${licencePlate.substring(1, 4)}-${licencePlate.substring(4)}';
+  }
 
   /// Serializes a list JSON-objects into a list of Dart `Device`-objects.
   static List<LicencePlate> listFromJSON(List<dynamic> json) =>

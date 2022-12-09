@@ -7,9 +7,8 @@ import 'package:po_frontend/api/models/parking_lot_model.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/requests/garage_requests.dart';
-import 'package:po_frontend/providers/user_provider.dart';
 import 'package:po_frontend/utils/dialogs.dart';
-import 'package:provider/provider.dart';
+import 'package:po_frontend/utils/user_data.dart';
 
 class MakeReservationPage extends StatefulWidget {
   const MakeReservationPage({
@@ -321,11 +320,10 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
           'toDate': endDate.toIso8601String(),
         },
       );
-      final UserProvider userProvider =
-          Provider.of<UserProvider>(context, listen: false);
 
       return Reservation(
         licencePlate: widget.garageAndLicencePlate.licencePlate,
+        userId: getUserId(context),
         fromDate: startDate,
         toDate: endDate,
         parkingLot: parkingLot,

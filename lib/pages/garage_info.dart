@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:po_frontend/api/network/static_values.dart';
 import 'package:po_frontend/api/requests/garage_requests.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -8,8 +7,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:po_frontend/api/models/opening_hour_model.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
-import 'package:po_frontend/api/network/network_helper.dart';
-import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/widgets/garage_opening_hours_widget.dart';
 import 'package:po_frontend/api/models/price_model.dart';
 import 'package:po_frontend/api/widgets/price_widget.dart';
@@ -136,6 +133,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                             ),
                             SizedBox(
                               height: 65,
+                              width: width,
                               child: Text(
                                 '${garageSettings.location.country}, ${Province.getProvinceName(garageSettings.location.province)}, ${garageSettings.location.street} ${garageSettings.location.number}, ${garageSettings.location.postCode} ${garageSettings.location.municipality}',
                                 style: const TextStyle(

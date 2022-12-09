@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/pages/auth/register.dart';
-import 'package:provider/provider.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:po_frontend/api/models/user_model.dart';
-import 'package:po_frontend/api/network/network_helper.dart';
-import 'package:po_frontend/api/network/network_service.dart';
-import 'package:po_frontend/api/network/static_values.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api/network/network_exception.dart';
-import '../../providers/user_provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key, required this.email, required this.password});
@@ -35,7 +30,11 @@ class _LoginPageState extends State<LoginPage> {
       String email = widget.email as String;
       String password = widget.password as String;
       return FutureBuilder(
-        future: loginUser(email, password),
+        future: loginUser(
+          context,
+          email,
+          password,
+        ),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
@@ -80,20 +79,9 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-            child: IconButton(
-              onPressed: () {
-                //
-              },
-              icon: const Icon(
-                Icons.help,
-                size: 45,
-              ),
-            ),
-          ),
-        ],
+        title: const Center(
+          child: Text('Parking Boys'),
+        ),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -105,8 +93,8 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
       body: SafeArea(
-        child: ListView(
-          //mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(
               height: 10,
@@ -186,7 +174,11 @@ class _LoginPageState extends State<LoginPage> {
                       userPassword = _passwordTextController.text;
                     });
                     try {
-                      User user = await loginUser(userMail, userPassword);
+                      User user = await loginUser(
+                        context,
+                        userMail,
+                        userPassword,
+                      );
                       if (mounted) {
                         context
                             .go(user.twoFactor ? '/login/two-factor' : '/home');
@@ -221,38 +213,6 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
-  }
-
-  Future<User> loginUser(String emailUser, String passwordUser) async {
-    Map<String, dynamic> body = {
-      'email': emailUser,
-      'password': passwordUser,
-    };
-    print(body);
-    final response = await NetworkService.sendRequest(
-      requestType: RequestType.post,
-      apiSlug: StaticValues.postLoginUser,
-      body: body,
-      useAuthToken: false,
-    );
-    // Contains a list of the format [User, String].
-    List userResponse = await NetworkHelper.filterResponse(
-      callBack: User.loginUserFromJson,
-      response: response,
-    );
-
-    // Store the authToken in the Shared Preferences.
-    final pref = await SharedPreferences.getInstance();
-    await pref.setString('authToken', userResponse[1]);
-
-    // Store the user model in the Provider.
-    User user = userResponse[0];
-    if (mounted) {
-      final UserProvider userProvider =
-          Provider.of<UserProvider>(context, listen: false);
-      userProvider.setUser(user);
-    }
-    return user;
   }
 
   void showFailureDialog(String error) {

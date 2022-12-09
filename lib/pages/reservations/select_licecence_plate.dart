@@ -40,15 +40,16 @@ class _SelectLicencePlatePageState extends State<SelectLicencePlatePage> {
                       vertical: 8,
                     ),
                     child: Text(
-                      'Choose the licence plate for which you want to make a reservation for.',
+                      'Choose the licence plate for which you want to make a reservation.',
                       style: TextStyle(
                         fontSize: 17,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 10,
+                const Divider(
+                  indent: 10,
+                  endIndent: 10,
                 ),
                 ListView.builder(
                   scrollDirection: Axis.vertical,

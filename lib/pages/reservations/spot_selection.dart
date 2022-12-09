@@ -8,6 +8,7 @@ import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/parking_lot_model.dart';
 import 'package:po_frontend/pages/reservations/make_reservation_page.dart';
 import 'package:po_frontend/providers/user_provider.dart';
+import 'package:po_frontend/utils/user_data.dart';
 import 'package:provider/provider.dart';
 
 class SpotSelectionPage extends StatefulWidget {
@@ -34,8 +35,8 @@ class _SpotSelectionPageState extends State<SpotSelectionPage> {
       ),
       body: FutureBuilder(
         future: getGarageParkingLots(garage.id, {
-          'startDate': startDate.toIso8601String(),
-          'endDate': endDate.toIso8601String(),
+          'fromDate': startDate.toIso8601String(),
+          'toDate': endDate.toIso8601String(),
         }),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
@@ -95,19 +96,43 @@ class _SpotSelectionPageState extends State<SpotSelectionPage> {
     return InkWell(
       child: ParkingLotsWidget(parkingLot: parkingLot),
       onTap: () {
-        final UserProvider userProvider =
-            Provider.of<UserProvider>(context, listen: false);
+        (parkingLot.booked ?? false)
+            ? showSpotErrorPopUp()
+            : context.push(
+                '/home/reserve/confirm-reservation',
+                extra: Reservation(
+                  licencePlate: widget.garageLicenceAndTime.licencePlate,
+                  userId: getUserId(context),
+                  fromDate: startDate,
+                  toDate: endDate,
+                  parkingLot: parkingLot,
+                  garage: garage,
+                ),
+              );
+      },
+    );
+  }
 
-        context.push(
-          '/home/reserve/confirm-reservation',
-          extra: Reservation(
-            licencePlate: widget.garageLicenceAndTime.licencePlate,
-            fromDate: startDate,
-            toDate: endDate,
-            parkingLot: parkingLot,
-            garage: garage,
-          ),
-        );
+  void showSpotErrorPopUp() {
+    Widget backButton = TextButton(
+      child: const Text('Back'),
+      onPressed: () {
+        context.pop();
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: const Text('Error'),
+      content: const Text('This spot is occupied.'),
+      actions: [
+        backButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
       },
     );
   }

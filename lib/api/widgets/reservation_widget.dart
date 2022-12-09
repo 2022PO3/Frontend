@@ -38,6 +38,29 @@ class ReservationWidget extends StatelessWidget {
                 indent: 5,
                 endIndent: 5,
               ),
+              Row(
+                children: [
+                  const Text('Licence plate:'),
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        reservation.licencePlate.formatLicencePlate(),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              const Divider(
+                indent: 5,
+                endIndent: 5,
+              ),
               IntrinsicHeight(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

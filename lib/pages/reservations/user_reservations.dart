@@ -22,8 +22,12 @@ class _UserReservationsState extends State<UserReservations> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
-            final List<Reservation> reservations =
-                snapshot.data as List<Reservation>;
+            List<Reservation> reservations = snapshot.data as List<Reservation>;
+
+            reservations.sort(
+              (r1, r2) => r1.fromDate.millisecondsSinceEpoch
+                  .compareTo(r2.fromDate.millisecondsSinceEpoch),
+            );
 
             return ListView.builder(
               itemBuilder: (context, index) {

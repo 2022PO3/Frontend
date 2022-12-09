@@ -1,21 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:po_frontend/api/models/garage_model.dart';
-import 'package:po_frontend/api/models/user_model.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/api/widgets/reservation_widget.dart';
-import 'package:po_frontend/pages/reservations/spot_selection.dart';
 import 'package:po_frontend/api/widgets/parking_lot_widget.dart';
-import 'package:po_frontend/api/models/garage_model.dart';
-import 'package:po_frontend/api/network/network_helper.dart';
-import 'package:po_frontend/api/network/network_service.dart';
-import 'package:po_frontend/api/network/static_values.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
-import 'package:po_frontend/api/models/parking_lot_model.dart';
-import 'package:po_frontend/providers/user_provider.dart';
 import 'package:po_frontend/utils/dialogs.dart';
-import 'package:provider/provider.dart';
 
 class ConfirmReservationPage extends StatefulWidget {
   const ConfirmReservationPage({
@@ -32,8 +22,6 @@ class ConfirmReservationPage extends StatefulWidget {
 class _ConfirmReservationPageState extends State<ConfirmReservationPage> {
   @override
   Widget build(BuildContext context) {
-    final UserProvider userProvider = Provider.of<UserProvider>(context);
-
     final Reservation reservation = widget.reservation;
 
     return Scaffold(
@@ -45,54 +33,52 @@ class _ConfirmReservationPageState extends State<ConfirmReservationPage> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Column(
-              children: [
-                const Text(
-                  'Your selected garage:',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
-                ),
-                Text(
-                  reservation.garage.name,
-                )
-              ],
+          children: [
+            const Text(
+              'Your selected garage:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text(
-                  'Your selected time and date:',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
-                ),
-                buildReservationTime(reservation),
-              ],
+            Text(
+              reservation.garage.name,
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'Your selected spot:',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
-                ),
-                ParkingLotsWidget(parkingLot: reservation.parkingLot),
-              ],
+            const Text(
+              'Numberplate for this reservation:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
             ),
+            Text(
+              reservation.licencePlate.formatLicencePlate(),
+            ),
+            const Text(
+              'Your selected time and date:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+            buildReservationTime(reservation),
+            const Text(
+              'Your selected spot:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+            ParkingLotsWidget(parkingLot: reservation.parkingLot),
             Container(
               decoration: BoxDecoration(
                   color: Colors.indigo, borderRadius: BorderRadius.circular(5)),
               child: TextButton(
                 onPressed: () async {
-                  if (checkReservation(reservation.fromDate, reservation.toDate,
-                      reservation.parkingLot)) {
+                  if (checkReservation(
+                    reservation.fromDate,
+                    reservation.toDate,
+                  )) {
                     try {
                       await postReservation(reservation);
                       if (mounted) {
@@ -129,7 +115,7 @@ class _ConfirmReservationPageState extends State<ConfirmReservationPage> {
     );
   }
 
-  bool checkReservation(DateTime date, DateTime date2, ParkingLot parkingLot) {
+  bool checkReservation(DateTime date, DateTime date2) {
     DateTime now = DateTime.now();
     if (now.compareTo(date) > 0) {
       return false;
@@ -140,10 +126,6 @@ class _ConfirmReservationPageState extends State<ConfirmReservationPage> {
     if (date.compareTo(date2) > 0) {
       return false;
     }
-    if (parkingLot.occupied) {
-      return false;
-    }
-
     return true;
   }
 }
