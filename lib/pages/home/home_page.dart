@@ -79,8 +79,8 @@ class _HomePageState extends State<HomePage> {
                 child: CurrentParkingSessionsListWidget(
                   licencePlatesFuture: licencePlatesFuture,
                 ),
-                maxHeight: MediaQuery.of(context).size.shortestSide / 2,
-                minHeight: MediaQuery.of(context).size.shortestSide / 4,
+                maxHeight: MediaQuery.of(context).size.shortestSide / 2.5,
+                minHeight: MediaQuery.of(context).size.shortestSide / 5,
               ),
             ),
             SliverToBoxAdapter(
@@ -274,14 +274,22 @@ class CurrentParkingSessionWidget extends StatelessWidget {
                 Spacer(
                   flex: constraints.maxHeight > 131 ? 3 : 1,
                 ),
-                if (constraints.maxHeight > 160)
+                if (constraints.maxHeight > 125)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
+                        const Text('Licence plate:'),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.shortestSide / 5,
+                        ),
                         Text(
-                          licencePlate.licencePlate,
+                          licencePlate.formatLicencePlate(),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
                         ),
                       ],
                     ),
