@@ -81,7 +81,7 @@ class Routes {
             ),
             GoRoute(
               path: 'profile',
-              builder: (context, state) => const Profile(),
+              builder: (context, state) => Profile(),
             ),
             GoRoute(
               path: 'statistics',
