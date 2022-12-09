@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/enums.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
+import 'package:po_frontend/utils/button.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/user_data.dart';
 import '../../../api/network/network_exception.dart';
@@ -656,73 +657,18 @@ class _UserInfoState extends State<UserInfo> {
                 const SizedBox(
                   height: 5,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 5,
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors.indigoAccent,
-                            ),
-                          ),
-                          onPressed: () {
-                            openPasswordDialog();
-                          },
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 15,
-                            ),
-                            child: Text(
-                              'Change you password',
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                buildButton(
+                  'Change your password',
+                  Colors.indigoAccent,
+                  openPasswordDialog,
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 5,
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Colors.redAccent),
-                          ),
-                          onPressed: () {
-                            openDeleteUserDialog();
-                          },
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 15,
-                            ),
-                            child: Text(
-                              'Delete your account',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                buildButton(
+                  'Delete your account',
+                  Colors.red,
+                  openDeleteUserDialog,
                 ),
               ],
             ),

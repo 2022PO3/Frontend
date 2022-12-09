@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
+import 'package:po_frontend/api/models/licence_plate_model.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
 import 'package:po_frontend/pages/auth/login_page.dart';
 import 'package:po_frontend/pages/auth/register.dart';
@@ -7,7 +8,8 @@ import 'package:po_frontend/pages/auth/two_factor_page.dart';
 import 'package:po_frontend/pages/auth/user_activation_page.dart';
 import 'package:po_frontend/pages/garage_info.dart';
 import 'package:po_frontend/pages/home/home_page.dart';
-import 'package:po_frontend/pages/navbar/profile/licecence_plates.dart';
+import 'package:po_frontend/pages/navbar/profile/licence_plates/confirm_licence_plate.dart';
+import 'package:po_frontend/pages/navbar/profile/licence_plates/licence_plates.dart';
 import 'package:po_frontend/pages/navbar/profile/user_info.dart';
 import 'package:po_frontend/pages/reservations/confirm_reservation.dart';
 import 'package:po_frontend/pages/reservations/make_reservation_page.dart';
@@ -92,6 +94,14 @@ class Routes {
                 GoRoute(
                   path: 'licence-plates',
                   builder: (context, state) => const LicencePlatesPage(),
+                  routes: [
+                    GoRoute(
+                      path: 'enable',
+                      builder: (context, state) => ConfirmLicencePlatePage(
+                        licencePlate: state.extra as LicencePlate,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
