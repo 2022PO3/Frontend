@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
+import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/utils/user_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
@@ -14,20 +15,6 @@ class Navbar extends StatefulWidget {
 }
 
 class _NavbarState extends State<Navbar> {
-  Future<void> logOutUser() async {
-    final response = await NetworkService.sendRequest(
-      requestType: RequestType.post,
-      apiSlug: StaticValues.postLogoutUser,
-      useAuthToken: true,
-      //    body: body
-    );
-    if (response?.statusCode == 204) {
-      final userInfo = await SharedPreferences.getInstance();
-      userInfo.remove('authToken');
-      Navigator.popUntil(context, ModalRoute.withName('/login_page'));
-    } else {}
-  }
-
   @override
   Widget build(BuildContext context) {
     final UserProvider userProvider = Provider.of<UserProvider>(context);
@@ -56,7 +43,7 @@ class _NavbarState extends State<Navbar> {
                         )),
                     TextButton(
                       onPressed: () {
-                        logOutUser();
+                        logOutUser(context);
                       },
                       child: const Text(
                         'Confirm',

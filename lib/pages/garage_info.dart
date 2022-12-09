@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/requests/garage_requests.dart';
+import 'package:po_frontend/core/app_bar.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -40,26 +41,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
           List<Price> prices = garageData.prices;
 
           return Scaffold(
-            appBar: AppBar(
-              title: Text(garageData.garage.name),
-              flexibleSpace: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [(Colors.indigo), (Colors.indigoAccent)],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
-                ),
-              ),
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    setState(() {});
-                  },
-                  icon: const FaIcon(FontAwesomeIcons.arrowsRotate),
-                ),
-              ],
-            ),
+            appBar: appBar(garageData.garage.name, true, setState),
             body: SingleChildScrollView(
               child: SafeArea(
                 child: Column(
@@ -306,25 +288,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
           );
         }
         return Scaffold(
-          appBar: AppBar(
-            flexibleSpace: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [(Colors.indigo), (Colors.indigoAccent)],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                ),
-              ),
-            ),
-            actions: [
-              IconButton(
-                onPressed: () {
-                  setState(() {});
-                },
-                icon: const FaIcon(FontAwesomeIcons.arrowsRotate),
-              ),
-            ],
-          ),
+          appBar: appBar('', true, setState),
           body: const Center(
             child: CircularProgressIndicator(),
           ),

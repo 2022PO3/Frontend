@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/utils/user_data.dart';
 import '../../api/models/licence_plate_model.dart';
 import '../../api/requests/garage_requests.dart';
@@ -46,22 +47,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       endDrawer: const Navbar(),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(
-            colors: [(Colors.indigo), (Colors.indigoAccent)],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          )),
-        ),
-        title: Center(
-          child: Text(
-            getUserFirstName(context),
-          ),
-        ),
-      ),
+      appBar: appBar(getUserFirstName(context), false, null),
       body: RefreshIndicator(
         onRefresh: getFutures,
         child: CustomScrollView(

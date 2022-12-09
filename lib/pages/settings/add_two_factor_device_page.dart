@@ -7,6 +7,7 @@ import 'package:po_frontend/api/network/static_values.dart';
 
 import 'package:flutter/material.dart';
 import 'package:po_frontend/api/widgets/device_widget.dart';
+import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/utils/user_data.dart';
 
 import '../../utils/loading_page.dart';
@@ -34,29 +35,7 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
     return isLoading
         ? const LoadingPage()
         : Scaffold(
-            appBar: AppBar(
-              automaticallyImplyLeading: true,
-              flexibleSpace: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [(Colors.indigo), (Colors.indigoAccent)],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
-                ),
-              ),
-              title: const Text(
-                'Two factor devices',
-              ),
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    setState(() {});
-                  },
-                  icon: const Icon(Icons.refresh_rounded),
-                ),
-              ],
-            ),
+            appBar: appBar('Two factor devices', true, setState),
             body: FutureBuilder(
               future: getDevices(),
               builder: (context, snapshot) {

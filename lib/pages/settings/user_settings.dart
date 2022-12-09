@@ -4,6 +4,7 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:po_frontend/api/models/user_model.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
+import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -20,21 +21,7 @@ class _UserSettingsState extends State<UserSettings> {
     final UserProvider userProvider = Provider.of<UserProvider>(context);
     final User user = userProvider.getUser;
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [(Colors.indigo), (Colors.indigoAccent)],
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-            ),
-          ),
-        ),
-        title: const Center(
-          child: Text('Settings'),
-        ),
-      ),
+      appBar: appBar('Settings', false, null),
       body: Center(
         child: Container(
           constraints: const BoxConstraints(maxWidth: 400),

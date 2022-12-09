@@ -6,15 +6,6 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 
 import 'providers/user_provider.dart';
 
-List stripParameters(String? routeName) {
-  if (routeName == null) {
-    return [routeName];
-  }
-  Map<String, String> queryParams =
-      Uri.parse(routeName.replaceAll('#', '')).queryParameters;
-  return [routeName.replaceAll(RegExp(r'\?.*'), ''), queryParams];
-}
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
