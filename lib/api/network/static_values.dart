@@ -21,7 +21,7 @@ class StaticValues {
   static const String getReservationSlug = 'api/reservations';
 
   // Payment slugs
-  static const String getLicencePlatesSlug = 'api/licence-plates';
+  static const String licenceplatesSlug = 'api/licence-plates';
   static const String createPaymentSessionSlug = 'api/checkout/create-session';
   static const String getPaymentPreviewSlug = 'api/checkout/preview';
 

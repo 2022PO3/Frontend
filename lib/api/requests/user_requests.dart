@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:po_frontend/api/models/device_model.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
 import 'package:po_frontend/providers/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -141,6 +142,17 @@ Future<bool> setUserPassword(
     apiSlug: StaticValues.changePassword,
     body: body,
     useAuthToken: true,
+  );
+
+  return NetworkHelper.validateResponse(response);
+}
+
+Future<bool> removeDevice(Device device) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.delete,
+    apiSlug: StaticValues.twoFactorDevicesSlug,
+    useAuthToken: true,
+    pk: device.id,
   );
 
   return NetworkHelper.validateResponse(response);

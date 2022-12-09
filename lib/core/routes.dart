@@ -7,12 +7,14 @@ import 'package:po_frontend/pages/auth/two_factor_page.dart';
 import 'package:po_frontend/pages/auth/user_activation_page.dart';
 import 'package:po_frontend/pages/garage_info.dart';
 import 'package:po_frontend/pages/home/home_page.dart';
+import 'package:po_frontend/pages/navbar/profile/licecence_plates.dart';
+import 'package:po_frontend/pages/navbar/profile/user_info.dart';
 import 'package:po_frontend/pages/reservations/confirm_reservation.dart';
 import 'package:po_frontend/pages/reservations/make_reservation_page.dart';
 import 'package:po_frontend/pages/navbar/help.dart';
 import 'package:po_frontend/pages/reservations/select_licecence_plate.dart';
 import 'package:po_frontend/pages/reservations/user_reservations.dart';
-import 'package:po_frontend/pages/navbar/profile.dart';
+import 'package:po_frontend/pages/navbar/profile/profile.dart';
 import 'package:po_frontend/pages/navbar/statistics.dart';
 import 'package:po_frontend/pages/settings/add_two_factor_device_page.dart';
 import 'package:po_frontend/pages/settings/user_settings.dart';
@@ -81,7 +83,17 @@ class Routes {
             ),
             GoRoute(
               path: 'profile',
-              builder: (context, state) => Profile(),
+              builder: (context, state) => const Profile(),
+              routes: [
+                GoRoute(
+                  path: 'user-info',
+                  builder: (context, state) => const UserInfo(),
+                ),
+                GoRoute(
+                  path: 'licence-plates',
+                  builder: (context, state) => const LicencePlatesPage(),
+                ),
+              ],
             ),
             GoRoute(
               path: 'statistics',

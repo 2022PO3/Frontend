@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/device_model.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
-import 'package:po_frontend/api/network/network_helper.dart';
-import 'package:po_frontend/api/network/network_service.dart';
-import 'package:po_frontend/api/network/static_values.dart';
+import 'package:po_frontend/api/requests/user_requests.dart';
+import 'package:po_frontend/utils/dialogs.dart';
 
 class DeviceWidget extends StatefulWidget {
   const DeviceWidget({Key? key, required this.device}) : super(key: key);
@@ -107,10 +106,16 @@ class _DeviceWidgetState extends State<DeviceWidget> {
                   await removeDevice(device);
                 } on BackendException catch (e) {
                   print(e);
-                  showFailureDialog(e.toString());
+                  showFailureDialog(context, e);
                   return;
                 }
-                showSuccessDialog();
+                if (mounted) {
+                  showSuccessDialog(
+                    context,
+                    'Success',
+                    'Your device is successfully deleted and two factor authentication is disabled.',
+                  );
+                }
                 setState(() {});
               },
               child: const Text(
@@ -135,72 +140,5 @@ class _DeviceWidgetState extends State<DeviceWidget> {
         );
       },
     );
-  }
-
-  void showFailureDialog(String error) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text(
-            'Server exception',
-          ),
-          content: Text(
-            'We\'re sorry, but the server returned an error: $error.',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                context.pop();
-              },
-              child: const Text(
-                'OK',
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void showSuccessDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text(
-            'Success',
-          ),
-          content: const Text(
-            'Your device is successfully deleted and two factor authentication is disabled.',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                // Used to refresh the page.
-                setState(() {});
-                context.pop();
-              },
-              child: const Text(
-                'OK',
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<bool> removeDevice(Device device) async {
-    final response = await NetworkService.sendRequest(
-      requestType: RequestType.delete,
-      apiSlug: StaticValues.twoFactorDevicesSlug,
-      useAuthToken: true,
-      pk: device.id,
-    );
-
-    return NetworkHelper.validateResponse(response);
   }
 }

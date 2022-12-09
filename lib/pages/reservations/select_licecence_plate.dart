@@ -54,7 +54,7 @@ class _SelectLicencePlatePageState extends State<SelectLicencePlatePage> {
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    return LicencePlateWidget(
+                    return ReservationLicencePlateWidget(
                       licencePlate: licencePlates[index],
                       garage: widget.garage,
                     );

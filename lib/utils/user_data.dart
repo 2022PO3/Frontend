@@ -87,6 +87,14 @@ String getUserEmail(BuildContext context, {bool listen = false}) {
   return userProvider.getUser.email;
 }
 
+bool getUserTwoFactor(BuildContext context, {bool listen = false}) {
+  final UserProvider userProvider = Provider.of<UserProvider>(
+    context,
+    listen: listen,
+  );
+  return userProvider.getUser.twoFactor;
+}
+
 Future<void> updateUserInfo(BuildContext context) async {
   final UserProvider userProvider =
       Provider.of<UserProvider>(context, listen: false);

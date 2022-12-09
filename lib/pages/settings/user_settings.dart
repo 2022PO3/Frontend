@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_switch/flutter_switch.dart';
-import 'package:po_frontend/api/models/user_model.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
-import 'package:po_frontend/providers/user_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:po_frontend/utils/dialogs.dart';
+import 'package:po_frontend/utils/settings_card.dart';
+import 'package:po_frontend/utils/user_data.dart';
 
 class UserSettings extends StatefulWidget {
   const UserSettings({super.key});
@@ -18,8 +18,7 @@ class UserSettings extends StatefulWidget {
 class _UserSettingsState extends State<UserSettings> {
   @override
   Widget build(BuildContext context) {
-    final UserProvider userProvider = Provider.of<UserProvider>(context);
-    final User user = userProvider.getUser;
+    final bool userTwoFactor = getUserTwoFactor(context);
     return Scaffold(
       appBar: appBar('Settings', false, null),
       body: Center(
@@ -52,11 +51,11 @@ class _UserSettingsState extends State<UserSettings> {
                             activeColor: Colors.green,
                             inactiveColor: Colors.red,
                             toggleSize: 15,
-                            value: user.twoFactor,
+                            value: userTwoFactor,
                             borderRadius: 30.0,
                             padding: 8.0,
                             onToggle: (val) {
-                              if (!user.twoFactor && val) {
+                              if (!userTwoFactor && val) {
                                 _showRedirectDialog();
                               } else {
                                 _showConfirmationDialog();
@@ -69,44 +68,11 @@ class _UserSettingsState extends State<UserSettings> {
                   ),
                 ),
               ),
-              Card(
-                child: InkWell(
-                  onTap: () => context.push('/home/settings/two-factor'),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: const [
-                            Text(
-                              'Two factor devices',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 17,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 3,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: const [
-                            Text(
-                              'View and edit your registered two factor devices.',
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.grey,
-                              ),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+              buildSettingsCard(
+                context,
+                '/home/settings/two-factor',
+                'Two factor devices',
+                'View and edit your registered two factor devices.',
               ),
             ],
           ),
@@ -179,7 +145,11 @@ class _UserSettingsState extends State<UserSettings> {
                 context.pop();
                 try {
                   disable2FA();
-                  _showSuccessDialog();
+                  showSuccessDialog(
+                    context,
+                    'Two factor disabled',
+                    'Two factor authentication is disabled for your account. You can turn it back on at any time you like.',
+                  );
                 } on BackendException catch (e) {
                   print(e);
                 }
@@ -195,38 +165,6 @@ class _UserSettingsState extends State<UserSettings> {
               },
               child: const Text(
                 'No',
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showSuccessDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Two factor disabled'),
-          content: Container(
-            constraints: const BoxConstraints(maxHeight: 230),
-            child: Column(
-              children: const [
-                Text(
-                  'Two factor authentication is disabled for your account. You can turn it back on at any time you like.',
-                )
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                context.pop();
-              },
-              child: const Text(
-                'OK',
                 style: TextStyle(color: Colors.black),
               ),
             ),

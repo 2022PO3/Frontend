@@ -4,17 +4,17 @@ import 'package:po_frontend/api/models/enums.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/user_data.dart';
-import '../../api/network/network_exception.dart';
+import '../../../api/network/network_exception.dart';
 import 'package:po_frontend/api/models/user_model.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({super.key});
+class UserInfo extends StatefulWidget {
+  const UserInfo({super.key});
 
   @override
-  State<Profile> createState() => _ProfileState();
+  State<UserInfo> createState() => _UserInfoState();
 }
 
-class _ProfileState extends State<Profile> {
+class _UserInfoState extends State<UserInfo> {
   final newFirstNameTextController = TextEditingController();
   final newLastNameTextController = TextEditingController();
   final newEmailTextController = TextEditingController();
