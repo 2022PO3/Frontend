@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/api/widgets/reservation_widget.dart';
+import 'package:po_frontend/core/app_bar.dart';
 
 class UserReservations extends StatefulWidget {
   const UserReservations({super.key});
@@ -14,9 +15,7 @@ class _UserReservationsState extends State<UserReservations> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('My Reservations'),
-      ),
+      appBar: appBar('My reservations', true, setState),
       body: FutureBuilder(
         future: getReservations(),
         builder: (context, snapshot) {

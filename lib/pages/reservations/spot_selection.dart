@@ -6,10 +6,9 @@ import 'package:po_frontend/api/requests/garage_requests.dart';
 import 'package:po_frontend/api/widgets/parking_lot_widget.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/parking_lot_model.dart';
+import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/pages/reservations/make_reservation_page.dart';
-import 'package:po_frontend/providers/user_provider.dart';
 import 'package:po_frontend/utils/user_data.dart';
-import 'package:provider/provider.dart';
 
 class SpotSelectionPage extends StatefulWidget {
   const SpotSelectionPage({
@@ -30,9 +29,7 @@ class _SpotSelectionPageState extends State<SpotSelectionPage> {
     final DateTime endDate = widget.garageLicenceAndTime.endDate;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Spot Selection'),
-      ),
+      appBar: appBar('Spot selection', true, setState),
       body: FutureBuilder(
         future: getGarageParkingLots(garage.id, {
           'fromDate': startDate.toIso8601String(),

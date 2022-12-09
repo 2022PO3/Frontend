@@ -3,6 +3,7 @@ import 'package:po_frontend/api/models/licence_plate_model.dart';
 import 'package:po_frontend/api/requests/licence_plate_requests.dart';
 import 'package:po_frontend/api/widgets/licence_plate_widget.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
+import 'package:po_frontend/core/app_bar.dart';
 
 class SelectLicencePlatePage extends StatefulWidget {
   const SelectLicencePlatePage({
@@ -20,9 +21,7 @@ class _SelectLicencePlatePageState extends State<SelectLicencePlatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Select licence plate'),
-      ),
+      appBar: appBar('Select licence plate', true, setState),
       body: FutureBuilder(
         future: getLicencePlates(),
         builder: (context, snapshot) {

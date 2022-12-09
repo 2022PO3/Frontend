@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:po_frontend/api/network/network_service.dart';
-import 'package:po_frontend/api/network/static_values.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/utils/user_data.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:po_frontend/providers/user_provider.dart';
 
