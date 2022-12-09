@@ -27,6 +27,8 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
 
+    final UserProvider userProvider = Provider.of<UserProvider>(context);
+    const Map<int, String> week_days = {} ;
     return FutureBuilder(
       future: getGarageData(widget.garageId),
       builder: (context, snapshot) {

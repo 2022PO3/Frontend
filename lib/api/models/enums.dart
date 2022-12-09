@@ -20,7 +20,7 @@ class Province {
     ProvinceEnum.WBR: 'Waals-Brabant',
   };
 
-  static String getProvinceName(ProvinceEnum provinceAbr) {
+  static String getProvinceName(ProvinceEnum? provinceAbr) {
     String? provinceName = provinces[provinceAbr];
     if (provinceName == null) {
       throw Exception('Province is not defined.');
