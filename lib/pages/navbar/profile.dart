@@ -570,115 +570,164 @@ class _ProfileState extends State<Profile> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Profile')),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            children: [
-              const Text(
-                'User Info:',
-                style: TextStyle(
-                  fontSize: 35,
-                  fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.underline,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 25),
-              buildUserField(
-                'User ID',
-                getUserId(context).toString(),
-                false,
-                null,
-                null,
-              ),
-              buildUserField(
-                'First name',
-                getUserFirstName(
-                  context,
-                  dummy: 'No first name given',
-                ),
-                true,
-                openDialog,
-                [
-                  'first name',
-                  userFirstName,
-                  newFirstNameTextController,
-                  setFirstName,
-                ],
-              ),
-              buildUserField(
-                'Last name',
-                getUserLastName(
-                  context,
-                  dummy: 'No last name given',
-                ),
-                true,
-                openDialog,
-                [
-                  'last name',
-                  userLastName,
-                  newLastNameTextController,
-                  setLastName,
-                ],
-              ),
-              buildUserField(
-                'Email address',
-                getUserEmail(context),
-                true,
-                openDialog,
-                [
-                  'email',
-                  userEmail,
-                  newEmailTextController,
-                  setEmail,
-                ],
-              ),
-              buildUserField(
-                'Province',
-                getUserLocation(context),
-                true,
-                openLocationDialog,
-                null,
-              ),
-              buildUserField(
-                'Favorite garage name',
-                'test',
-                true,
-                openLocationDialog,
-                null,
-              ),
-              TextButton(
-                onPressed: () {
-                  openPasswordDialog();
-                },
-                child: const Text(
-                  'Change you password',
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              children: [
+                const Text(
+                  'User Info:',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 25),
+                buildUserField(
+                  'User ID',
+                  getUserId(context).toString(),
+                  false,
+                  null,
+                  null,
+                ),
+                buildUserField(
+                  'First name',
+                  getUserFirstName(
+                    context,
+                    dummy: 'No first name given',
+                  ),
+                  true,
+                  openDialog,
+                  [
+                    'first name',
+                    userFirstName,
+                    newFirstNameTextController,
+                    setFirstName,
+                  ],
+                ),
+                buildUserField(
+                  'Last name',
+                  getUserLastName(
+                    context,
+                    dummy: 'No last name given',
+                  ),
+                  true,
+                  openDialog,
+                  [
+                    'last name',
+                    userLastName,
+                    newLastNameTextController,
+                    setLastName,
+                  ],
+                ),
+                buildUserField(
+                  'Email address',
+                  getUserEmail(context),
+                  true,
+                  openDialog,
+                  [
+                    'email',
+                    userEmail,
+                    newEmailTextController,
+                    setEmail,
+                  ],
+                ),
+                buildUserField(
+                  'Province',
+                  getUserLocation(context),
+                  true,
+                  openLocationDialog,
+                  null,
+                ),
+                buildUserField(
+                  'Favorite garage name',
+                  'test',
+                  true,
+                  openLocationDialog,
+                  null,
+                ),
+                const Divider(
+                  endIndent: 10,
+                  indent: 10,
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 5,
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.indigoAccent,
+                            ),
+                          ),
+                          onPressed: () {
+                            openPasswordDialog();
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 15,
+                            ),
+                            child: Text(
+                              'Change you password',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ],
-          ),
-          Column(
-            children: [
-              TextButton(
-                onPressed: () {
-                  openDeleteUserDialog();
-                },
-                child: const Text(
-                  'Delete your account',
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 20,
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 5,
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Colors.redAccent),
+                          ),
+                          onPressed: () {
+                            openDeleteUserDialog();
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 15,
+                            ),
+                            child: Text(
+                              'Delete your account',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              const SizedBox(height: 20)
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
