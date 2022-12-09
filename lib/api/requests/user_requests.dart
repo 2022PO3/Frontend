@@ -25,7 +25,7 @@ Future<User> loginUser(
   );
   // Contains a list of the format [User, String].
   List userResponse = await NetworkHelper.filterResponse(
-    callBack: User.loginUserFromJson,
+    callBack: User.loginFromJSON,
     response: response,
   );
 
@@ -59,11 +59,11 @@ Future<void> logOutUser(BuildContext context) async {
 Future<User> getUserInfo() async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.get,
-    apiSlug: StaticValues.getUserSlug,
+    apiSlug: StaticValues.userSlug,
     useAuthToken: true,
   );
   return await NetworkHelper.filterResponse(
-    callBack: User.userFromJson,
+    callBack: User.fromJSON,
     response: response,
   );
 }
@@ -97,6 +97,50 @@ Future<bool> postReservation(Reservation reservation) async {
     apiSlug: StaticValues.getReservationSlug,
     useAuthToken: true,
     body: reservation.toJSON(),
+  );
+
+  return NetworkHelper.validateResponse(response);
+}
+
+Future<User> updateUser(User user) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.put,
+    apiSlug: StaticValues.userSlug,
+    useAuthToken: true,
+    body: user.toJSON(),
+  );
+
+  return NetworkHelper.filterResponse(
+    callBack: User.fromJSON,
+    response: response,
+  );
+}
+
+Future<bool> deleteUser() async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.delete,
+    apiSlug: StaticValues.userSlug,
+    useAuthToken: true,
+  );
+
+  return NetworkHelper.validateResponse(response);
+}
+
+Future<bool> setUserPassword(
+  String oldPassword,
+  String newPassword,
+  String passwordConfirmation,
+) async {
+  Map<String, dynamic> body = {
+    'oldPassword': oldPassword,
+    'newPassword': newPassword,
+    'passwordConfirmation': passwordConfirmation,
+  };
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.put,
+    apiSlug: StaticValues.changePassword,
+    body: body,
+    useAuthToken: true,
   );
 
   return NetworkHelper.validateResponse(response);

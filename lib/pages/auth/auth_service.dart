@@ -78,12 +78,12 @@ class AuthService {
     try {
       final response = await NetworkService.sendRequest(
         requestType: RequestType.get,
-        apiSlug: StaticValues.getUserSlug,
+        apiSlug: StaticValues.userSlug,
         useAuthToken: true,
       );
       try {
         User user = await NetworkHelper.filterResponse(
-          callBack: User.userFromJson,
+          callBack: User.fromJSON,
           response: response,
         );
         bool? twoFactorValidated = user.twoFactorValidated;

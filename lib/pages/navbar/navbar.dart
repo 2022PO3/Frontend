@@ -17,7 +17,7 @@ class _NavbarState extends State<Navbar> {
           context: context,
           builder: (context) => AlertDialog(
             title: Text(
-              'Dear ${getUserName(context)},',
+              'Dear ${getUserFirstName(context)},',
               style: const TextStyle(color: Colors.indigoAccent),
             ),
             content: const Text('Are you sure you want to sign out?'),

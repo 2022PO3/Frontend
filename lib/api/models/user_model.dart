@@ -2,12 +2,12 @@ import 'package:po_frontend/api/models/enums.dart';
 
 class User {
   final int id;
-  final String email;
+  String email;
   final int role;
-  final String? firstName;
-  final String? lastName;
-  final int? favGarageId;
-  final ProvinceEnum? location;
+  String? firstName;
+  String? lastName;
+  int? favGarageId;
+  ProvinceEnum? location;
   final bool twoFactor;
   final bool? twoFactorValidated;
 
@@ -23,7 +23,13 @@ class User {
     required this.twoFactorValidated,
   });
 
-  static User userFromJson(Map<String, dynamic> json) {
+  //set email(String email) => this.email = email;
+  //set firstName(String? firstName) => this.firstName = firstName;
+  //set lastName(String? lastName) => this.lastName = lastName;
+  //set favGarageId(int? favGarageId) => this.favGarageId = favGarageId;
+  //set location(ProvinceEnum? location) => this.location = location;
+
+  static User fromJSON(Map<String, dynamic> json) {
     return User(
       id: json['id'] as int,
       email: json['email'] as String,
@@ -37,7 +43,7 @@ class User {
     );
   }
 
-  static List loginUserFromJson(Map<String, dynamic> json) {
+  static List loginFromJSON(Map<String, dynamic> json) {
     return [
       User(
         id: json['user']['id'] as int,
@@ -52,5 +58,16 @@ class User {
       ),
       json['token']
     ];
+  }
+
+  Map<String, dynamic> toJSON() {
+    return {
+      'email': email,
+      'role': role,
+      'firstName': firstName,
+      'lastName': lastName,
+      'favGarageId': favGarageId,
+      'location': location == null ? null : location.toString()
+    };
   }
 }

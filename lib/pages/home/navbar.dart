@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
+import 'package:po_frontend/utils/user_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:po_frontend/providers/user_provider.dart';
@@ -71,14 +72,14 @@ class _NavbarState extends State<Navbar> {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            accountName: Row(
-              children: [
-                Text(userProvider.getUser.firstName ?? 'Firstname'),
-                const Text(' '),
-                Text(userProvider.getUser.lastName ?? 'LastName')
-              ]
+            accountName: Row(children: [
+              Text(userProvider.getUser.firstName ?? 'Firstname'),
+              const Text(' '),
+              Text(userProvider.getUser.lastName ?? 'LastName')
+            ]),
+            accountEmail: Text(
+              getUserEmail(context),
             ),
-            accountEmail: Text(userProvider.getUser.email),
             decoration: const BoxDecoration(
               color: Colors.indigoAccent,
               image: DecorationImage(

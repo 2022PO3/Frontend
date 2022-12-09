@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
         ),
         title: Center(
           child: Text(
-            getUserName(context),
+            getUserFirstName(context),
           ),
         ),
       ),
