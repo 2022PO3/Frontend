@@ -60,9 +60,11 @@ class _UserSettingsState extends State<UserSettings> {
                             ),
                           ),
                           FlutterSwitch(
+                            height: 30,
+                            width: 60,
                             activeColor: Colors.green,
                             inactiveColor: Colors.red,
-                            toggleSize: 20,
+                            toggleSize: 15,
                             value: user.twoFactor,
                             borderRadius: 30.0,
                             padding: 8.0,

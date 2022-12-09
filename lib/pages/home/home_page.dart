@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:po_frontend/providers/user_provider.dart';
 import 'package:po_frontend/utils/user_data.dart';
 import '../../api/models/licence_plate_model.dart';
 import '../../api/requests/garage_requests.dart';
 import '../../api/requests/licence_plate_requests.dart';
-import '../../api/requests/user_requests.dart';
 import '../../utils/error_widget.dart';
 import '../navbar/navbar.dart';
 import '../payment_widgets/pay_button.dart';
 import '../payment_widgets/timer_widget.dart';
 
 import 'dart:async';
-import 'package:provider/provider.dart';
 
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/widgets/garage_widget.dart';
@@ -47,8 +44,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final UserProvider userProvider = Provider.of<UserProvider>(context);
-
     return Scaffold(
       endDrawer: const Navbar(),
       appBar: AppBar(
@@ -62,7 +57,9 @@ class _HomePageState extends State<HomePage> {
           )),
         ),
         title: Center(
-          child: Text(userProvider.getUser.firstName ?? ''),
+          child: Text(
+            getUserName(context),
+          ),
         ),
       ),
       body: RefreshIndicator(
@@ -377,9 +374,7 @@ class GarageListWidget extends StatelessWidget {
 }
 
 void saveUserToProvider(BuildContext context) async {
-  if (getUserId(context) != 0) {
-    final UserProvider userProvider =
-        Provider.of<UserProvider>(context, listen: false);
-    userProvider.setUser(await getUserInfo());
+  if (getUserId(context) == 0) {
+    updateUserInfo(context);
   }
 }

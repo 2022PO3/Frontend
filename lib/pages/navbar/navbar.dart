@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:po_frontend/api/network/network_service.dart';
-import 'package:po_frontend/api/network/static_values.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:provider/provider.dart';
-import 'package:po_frontend/providers/user_provider.dart';
+import 'package:po_frontend/api/requests/user_requests.dart';
+import 'package:po_frontend/utils/user_data.dart';
 
 class Navbar extends StatefulWidget {
   const Navbar({Key? key}) : super(key: key);
@@ -14,64 +11,53 @@ class Navbar extends StatefulWidget {
 }
 
 class _NavbarState extends State<Navbar> {
-  Future<void> logOutUser() async {
-    final response = await NetworkService.sendRequest(
-      requestType: RequestType.post,
-      apiSlug: StaticValues.postLogoutUser,
-      useAuthToken: true,
-      //    body: body
-    );
-    if (response?.statusCode == 204) {
-      final userInfo = await SharedPreferences.getInstance();
-      userInfo.remove('authToken');
-      if (mounted) context.go("/login");
-    } else {}
-  }
-
   @override
   Widget build(BuildContext context) {
-    final UserProvider userProvider = Provider.of<UserProvider>(context);
     Future openDialog() => showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: Text(
-                'Dear ${userProvider.getUser.firstName ?? 'user'},',
-                style: const TextStyle(color: Colors.indigoAccent),
-              ),
-              content: const Text('Are you sure you want to sign out?'),
-              actions: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    TextButton(
-                        onPressed: () {
-                          context.pop();
-                        },
-                        child: const Text(
-                          'Cancel',
-                          style: TextStyle(color: Colors.indigo, fontSize: 15),
-                        )),
-                    TextButton(
-                      onPressed: () {
-                        logOutUser();
-                      },
-                      child: const Text(
-                        'Confirm',
-                        style: TextStyle(color: Colors.indigo, fontSize: 15),
-                      ),
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(
+              'Dear ${getUserName(context)},',
+              style: const TextStyle(color: Colors.indigoAccent),
+            ),
+            content: const Text('Are you sure you want to sign out?'),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      context.pop();
+                    },
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(color: Colors.indigo, fontSize: 15),
                     ),
-                  ],
-                )
-              ],
-            ));
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      logOutUser(context);
+                    },
+                    child: const Text(
+                      'Confirm',
+                      style: TextStyle(color: Colors.indigo, fontSize: 15),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        );
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
             accountName: const Text(''),
-            accountEmail: Text(userProvider.getUser.email),
+            accountEmail: Text(
+              getUserEmail(context),
+            ),
             decoration: const BoxDecoration(
               color: Colors.indigoAccent,
               image: DecorationImage(

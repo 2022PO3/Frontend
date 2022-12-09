@@ -103,7 +103,6 @@ class _DeviceWidgetState extends State<DeviceWidget> {
             TextButton(
               onPressed: () async {
                 context.pop();
-                setState(() {});
                 try {
                   await removeDevice(device);
                 } on BackendException catch (e) {
@@ -112,6 +111,7 @@ class _DeviceWidgetState extends State<DeviceWidget> {
                   return;
                 }
                 showSuccessDialog();
+                setState(() {});
               },
               child: const Text(
                 'Confirm',

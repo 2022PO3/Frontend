@@ -7,6 +7,7 @@ import 'package:po_frontend/api/network/static_values.dart';
 
 import 'package:flutter/material.dart';
 import 'package:po_frontend/api/widgets/device_widget.dart';
+import 'package:po_frontend/utils/user_data.dart';
 
 import '../../utils/loading_page.dart';
 
@@ -192,8 +193,9 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
           ),
           actions: [
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 context.pop();
+                await updateUserInfo(context);
               },
               child: const Text(
                 'OK',

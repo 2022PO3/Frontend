@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
 import 'package:po_frontend/providers/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +40,20 @@ Future<User> loginUser(
   userProvider.setUser(user);
 
   return user;
+}
+
+Future<void> logOutUser(BuildContext context) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.post,
+    apiSlug: StaticValues.postLogoutUser,
+    useAuthToken: true,
+  );
+  if (NetworkHelper.validateResponse(response)) {
+    final userInfo = await SharedPreferences.getInstance();
+    userInfo.remove('authToken');
+  }
+  // Make sure to redirect to user.
+  context.go('/login');
 }
 
 Future<User> getUserInfo() async {
