@@ -9,6 +9,7 @@ import 'package:po_frontend/pages/garage_info.dart';
 import 'package:po_frontend/pages/home/home_page.dart';
 import 'package:po_frontend/pages/navbar/profile/licecence_plates.dart';
 import 'package:po_frontend/pages/navbar/profile/user_info.dart';
+import 'package:po_frontend/pages/payment_page/failed_payment_page.dart';
 import 'package:po_frontend/pages/reservations/confirm_reservation.dart';
 import 'package:po_frontend/pages/reservations/make_reservation_page.dart';
 import 'package:po_frontend/pages/navbar/help.dart';
@@ -21,6 +22,8 @@ import 'package:po_frontend/pages/settings/add_two_factor_device_page.dart';
 import 'package:po_frontend/pages/settings/user_settings.dart';
 import 'package:po_frontend/pages/reservations/spot_selection.dart';
 import 'package:po_frontend/utils/loading_page.dart';
+
+import '../pages/payment_page/succesful_payment_page.dart';
 
 class Routes {
   static GoRouter generateRoutes(String initialLocation) {
@@ -133,7 +136,15 @@ class Routes {
             uidB64: state.queryParams['uidB64'],
             token: state.queryParams['token'],
           ),
-        )
+        ),
+        GoRoute(path: '/checkout', redirect: (_, __) => '/', routes: [
+          GoRoute(
+              path: 'success',
+              builder: (context, state) => const SuccessFulPaymentPage()),
+          GoRoute(
+              path: 'failed',
+              builder: (context, state) => const FailedPaymentPage()),
+        ])
       ],
     );
   }
