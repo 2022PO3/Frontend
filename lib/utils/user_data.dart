@@ -95,6 +95,14 @@ bool getUserTwoFactor(BuildContext context, {bool listen = false}) {
   return userProvider.getUser.twoFactor;
 }
 
+bool getUserAutomaticPayment(BuildContext context, {bool listen = false}) {
+  final UserProvider userProvider = Provider.of<UserProvider>(
+    context,
+    listen: listen,
+  );
+  return userProvider.getUser.automaticPayment;
+}
+
 Future<void> updateUserInfo(BuildContext context) async {
   final UserProvider userProvider =
       Provider.of<UserProvider>(context, listen: false);

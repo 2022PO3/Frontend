@@ -47,9 +47,9 @@ class _PaymentOverviewState extends State<PaymentOverview> {
         requestType: RequestType.get,
         apiSlug: StaticValues.getPaymentPreviewSlug,
         useAuthToken: true,
-        queryParams: {'licence_plate': widget.licencePlate.licencePlate}
-        //    body: body
-        );
+        queryParams: {'licence_plate': widget.licencePlate.licencePlate});
+
+    print(response?.body);
 
     return await NetworkHelper.filterResponse(
       callBack: fromPaymentPreviewJSON,

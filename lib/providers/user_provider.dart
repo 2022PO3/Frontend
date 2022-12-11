@@ -10,6 +10,7 @@ class UserProvider with ChangeNotifier {
     lastName: null,
     favGarageId: null,
     location: null,
+    automaticPayment: false,
     twoFactor: false,
     twoFactorValidated: null,
   );

@@ -8,6 +8,7 @@ class User {
   String? lastName;
   int? favGarageId;
   ProvinceEnum? location;
+  final bool automaticPayment;
   final bool twoFactor;
   final bool? twoFactorValidated;
 
@@ -19,6 +20,7 @@ class User {
     required this.lastName,
     required this.favGarageId,
     required this.location,
+    required this.automaticPayment,
     required this.twoFactor,
     required this.twoFactorValidated,
   });
@@ -38,6 +40,7 @@ class User {
       lastName: json['lastName'] as String?,
       favGarageId: json['favGarageId'] as int?,
       location: Province.toProvinceEnum(json['province'] as String?),
+      automaticPayment: json['hasAutomaticPayment'] as bool,
       twoFactor: json['twoFactor'] as bool,
       twoFactorValidated: json['twoFactorValidated'] as bool?,
     );
@@ -53,6 +56,7 @@ class User {
         lastName: json['user']['lastName'] as String?,
         favGarageId: json['user']['favGarageId'] as int?,
         location: Province.toProvinceEnum(json['user']['location'] as String?),
+        automaticPayment: json['user']['hasAutomaticPayment'] as bool,
         twoFactor: json['user']['twoFactor'] as bool,
         twoFactorValidated: json['user']['twoFactorValidated'] as bool?,
       ),
@@ -67,7 +71,7 @@ class User {
       'firstName': firstName,
       'lastName': lastName,
       'favGarageId': favGarageId,
-      'location': location == null ? null : location.toString()
+      'location': location?.toString()
     };
   }
 }

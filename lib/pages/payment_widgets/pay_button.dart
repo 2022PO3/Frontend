@@ -48,7 +48,7 @@ class PayPreviewButton extends StatelessWidget {
   }
 }
 
-class PayButton extends StatefulWidget {
+class PayButton extends StatelessWidget {
   /// Button to launch the Stripe checkout url. It has a hero tag for a nice
   /// animation when opening the payment preview page.
 
@@ -62,50 +62,65 @@ class PayButton extends StatefulWidget {
   final Garage garage;
 
   @override
-  State<PayButton> createState() => _PayButtonState();
+  Widget build(BuildContext context) {
+    return Hero(
+        tag: 'pay_button_${licencePlate.licencePlate}',
+        child: RequestButton<void>(
+          makeRequest: () => startPaymentSession(
+            licencePlate: licencePlate.licencePlate,
+          ),
+          text: 'Pay',
+        ));
+  }
 }
 
-class _PayButtonState extends State<PayButton> {
-  Future<void> checkoutFuture = Future(() {});
+class RequestButton<T> extends StatefulWidget {
+  /// Button that makes a request to the backend, the makeRequest parameter
+  /// should be a function that returns a future of T. While the future is
+  /// loading, the button shows a progress indicator, when the future throws an
+  /// error, the error is shown with a 'retry' button.
+  const RequestButton({Key? key, required this.makeRequest, required this.text})
+      : super(key: key);
 
-  void onPressed(BuildContext context) {
-    setState(
-      () {
-        checkoutFuture = startPaymentSession(
-          licencePlate: widget.licencePlate.licencePlate,
-        );
-      },
-    );
-  }
+  @override
+  State<RequestButton> createState() => _RequestButtonState<T>();
+
+  final Future<T> Function() makeRequest;
+  final String text;
+}
+
+class _RequestButtonState<T> extends State<RequestButton> {
+  Future<T>? future;
 
   @override
   Widget build(BuildContext context) {
-    return Hero(
-      tag: 'pay_button_${widget.licencePlate.licencePlate}',
-      child: FutureBuilder<void>(
-        future: checkoutFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'We failed to create a checkout page: ${snapshot.error}',
-                  style: const TextStyle(color: Colors.red),
-                ),
-                _buildButton(context, 'Retry')
-              ],
-            );
-          } else {
-            return _buildButton(context, 'Pay');
-          }
-        },
-      ),
+    if (future == null) {
+      return _buildButton(context, widget.text);
+    }
+
+    return FutureBuilder<void>(
+      future: future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasError) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'The request to our servers failed: ${snapshot.error}',
+                style: const TextStyle(color: Colors.red),
+              ),
+              _buildButton(context, 'Retry')
+            ],
+          );
+        } else {
+          return _buildButton(context, widget.text);
+        }
+      },
     );
   }
 
@@ -118,7 +133,11 @@ class _PayButtonState extends State<PayButton> {
               const StadiumBorder(),
             ),
           ),
-          onPressed: () => onPressed(context),
+          onPressed: () {
+            setState(() {
+              future = widget.makeRequest() as Future<T>?;
+            });
+          },
           child: Text(text)),
     );
   }
