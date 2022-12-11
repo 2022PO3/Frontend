@@ -3,6 +3,7 @@ import 'package:po_frontend/api/models/garage_settings_model.dart';
 /// Model which represents the backend `Garage`-model.
 class Garage {
   final int id;
+  final int userId;
   final String name;
   final bool isFull;
   final int unoccupiedLots;
@@ -11,6 +12,7 @@ class Garage {
 
   Garage({
     required this.id,
+    required this.userId,
     required this.name,
     required this.isFull,
     required this.unoccupiedLots,
@@ -22,6 +24,7 @@ class Garage {
   static Garage fromJSON(Map<String, dynamic> json) {
     return Garage(
         id: json['id'] as int,
+        userId: json['userId'] as int,
         name: json['name'] as String,
         isFull: json['isFull'] as bool,
         unoccupiedLots: json['unoccupiedLots'] as int,

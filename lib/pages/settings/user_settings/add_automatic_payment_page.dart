@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_credit_card/credit_card_brand.dart';
 import 'package:flutter_credit_card/credit_card_form.dart';
 import 'package:flutter_credit_card/credit_card_model.dart';
 import 'package:flutter_credit_card/credit_card_widget.dart';
-import 'package:flutter_credit_card/custom_card_type_icon.dart';
 import 'package:flutter_credit_card/glassmorphism_config.dart';
 import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/credit_card_model.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/pages/payment_widgets/pay_button.dart';
 
-import '../../utils/user_data.dart';
+import '../../../utils/user_data.dart';
 
 class AddAutomaticPaymentPage extends StatefulWidget {
   const AddAutomaticPaymentPage({Key? key}) : super(key: key);

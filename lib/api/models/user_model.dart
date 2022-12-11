@@ -31,6 +31,8 @@ class User {
   //set favGarageId(int? favGarageId) => this.favGarageId = favGarageId;
   //set location(ProvinceEnum? location) => this.location = location;
 
+  get isOwner => role == 2;
+
   static User fromJSON(Map<String, dynamic> json) {
     return User(
       id: json['id'] as int,

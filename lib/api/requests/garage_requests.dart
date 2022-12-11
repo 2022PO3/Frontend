@@ -5,6 +5,7 @@ import 'package:po_frontend/pages/garage_info.dart';
 
 import '../models/garage_model.dart';
 import '../models/parking_lot_model.dart';
+import '../models/user_model.dart';
 import '../network/network_helper.dart';
 import '../network/network_service.dart';
 import '../network/static_values.dart';
@@ -125,6 +126,21 @@ Future<ParkingLot> assignParkingLot(
 
   return await NetworkHelper.filterResponse(
     callBack: ParkingLot.fromJSON,
+    response: response,
+  );
+}
+
+Future<List<Garage>> getOwnedGarages(User owner) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.get,
+    apiSlug: StaticValues.getGaragesSlug,
+    useAuthToken: true,
+  );
+  return await NetworkHelper.filterResponse(
+    callBack: (List<dynamic> json) {
+      final garages = Garage.listFromJSON(json);
+      return garages.where((garage) => garage.userId == owner.id).toList();
+    },
     response: response,
   );
 }
