@@ -19,7 +19,9 @@ class LoadingPage extends StatelessWidget {
           ),
         ),
         title: const Center(
-          child: Text('Two factor devices'),
+          child: Text(
+            'Parking Boys',
+          ),
         ),
       ),
       body: const Center(

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/device_model.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
-import 'package:po_frontend/api/network/network_helper.dart';
-import 'package:po_frontend/api/network/network_service.dart';
-import 'package:po_frontend/api/network/static_values.dart';
+import 'package:po_frontend/api/requests/user_requests.dart';
+import 'package:po_frontend/utils/dialogs.dart';
 
 class DeviceWidget extends StatefulWidget {
   const DeviceWidget({Key? key, required this.device}) : super(key: key);
@@ -19,73 +19,71 @@ class _DeviceWidgetState extends State<DeviceWidget> {
     return InkWell(
       onLongPress: () => showDeviceDeletionPopUp(widget.device),
       child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            IntrinsicHeight(
-              child: Row(
-                children: [
-                  Text(
-                    widget.device.id.toString(),
-                    style: const TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                  const VerticalDivider(
-                    width: 15,
-                    thickness: 1,
-                    color: Colors.black,
-                    indent: 5,
-                    endIndent: 5,
-                  ),
-                  const Icon(
-                    Icons.phone_android_outlined,
-                    size: 40,
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            widget.device.name,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
+        padding: const EdgeInsets.all(5),
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.phone_android_outlined,
+                        size: 40,
+                      ),
+                      const VerticalDivider(
+                        width: 15,
+                        thickness: 1,
+                        color: Colors.black,
+                        indent: 5,
+                        endIndent: 5,
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                widget.device.name,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                          width: 0,
-                        ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            widget.device.confirmed
-                                ? 'Confirmed'
-                                : 'Not confirmed',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              color: widget.device.confirmed
-                                  ? Colors.green
-                                  : Colors.red,
-                              fontSize: 15,
+                            const SizedBox(
+                              height: 5,
+                              width: 0,
                             ),
-                          ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                widget.device.confirmed
+                                    ? 'Confirmed'
+                                    : 'Not confirmed',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: widget.device.confirmed
+                                      ? Colors.green
+                                      : Colors.red,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            const Divider()
-          ],
+          ),
         ),
       ),
     );
@@ -103,18 +101,22 @@ class _DeviceWidgetState extends State<DeviceWidget> {
           actions: [
             TextButton(
               onPressed: () async {
-                Navigator.pop(
-                  context,
-                );
-                setState(() {});
+                context.pop();
                 try {
                   await removeDevice(device);
                 } on BackendException catch (e) {
                   print(e);
-                  showFailureDialog(e.toString());
+                  showFailureDialog(context, e);
                   return;
                 }
-                showSuccessDialog();
+                if (mounted) {
+                  showSuccessDialog(
+                    context,
+                    'Success',
+                    'Your device is successfully deleted and two factor authentication is disabled.',
+                  );
+                }
+                setState(() {});
               },
               child: const Text(
                 'Confirm',
@@ -125,7 +127,7 @@ class _DeviceWidgetState extends State<DeviceWidget> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
+                context.pop();
               },
               child: const Text(
                 'Cancel',
@@ -138,72 +140,5 @@ class _DeviceWidgetState extends State<DeviceWidget> {
         );
       },
     );
-  }
-
-  void showFailureDialog(String error) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text(
-            'Server exception',
-          ),
-          content: Text(
-            'We\'re sorry, but the server returned an error: $error.',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                'OK',
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void showSuccessDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text(
-            'Success',
-          ),
-          content: const Text(
-            'Your device is successfully deleted and two factor authentication is disabled.',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                // Used to refresh the page.
-                setState(() {});
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                'OK',
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<bool> removeDevice(Device device) async {
-    final response = await NetworkService.sendRequest(
-      requestType: RequestType.delete,
-      apiSlug: StaticValues.twoFactorDevicesSlug,
-      useAuthToken: true,
-      pk: device.id,
-    );
-
-    return NetworkHelper.validateResponse(response);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/device_model.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
@@ -6,6 +7,8 @@ import 'package:po_frontend/api/network/static_values.dart';
 
 import 'package:flutter/material.dart';
 import 'package:po_frontend/api/widgets/device_widget.dart';
+import 'package:po_frontend/core/app_bar.dart';
+import 'package:po_frontend/utils/user_data.dart';
 
 import '../../utils/loading_page.dart';
 
@@ -32,29 +35,7 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
     return isLoading
         ? const LoadingPage()
         : Scaffold(
-            appBar: AppBar(
-              automaticallyImplyLeading: true,
-              flexibleSpace: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [(Colors.indigo), (Colors.indigoAccent)],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
-                ),
-              ),
-              title: const Text(
-                'Two factor devices',
-              ),
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    setState(() {});
-                  },
-                  icon: const Icon(Icons.refresh_rounded),
-                ),
-              ],
-            ),
+            appBar: appBar('Two factor devices', true, setState),
             body: FutureBuilder(
               future: getDevices(),
               builder: (context, snapshot) {
@@ -132,7 +113,7 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
             TextButton(
               onPressed: () async {
                 if (_addNameFormKey.currentState!.validate()) {
-                  Navigator.of(context).pop();
+                  context.pop();
                   setState(() {
                     isLoading = true;
                   });
@@ -191,8 +172,9 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
           ),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
+              onPressed: () async {
+                context.pop();
+                await updateUserInfo(context);
               },
               child: const Text(
                 'OK',
@@ -216,7 +198,7 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                context.pop();
               },
               child: const Text(
                 'OK',

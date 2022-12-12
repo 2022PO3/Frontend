@@ -1,35 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:po_frontend/api/models/reservation_model.dart';
+import 'package:po_frontend/api/requests/user_requests.dart';
+import 'package:po_frontend/api/widgets/reservation_widget.dart';
+import 'package:po_frontend/core/app_bar.dart';
 
-import 'package:po_frontend/api/network/network_helper.dart';
-import 'package:po_frontend/api/network/network_service.dart';
-import 'package:po_frontend/api/network/static_values.dart';
-
-import 'models/garage_model.dart';
-import 'widgets/garage_widget.dart';
-
-class GaragesPage extends StatefulWidget {
-  const GaragesPage({Key? key}) : super(key: key);
+class UserReservations extends StatefulWidget {
+  const UserReservations({super.key});
 
   @override
-  State<GaragesPage> createState() => _GaragesPageState();
+  State<UserReservations> createState() => _UserReservationsState();
 }
 
-class _GaragesPageState extends State<GaragesPage> {
+class _UserReservationsState extends State<UserReservations> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: appBar('My reservations', true, setState),
       body: FutureBuilder(
-        future: getData(),
+        future: getReservations(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
-            final List<Garage> garages = snapshot.data as List<Garage>;
+            List<Reservation> reservations = snapshot.data as List<Reservation>;
+
+            reservations.sort(
+              (r1, r2) => r1.fromDate.millisecondsSinceEpoch
+                  .compareTo(r2.fromDate.millisecondsSinceEpoch),
+            );
 
             return ListView.builder(
               itemBuilder: (context, index) {
-                return GarageWidget(garage: garages[index]);
+                return ReservationWidget(reservation: reservations[index]);
               },
-              itemCount: garages.length,
+              itemCount: reservations.length,
             );
           } else if (snapshot.hasError) {
             return Center(
@@ -56,18 +59,4 @@ class _GaragesPageState extends State<GaragesPage> {
       ),
     );
   }
-}
-
-Future<List<Garage>> getData() async {
-  final response = await NetworkService.sendRequest(
-    requestType: RequestType.get,
-    apiSlug: StaticValues.getGaragesSlug,
-    useAuthToken: true,
-    //    body: body
-  );
-
-  return await NetworkHelper.filterResponse(
-    callBack: garagesListFromJson,
-    response: response,
-  );
 }

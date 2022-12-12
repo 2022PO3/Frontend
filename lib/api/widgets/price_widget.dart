@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:po_frontend/api/models/price_model.dart';
-import 'package:enum_to_string/enum_to_string.dart';
 import 'package:po_frontend/api/models/enums.dart';
+
 class CurrentPrice extends StatelessWidget {
-  CurrentPrice({Key? key, required this.curprice}) : super(key: key);
-  final Price? curprice;
+  const CurrentPrice({Key? key, required this.price}) : super(key: key);
+  final Price? price;
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      "for " + curprice!.priceString + " " + curprice!.price.toString() + " " + Valuta().getValutaSymbol(curprice!.valuta),
-      style: TextStyle(
-        color: Colors.indigoAccent,
-          fontWeight: FontWeight.w600
-      ),//curprice!.valuta
+      'For ${price!.priceString} ${Valuta.getValutaSymbol(price!.valuta)} ${price!.price} ',
+      style: const TextStyle(
+        color: Colors.indigo,
+      ),
     );
   }
 }

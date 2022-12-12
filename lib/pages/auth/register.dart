@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
 import 'package:po_frontend/api/network/network_service.dart';
@@ -6,14 +7,14 @@ import 'package:po_frontend/api/network/static_values.dart';
 
 import '../../api/network/network_exception.dart';
 
-class RegisterNow extends StatefulWidget {
-  const RegisterNow({Key? key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  State<RegisterNow> createState() => _RegisterNowState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _RegisterNowState extends State<RegisterNow> {
+class _RegisterPageState extends State<RegisterPage> {
   final _firstNameTextController = TextEditingController();
   final _lastNameTextController = TextEditingController();
   final _emailTextController = TextEditingController();
@@ -442,7 +443,13 @@ class _RegisterNowState extends State<RegisterNow> {
                     onPressed: () async {
                       setState(() {
                         userFirstName = _firstNameTextController.text;
-                        userLastName = _lastNameTextController.text;
+                      if (userFirstName == '') {
+                        userFirstName = null;
+                      }
+                      userLastName = _lastNameTextController.text;
+                      if (userLastName == '') {
+                        userLastName = null;
+                      }
                         userMail = _emailTextController.text;
                         userPassword = _passwordTextController.text;
                         userConfirmPassword =
@@ -459,9 +466,7 @@ class _RegisterNowState extends State<RegisterNow> {
                           if (mounted) {
                             _showSuccessDialog(context);
                             await Future.delayed(const Duration(seconds: 4));
-                            if (mounted) {
-                              Navigator.popAndPushNamed(context, '/login_page');
-                            }
+                            if (mounted) context.pop();
                           }
                         } on BackendException catch (e) {
                           print('Error occurred $e');
@@ -490,9 +495,10 @@ class _RegisterNowState extends State<RegisterNow> {
       'password': passwordUser,
       'passwordConfirmation': confirmPasswordUser,
       'role': 1,
-      'firstName': firstNameUser,
-      'lastName': lastNameUser,
+      'firstName': firstNameUser == '' ? null : firstNameUser,
+      'lastName': lastNameUser == '' ? null : lastNameUser,
     };
+    print(body);
     final response = await NetworkService.sendRequest(
       requestType: RequestType.post,
       apiSlug: StaticValues.postRegisterUser,
@@ -514,7 +520,7 @@ class _RegisterNowState extends State<RegisterNow> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                context.pop();
               },
               child: const Text(
                 'OK',
@@ -538,7 +544,7 @@ class _RegisterNowState extends State<RegisterNow> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                context.pop();
               },
               child: const Text(
                 'OK',
@@ -548,6 +554,102 @@ class _RegisterNowState extends State<RegisterNow> {
           ],
         );
       },
+    );
+  }
+}
+
+class TextInput extends StatelessWidget {
+  const TextInput({
+    super.key,
+    required this.controller,
+    required this.label,
+  });
+
+  final String label;
+  final TextEditingController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+      child: Container(
+        //height: 40,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.white, width: 2),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20.0),
+          child: TextField(
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: label,
+                hintStyle: const TextStyle(fontSize: 20),
+                suffixIcon: IconButton(
+                    onPressed: () {
+                      controller.clear();
+                    },
+                    icon: const Icon(Icons.clear))),
+            controller: controller,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class PasswordInput extends StatefulWidget {
+  const PasswordInput({
+    super.key,
+    required this.controller,
+    required this.label,
+    this.onChanged,
+  });
+
+  final String label;
+  final TextEditingController controller;
+  final Function(String password)? onChanged;
+
+  @override
+  State<PasswordInput> createState() => _PasswordInputState();
+}
+
+class _PasswordInputState extends State<PasswordInput> {
+  bool _obscureText = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.white, width: 2),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20.0),
+          child: TextField(
+            obscureText: _obscureText,
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: widget.label,
+                hintStyle: const TextStyle(fontSize: 20),
+                suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _obscureText = !_obscureText;
+                      });
+                    },
+                    icon: Icon(_obscureText
+                        ? Icons.visibility
+                        : Icons.visibility_off))),
+            controller: widget.controller,
+            onChanged: (String password) => widget.onChanged?.call(password),
+          ),
+        ),
+      ),
     );
   }
 }

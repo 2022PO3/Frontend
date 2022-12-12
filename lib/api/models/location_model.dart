@@ -21,6 +21,11 @@ class Location {
     required this.number,
   });
 
+  @override
+  String toString() {
+    return '$street $number, $municipality, $country';
+  }
+
   /// Serializes a JSON-object into a Dart `Location`-object with all properties.
   static Location fromJSON(Map<String, dynamic> json) {
     ProvinceEnum? province =

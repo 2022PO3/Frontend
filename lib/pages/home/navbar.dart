@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:po_frontend/api/network/network_service.dart';
-import 'package:po_frontend/api/network/static_values.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:po_frontend/api/requests/user_requests.dart';
+import 'package:po_frontend/utils/user_data.dart';
 import 'package:provider/provider.dart';
 import 'package:po_frontend/providers/user_provider.dart';
 
@@ -13,27 +12,15 @@ class Navbar extends StatefulWidget {
 }
 
 class _NavbarState extends State<Navbar> {
-  Future<void> logOutUser() async {
-    final response = await NetworkService.sendRequest(
-      requestType: RequestType.post,
-      apiSlug: StaticValues.postLogoutUser,
-      useAuthToken: true,
-      //    body: body
-    );
-    if (response?.statusCode == 204) {
-      final userInfo = await SharedPreferences.getInstance();
-      userInfo.remove('authToken');
-      Navigator.popUntil(context, ModalRoute.withName('/login_page'));
-    } else {}
-  }
   @override
   Widget build(BuildContext context) {
     final UserProvider userProvider = Provider.of<UserProvider>(context);
-        Future openDialog() => showDialog(
+
+    Future openDialog() => showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              title: Text(
-                'Dear ' + (userProvider.getUser.firstName ?? "user") + ",",
+              title: const Text(
+                'Dear [user],',
                 style: TextStyle(color: Colors.indigoAccent),
               ),
               content: const Text('Are you sure you want to sign out?'),
@@ -53,7 +40,7 @@ class _NavbarState extends State<Navbar> {
                         )),
                     TextButton(
                       onPressed: () {
-                        logOutUser();
+                        logOutUser(context);
                       },
                       child: const Text(
                         'Confirm',
@@ -69,8 +56,14 @@ class _NavbarState extends State<Navbar> {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            accountName: const Text(''),
-            accountEmail: Text(userProvider.getUser.email),
+            accountName: Row(children: [
+              Text(userProvider.getUser.firstName ?? 'Firstname'),
+              const Text(' '),
+              Text(userProvider.getUser.lastName ?? 'LastName')
+            ]),
+            accountEmail: Text(
+              getUserEmail(context),
+            ),
             decoration: const BoxDecoration(
               color: Colors.indigoAccent,
               image: DecorationImage(

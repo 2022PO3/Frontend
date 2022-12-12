@@ -1,387 +1,348 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:po_frontend/api/requests/garage_requests.dart';
+import 'package:po_frontend/core/app_bar.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:po_frontend/api/models/opening_hour_model.dart';
-import 'package:po_frontend/providers/user_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
-import 'package:po_frontend/api/network/network_helper.dart';
-import 'package:po_frontend/api/network/network_service.dart';
-import 'package:po_frontend/api/network/static_values.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:po_frontend/api/models/opening_hour_model.dart';
-import 'package:po_frontend/api/widgets/dayoftheweek_Widget.dart';
+import 'package:po_frontend/api/widgets/garage_opening_hours_widget.dart';
 import 'package:po_frontend/api/models/price_model.dart';
 import 'package:po_frontend/api/widgets/price_widget.dart';
 import 'package:po_frontend/api/models/garage_settings_model.dart';
 import 'package:po_frontend/api/models/enums.dart';
 
-class GarageInfo extends StatefulWidget {
-  const GarageInfo({Key? key}) : super(key: key);
+class GarageInfoPage extends StatefulWidget {
+  const GarageInfoPage({Key? key, required this.garageId}) : super(key: key);
+
+  final int garageId;
 
   @override
-  State<GarageInfo> createState() => _GarageInfoState();
+  State<GarageInfoPage> createState() => _GarageInfoPageState();
 }
 
-class _GarageInfoState extends State<GarageInfo> {
-
-
+class _GarageInfoPageState extends State<GarageInfoPage> {
   @override
   Widget build(BuildContext context) {
-    final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
-    print(arguments['garageIDargument'].id);
-    final Garage garage = arguments['garageIDargument'];
+    final width = MediaQuery.of(context).size.width;
 
-    final UserProvider userProvider = Provider.of<UserProvider>(context);
-    const Map<int, String> week_days = {} ;
+    return FutureBuilder(
+      future: getGarageData(widget.garageId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData) {
+          final GarageData garageData = snapshot.data as GarageData;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(userProvider.getUser.firstName ?? ''),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [(Colors.indigo), (Colors.indigoAccent)],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-              )),
-        ),
-      ),
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                  child: GradientText(
-                    'Garage Name: ',
-                    textAlign: TextAlign.left,
-                    style: const TextStyle(
-                      //fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    colors: const [(Colors.indigoAccent), (Colors.indigo)],
-                  ),
-                ),
-                Text('${garage.name}',
-                  style: TextStyle(
-                      color: Colors.indigoAccent,
-                      fontWeight: FontWeight.w600
-                  ),
-                )
-              ],
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                  child: GradientText(
-                    'Location: ',
-                    textAlign: TextAlign.left,
-                    style: const TextStyle(
-                      //fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    colors: const [(Colors.indigoAccent), (Colors.indigo)],
-                  ),
-                ),
-                TextButton(
-                    onPressed: () {
-                      showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-    content: FutureBuilder(
-    future: getGarageSettings(garage.id.toString()),
-    builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.done &&
-    snapshot.hasData) {
-    final GarageSettings? garagesetting = snapshot.data;
-    return SizedBox(
-      height: 70,
-      width: 300,
-      child: Center(
-        child: Column(
-        children: [
-        Text("Maximum amount of handicapped lots: " + garagesetting!.maxHandicappedLots.toString()),
-        Text("Maximum height: " + garagesetting!.maxHeight.toString() + " m"),
-        Text("Maximum width: " + garagesetting!.maxWidth.toString() + " m"),
-        ],
-        ),
-      ),
-    );
-    } else if (snapshot.hasError) {
-    return Text("error");
-    }
-    return  Container( height: 70,
-    width: 300,
-    child: Center(child: CircularProgressIndicator()),
-    alignment: Alignment.center,
-    );
-    },
-    ),
-    ));
-                    },
-                    child: Text(
-                    "Press for details",
-                      style: TextStyle(
-                          color: Colors.indigoAccent,
-                          fontWeight: FontWeight.w700
-                      ),
+          Garage garage = garageData.garage;
+          GarageSettings garageSettings = garageData.garageSettings;
+          List<OpeningHour> openingHours = garageData.openingHours;
+          List<Price> prices = garageData.prices;
 
-                    )
-                )
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-              child: SizedBox(
-                height: 40,
-                child: FutureBuilder(
-                  future: getGarageSettings(garage.id.toString()),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done &&
-                        snapshot.hasData) {
-                      final GarageSettings? garagesettings = snapshot.data;
-                      return Text(garagesettings!.location.country + ", " + Province.getProvinceName(garagesettings!.location.province) + ", " + garagesettings!.location.street + " " + garagesettings!.location.number.toString() + ", " + garagesettings!.location.postCode.toString() + " " + garagesettings!.location.municipality + " ",
-                        style: TextStyle(
-                            color: Colors.indigoAccent,
-                            fontWeight: FontWeight.w600
+          return Scaffold(
+            appBar: appBar(garageData.garage.name, true, setState),
+            body: SingleChildScrollView(
+              child: SafeArea(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            gradientText('Free spots:'),
+                            Container(
+                              constraints: const BoxConstraints(
+                                maxHeight: 150,
+                              ),
+                              child: SfRadialGauge(
+                                axes: <RadialAxis>[
+                                  RadialAxis(
+                                    minimum: 0,
+                                    maximum: garage.parkingLots.toDouble(),
+                                    showLabels: false,
+                                    showTicks: false,
+                                    axisLineStyle: const AxisLineStyle(
+                                      thickness: 0.2,
+                                      cornerStyle: CornerStyle.bothCurve,
+                                      color: Colors.grey,
+                                      thicknessUnit: GaugeSizeUnit.factor,
+                                    ),
+                                    pointers: <GaugePointer>[
+                                      RangePointer(
+                                        value: garage.unoccupiedLots.toDouble(),
+                                        cornerStyle: CornerStyle.bothCurve,
+                                        width: 0.2,
+                                        sizeUnit: GaugeSizeUnit.factor,
+                                      )
+                                    ],
+                                    annotations: <GaugeAnnotation>[
+                                      GaugeAnnotation(
+                                        positionFactor: 0.1,
+                                        angle: 90,
+                                        widget: Text(
+                                          '${garage.unoccupiedLots.toStringAsFixed(0)} / ${garage.parkingLots}',
+                                          style: const TextStyle(
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text("error");
-                    }
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
-                      child: Container(
-                        child: CircularProgressIndicator(),
-                        alignment: Alignment.topLeft,
                       ),
-                    );
-                  },
+                    ),
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 20,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            gradientText('Location'),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            SizedBox(
+                              height: 65,
+                              width: width,
+                              child: Text(
+                                '${garageSettings.location.country}, ${Province.getProvinceName(garageSettings.location.province)}, ${garageSettings.location.street} ${garageSettings.location.number}, ${garageSettings.location.postCode} ${garageSettings.location.municipality}',
+                                style: const TextStyle(
+                                  color: Colors.indigo,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 20,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            gradientText('Garage prices:'),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            SizedBox(
+                              height: 70,
+                              child: ListView.builder(
+                                itemBuilder: (context, index) {
+                                  return CurrentPrice(
+                                    price: prices[index],
+                                  );
+                                },
+                                itemCount: prices.length,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 20,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            gradientText('Opening hours'),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            SizedBox(
+                              height: 190,
+                              child: ListView.builder(
+                                itemBuilder: (context, index) {
+                                  return GarageOpeningHoursWidget(
+                                    openingsHours: openingHours[index],
+                                  );
+                                },
+                                itemCount: openingHours.length,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              buildIconWithText(
+                                FontAwesomeIcons.wheelchair,
+                                garageData
+                                    .garage.garageSettings.maxHandicappedLots
+                                    .toString(),
+                              ),
+                              const SizedBox(
+                                width: 30,
+                              ),
+                              buildIconWithText(
+                                FontAwesomeIcons.chargingStation,
+                                garageData
+                                    .garage.garageSettings.maxHandicappedLots
+                                    .toString(),
+                              ),
+                              const SizedBox(
+                                width: 30,
+                              ),
+                              buildIconWithText(
+                                FontAwesomeIcons.arrowsLeftRight,
+                                '${garage.garageSettings.maxWidth.toString()} m',
+                              ),
+                              const SizedBox(
+                                width: 30,
+                              ),
+                              buildIconWithText(
+                                FontAwesomeIcons.arrowsUpDown,
+                                '${garage.garageSettings.maxHeight.toString()} m',
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                      child: Container(
+                        height: 65,
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [(Colors.indigo), (Colors.indigoAccent)],
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                            ),
+                            borderRadius: BorderRadius.circular(20)),
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                            minimumSize: const Size.fromHeight(30),
+                          ),
+                          child: Text(
+                            'Make a reservation',
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.9),
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          onPressed: () {
+                            context.go(
+                              '/home/select-licence-plate',
+                              extra: garage,
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                  ],
                 ),
               ),
             ),
-            Row(
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                  child: GradientText(
-                    'Empty spots left: ',
-                    textAlign: TextAlign.left,
-                    style: const TextStyle(
-                      //fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    colors: const [(Colors.indigoAccent), (Colors.indigo)],
-                  ),
+                const Icon(
+                  Icons.error_outline,
+                  color: Colors.red,
+                  size: 25,
                 ),
-                Text('${garage.unoccupiedLots}/${garage.parkingLots}',
-                  style: TextStyle(
-                      color: Colors.indigoAccent,
-                      fontWeight: FontWeight.w600
-                  ),
-                )
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(snapshot.error.toString()),
               ],
             ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                  child: GradientText(
-                    'Garage Price: ',
-                    textAlign: TextAlign.left,
-                    style: const TextStyle(
-                      //fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    colors: const [(Colors.indigoAccent), (Colors.indigo)],
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-              child: SizedBox(
-                height: 70,
-                child: FutureBuilder(
-                  future: getGaragePrice(garage.id.toString()),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done &&
-                        snapshot.hasData) {
-                      final List<Price>? garageprice = snapshot.data;
-                      return ListView.builder(
-                        itemBuilder: (context, index) {
-                          return CurrentPrice(curprice: garageprice?[index],);
-                        },
-                        itemCount: garageprice?.length,
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text("error");
-                    }
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
-                      child: Container(
-                        child: CircularProgressIndicator(),
-                        alignment: Alignment.topLeft,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                  child: GradientText(
-                    'Opening hours: ',
-                    textAlign: TextAlign.left,
-                    style: const TextStyle(
-                      //fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    colors: const [(Colors.indigoAccent), (Colors.indigo)],
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-              child: SizedBox(
-                height: 190,
-                child: FutureBuilder(
-                  future: getGarageOpening(garage.id.toString()),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done &&
-                        snapshot.hasData) {
-                      final List<OpeningHour>? openingshours = snapshot.data;
-                      print(openingshours);
-                      return ListView.builder(
-                        itemBuilder: (context, index) {
-                          return Dayoftheweek(openingshours: openingshours?[index],);
-                        },
-                        itemCount: openingshours?.length,
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text("error");
-                    }
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
-                      child: Container(
-                          child: CircularProgressIndicator(),
-                        alignment: Alignment.topLeft,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-            // FutureBuilder(
-            //   future: getGaragePriceData(),
-            //     builder: (context,snapshot) {
-            //       if (snapshot.connectionState == ConnectionState.done &&
-            //       snapshot.hasData) {
-            //         return Row(
-            //           children: [
-            //             Padding(
-            //               padding: const EdgeInsets.symmetric(horizontal: 20),
-            //               child: GradientText(
-            //                 "Price: ",
-            //                 textAlign: TextAlign.left,
-            //                 style: TextStyle(
-            //                   //fontWeight: FontWeight.bold,
-            //                   fontSize: 20,
-            //                   fontWeight: FontWeight.bold,
-            //                 ),
-            //                 colors: [(Colors.indigoAccent), (Colors.indigo)],
-            //               ),
-            //             ),
-            //             Text("price...")
-            //           ],
-            //         );
-            //       } else if (snapshot.hasError) {
-            //         return Text("Error...");
-            //       }
-            //       return const Center(
-            //           child: CircularProgressIndicator(),
-            //       );
-            //     }
-            // ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: Container(
-                height: 65,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [(Colors.indigo), (Colors.indigoAccent)],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
-                    borderRadius: BorderRadius.circular(20)),
-                child: TextButton(
-                    style: TextButton.styleFrom(
-                      minimumSize: const Size.fromHeight(30),
-                    ),
-                    child: Text(
-                      'Make a reservation',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onPressed: () async {}),
-              ),
-            ),
-          ],
-        ),
+          );
+        }
+        return Scaffold(
+          appBar: appBar('', true, setState),
+          body: const Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget gradientText(String text) {
+    return GradientText(
+      text,
+      textAlign: TextAlign.left,
+      style: const TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
       ),
+      colors: const [(Colors.indigoAccent), (Colors.indigo)],
+    );
+  }
+
+  Widget buildIconWithText(dynamic icon, String text) {
+    return Column(
+      children: [
+        FaIcon(
+          icon,
+          size: 30,
+          color: Colors.black,
+        ),
+        const SizedBox(
+          width: 3,
+        ),
+        Text(
+          text,
+          style: const TextStyle(
+            fontSize: 20,
+            color: Colors.black,
+          ),
+        ),
+      ],
     );
   }
 }
 
-Future<List<OpeningHour>> getGarageOpening(String garage_ID) async {
-  final response = await NetworkService.sendRequest(
-    requestType: RequestType.get,
-    apiSlug: "api/opening-hours/${garage_ID}",
-    useAuthToken: true,
-  );
-  print("api/opening-hours/${garage_ID}");
-  return await NetworkHelper.filterResponse(
-      callBack: OpeningHourListFromJson,
-      response: response
-  );
-}
+class GarageData {
+  const GarageData({
+    Key? key,
+    required this.garage,
+    required this.openingHours,
+    required this.prices,
+    required this.garageSettings,
+  });
 
-Future<List<Price>> getGaragePrice(String garage_ID) async {
-  final response = await NetworkService.sendRequest(
-      requestType: RequestType.get,
-      apiSlug: "api/prices/${garage_ID}",
-      useAuthToken: true,
-  );
-  return await NetworkHelper.filterResponse(
-      callBack: PriceListFromJson,
-      response: response
-  );
-}
-
-Future<GarageSettings> getGarageSettings(String garage_ID) async {
-  final response = await NetworkService.sendRequest(
-    requestType: RequestType.get,
-    apiSlug: "api/garage-settings/${garage_ID}",
-    useAuthToken: true,
-  );
-  return await NetworkHelper.filterResponse(
-      callBack: GarageSettings.fromJSON,
-      response: response
-  );
+  final Garage garage;
+  final List<OpeningHour> openingHours;
+  final List<Price> prices;
+  final GarageSettings garageSettings;
 }

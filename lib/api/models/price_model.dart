@@ -1,9 +1,5 @@
 import 'package:po_frontend/api/models/enums.dart';
-import 'package:enum_to_string/enum_to_string.dart';
-
 import '../network/network_exception.dart';
-import 'enums.dart';
-import 'enums.dart';
 
 /// Model which represents the backend `Price`-model.
 class Price {
@@ -11,6 +7,7 @@ class Price {
   final int garageId;
   final String priceString;
   final double price;
+  final Duration duration;
   final ValutaEnum valuta;
 
   Price({
@@ -18,6 +15,7 @@ class Price {
     required this.garageId,
     required this.priceString,
     required this.price,
+    required this.duration,
     required this.valuta,
   });
 
@@ -28,20 +26,36 @@ class Price {
       garageId: json['garageId'] as int,
       priceString: json['priceString'] as String,
       price: json['price'] as double,
-      valuta: Valuta.toValutaEnum(json['valuta']) ?? (throw BackendException(['No valid province given.'])),
+      duration: parseDuration(json['duration'] as String),
+      valuta: Valuta.toValutaEnum(json['valuta']) ??
+          (throw BackendException(
+            ['No valid province given.'],
+          )),
     );
   }
 
   /// Serializes a Dart `Price`-object to a JSON-object with the attributes defined in
   /// the database.
-  static Map<String, dynamic> toJSON(Price openingHour) => <String, dynamic>{
-        'id': openingHour.id,
-        'garageId': openingHour.garageId,
-        'priceString': openingHour.priceString,
-        'price': openingHour.price,
-        'valuta': openingHour.valuta.toString(),
+  static Map<String, dynamic> toJSON(Price price) => <String, dynamic>{
+        'id': price.id,
+        'garageId': price.garageId,
+        'priceString': price.priceString,
+        'price': price.price,
+        'duration': price.duration.inSeconds,
+        'valuta': price.valuta.toString(),
       };
+
+  static List<Price> listFromJSON(List<dynamic> json) =>
+      (json).map((jsonPrice) => Price.fromJSON(jsonPrice)).toList();
 }
 
-List<Price> PriceListFromJson(List<dynamic> json) =>
-    (json).map((jsonprice) => Price.fromJSON(jsonprice)).toList();
+Duration parseDuration(String s) {
+  List<String> parts = s.split(':');
+  return Duration(
+    hours: int.parse(parts[0]),
+    minutes: int.parse(parts[1]),
+    seconds: int.parse(
+      parts[2],
+    ),
+  );
+}

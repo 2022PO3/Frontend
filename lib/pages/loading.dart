@@ -11,19 +11,23 @@ class _LoadingState extends State<Loading> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(
-      children: [
-        Container(
-          decoration: const BoxDecoration(
-            color: Colors.indigoAccent,
-            gradient: LinearGradient(
-              colors: [(Colors.indigoAccent), (Colors.indigo)],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              color: Colors.indigoAccent,
+              gradient: LinearGradient(
+                colors: [(Colors.indigoAccent), (Colors.indigo)],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
             ),
           ),
-        )
-      ],
-    ));
+          const Center(
+            child: CircularProgressIndicator(color: Colors.white),
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
 import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
-
-import 'package:simple_gradient_text/simple_gradient_text.dart';
-
-enum ButtonState { init, loading, done, error }
 
 class UserActivationPage extends StatefulWidget {
   const UserActivationPage({
@@ -15,25 +12,16 @@ class UserActivationPage extends StatefulWidget {
     required this.token,
   });
 
-  static const route = 'user-activation';
-
-  final String uidB64;
-  final String token;
+  final String? uidB64;
+  final String? token;
 
   @override
   State<UserActivationPage> createState() => _UserActivationPageState();
 }
 
 class _UserActivationPageState extends State<UserActivationPage> {
-  bool isAnimating = true;
-  ButtonState state = ButtonState.init;
-
   @override
   Widget build(BuildContext context) {
-    final isDone = state == ButtonState.done;
-    final isError = state == ButtonState.error;
-    final isStretched = isAnimating || state == ButtonState.init;
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -56,29 +44,29 @@ class _UserActivationPageState extends State<UserActivationPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: GradientText(
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25),
+                child: Text(
                   'Hello!',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                     fontStyle: FontStyle.italic,
+                    color: Colors.indigoAccent,
                   ),
-                  colors: const [(Colors.indigoAccent), (Colors.indigo)],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: GradientText(
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25),
+                child: Text(
                   'Welcome to Parking Boys.',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                     fontStyle: FontStyle.italic,
+                    color: Colors.indigoAccent,
                   ),
-                  colors: const [(Colors.indigoAccent), (Colors.indigo)],
                 ),
               ),
               const SizedBox(
@@ -99,9 +87,7 @@ class _UserActivationPageState extends State<UserActivationPage> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: isStretched
-                    ? buildButton()
-                    : buildSmallButton(isDone, isError),
+                child: buildButton(),
               ),
             ],
           ),
@@ -134,17 +120,14 @@ class _UserActivationPageState extends State<UserActivationPage> {
           ),
         ),
         onPressed: () async {
-          setState(() => state = ButtonState.loading);
           try {
             await sendActivationRequest();
-            setState(() => state = ButtonState.done);
             if (mounted) {
-              _showSuccessDialog(context);
+              _showSuccessDialog();
               await Future.delayed(const Duration(seconds: 2));
-              if (mounted) Navigator.popAndPushNamed(context, '/login_page');
+              if (mounted) context.go('/login');
             }
           } on BackendException catch (e) {
-            setState(() => state = ButtonState.error);
             showFailureDialog(e.toString());
           }
         },
@@ -152,40 +135,7 @@ class _UserActivationPageState extends State<UserActivationPage> {
     );
   }
 
-  Widget buildSmallButton(bool isDone, bool isError) {
-    List<Color> color = isDone
-        ? [(Colors.green), (Colors.green)]
-        : [(Colors.indigo), (Colors.indigoAccent)];
-
-    if (isError) {
-      color = [(Colors.red), (Colors.red)];
-    }
-    return Container(
-      height: 50,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: LinearGradient(
-          colors: color,
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-        ),
-      ),
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(2),
-          child: isDone
-              ? Icon(
-                  isError ? Icons.done : Icons.close,
-                  size: 52,
-                  color: Colors.white,
-                )
-              : const CircularProgressIndicator(color: Colors.white),
-        ),
-      ),
-    );
-  }
-
-  void _showSuccessDialog(BuildContext context) {
+  void _showSuccessDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -196,7 +146,8 @@ class _UserActivationPageState extends State<UserActivationPage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                context.pop();
+                context.go('/login');
               },
               child: const Text(
                 'OK',
@@ -220,7 +171,7 @@ class _UserActivationPageState extends State<UserActivationPage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                context.pop();
               },
               child: const Text(
                 'OK',

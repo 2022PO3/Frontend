@@ -8,22 +8,22 @@ enum ValutaEnum { EUR, USD, GBP }
 
 class Province {
   static Map<ProvinceEnum, String> provinces = {
-    ProvinceEnum.ANT: "Antwerpen",
-    ProvinceEnum.HAI: "Henegouwen",
-    ProvinceEnum.LIE: "Luik",
-    ProvinceEnum.LIM: "Limburg",
-    ProvinceEnum.LUX: "Luxemburg",
-    ProvinceEnum.NAM: "Namen",
-    ProvinceEnum.OVL: "Oost-Vlaandern",
-    ProvinceEnum.WVL: "West-Vlaanderen",
-    ProvinceEnum.VBR: "Vlaams-Brabant",
-    ProvinceEnum.WBR: "Waals-Brabant",
+    ProvinceEnum.ANT: 'Antwerpen',
+    ProvinceEnum.HAI: 'Henegouwen',
+    ProvinceEnum.LIE: 'Luik',
+    ProvinceEnum.LIM: 'Limburg',
+    ProvinceEnum.LUX: 'Luxemburg',
+    ProvinceEnum.NAM: 'Namen',
+    ProvinceEnum.OVL: 'Oost-Vlaandern',
+    ProvinceEnum.WVL: 'West-Vlaanderen',
+    ProvinceEnum.VBR: 'Vlaams-Brabant',
+    ProvinceEnum.WBR: 'Waals-Brabant',
   };
 
-  static String getProvinceName(ProvinceEnum provinceAbr) {
+  static String getProvinceName(ProvinceEnum? provinceAbr) {
     String? provinceName = provinces[provinceAbr];
     if (provinceName == null) {
-      throw Exception("Province is not defined.");
+      throw Exception('Province is not defined.');
     }
     return provinceName;
   }
@@ -41,16 +41,16 @@ class Province {
 }
 
 class Valuta {
-  Map<ValutaEnum, String> valutas = {
+  static Map<ValutaEnum, String> valutas = {
     ValutaEnum.EUR: '€',
     ValutaEnum.USD: '\$',
     ValutaEnum.GBP: '£',
   };
 
-  String getValutaSymbol(ValutaEnum valuta) {
+  static String getValutaSymbol(ValutaEnum valuta) {
     String? valutaSymbol = valutas[valuta];
     if (valutaSymbol == null) {
-      throw Exception("Province is not defined.");
+      throw Exception('Province is not defined.');
     }
     return valutaSymbol;
   }

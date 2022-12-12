@@ -1,63 +1,95 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
+import 'package:po_frontend/api/requests/user_requests.dart';
+import 'package:po_frontend/pages/auth/register.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:po_frontend/api/models/user_model.dart';
-import 'package:po_frontend/api/network/network_helper.dart';
-import 'package:po_frontend/api/network/network_service.dart';
-import 'package:po_frontend/api/network/static_values.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api/network/network_exception.dart';
-import '../../providers/user_provider.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({super.key, required this.email, required this.password});
+
+  final String? email;
+  final String? password;
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  Future wrongPasswordPopUp() => showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-            title: const Text('Wrong userinfo...'),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.popUntil(
-                            context, ModalRoute.withName('/login_page'));
-                      },
-                      child: const Text('Go Back')),
-                ],
-              )
-            ],
-          ));
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
 
   String userMail = '';
   String userPassword = '';
 
-  //List<UserInfo> users = List.from(UserDataBase);
-
   @override
   Widget build(BuildContext context) {
+    if (automaticLogin(widget.email, widget.password)) {
+      String email = widget.email as String;
+      String password = widget.password as String;
+      return FutureBuilder(
+        future: loginUser(
+          context,
+          email,
+          password,
+        ),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.hasData) {
+            context.go('/home');
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.error_outline,
+                    color: Colors.red,
+                    size: 25,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(snapshot.error.toString()),
+                ],
+              ),
+            );
+          }
+          return Scaffold(
+            appBar: AppBar(
+              flexibleSpace: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [(Colors.indigo), (Colors.indigoAccent)],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                ),
+              ),
+            ),
+            body: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        },
+      );
+    }
     return Scaffold(
-      //backgroundColor: ,
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        title: const Center(
+          child: Text('Parking Boys'),
+        ),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
-              gradient: LinearGradient(
-            colors: [(Colors.indigo), (Colors.indigoAccent)],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          )),
+            gradient: LinearGradient(
+              colors: [(Colors.indigo), (Colors.indigoAccent)],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+          ),
         ),
       ),
       body: SafeArea(
@@ -67,14 +99,12 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(
               height: 10,
             ),
-            //Hello again!
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: GradientText(
                 'Hello Again!',
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  //fontWeight: FontWeight.bold,
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
                 ),
@@ -90,74 +120,26 @@ class _LoginPageState extends State<LoginPage> {
                 "Welcome back, you've been missed!",
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  //fontWeight: FontWeight.bold,
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                 ),
                 colors: const [(Colors.indigoAccent), (Colors.indigo)],
               ),
             ),
-            //email textfield
             const SizedBox(
               height: 30,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.white, width: 4),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Email',
-                        hintStyle: const TextStyle(fontSize: 20),
-                        suffixIcon: IconButton(
-                            onPressed: () {
-                              _emailTextController.clear();
-                            },
-                            icon: const Icon(Icons.clear))),
-                    controller: _emailTextController,
-                  ),
-                ),
-              ),
-            ),
+            TextInput(controller: _emailTextController, label: 'Email'),
             const SizedBox(
               height: 10,
             ),
             //password textfield
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.white, width: 4),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: TextField(
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Password',
-                      hintStyle: const TextStyle(fontSize: 20),
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          _passwordTextController.clear();
-                        },
-                        icon: const Icon(Icons.clear),
-                      ),
-                    ),
-                    controller: _passwordTextController,
-                  ),
-                ),
-              ),
+
+            PasswordInput(
+              controller: _passwordTextController,
+              label: 'Password',
             ),
+
             const SizedBox(
               height: 20,
             ),
@@ -192,10 +174,14 @@ class _LoginPageState extends State<LoginPage> {
                       userPassword = _passwordTextController.text;
                     });
                     try {
-                      User user = await loginUser(userMail, userPassword);
+                      User user = await loginUser(
+                        context,
+                        userMail,
+                        userPassword,
+                      );
                       if (mounted) {
-                        Navigator.pushNamed(
-                            context, '/home');
+                        context
+                            .go(user.twoFactor ? '/login/two-factor' : '/home');
                       }
                     } on BackendException catch (e) {
                       print(e);
@@ -213,7 +199,7 @@ class _LoginPageState extends State<LoginPage> {
                 const Text('Not a member? '),
                 TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/register');
+                    context.go('/login/register');
                   },
                   child: const Text(
                     'Register now',
@@ -227,37 +213,6 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
-  }
-
-  Future<User> loginUser(String emailUser, String passwordUser) async {
-    Map<String, dynamic> body = {
-      'email': emailUser,
-      'password': passwordUser,
-    };
-    final response = await NetworkService.sendRequest(
-      requestType: RequestType.post,
-      apiSlug: StaticValues.postLoginUser,
-      body: body,
-      useAuthToken: false,
-    );
-    // Contains a list of the format [User, String].
-    List userResponse = await NetworkHelper.filterResponse(
-      callBack: User.loginUserFromJson,
-      response: response,
-    );
-
-    // Store the authToken in the Shared Preferences.
-    final pref = await SharedPreferences.getInstance();
-    await pref.setString('authToken', userResponse[1]);
-
-    // Store the user model in the Provider.
-    User user = userResponse[0];
-    if (mounted) {
-      final UserProvider userProvider =
-          Provider.of<UserProvider>(context, listen: false);
-      userProvider.setUser(user);
-    }
-    return user;
   }
 
   void showFailureDialog(String error) {
@@ -278,7 +233,7 @@ class _LoginPageState extends State<LoginPage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                context.pop();
               },
               child: const Text(
                 'OK',
@@ -289,5 +244,9 @@ class _LoginPageState extends State<LoginPage> {
         );
       },
     );
+  }
+
+  bool automaticLogin(String? email, String? password) {
+    return email != null && password != null;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
 import 'package:po_frontend/api/network/network_service.dart';
@@ -11,7 +12,7 @@ enum ButtonState { init, loading, done, error }
 class TwoFactorPage extends StatefulWidget {
   const TwoFactorPage({super.key});
 
-  static const route = '/two-factor';
+  static const route = '/login/two-factor';
 
   @override
   State<TwoFactorPage> createState() => _TwoFactorPageState();
@@ -164,8 +165,8 @@ class _TwoFactorPageState extends State<TwoFactorPage> {
               await sendAuthenticationCode();
               setState(() => state = ButtonState.done);
               await Future.delayed(const Duration(seconds: 1));
-              if (mounted) Navigator.popAndPushNamed(context, '/home');
-            } on BackendException catch (e) {
+              if (mounted) context.go('/home');
+            } on BackendException {
               setState(() => state = ButtonState.error);
               await Future.delayed(const Duration(seconds: 1));
               setState(() => state = ButtonState.init);

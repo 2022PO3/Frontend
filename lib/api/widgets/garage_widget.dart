@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 
 class GarageWidget extends StatelessWidget {
-  const GarageWidget({Key? key, required this.garage}) : super(key: key);
+  const GarageWidget({
+    Key? key,
+    required this.garage,
+  }) : super(key: key);
 
   final Garage garage;
 
@@ -53,12 +57,20 @@ class GarageWidget extends StatelessWidget {
                 ),
               ],
             ),
-            onTap: () {
-              Navigator.pushNamed(context, '/garage_info',arguments: {'garageIDargument': garage});
-            },
-          ),
+            SizedBox(
+              width: 300,
+              child: Text(garage.isFull ? 'Full' : 'Empty places'),
+            ),
+            SizedBox(
+              width: 300,
+              child: Text('${garage.unoccupiedLots}/${garage.parkingLots}'),
+            ),
+          ],
         ),
       ),
+      onTap: () {
+        context.push('/home/garage-info/${garage.id}');
+      },
     );
   }
 }
