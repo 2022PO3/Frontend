@@ -46,9 +46,9 @@ class Location {
   static Map<String, dynamic> toJSON(Location location) => <String, dynamic>{
         'id': location.id,
         'country': location.country,
-        'province': location.province.toString(),
+        'province': location.province.toString().split('.').last,
         'municipality': location.municipality,
-        'postcode': location.postCode,
+        'postCode': location.postCode,
         'street': location.street,
         'number': location.number
       };

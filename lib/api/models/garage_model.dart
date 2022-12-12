@@ -20,6 +20,23 @@ class Garage {
     required this.garageSettings,
   });
 
+  Garage copyWith({
+    int? id,
+    int? userId,
+    String? name,
+    GarageSettings? garageSettings,
+  }) {
+    return Garage(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      name: name ?? this.name,
+      isFull: isFull,
+      unoccupiedLots: unoccupiedLots,
+      parkingLots: parkingLots,
+      garageSettings: garageSettings ?? this.garageSettings,
+    );
+  }
+
   /// Serializes a JSON-object into a Dart `Garage`-object with all properties.
   static Garage fromJSON(Map<String, dynamic> json) {
     return Garage(

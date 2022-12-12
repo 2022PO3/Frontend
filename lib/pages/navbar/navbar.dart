@@ -171,8 +171,11 @@ class _OwnedGaragesListState extends State<_OwnedGaragesList> {
             snapshot.hasData) {
           List<Garage> garages = snapshot.data as List<Garage>;
 
-          return Column(
-            children: garages.map((e) => GarageListTile(garage: e)).toList(),
+          return Padding(
+            padding: const EdgeInsets.only(left: 50.0),
+            child: Column(
+              children: garages.map((e) => GarageListTile(garage: e)).toList(),
+            ),
           );
         } else if (snapshot.hasError) {
           return Padding(
@@ -201,7 +204,8 @@ class GarageListTile extends StatelessWidget {
     return ListTile(
       title: Text(garage.name),
       leading: const Icon(Icons.car_rental_rounded),
-      onTap: context.go(''),
+      onTap: () => context.go('/home/settings/garage/${garage.id}'),
+      trailing: const Icon(Icons.keyboard_arrow_right),
     );
   }
 }

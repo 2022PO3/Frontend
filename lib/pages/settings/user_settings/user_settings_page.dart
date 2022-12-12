@@ -9,16 +9,18 @@ import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/settings_card.dart';
 import 'package:po_frontend/utils/user_data.dart';
 
+import '../widgets/create_or_remove_setting_widget.dart';
+import '../widgets/toggle_setting_widget.dart';
 import 'add_automatic_payment_page.dart';
 
-class UserSettings extends StatefulWidget {
-  const UserSettings({super.key});
+class UserSettingsPage extends StatefulWidget {
+  const UserSettingsPage({super.key});
 
   @override
-  State<UserSettings> createState() => _UserSettingsState();
+  State<UserSettingsPage> createState() => _UserSettingsPageState();
 }
 
-class _UserSettingsState extends State<UserSettings> {
+class _UserSettingsPageState extends State<UserSettingsPage> {
   @override
   Widget build(BuildContext context) {
     final bool userTwoFactor = getUserTwoFactor(context, listen: true);
@@ -160,108 +162,6 @@ class _UserSettingsState extends State<UserSettings> {
           ],
         );
       },
-    );
-  }
-}
-
-class ToggleSettingWidget extends StatelessWidget {
-  const ToggleSettingWidget({
-    super.key,
-    required this.currentValue,
-    required this.onToggle,
-    required this.settingName,
-  });
-
-  final String settingName;
-  final bool currentValue;
-  final Function(bool val) onToggle;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 20,
-          horizontal: 20,
-        ),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  settingName,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 17,
-                  ),
-                ),
-                FlutterSwitch(
-                  height: 30,
-                  width: 60,
-                  activeColor: Colors.green,
-                  inactiveColor: Colors.red,
-                  toggleSize: 15,
-                  value: currentValue,
-                  borderRadius: 30.0,
-                  padding: 8.0,
-                  onToggle: onToggle,
-                ),
-              ],
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class CreateOrRemoveSettingWidget extends StatelessWidget {
-  const CreateOrRemoveSettingWidget({
-    super.key,
-    required this.exists,
-    required this.settingName,
-    required this.onCreate,
-    required this.onRemove,
-  });
-
-  final String settingName;
-  final bool exists;
-  final Future<void> Function() onCreate;
-  final Future<void> Function() onRemove;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 20,
-          horizontal: 20,
-        ),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  settingName,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 17,
-                  ),
-                ),
-                SizedBox(
-                  width: exists ? 100 : 75,
-                  child: RequestButton(
-                    makeRequest: exists ? onRemove : onCreate,
-                    text: exists ? 'Remove' : 'Add',
-                  ),
-                )
-              ],
-            )
-          ],
-        ),
-      ),
     );
   }
 }

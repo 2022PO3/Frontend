@@ -23,6 +23,19 @@ Future<Garage> getGarage(int garageId) async {
   );
 }
 
+Future<Garage> updateGarage(Garage garage) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.put,
+    apiSlug: StaticValues.getGarageSlug,
+    useAuthToken: true,
+    body: garage.toJSON(),
+  );
+  return await NetworkHelper.filterResponse(
+    callBack: Garage.fromJSON,
+    response: response,
+  );
+}
+
 Future<List<Garage>> getAllGarages() async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.get,

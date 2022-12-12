@@ -2,6 +2,7 @@ import 'package:po_frontend/api/models/location_model.dart';
 
 /// Model which represents the backend `GarageSettings`-model.
 class GarageSettings {
+  //x
   final int id;
   final Location location;
   final int electricCars;
