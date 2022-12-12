@@ -3,7 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 
 class GarageWidget extends StatelessWidget {
-  const GarageWidget({Key? key, required this.garage}) : super(key: key);
+  const GarageWidget({
+    Key? key,
+    required this.garage,
+  }) : super(key: key);
 
   final Garage garage;
 

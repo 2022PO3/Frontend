@@ -38,3 +38,7 @@ Future<bool> deleteLicencePlate(LicencePlate lp) async {
 
   return NetworkHelper.validateResponse(response);
 }
+
+Future<bool> uploadCertificateFile() async {
+  return true;
+}
