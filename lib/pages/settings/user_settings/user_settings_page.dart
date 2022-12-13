@@ -24,8 +24,8 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
   @override
   Widget build(BuildContext context) {
     final bool userTwoFactor = getUserTwoFactor(context, listen: true);
-    final bool automaticPayment =
-        getUserAutomaticPayment(context, listen: true);
+    final bool hasAutomaticPayment =
+        getUserHasAutomaticPayment(context, listen: true);
     return Scaffold(
       appBar: appBar('Settings', false, null),
       body: RefreshIndicator(
@@ -56,7 +56,7 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
               ),
               CreateOrRemoveSettingWidget(
                 settingName: 'Automatic Payment',
-                exists: automaticPayment,
+                exists: hasAutomaticPayment,
                 onCreate: () async {
                   context.go(AddAutomaticPaymentPage.route);
                 },

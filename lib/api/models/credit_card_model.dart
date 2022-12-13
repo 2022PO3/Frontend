@@ -4,14 +4,12 @@ import 'package:po_frontend/utils/user_data.dart';
 
 /// Model which represents the backend `Card`-model.
 class CreditCard {
-  final String cardHolder;
   final String number;
   final int? expMonth;
   final int? expYear;
   final String cvc;
 
   CreditCard({
-    required this.cardHolder,
     required this.number,
     this.expMonth,
     this.expYear,
@@ -22,7 +20,6 @@ class CreditCard {
     final String name =
         '${getUserFirstName(context)} ${getUserLastName(context)}';
     return CreditCard(
-      cardHolder: name,
       number: '',
       cvc: '',
     );
@@ -43,7 +40,6 @@ class CreditCard {
     }
 
     return CreditCard(
-      cardHolder: creditCardModel.cardHolderName,
       number: creditCardModel.cardNumber,
       cvc: creditCardModel.cvvCode,
       expMonth: expMonth,
@@ -65,7 +61,6 @@ class CreditCard {
   /// Serializes a JSON-object into a Dart `Card`-object with all properties.
   static CreditCard fromJSON(Map<String, dynamic> json) {
     return CreditCard(
-      cardHolder: json['cardHolder'] as String,
       number: json['number'] as String,
       expMonth: json['expMonth'] as int,
       expYear: json['expYear'] as int,
@@ -76,7 +71,6 @@ class CreditCard {
   /// Serializes a Dart `Card`-object to a JSON-object with the attributes defined in
   /// the database.
   Map<String, dynamic> toJSON() => <String, dynamic>{
-        'cardHolder': cardHolder,
         'number': number,
         'expMonth': expMonth,
         'expYear': expYear,
