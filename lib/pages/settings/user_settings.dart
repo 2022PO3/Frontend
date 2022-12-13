@@ -5,6 +5,8 @@ import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/utils/constants.dart';
+import 'package:po_frontend/pages/payment_widgets/pay_button.dart';
+import 'package:po_frontend/pages/settings/add_automatic_payment_page.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/settings_card.dart';
 import 'package:po_frontend/utils/user_data.dart';
@@ -19,7 +21,9 @@ class UserSettings extends StatefulWidget {
 class _UserSettingsState extends State<UserSettings> {
   @override
   Widget build(BuildContext context) {
-    final bool userTwoFactor = getUserTwoFactor(context);
+    final bool userTwoFactor = getUserTwoFactor(context, listen: true);
+    final bool hasAutomaticPayment =
+        getUserHasAutomaticPayment(context, listen: true);
     return Scaffold(
       appBar: appBar(title: 'Settings'),
       body: Center(
@@ -69,6 +73,26 @@ class _UserSettingsState extends State<UserSettings> {
                     ],
                   ),
                 ),
+      appBar: appBar('Settings', false, null),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await updateUserInfo(context);
+        },
+        child: Builder(builder: (context) {
+          return ListView(
+            physics: const AlwaysScrollableScrollPhysics()
+                .applyTo(const BouncingScrollPhysics()),
+            children: [
+              ToggleSettingWidget(
+                settingName: 'Two Factor enabled',
+                currentValue: userTwoFactor,
+                onToggle: (val) {
+                  if (!userTwoFactor && val) {
+                    _showRedirectDialog();
+                  } else {
+                    _showConfirmationDialog();
+                  }
+                },
               ),
               buildSettingsCard(
                 context,
@@ -76,9 +100,20 @@ class _UserSettingsState extends State<UserSettings> {
                 'Two factor devices',
                 'View and edit your registered two factor devices.',
               ),
+              CreateOrRemoveSettingWidget(
+                settingName: 'Automatic Payment',
+                exists: hasAutomaticPayment,
+                onCreate: () async {
+                  context.go(AddAutomaticPaymentPage.route);
+                },
+                onRemove: () async {
+                  await removeAutomaticPayment();
+                  await updateUserInfo(context);
+                },
+              )
             ],
-          ),
-        ),
+          );
+        }),
       ),
     );
   }
@@ -173,6 +208,108 @@ class _UserSettingsState extends State<UserSettings> {
           ],
         );
       },
+    );
+  }
+}
+
+class ToggleSettingWidget extends StatelessWidget {
+  const ToggleSettingWidget({
+    super.key,
+    required this.currentValue,
+    required this.onToggle,
+    required this.settingName,
+  });
+
+  final String settingName;
+  final bool currentValue;
+  final Function(bool val) onToggle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: 20,
+          horizontal: 20,
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  settingName,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 17,
+                  ),
+                ),
+                FlutterSwitch(
+                  height: 30,
+                  width: 60,
+                  activeColor: Colors.green,
+                  inactiveColor: Colors.red,
+                  toggleSize: 15,
+                  value: currentValue,
+                  borderRadius: 30.0,
+                  padding: 8.0,
+                  onToggle: onToggle,
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CreateOrRemoveSettingWidget extends StatelessWidget {
+  const CreateOrRemoveSettingWidget({
+    super.key,
+    required this.exists,
+    required this.settingName,
+    required this.onCreate,
+    required this.onRemove,
+  });
+
+  final String settingName;
+  final bool exists;
+  final Future<void> Function() onCreate;
+  final Future<void> Function() onRemove;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: 20,
+          horizontal: 20,
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  settingName,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 17,
+                  ),
+                ),
+                SizedBox(
+                  width: exists ? 100 : 75,
+                  child: RequestButton(
+                    makeRequest: exists ? onRemove : onCreate,
+                    text: exists ? 'Remove' : 'Add',
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
+      ),
     );
   }
 }

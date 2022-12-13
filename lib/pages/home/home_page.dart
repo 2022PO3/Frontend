@@ -146,16 +146,18 @@ class CurrentParkingSessionsListWidget extends StatelessWidget {
               dimension: 0,
             );
           } else {
-            return ListView.builder(
-              shrinkWrap: true,
-              physics: const BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                return CurrentParkingSessionWidget(
-                  licencePlate: licencePlates[index],
-                );
-              },
-              itemCount: licencePlates.length,
+            return Scrollbar(
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  return CurrentParkingSessionWidget(
+                    licencePlate: licencePlates[index],
+                  );
+                },
+                itemCount: licencePlates.length,
+              ),
             );
           }
         } else if (snapshot.hasError) {

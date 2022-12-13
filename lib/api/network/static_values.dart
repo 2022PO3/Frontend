@@ -24,6 +24,7 @@ class StaticValues {
   static const String licencePlatesSlug = 'api/licence-plates';
   static const String createPaymentSessionSlug = 'api/checkout/create-session';
   static const String getPaymentPreviewSlug = 'api/checkout/preview';
+  static const String stripeConnectionSlug = 'api/stripe-connection';
 
   // Two factor slugs
   static const String addTwoFactorDeviceSlug = 'api/auth/totp/create';

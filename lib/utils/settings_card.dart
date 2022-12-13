@@ -15,33 +15,26 @@ Widget buildSettingsCard(
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 17,
-                  ),
-                ),
-              ],
+            Row(), // Make widget as wide as possible
+            Text(
+              title,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 17,
+              ),
             ),
             const SizedBox(
               height: 3,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  subtitle,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    color: Colors.grey,
-                  ),
-                )
-              ],
+            Text(
+              subtitle,
+              style: const TextStyle(
+                fontSize: 15,
+                color: Colors.grey,
+              ),
+              maxLines: 3,
             ),
           ],
         ),

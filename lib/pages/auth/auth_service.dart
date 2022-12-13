@@ -45,7 +45,7 @@ class AuthService {
     bool debug = StaticValues.debug;
     if (debug) {
       print('Debug enabled, redirecting to localhost.');
-      return 'http://192.168.49.1:8000/';
+      return 'http://192.168.135.56:8000/';
     }
     try {
       http.Response response = await http.get(
