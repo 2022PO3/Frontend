@@ -59,8 +59,10 @@ class ReservationLicencePlateWidget extends StatelessWidget {
 }
 
 class AddLicencePlateWidget extends StatefulWidget {
-  const AddLicencePlateWidget({Key? key, required this.licencePlate})
-      : super(key: key);
+  const AddLicencePlateWidget({
+    Key? key,
+    required this.licencePlate,
+  }) : super(key: key);
 
   final LicencePlate licencePlate;
   @override
@@ -70,24 +72,37 @@ class AddLicencePlateWidget extends StatefulWidget {
 class _AddLicencePlateWidgetState extends State<AddLicencePlateWidget> {
   @override
   Widget build(BuildContext context) {
+    final bool enabled = widget.licencePlate.enabled;
     return InkWell(
       child: Card(
+        color: enabled ? Colors.green.shade300 : Colors.red.shade300,
         child: Padding(
           padding: const EdgeInsets.all(24.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+          child: Column(
             children: [
-              const Icon(
-                Icons.directions_car_rounded,
-                size: 50,
-              ),
-              const SizedBox(
-                width: 10,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Icon(
+                    Icons.directions_car_rounded,
+                    size: 50,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    widget.licencePlate.formatLicencePlate(),
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
               Text(
-                widget.licencePlate.formatLicencePlate(),
-                style: const TextStyle(
-                  fontSize: 20,
+                enabled ? 'Confirmed' : 'Not confirmed',
+                style: TextStyle(
+                  color: enabled ? Colors.green : Colors.red,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -95,9 +110,8 @@ class _AddLicencePlateWidgetState extends State<AddLicencePlateWidget> {
           ),
         ),
       ),
-      onLongPress: () {
-        showLicencePlateDeletionPopUp(widget.licencePlate);
-      },
+      onTap: () => showEnableLicencePlatePopUp(widget.licencePlate),
+      onLongPress: () => showLicencePlateDeletionPopUp(widget.licencePlate),
     );
   }
 
@@ -132,6 +146,48 @@ class _AddLicencePlateWidgetState extends State<AddLicencePlateWidget> {
               },
               child: const Text(
                 'Confirm',
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                context.pop();
+              },
+              child: const Text(
+                'Cancel',
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showEnableLicencePlatePopUp(LicencePlate licencePlate) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Enable this licence plate?'),
+          content: const Text(
+            'You can only enable this licence plate when you are the owner of this licence plate. You can verify your ownership by uploading the registration certificate of your licence plate. Continue by clicking Next.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                context.pop();
+                context.push(
+                  '/home/profile/licence-plates/enable',
+                  extra: licencePlate,
+                );
+              },
+              child: const Text(
+                'Next',
                 style: TextStyle(
                   color: Colors.black,
                 ),
