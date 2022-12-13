@@ -2,7 +2,6 @@ import 'package:po_frontend/api/models/location_model.dart';
 
 /// Model which represents the backend `GarageSettings`-model.
 class GarageSettings {
-  //x
   final int id;
   final Location location;
   final int electricCars;
@@ -18,6 +17,24 @@ class GarageSettings {
     required this.maxWidth,
     required this.maxHandicappedLots,
   });
+
+  GarageSettings copyWith({
+    int? id,
+    Location? location,
+    int? electricCars,
+    double? maxHeight,
+    double? maxWidth,
+    int? maxHandicappedLots,
+  }) {
+    return GarageSettings(
+      id: id ?? this.id,
+      location: location ?? this.location,
+      electricCars: electricCars ?? this.electricCars,
+      maxHeight: maxHeight ?? this.maxHeight,
+      maxWidth: maxWidth ?? this.maxWidth,
+      maxHandicappedLots: maxHandicappedLots ?? this.maxHandicappedLots,
+    );
+  }
 
   /// Serializes a JSON-object into a Dart `GarageSettings`-object with all properties.
   static GarageSettings fromJSON(Map<String, dynamic> json) {

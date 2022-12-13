@@ -26,6 +26,26 @@ class Location {
     return '$street $number, $municipality, $country';
   }
 
+  Location copyWith({
+    int? id,
+    String? country,
+    ProvinceEnum? province,
+    String? municipality,
+    int? postCode,
+    String? street,
+    int? number,
+  }) {
+    return Location(
+      id: id ?? this.id,
+      country: country ?? this.country,
+      province: province ?? this.province,
+      municipality: municipality ?? this.municipality,
+      postCode: postCode ?? this.postCode,
+      street: street ?? this.street,
+      number: number ?? this.number,
+    );
+  }
+
   /// Serializes a JSON-object into a Dart `Location`-object with all properties.
   static Location fromJSON(Map<String, dynamic> json) {
     ProvinceEnum? province =
