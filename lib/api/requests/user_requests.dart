@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:po_frontend/api/models/credit_card_model.dart';
 import 'package:po_frontend/api/models/device_model.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
 import 'package:po_frontend/providers/user_provider.dart';
@@ -153,6 +154,27 @@ Future<bool> removeDevice(Device device) async {
     apiSlug: StaticValues.twoFactorDevicesSlug,
     useAuthToken: true,
     pk: device.id,
+  );
+
+  return NetworkHelper.validateResponse(response);
+}
+
+Future<bool> addAutomaticPayment(CreditCard card) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.post,
+    apiSlug: StaticValues.stripeConnectionSlug,
+    body: card.toJSON(),
+    useAuthToken: true,
+  );
+
+  return NetworkHelper.validateResponse(response);
+}
+
+Future<bool> removeAutomaticPayment() async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.delete,
+    apiSlug: StaticValues.stripeConnectionSlug,
+    useAuthToken: true,
   );
 
   return NetworkHelper.validateResponse(response);

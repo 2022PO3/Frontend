@@ -587,68 +587,52 @@ class _UserInfoState extends State<UserInfo> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 25),
-                buildUserField(
-                  'User ID',
-                  getUserId(context).toString(),
-                  false,
-                  null,
-                  null,
+                UserField(
+                  fieldName: 'User ID',
+                  fieldNameValue: getUserId(context).toString(),
                 ),
-                buildUserField(
-                  'First name',
-                  getUserFirstName(
+                UserField(
+                  fieldName: 'First name',
+                  fieldNameValue: getUserFirstName(
                     context,
                     dummy: 'No first name given',
                   ),
-                  true,
-                  openDialog,
-                  [
-                    'first name',
-                    userFirstName,
-                    newFirstNameTextController,
-                    setFirstName,
-                  ],
+                  onButtonPressed: () => openDialog(
+                      fieldName: 'first name',
+                      newFieldValue: userFirstName,
+                      textController: newFirstNameTextController,
+                      updateFunction: setFirstName),
                 ),
-                buildUserField(
-                  'Last name',
-                  getUserLastName(
+                UserField(
+                  fieldName: 'Last name',
+                  fieldNameValue: getUserLastName(
                     context,
                     dummy: 'No last name given',
                   ),
-                  true,
-                  openDialog,
-                  [
-                    'last name',
-                    userLastName,
-                    newLastNameTextController,
-                    setLastName,
-                  ],
+                  onButtonPressed: () => openDialog(
+                      fieldName: 'last name',
+                      newFieldValue: userLastName,
+                      textController: newLastNameTextController,
+                      updateFunction: setLastName),
                 ),
-                buildUserField(
-                  'Email address',
-                  getUserEmail(context),
-                  true,
-                  openDialog,
-                  [
-                    'email',
-                    userEmail,
-                    newEmailTextController,
-                    setEmail,
-                  ],
+                UserField(
+                  fieldName: 'Email address',
+                  fieldNameValue: getUserEmail(context),
+                  onButtonPressed: () => openDialog(
+                      fieldName: 'email',
+                      newFieldValue: userEmail,
+                      textController: newEmailTextController,
+                      updateFunction: setEmail),
                 ),
-                buildUserField(
-                  'Province',
-                  getUserLocation(context),
-                  true,
-                  openLocationDialog,
-                  null,
+                UserField(
+                  fieldName: 'Province',
+                  fieldNameValue: getUserLocation(context),
+                  onButtonPressed: () => openLocationDialog(),
                 ),
-                buildUserField(
-                  'Favorite garage name',
-                  'test',
-                  true,
-                  openLocationDialog,
-                  null,
+                UserField(
+                  fieldName: 'Favorite garage name',
+                  fieldNameValue: 'test',
+                  onButtonPressed: () => openLocationDialog(),
                 ),
                 const Divider(
                   endIndent: 10,
@@ -678,63 +662,11 @@ class _UserInfoState extends State<UserInfo> {
     );
   }
 
-  Widget buildUserField(
-    String fieldName,
-    String fieldNameValue,
-    bool button,
-    Function? dialogFunction,
-    List? functionArguments,
-  ) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 8,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Text(
-                  '$fieldName:',
-                  style: const TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
-                const SizedBox(
-                  width: 2,
-                ),
-                Text(
-                  fieldNameValue,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            if (button)
-              TextButton(
-                onPressed: () {
-                  if (dialogFunction != null && functionArguments != null) {
-                    dialogFunction(functionArguments);
-                  }
-                },
-                child: const Text('Change'),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void openDialog(List arguments) {
-    String fieldName = arguments[0];
-    String newFieldValue = arguments[1];
-    TextEditingController textController = arguments[2];
-    Function updateFunction = arguments[3];
-
+  void openDialog(
+      {required String fieldName,
+      required String newFieldValue,
+      required TextEditingController textController,
+      required Function updateFunction}) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -860,5 +792,59 @@ class _UserInfoState extends State<UserInfo> {
     User oldUser = getUser(context);
     oldUser.favGarageId = favGarageId;
     tryUpdateUser(oldUser);
+  }
+}
+
+class UserField extends StatelessWidget {
+  const UserField({
+    super.key,
+    required this.fieldName,
+    required this.fieldNameValue,
+    this.onButtonPressed,
+  });
+
+  final String fieldName;
+  final String fieldNameValue;
+  final Function()? onButtonPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 8,
+        ),
+        child: Row(
+          children: [
+            Text(
+              '$fieldName:',
+              style: const TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            const SizedBox(
+              width: 2,
+            ),
+            Expanded(
+              child: Text(
+                fieldNameValue,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                maxLines: 2,
+                softWrap: true,
+              ),
+            ),
+            if (onButtonPressed != null)
+              TextButton(
+                onPressed: onButtonPressed,
+                child: const Text('Change'),
+              ),
+          ],
+        ),
+      ),
+    );
   }
 }
