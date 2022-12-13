@@ -146,14 +146,11 @@ Future<ParkingLot> assignParkingLot(
 Future<List<Garage>> getOwnedGarages(User owner) async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.get,
-    apiSlug: StaticValues.getGaragesSlug,
+    apiSlug: StaticValues.getOwnedGaragesSlug,
     useAuthToken: true,
   );
   return await NetworkHelper.filterResponse(
-    callBack: (List<dynamic> json) {
-      final garages = Garage.listFromJSON(json);
-      return garages.where((garage) => garage.userId == owner.id).toList();
-    },
+    callBack: Garage.listFromJSON,
     response: response,
   );
 }

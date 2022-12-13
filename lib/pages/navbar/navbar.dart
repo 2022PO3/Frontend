@@ -154,14 +154,9 @@ class GarageSettingsTile extends StatelessWidget {
   }
 }
 
-class _OwnedGaragesList extends StatefulWidget {
+class _OwnedGaragesList extends StatelessWidget {
   const _OwnedGaragesList({Key? key}) : super(key: key);
 
-  @override
-  State<_OwnedGaragesList> createState() => _OwnedGaragesListState();
-}
-
-class _OwnedGaragesListState extends State<_OwnedGaragesList> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Garage>>(

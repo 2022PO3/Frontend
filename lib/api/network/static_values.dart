@@ -1,8 +1,9 @@
 class StaticValues {
   const StaticValues._();
   // Garage slugs
-  static const String getGaragesSlug = 'api/garages';
   static const String getGarageSlug = 'api/garage';
+  static const String getGaragesSlug = 'api/garages';
+  static const String getOwnedGaragesSlug = 'api/user/garages';
   static const String getGarageOpeningHoursSlug = 'api/opening-hours';
   static const String getGaragePricesSlug = 'api/prices';
   static const String getGarageSettingsSlug = 'api/garage-settings';
