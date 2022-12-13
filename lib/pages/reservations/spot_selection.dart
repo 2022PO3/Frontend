@@ -30,7 +30,11 @@ class _SpotSelectionPageState extends State<SpotSelectionPage> {
     final DateTime endDate = widget.garageLicenceAndTime.endDate;
 
     return Scaffold(
-      appBar: appBar('Spot selection', true, setState),
+      appBar: appBar(
+        title: 'Spot selection',
+        refreshButton: true,
+        refreshFunction: () => setState(() => {}),
+      ),
       body: FutureBuilder(
         future: getGarageParkingLots(garage.id, {
           'fromDate': startDate.toIso8601String(),

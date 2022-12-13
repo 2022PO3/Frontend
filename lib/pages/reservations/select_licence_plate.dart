@@ -22,7 +22,13 @@ class _SelectLicencePlatePageState extends State<SelectLicencePlatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar('Select licence plate', true, setState),
+      appBar: appBar(
+        title: 'Select licence plate',
+        refreshButton: true,
+        refreshFunction: () => setState(
+          () => {},
+        ),
+      ),
       body: FutureBuilder(
         future: getLicencePlates(),
         builder: (context, snapshot) {

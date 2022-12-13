@@ -46,7 +46,7 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
     hours.add('0');
 
     return Scaffold(
-      appBar: appBar('New reservation', false, null),
+      appBar: appBar(title: 'New reservation'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

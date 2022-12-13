@@ -15,7 +15,11 @@ class _UserReservationsState extends State<UserReservations> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar('My reservations', true, setState),
+      appBar: appBar(
+        title: 'My reservations',
+        refreshButton: true,
+        refreshFunction: () => setState(() => {}),
+      ),
       body: FutureBuilder(
         future: getReservations(),
         builder: (context, snapshot) {

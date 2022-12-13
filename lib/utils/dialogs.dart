@@ -3,6 +3,25 @@ import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/utils/constants.dart';
 
+void showFailureDialog(BuildContext context, BackendException error) {
+  return showFrontendDialog1(
+    context,
+    'Server Exception',
+    [
+      Text(
+          'We\'re sorry, but the server returned an error: ${error.toString()}.'),
+    ],
+  );
+}
+
+void showSuccessDialog(BuildContext context, String title, String body) {
+  return showFrontendDialog1(
+    context,
+    title,
+    [Text(body)],
+  );
+}
+
 void showFrontendDialog2(
   BuildContext context,
   String title,
@@ -17,65 +36,34 @@ void showFrontendDialog2(
       return AlertDialog(
         shape: Constants.cardBorder,
         title: Text(title),
+        titlePadding: const EdgeInsets.only(
+          left: 15,
+          right: 15,
+          top: 15,
+        ),
         contentPadding: const EdgeInsets.only(
-          top: 10,
+          top: 15,
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ...children,
             const SizedBox(
-              height: 10,
+              height: 20,
             ),
             Row(
               children: [
-                Expanded(
-                  child: InkWell(
-                    child: Container(
-                      padding: const EdgeInsets.only(
-                        top: 20.0,
-                        bottom: 20.0,
-                      ),
-                      decoration: const BoxDecoration(
-                        color: Colors.indigoAccent,
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(
-                            Constants.cardBorderRadius,
-                          ),
-                        ),
-                      ),
-                      child: Text(
-                        leftButtonText,
-                        style: const TextStyle(color: Colors.white),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    onTap: () => leftButtonFunction(),
-                  ),
+                buildDialogButton(
+                  leftButtonText,
+                  Colors.indigoAccent,
+                  () => leftButtonFunction(),
+                  leftBorderRadius: true,
                 ),
-                Expanded(
-                  child: InkWell(
-                    child: Container(
-                      padding: const EdgeInsets.only(
-                        top: 20.0,
-                        bottom: 20.0,
-                      ),
-                      decoration: const BoxDecoration(
-                        color: Colors.redAccent,
-                        borderRadius: BorderRadius.only(
-                          bottomRight: Radius.circular(
-                            Constants.cardBorderRadius,
-                          ),
-                        ),
-                      ),
-                      child: Text(
-                        rightButtonText,
-                        style: const TextStyle(color: Colors.white),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    onTap: () => context.pop(),
-                  ),
+                buildDialogButton(
+                  rightButtonText,
+                  Colors.red,
+                  () => context.pop(),
+                  rightBorderRadius: true,
                 ),
               ],
             ),
@@ -121,39 +109,19 @@ void showFrontendDialog1(
               ),
             ),
             const SizedBox(
-              height: 15,
+              height: 20,
             ),
             Row(
               children: [
-                Expanded(
-                  child: InkWell(
-                    child: Container(
-                      padding: const EdgeInsets.only(
-                        top: 20.0,
-                        bottom: 20.0,
-                      ),
-                      decoration: const BoxDecoration(
-                        color: Colors.indigoAccent,
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(
-                            Constants.cardBorderRadius,
-                          ),
-                          bottomRight: Radius.circular(
-                            Constants.cardBorderRadius,
-                          ),
-                        ),
-                      ),
-                      child: Text(
-                        buttonText,
-                        style: const TextStyle(color: Colors.white),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    onTap: () {
-                      buttonFunction != null ? buttonFunction() : context.pop();
-                    },
-                  ),
-                ),
+                buildDialogButton(
+                  buttonText,
+                  Colors.indigoAccent,
+                  buttonFunction != null
+                      ? () => buttonFunction()
+                      : () => context.pop(),
+                  leftBorderRadius: true,
+                  rightBorderRadius: true,
+                )
               ],
             ),
           ],
@@ -163,51 +131,44 @@ void showFrontendDialog1(
   );
 }
 
-class FrontendDialog extends AlertDialog {}
-
-void showFailureDialog(BuildContext context, BackendException error) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Server exception'),
-        content: Text(
-            'We\'re sorry, but the server returned an error: ${error.toString()}.'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              context.pop();
-            },
-            child: const Text(
-              'OK',
-              style: TextStyle(color: Colors.black),
-            ),
+Widget buildDialogButton(
+  String buttonText,
+  Color buttonColor,
+  Function() buttonFunction, {
+  bool rightBorderRadius = false,
+  bool leftBorderRadius = true,
+}) {
+  return Expanded(
+    child: InkWell(
+      child: Container(
+        padding: const EdgeInsets.only(
+          top: 15,
+          bottom: 15,
+        ),
+        decoration: BoxDecoration(
+          color: buttonColor,
+          borderRadius: BorderRadius.only(
+            bottomLeft: leftBorderRadius
+                ? Radius.circular(
+                    Constants.borderRadius,
+                  )
+                : Radius.circular(0),
+            bottomRight: rightBorderRadius
+                ? Radius.circular(
+                    Constants.borderRadius,
+                  )
+                : Radius.circular(0),
           ),
-        ],
-      );
-    },
-  );
-}
-
-void showSuccessDialog(BuildContext context, String title, String body) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text(title),
-        content: Text(body),
-        actions: [
-          TextButton(
-            onPressed: () {
-              context.pop();
-            },
-            child: const Text(
-              'OK',
-              style: TextStyle(color: Colors.black),
-            ),
+        ),
+        child: Text(
+          buttonText,
+          style: const TextStyle(
+            color: Colors.white,
           ),
-        ],
-      );
-    },
+          textAlign: TextAlign.center,
+        ),
+      ),
+      onTap: () => buttonFunction(),
+    ),
   );
 }

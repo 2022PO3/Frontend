@@ -27,7 +27,7 @@ class _ConfirmReservationPageState extends State<ConfirmReservationPage> {
     final Reservation reservation = widget.reservation;
 
     return Scaffold(
-      appBar: appBar('Reservation overview', false, null),
+      appBar: appBar(title: 'Reservation overview'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

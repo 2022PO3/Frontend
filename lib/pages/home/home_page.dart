@@ -49,7 +49,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       endDrawer: const Navbar(),
-      appBar: appBar(getUserFirstName(context), false, null),
+      appBar: appBar(
+        title: getUserFirstName(context),
+      ),
       body: RefreshIndicator(
         onRefresh: getFutures,
         child: CustomScrollView(
@@ -214,6 +216,7 @@ class CurrentParkingSessionWidget extends StatelessWidget {
     return SizedBox(
       width: MediaQuery.of(context).size.shortestSide,
       child: Card(
+        shape: Constants.cardBorder,
         child: LayoutBuilder(
           builder: (context, constraints) {
             return Column(
@@ -492,10 +495,10 @@ class _GarageListWidgetState extends State<GarageListWidget> {
                           color: Colors.redAccent,
                           borderRadius: BorderRadius.only(
                             bottomRight: Radius.circular(
-                              Constants.cardBorderRadius,
+                              Constants.borderRadius,
                             ),
                             bottomLeft: Radius.circular(
-                              Constants.cardBorderRadius,
+                              Constants.borderRadius,
                             ),
                           ),
                         ),

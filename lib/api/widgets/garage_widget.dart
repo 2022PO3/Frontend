@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:po_frontend/api/models/enums.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/location_model.dart';
 import 'package:po_frontend/utils/constants.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class GarageWidget extends StatelessWidget {
   const GarageWidget({
@@ -25,7 +27,7 @@ class GarageWidget extends StatelessWidget {
               context,
               garage,
               height,
-              Constants.cardBorderRadius,
+              Constants.borderRadius,
             ),
             buildGarageInformationBanner(
               garage,
@@ -47,66 +49,63 @@ class GarageWidget extends StatelessWidget {
     double borderRadius,
   ) {
     final double width = MediaQuery.of(context).size.shortestSide;
-    final bool full = garage.parkingLots == garage.unoccupiedLots;
-    final bannerText = full ? 'Full!' : 'Free';
-    final int freeSpots = garage.parkingLots - garage.unoccupiedLots;
+    final double maxSpots = garage.parkingLots.toDouble();
+    final double unoccupiedLots = garage.unoccupiedLots.toDouble();
+    final bool full = maxSpots == unoccupiedLots;
 
     return Container(
       width: width / 6,
       height: height / 11,
       decoration: BoxDecoration(
-        color: determineFreePlacesColor(garage),
         borderRadius: BorderRadius.horizontal(
           left: Radius.circular(borderRadius),
         ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.only(
-          top: 5,
-          left: 5,
-          right: 5,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              bannerText,
-              style: const TextStyle(
-                fontSize: 15,
+      child: SfRadialGauge(
+        axes: <RadialAxis>[
+          RadialAxis(
+            startAngle: 270,
+            endAngle: 270,
+            minimum: 0,
+            maximum: maxSpots == 0 ? 1 : maxSpots,
+            showLabels: false,
+            showTicks: false,
+            axisLineStyle: const AxisLineStyle(
+              thickness: 0.15,
+              cornerStyle: CornerStyle.bothFlat,
+              color: Colors.grey,
+              thicknessUnit: GaugeSizeUnit.factor,
+            ),
+            pointers: <GaugePointer>[
+              RangePointer(
+                value: unoccupiedLots == maxSpots ? 1 : unoccupiedLots,
+                width: 0.15,
+                sizeUnit: GaugeSizeUnit.factor,
+                cornerStyle:
+                    full ? CornerStyle.bothFlat : CornerStyle.bothCurve,
+                color: determineFreePlacesColor(garage),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
-              children: [
-                Text(
-                  freeSpots.toString(),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25,
-                  ),
+            ],
+            annotations: <GaugeAnnotation>[
+              GaugeAnnotation(
+                angle: 90,
+                widget: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      (garage.parkingLots - garage.unoccupiedLots).toString(),
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Text('left'),
+                  ],
                 ),
-                const SizedBox(
-                  width: 1,
-                ),
-                const Text(
-                  '/',
-                ),
-                const SizedBox(
-                  width: 1,
-                ),
-                Text(
-                  garage.parkingLots.toString(),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: width / 22,
-            ),
-          ],
-        ),
+              )
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -141,11 +140,11 @@ class GarageWidget extends StatelessWidget {
               height: 2,
             ),
             Text(
-              '${location.street} ${location.number}',
+              Province.getProvinceName(location.province),
               style: locationTextStyle,
             ),
             Text(
-              '${location.municipality}, ${location.postCode}',
+              '${location.street} ${location.number}, ${location.municipality}, ${location.postCode}',
               style: locationTextStyle,
             ),
           ],

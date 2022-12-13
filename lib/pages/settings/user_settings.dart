@@ -21,7 +21,7 @@ class _UserSettingsState extends State<UserSettings> {
   Widget build(BuildContext context) {
     final bool userTwoFactor = getUserTwoFactor(context);
     return Scaffold(
-      appBar: appBar('Settings', false, null),
+      appBar: appBar(title: 'Settings'),
       body: Center(
         child: Container(
           constraints: const BoxConstraints(maxWidth: 400),
