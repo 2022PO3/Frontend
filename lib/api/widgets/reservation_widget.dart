@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
+import 'package:po_frontend/utils/constants.dart';
 
 class ReservationWidget extends StatelessWidget {
   const ReservationWidget({
@@ -14,8 +15,12 @@ class ReservationWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(5),
       child: Card(
+        shape: Constants.cardBorder,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+          padding: const EdgeInsets.symmetric(
+            vertical: 8,
+            horizontal: 20,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

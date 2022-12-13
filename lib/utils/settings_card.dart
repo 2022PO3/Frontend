@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:po_frontend/utils/constants.dart';
 
 Widget buildSettingsCard(
   BuildContext context,
@@ -8,6 +9,7 @@ Widget buildSettingsCard(
   String subtitle,
 ) {
   return Card(
+    shape: Constants.cardBorder,
     child: InkWell(
       onTap: () => context.push(path),
       child: Padding(

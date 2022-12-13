@@ -4,6 +4,7 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
+import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/settings_card.dart';
 import 'package:po_frontend/utils/user_data.dart';
@@ -28,6 +29,7 @@ class _UserSettingsState extends State<UserSettings> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Card(
+                shape: Constants.cardBorder,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     vertical: 20,

@@ -338,9 +338,11 @@ class GarageListWidget extends StatelessWidget {
 
           return Column(
             children: garages
-                .map((e) => GarageWidget(
-                      garage: e,
-                    ))
+                .map(
+                  (e) => GarageWidget(
+                    garage: e,
+                  ),
+                )
                 .toList(),
           );
         } else if (snapshot.hasError) {
