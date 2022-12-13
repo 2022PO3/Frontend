@@ -125,21 +125,18 @@ class _RequestButtonState<T> extends State<RequestButton> {
   }
 
   Widget _buildButton(BuildContext context, String text) {
-    return FractionallySizedBox(
-      widthFactor: 1,
-      child: ElevatedButton(
-          style: ButtonStyle(
-            shape: MaterialStateProperty.all(
-              const StadiumBorder(),
-            ),
+    return ElevatedButton(
+        style: ButtonStyle(
+          shape: MaterialStateProperty.all(
+            const StadiumBorder(),
           ),
-          onPressed: () {
-            setState(() {
-              future = widget.makeRequest() as Future<T>?;
-            });
-          },
-          child: Text(text)),
-    );
+        ),
+        onPressed: () {
+          setState(() {
+            future = widget.makeRequest() as Future<T>?;
+          });
+        },
+        child: Text(text));
   }
 }
 

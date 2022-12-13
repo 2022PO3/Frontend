@@ -53,8 +53,8 @@ class _AddAutomaticPaymentPageState extends State<AddAutomaticPaymentPage> {
                     glassmorphismConfig: Glassmorphism.defaultConfig(),
                     cardNumber: card.number,
                     expiryDate: card.shortExpDate,
-                    cardHolderName: card.cardHolder,
                     cvvCode: card.cvc,
+                    cardHolderName: '',
                     showBackView: isCvvFocused,
                     obscureCardNumber: false,
                     obscureCardCvv: false,
@@ -71,7 +71,8 @@ class _AddAutomaticPaymentPageState extends State<AddAutomaticPaymentPage> {
                 obscureNumber: false,
                 cardNumber: card.number,
                 cvvCode: card.cvc,
-                cardHolderName: card.cardHolder,
+                cardHolderName: '',
+                isHolderNameVisible: false,
                 expiryDate: card.shortExpDate,
                 onCreditCardModelChange: onCreditCardModelChange,
                 themeColor: primaryColor,
@@ -95,15 +96,20 @@ class _AddAutomaticPaymentPageState extends State<AddAutomaticPaymentPage> {
                   primaryColor: primaryColor,
                 ),
               ),
-              RequestButton<void>(
-                text: 'Add Card',
-                makeRequest: () async {
-                  if (formKey.currentState!.validate()) {
-                    await addAutomaticPayment(card);
-                    context.pop();
-                    await updateUserInfo(context);
-                  }
-                },
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 30.0),
+                  child: RequestButton<void>(
+                    text: 'Add Card',
+                    makeRequest: () async {
+                      if (formKey.currentState!.validate()) {
+                        await addAutomaticPayment(card);
+                        context.pop();
+                        await updateUserInfo(context);
+                      }
+                    },
+                  ),
+                ),
               ),
             ],
           ),
