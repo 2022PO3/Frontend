@@ -5,23 +5,28 @@ class LicencePlate {
   final int? garageId;
   final int userId;
   final DateTime updatedAt;
+  final bool enabled;
 
-  LicencePlate(
-      {required this.id,
-      required this.licencePlate,
-      required this.garageId,
-      required this.userId,
-      required this.updatedAt});
+  LicencePlate({
+    required this.id,
+    required this.licencePlate,
+    required this.garageId,
+    required this.userId,
+    required this.updatedAt,
+    required this.enabled,
+  });
 
   /// Serializes a JSON-object into a Dart `Device`-object with all properties.
   static LicencePlate fromJSON(Map<String, dynamic> json) {
     print(json);
     return LicencePlate(
-        id: json['id'] as int,
-        licencePlate: json['licencePlate'] as String,
-        garageId: json['garageId'] as int?,
-        userId: json['userId'] as int,
-        updatedAt: DateTime.parse(json['updatedAt']));
+      id: json['id'] as int,
+      licencePlate: json['licencePlate'] as String,
+      garageId: json['garageId'] as int?,
+      userId: json['userId'] as int,
+      updatedAt: DateTime.parse(json['updatedAt']),
+      enabled: json['enabled'],
+    );
   }
 
   /// Serializes a Dart `Device`-object to a JSON-object with the attributes defined in
@@ -31,8 +36,9 @@ class LicencePlate {
         'licence_plate': licencePlate,
         'garage_id': garageId,
         'user_id': userId,
+        'enabled': enabled,
       };
-      
+
   String formatLicencePlate() {
     return '${licencePlate.substring(0, 1)}-${licencePlate.substring(1, 4)}-${licencePlate.substring(4)}';
   }

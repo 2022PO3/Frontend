@@ -35,37 +35,15 @@ class _LicencePlatesPageState extends State<LicencePlatesPage> {
             final List<LicencePlate> licencePlates =
                 snapshot.data as List<LicencePlate>;
 
-            return Column(
-              children: [
-                const Card(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 8,
-                    ),
-                    child: Text(
-                      'Choose the licence plate for which you want to make a reservation.',
-                      style: TextStyle(
-                        fontSize: 17,
-                      ),
-                    ),
-                  ),
-                ),
-                const Divider(
-                  indent: 10,
-                  endIndent: 10,
-                ),
-                ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return AddLicencePlateWidget(
-                      licencePlate: licencePlates[index],
-                    );
-                  },
-                  itemCount: licencePlates.length,
-                ),
-              ],
+            return ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return AddLicencePlateWidget(
+                  licencePlate: licencePlates[index],
+                );
+              },
+              itemCount: licencePlates.length,
             );
           } else if (snapshot.hasError) {
             return Center(
@@ -113,7 +91,7 @@ class _LicencePlatesPageState extends State<LicencePlatesPage> {
               decoration: const InputDecoration(
                 contentPadding: EdgeInsets.all(14),
                 prefixIcon: Icon(
-                  Icons.phone_android_sharp,
+                  Icons.directions_car,
                   color: Colors.indigoAccent,
                 ),
                 hintText: 'Licence plate...',
@@ -121,7 +99,7 @@ class _LicencePlatesPageState extends State<LicencePlatesPage> {
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter an device name.';
+                  return 'Please enter your licence plate.';
                 } else if (!RegExp(r'\d-[A-z]{3}-\d{3}').hasMatch(value)) {
                   return 'Enter a correct format!';
                 }
@@ -138,11 +116,21 @@ class _LicencePlatesPageState extends State<LicencePlatesPage> {
                     isLoading = true;
                   });
                   try {
-                    await addLicencePlate(
-                        {'licencePlate': addLicencePlateController.text});
+                    await addLicencePlate({
+                      'licencePlate': formatLicencePlate(
+                        addLicencePlateController.text,
+                      ),
+                    });
                     setState(() {
                       isLoading = false;
                     });
+                    if (mounted) {
+                      showSuccessDialog(
+                        context,
+                        'Added licence plate',
+                        'Your licence plate is added to your account. Please note that you cannot user this licence plate until it is verified. Click the licence plate for more information.',
+                      );
+                    }
                     setState(() {});
                   } on BackendException catch (e) {
                     print(e);
@@ -154,7 +142,7 @@ class _LicencePlatesPageState extends State<LicencePlatesPage> {
                 }
               },
               child: const Text(
-                'Add device',
+                'Add licence plate',
                 style: TextStyle(color: Colors.black),
               ),
             ),
@@ -162,5 +150,9 @@ class _LicencePlatesPageState extends State<LicencePlatesPage> {
         );
       },
     );
+  }
+
+  String formatLicencePlate(String lp) {
+    return lp.replaceAll('-', '').toUpperCase();
   }
 }
