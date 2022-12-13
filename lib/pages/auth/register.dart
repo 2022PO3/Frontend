@@ -4,7 +4,6 @@ import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/dialogs.dart';
-import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 import '../../api/network/network_exception.dart';
 
@@ -120,7 +119,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(
+                      Constants.borderRadius,
+                    ),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),

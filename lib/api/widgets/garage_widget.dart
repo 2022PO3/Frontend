@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/enums.dart';
@@ -30,6 +31,7 @@ class GarageWidget extends StatelessWidget {
               Constants.borderRadius,
             ),
             buildGarageInformationBanner(
+              context,
               garage,
               height,
             ),
@@ -115,15 +117,17 @@ class GarageWidget extends StatelessWidget {
     );
   }
 
-  Widget buildGarageInformationBanner(Garage garage, double height) {
+  Widget buildGarageInformationBanner(
+    BuildContext context,
+    Garage garage,
+    double height,
+  ) {
     final Location location = garage.garageSettings.location;
-    const TextStyle locationTextStyle = TextStyle(
-      fontSize: 14,
-      color: Colors.black87,
-    );
+    final double width = MediaQuery.of(context).size.shortestSide;
 
     return SizedBox(
       height: height / 11,
+      width: width - 72,
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 15,
@@ -146,11 +150,18 @@ class GarageWidget extends StatelessWidget {
             ),
             Text(
               Province.getProvinceName(location.province),
-              style: locationTextStyle,
+              style: const TextStyle(
+                color: Colors.black87,
+              ),
             ),
-            Text(
+            AutoSizeText(
               '${location.street} ${location.number}, ${location.municipality}, ${location.postCode}',
-              style: locationTextStyle,
+              maxLines: 1,
+              maxFontSize: 14,
+              minFontSize: 5,
+              style: const TextStyle(
+                color: Colors.black87,
+              ),
             ),
           ],
         ),

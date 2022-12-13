@@ -82,6 +82,16 @@ Future<void> logOutUser(BuildContext context) async {
   context.go('/login');
 }
 
+Future<bool> sendAuthenticationCode(String code) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.post,
+    apiSlug: '${StaticValues.sendAuthenticationCodeSlug}/$code',
+    useAuthToken: true,
+  );
+
+  return NetworkHelper.validateResponse(response);
+}
+
 Future<User> getUserInfo() async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.get,

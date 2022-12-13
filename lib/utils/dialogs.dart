@@ -136,7 +136,7 @@ Widget buildDialogButton(
   Color buttonColor,
   Function() buttonFunction, {
   bool rightBorderRadius = false,
-  bool leftBorderRadius = true,
+  bool leftBorderRadius = false,
 }) {
   return Expanded(
     child: InkWell(
@@ -149,15 +149,15 @@ Widget buildDialogButton(
           color: buttonColor,
           borderRadius: BorderRadius.only(
             bottomLeft: leftBorderRadius
-                ? Radius.circular(
+                ? const Radius.circular(
                     Constants.borderRadius,
                   )
-                : Radius.circular(0),
+                : const Radius.circular(0),
             bottomRight: rightBorderRadius
-                ? Radius.circular(
+                ? const Radius.circular(
                     Constants.borderRadius,
                   )
-                : Radius.circular(0),
+                : const Radius.circular(0),
           ),
         ),
         child: Text(

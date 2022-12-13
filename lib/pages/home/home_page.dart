@@ -354,7 +354,7 @@ class _GarageListWidgetState extends State<GarageListWidget> {
             snapshot.hasData) {
           final List<Garage> garages = snapshot.data as List<Garage>;
           sortGarages(garages);
-          print(garages.map((garage) => garage.id));
+
           final List<Widget> garageWidgets =
               garages.map((e) => GarageWidget(garage: e)).toList();
           return Column(
@@ -490,8 +490,8 @@ class _GarageListWidgetState extends State<GarageListWidget> {
                     child: InkWell(
                       child: Container(
                         padding: const EdgeInsets.only(
-                          top: 20.0,
-                          bottom: 20.0,
+                          top: 15,
+                          bottom: 15,
                         ),
                         decoration: const BoxDecoration(
                           color: Colors.redAccent,
@@ -506,7 +506,9 @@ class _GarageListWidgetState extends State<GarageListWidget> {
                         ),
                         child: const Text(
                           'Cancel',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ),
