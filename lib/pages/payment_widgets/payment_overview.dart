@@ -49,8 +49,6 @@ class _PaymentOverviewState extends State<PaymentOverview> {
         useAuthToken: true,
         queryParams: {'licence_plate': widget.licencePlate.licencePlate});
 
-    print(response?.body);
-
     return await NetworkHelper.filterResponse(
       callBack: fromPaymentPreviewJSON,
       response: response,
