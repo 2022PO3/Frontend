@@ -61,51 +61,56 @@ class GarageWidget extends StatelessWidget {
           left: Radius.circular(borderRadius),
         ),
       ),
-      child: SfRadialGauge(
-        axes: <RadialAxis>[
-          RadialAxis(
-            startAngle: 270,
-            endAngle: 270,
-            minimum: 0,
-            maximum: maxSpots == 0 ? 1 : maxSpots,
-            showLabels: false,
-            showTicks: false,
-            axisLineStyle: const AxisLineStyle(
-              thickness: 0.15,
-              cornerStyle: CornerStyle.bothFlat,
-              color: Colors.grey,
-              thicknessUnit: GaugeSizeUnit.factor,
-            ),
-            pointers: <GaugePointer>[
-              RangePointer(
-                value: unoccupiedLots == maxSpots ? 1 : unoccupiedLots,
-                width: 0.15,
-                sizeUnit: GaugeSizeUnit.factor,
-                cornerStyle:
-                    full ? CornerStyle.bothFlat : CornerStyle.bothCurve,
-                color: determineFreePlacesColor(garage),
+      child: Padding(
+        padding: const EdgeInsets.only(
+          left: 5,
+        ),
+        child: SfRadialGauge(
+          axes: <RadialAxis>[
+            RadialAxis(
+              startAngle: 270,
+              endAngle: 270,
+              minimum: 0,
+              maximum: maxSpots == 0 ? 1 : maxSpots,
+              showLabels: false,
+              showTicks: false,
+              axisLineStyle: const AxisLineStyle(
+                thickness: 0.15,
+                cornerStyle: CornerStyle.bothFlat,
+                color: Colors.grey,
+                thicknessUnit: GaugeSizeUnit.factor,
               ),
-            ],
-            annotations: <GaugeAnnotation>[
-              GaugeAnnotation(
-                angle: 90,
-                widget: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      (garage.parkingLots - garage.unoccupiedLots).toString(),
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const Text('left'),
-                  ],
+              pointers: <GaugePointer>[
+                RangePointer(
+                  value: unoccupiedLots == maxSpots ? 1 : unoccupiedLots,
+                  width: 0.15,
+                  sizeUnit: GaugeSizeUnit.factor,
+                  cornerStyle:
+                      full ? CornerStyle.bothFlat : CornerStyle.bothCurve,
+                  color: determineFreePlacesColor(garage),
                 ),
-              )
-            ],
-          ),
-        ],
+              ],
+              annotations: <GaugeAnnotation>[
+                GaugeAnnotation(
+                  angle: 90,
+                  widget: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        (garage.parkingLots - garage.unoccupiedLots).toString(),
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const Text('left'),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -121,7 +126,7 @@ class GarageWidget extends StatelessWidget {
       height: height / 11,
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: 20,
+          horizontal: 15,
           vertical: 5,
         ),
         child: Column(
