@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:po_frontend/core/app_bar.dart';
+import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/user_data.dart';
 import '../../api/models/licence_plate_model.dart';
 import '../../api/requests/garage_requests.dart';
@@ -319,31 +321,42 @@ class CurrentParkingSessionWidget extends StatelessWidget {
   }
 }
 
-class GarageListWidget extends StatelessWidget {
-  const GarageListWidget({
-    Key? key,
-    required this.garagesFuture,
-  }) : super(key: key);
+enum SortByEnum { none, province, freeSpots }
+
+enum SortDirection { none, up, down }
+
+class GarageListWidget extends StatefulWidget {
+  const GarageListWidget({super.key, required this.garagesFuture});
 
   final Future<List<Garage>> garagesFuture;
 
   @override
+  State<GarageListWidget> createState() => _GarageListWidgetState();
+}
+
+class _GarageListWidgetState extends State<GarageListWidget> {
+  SortDirection sortDirection = SortDirection.none;
+  SortByEnum sortBy = SortByEnum.none;
+
+  @override
   Widget build(BuildContext context) {
+    final double height = MediaQuery.of(context).size.longestSide;
+
     return FutureBuilder(
-      future: garagesFuture,
+      future: widget.garagesFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {
           final List<Garage> garages = snapshot.data as List<Garage>;
-
+          sortGarages(garages);
+          print(garages.map((garage) => garage.id));
+          final List<Widget> garageWidgets =
+              garages.map((e) => GarageWidget(garage: e)).toList();
           return Column(
-            children: garages
-                .map(
-                  (e) => GarageWidget(
-                    garage: e,
-                  ),
-                )
-                .toList(),
+            children: [
+              buildSortRow(height),
+              ...garageWidgets,
+            ],
           );
         } else if (snapshot.hasError) {
           return SnapshotErrorWidget(
@@ -358,6 +371,192 @@ class GarageListWidget extends StatelessWidget {
         );
       },
     );
+  }
+
+  Widget buildSortRow(double height) {
+    return SizedBox(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 0,
+              horizontal: 10,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (sortBy != SortByEnum.none) buildSortDirectionButton(),
+                buildSortText(),
+                buildSortButton(),
+              ],
+            ),
+          ),
+          const Divider(
+            indent: 10,
+            endIndent: 10,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildSortDirectionButton() {
+    final Icon directionIcon = sortDirection == SortDirection.up
+        ? const Icon(
+            Icons.arrow_upward_rounded,
+            size: 20,
+          )
+        : const Icon(
+            Icons.arrow_downward_rounded,
+            size: 20,
+          );
+    return TextButton(
+      onPressed: () {
+        if (sortDirection == SortDirection.up) {
+          setState(() {
+            sortDirection = SortDirection.down;
+          });
+        } else if (sortDirection == SortDirection.down) {
+          setState(() {
+            sortDirection = SortDirection.up;
+          });
+        }
+        setState(() {});
+      },
+      child: directionIcon,
+    );
+  }
+
+  Widget buildSortText() {
+    late String sortText;
+    switch (sortBy) {
+      case SortByEnum.none:
+        sortText = 'No sorting';
+        break;
+      case SortByEnum.province:
+        sortText = 'Sorted by province';
+        break;
+      case SortByEnum.freeSpots:
+        sortText = 'Sorted by free spots';
+        break;
+    }
+    return Text(
+      sortText,
+      style: const TextStyle(
+        fontSize: 15,
+      ),
+    );
+  }
+
+  Widget buildSortButton() {
+    return TextButton(
+      onPressed: alterSortByPopUp,
+      child: const Icon(
+        Icons.sort,
+        size: 20,
+      ),
+    );
+  }
+
+  void alterSortByPopUp() async {
+    return await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: Constants.cardBorder,
+          title: const Text('Sort by'),
+          contentPadding: const EdgeInsets.only(
+            top: 10,
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              buildRadioButton('None', SortByEnum.none),
+              buildRadioButton('Province', SortByEnum.province),
+              buildRadioButton('Free spots', SortByEnum.freeSpots),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      child: Container(
+                        padding: const EdgeInsets.only(
+                          top: 20.0,
+                          bottom: 20.0,
+                        ),
+                        decoration: const BoxDecoration(
+                          color: Colors.redAccent,
+                          borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(
+                              Constants.cardBorderRadius,
+                            ),
+                            bottomLeft: Radius.circular(
+                              Constants.cardBorderRadius,
+                            ),
+                          ),
+                        ),
+                        child: const Text(
+                          'Cancel',
+                          style: TextStyle(color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      onTap: () => context.pop(),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  RadioListTile buildRadioButton(
+    String text,
+    SortByEnum value,
+  ) {
+    return RadioListTile(
+        title: Text(text),
+        value: value,
+        groupValue: sortBy,
+        onChanged: (value) {
+          setState(() {
+            sortBy = value;
+            sortDirection = SortDirection.up;
+          });
+          context.pop();
+        });
+  }
+
+  void sortGarages(List<Garage> garages) {
+    final bool up = sortDirection == SortDirection.up;
+    print(up);
+    switch (sortBy) {
+      case SortByEnum.none:
+        return;
+      case SortByEnum.province:
+        up
+            ? garages.sort((g1, g2) => g1.garageSettings.location.province
+                .toString()
+                .compareTo(g2.garageSettings.location.province.toString()))
+            : garages.sort((g2, g1) => g1.garageSettings.location.province
+                .toString()
+                .compareTo(g2.garageSettings.location.province.toString()));
+        break;
+      case SortByEnum.freeSpots:
+        up
+            ? garages.sort((g1, g2) => (g1.unoccupiedLots / g1.parkingLots)
+                .compareTo((g2.unoccupiedLots / g2.parkingLots)))
+            : garages.sort((g2, g1) => (g1.unoccupiedLots / g1.parkingLots)
+                .compareTo((g2.unoccupiedLots / g2.parkingLots)));
+        break;
+    }
   }
 }
 

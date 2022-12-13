@@ -56,9 +56,10 @@ class _SelectLicencePlatePageState extends State<SelectLicencePlatePage> {
                     },
                     itemCount: enabledLicencePlates.length,
                   ),
-                buildCard(
-                  'We could not find enabled licence plates for your account. If you have already registered a licence plate, enabled them in the profile page.',
-                ),
+                if (enabledLicencePlates.isEmpty)
+                  buildCard(
+                    'We could not find enabled licence plates for your account. If you have already registered a licence plate, enabled them in the profile page.',
+                  ),
               ],
             );
           } else if (snapshot.hasError) {
