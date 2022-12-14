@@ -34,8 +34,9 @@ class _UserSettingsState extends State<UserSettings> {
         },
         child: Builder(builder: (context) {
           return ListView(
-            physics: const AlwaysScrollableScrollPhysics()
-                .applyTo(const BouncingScrollPhysics()),
+            physics: const AlwaysScrollableScrollPhysics().applyTo(
+              const BouncingScrollPhysics(),
+            ),
             children: [
               ToggleSettingWidget(
                 settingName: 'Two Factor enabled',
@@ -119,6 +120,7 @@ class ToggleSettingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      shape: Constants.cardBorder,
       child: Padding(
         padding: const EdgeInsets.symmetric(
           vertical: 20,
@@ -192,7 +194,8 @@ class CreateOrRemoveSettingWidget extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: exists ? 100 : 75,
+                  width: exists ? 100 : 60,
+                  height: 30,
                   child: RequestButton(
                     makeRequest: exists ? onRemove : onCreate,
                     text: exists ? 'Remove' : 'Add',

@@ -20,46 +20,55 @@ class _UserReservationsState extends State<UserReservations> {
         refreshButton: true,
         refreshFunction: () => setState(() => {}),
       ),
-      body: FutureBuilder(
-        future: getReservations(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.hasData) {
-            List<Reservation> reservations = snapshot.data as List<Reservation>;
-
-            reservations.sort(
-              (r1, r2) => r1.fromDate.millisecondsSinceEpoch
-                  .compareTo(r2.fromDate.millisecondsSinceEpoch),
-            );
-
-            return ListView.builder(
-              itemBuilder: (context, index) {
-                return ReservationWidget(reservation: reservations[index]);
-              },
-              itemCount: reservations.length,
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.error_outline,
-                    color: Colors.red,
-                    size: 25,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(snapshot.error.toString()),
-                ],
-              ),
-            );
-          }
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+      body: RefreshIndicator(
+        onRefresh: () async {
+          setState(() => {});
         },
+        child: FutureBuilder(
+          future: getReservations(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done &&
+                snapshot.hasData) {
+              List<Reservation> reservations =
+                  snapshot.data as List<Reservation>;
+
+              reservations.sort(
+                (r1, r2) => r1.fromDate.millisecondsSinceEpoch
+                    .compareTo(r2.fromDate.millisecondsSinceEpoch),
+              );
+
+              return ListView.builder(
+                physics: const AlwaysScrollableScrollPhysics().applyTo(
+                  const BouncingScrollPhysics(),
+                ),
+                itemBuilder: (context, index) {
+                  return ReservationWidget(reservation: reservations[index]);
+                },
+                itemCount: reservations.length,
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.error_outline,
+                      color: Colors.red,
+                      size: 25,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(snapshot.error.toString()),
+                  ],
+                ),
+              );
+            }
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        ),
       ),
     );
   }
