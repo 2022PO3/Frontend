@@ -13,10 +13,10 @@ class NetworkService {
   const NetworkService._();
 
   static Map<String, String> _getHeaders() => {
-        'Content-Type': 'application/json',
-        'PO3-ORIGIN': 'app',
-        'PO3-APP-KEY': _encodeKey(),
-      };
+    'Content-Type': 'application/json',
+    'PO3-ORIGIN': 'app',
+    'PO3-APP-KEY': _encodeKey(),
+  };
 
   static Future<Map<String, String>> _setAuthHeaders() async {
     final userInfo = await SharedPreferences.getInstance();
@@ -41,9 +41,9 @@ class NetworkService {
                 1000)
             .round(),
         'exp': (DateTime.now()
-                    .add(const Duration(seconds: 5))
-                    .millisecondsSinceEpoch /
-                1000)
+            .add(const Duration(seconds: 5))
+            .millisecondsSinceEpoch /
+            1000)
             .round(),
         'key': Env.appSecretKey.toString()
       },
@@ -124,7 +124,8 @@ class NetworkService {
       Map<String, dynamic>? body, int? pk) {
     if (url.contains('user')) {
       return url;
-    } else if (requestType == RequestType.get && pk != null) {
+    }
+    else if (requestType == RequestType.get && pk != null) {
       return '$url/${pk.toString()}';
     } else if (requestType == RequestType.put) {
       if (body == null) {

@@ -4,7 +4,6 @@ import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/licence_plate_model.dart';
 import 'package:po_frontend/api/requests/licence_plate_requests.dart';
 import 'package:po_frontend/pages/reservations/make_reservation_page.dart';
-import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 
 import '../network/network_exception.dart';
@@ -23,7 +22,6 @@ class ReservationLicencePlateWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       child: Card(
-        shape: Constants.cardBorder,
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Row(
@@ -77,13 +75,9 @@ class _AddLicencePlateWidgetState extends State<AddLicencePlateWidget> {
     final bool enabled = widget.licencePlate.enabled;
     return InkWell(
       child: Card(
-        shape: Constants.cardBorder,
         color: enabled ? Colors.green.shade300 : Colors.red.shade300,
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 10,
-          ),
+          padding: const EdgeInsets.all(24.0),
           child: Column(
             children: [
               Row(

@@ -26,7 +26,7 @@ class _LicencePlatesPageState extends State<LicencePlatesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(title: 'Licence plates'),
+      appBar: appBar('Licence plates', true, setState),
       body: FutureBuilder(
         future: getLicencePlates(),
         builder: (context, snapshot) {
@@ -78,73 +78,78 @@ class _LicencePlatesPageState extends State<LicencePlatesPage> {
   }
 
   void _showEnterLicencePlateDialog() {
-    return showFrontendDialog1(
-      context,
-      'Enter your licence plate',
-      [buildAddLicencePlateForm()],
-      buttonText: 'Add licence plate',
-      buttonFunction: () => addLicencePlateFromDialog(),
-    );
-  }
-
-  Widget buildAddLicencePlateForm() {
-    return Form(
-      key: _addLicencePlateFormKey,
-      child: TextFormField(
-        controller: addLicencePlateController,
-        keyboardType: TextInputType.text,
-        decoration: const InputDecoration(
-          contentPadding: EdgeInsets.all(14),
-          prefixIcon: Icon(
-            Icons.directions_car,
-            color: Colors.indigoAccent,
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Enter your licence plate'),
+          content: Form(
+            key: _addLicencePlateFormKey,
+            child: TextFormField(
+              controller: addLicencePlateController,
+              keyboardType: TextInputType.text,
+              decoration: const InputDecoration(
+                contentPadding: EdgeInsets.all(14),
+                prefixIcon: Icon(
+                  Icons.directions_car,
+                  color: Colors.indigoAccent,
+                ),
+                hintText: 'Licence plate...',
+                hintStyle: TextStyle(color: Colors.black38),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your licence plate.';
+                } else if (!RegExp(r'\d-[A-z]{3}-\d{3}').hasMatch(value)) {
+                  return 'Enter a correct format!';
+                }
+                return null;
+              },
+            ),
           ),
-          hintText: 'Licence plate...',
-          hintStyle: TextStyle(color: Colors.black38),
-        ),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter your licence plate.';
-          } else if (!RegExp(r'\d-[A-z]{3}-\d{3}').hasMatch(value)) {
-            return 'Enter a correct format!';
-          }
-          return null;
-        },
-      ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                if (_addLicencePlateFormKey.currentState!.validate()) {
+                  context.pop();
+                  setState(() {
+                    isLoading = true;
+                  });
+                  try {
+                    await addLicencePlate({
+                      'licencePlate': formatLicencePlate(
+                        addLicencePlateController.text,
+                      ),
+                    });
+                    setState(() {
+                      isLoading = false;
+                    });
+                    if (mounted) {
+                      showSuccessDialog(
+                        context,
+                        'Added licence plate',
+                        'Your licence plate is added to your account. Please note that you cannot user this licence plate until it is verified. Click the licence plate for more information.',
+                      );
+                    }
+                    setState(() {});
+                  } on BackendException catch (e) {
+                    print(e);
+                    setState(() {
+                      isLoading = false;
+                    });
+                    showFailureDialog(context, e);
+                  }
+                }
+              },
+              child: const Text(
+                'Add licence plate',
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+          ],
+        );
+      },
     );
-  }
-
-  void addLicencePlateFromDialog() async {
-    if (_addLicencePlateFormKey.currentState!.validate()) {
-      context.pop();
-      setState(() {
-        isLoading = true;
-      });
-      try {
-        await addLicencePlate({
-          'licencePlate': formatLicencePlate(
-            addLicencePlateController.text,
-          ),
-        });
-        setState(() {
-          isLoading = false;
-        });
-        if (mounted) {
-          showSuccessDialog(
-            context,
-            'Added licence plate',
-            'Your licence plate is added to your account. Please note that you cannot user this licence plate until it is verified. Click the licence plate for more information.',
-          );
-        }
-        setState(() {});
-      } on BackendException catch (e) {
-        print(e);
-        setState(() {
-          isLoading = false;
-        });
-        showFailureDialog(context, e);
-      }
-    }
   }
 
   String formatLicencePlate(String lp) {
