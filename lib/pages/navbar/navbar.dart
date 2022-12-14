@@ -67,57 +67,55 @@ class _NavbarState extends State<Navbar> {
               ),
             ),
           ),
-          const Divider(),
-          ListTile(
-              leading: const Icon(
-                Icons.event,
-                color: Colors.indigo,
-              ),
-              title: const Text('My Reservations'),
-              onTap: () {
-                context.push('/home/reservations');
-              }),
-          const Divider(),
-          ListTile(
-              leading: const Icon(Icons.account_circle, color: Colors.indigo),
-              title: const Text('Profile'),
-              onTap: () {
-                context.push('/home/profile');
-              }),
-          const Divider(),
-          ListTile(
-              leading: const Icon(
-                Icons.query_stats,
-                color: Colors.indigo,
-              ),
-              title: const Text('Statistics'),
-              onTap: () {
-                context.push('/home/statistics');
-              }),
-          const Divider(),
-          ListTile(
-              leading: const Icon(Icons.settings, color: Colors.indigo),
-              title: const Text('Settings'),
-              onTap: () {
-                context.go('/home/settings');
-              }),
-          const Divider(),
-          ListTile(
-              leading: const Icon(Icons.help, color: Colors.indigo),
-              title: const Text('Help'),
-              onTap: () {
-                context.push('/home/help');
-              }),
-          const Divider(),
-          ListTile(
-              leading: const Icon(Icons.logout, color: Colors.indigo),
-              title: const Text('Sign Out'),
-              onTap: () {
-                openDialog();
-              }),
-          const Divider(),
+          buildListTile(
+            leadingIcon: Icons.event_rounded,
+            title: 'My reservations',
+            onTap: () => context.push('/home/reservations'),
+          ),
+          buildListTile(
+            leadingIcon: Icons.account_circle_rounded,
+            title: 'Profile',
+            onTap: () => context.push('/home/profile'),
+          ),
+          buildListTile(
+            leadingIcon: Icons.settings_rounded,
+            title: 'Settings',
+            onTap: () => context.push('/home/settings'),
+          ),
+          buildListTile(
+            leadingIcon: Icons.logout_rounded,
+            title: 'Sign out',
+            onTap: () => openSignOutDialog(context),
+          ),
         ],
       ),
+    );
+  }
+
+  Column buildListTile({
+    required IconData leadingIcon,
+    required String title,
+    required Function() onTap,
+  }) {
+    return Column(
+      children: [
+        ListTile(
+            leading: Icon(leadingIcon, color: Colors.indigo),
+            title: Text(title),
+            onTap: () {
+              onTap();
+            }),
+        const Divider(),
+      ],
+    );
+  }
+
+  void openSignOutDialog(BuildContext context) {
+    return showFrontendDialog2(
+      context,
+      'Sign out',
+      [const Text('Are you sure you want to sign out?')],
+      () => logOutUser(context),
     );
   }
 }

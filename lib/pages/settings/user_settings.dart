@@ -21,10 +21,12 @@ class _UserSettingsState extends State<UserSettings> {
   @override
   Widget build(BuildContext context) {
     final bool userTwoFactor = getUserTwoFactor(context, listen: true);
-    final bool hasAutomaticPayment =
-        getUserHasAutomaticPayment(context, listen: true);
+    final bool hasAutomaticPayment = getUserHasAutomaticPayment(
+      context,
+      listen: true,
+    );
     return Scaffold(
-      appBar: appBar('Settings', false, null),
+      appBar: appBar(title: 'Settings'),
       body: RefreshIndicator(
         onRefresh: () async {
           await updateUserInfo(context);
@@ -70,95 +72,33 @@ class _UserSettingsState extends State<UserSettings> {
   }
 
   void _showRedirectDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Enable two factor authentication'),
-          content: Container(
-            constraints: const BoxConstraints(maxHeight: 230),
-            child: Column(
-              children: const [
-                Text(
-                  'In order to activate the two factor authentication you have to add a device. Press OK to go to the device adding page.',
-                )
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                context.pop();
-                context.go('/home/settings/two-factor');
-              },
-              child: const Text(
-                'OK',
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                context.pop();
-              },
-              child: const Text(
-                'Cancel',
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-          ],
-        );
-      },
+    return showFrontendDialog2(
+      context,
+      'Enable two factor authentication',
+      [
+        const Text(
+          'In order to activate the two factor authentication you have to add a device. Press OK to go to the device adding page.',
+        )
+      ],
+      () => {context.pop(), context.go('/home/settings/two-factor')},
     );
   }
 
   void _showConfirmationDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Disable two factor authentication'),
-          content: Container(
-            constraints: const BoxConstraints(maxHeight: 230),
-            child: Column(
-              children: const [
-                Text(
-                  'Are you sure to disable two factor authentication?',
-                )
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                context.pop();
-                try {
-                  disable2FA();
-                  showSuccessDialog(
-                    context,
-                    'Two factor disabled',
-                    'Two factor authentication is disabled for your account. You can turn it back on at any time you like.',
-                  );
-                } on BackendException catch (e) {
-                  print(e);
-                }
-              },
-              child: const Text(
-                'Yes',
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                context.pop();
-              },
-              child: const Text(
-                'No',
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-          ],
-        );
+    return showFrontendDialog2(
+      context,
+      'Disable two factor authentication',
+      [const Text('Are you sure to disable two factor authentication?')],
+      () => {
+        disable2FA(),
+        showSuccessDialog(
+          context,
+          'Two factor disabled',
+          'Two factor authentication is disabled for your account. You can turn it back on at any time you like.',
+        )
       },
+      leftButtonText: 'No',
+      rightButtonText: 'Yes',
     );
   }
 }
@@ -232,6 +172,7 @@ class CreateOrRemoveSettingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      shape: Constants.cardBorder,
       child: Padding(
         padding: const EdgeInsets.symmetric(
           vertical: 20,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/licence_plate_model.dart';
 import 'package:po_frontend/api/requests/licence_plate_requests.dart';
 import 'package:po_frontend/api/widgets/licence_plate_widget.dart';
@@ -22,7 +23,13 @@ class _SelectLicencePlatePageState extends State<SelectLicencePlatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar('Select licence plate', true, setState),
+      appBar: appBar(
+        title: 'Select licence plate',
+        refreshButton: true,
+        refreshFunction: () => setState(
+          () => {},
+        ),
+      ),
       body: FutureBuilder(
         future: getLicencePlates(),
         builder: (context, snapshot) {
@@ -56,9 +63,13 @@ class _SelectLicencePlatePageState extends State<SelectLicencePlatePage> {
                     },
                     itemCount: enabledLicencePlates.length,
                   ),
-                buildCard(
-                  'We could not find enabled licence plates for your account. If you have already registered a licence plate, enabled them in the profile page.',
-                ),
+                if (enabledLicencePlates.isEmpty)
+                  InkWell(
+                    child: buildCard(
+                      'We could not find enabled licence plates for your account. If you have already registered a licence plate, enabled them in the profile page.',
+                    ),
+                    onTap: () => context.push('/home/profile/licence-plates'),
+                  ),
               ],
             );
           } else if (snapshot.hasError) {

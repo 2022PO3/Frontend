@@ -1,4 +1,5 @@
 import 'package:po_frontend/api/models/enums.dart';
+import 'package:po_frontend/api/network/network_exception.dart';
 
 class User {
   final int id;
@@ -62,6 +63,18 @@ class User {
       ),
       json['token']
     ];
+  }
+
+  /// Extracts the secret key for the user from the JSOn backend response.
+  static String extractSecret(Map<String, dynamic> json) {
+    String otpAuthUrl = json['oauthUrl'];
+    Uri otpAuthUri = Uri.parse(otpAuthUrl);
+    Map<String, String> queryParams = otpAuthUri.queryParameters;
+    String? secret = queryParams['secret'];
+    if (secret == null) {
+      throw BackendException(['Secret is not part of the oauth URL.']);
+    }
+    return secret;
   }
 
   Map<String, dynamic> toJSON() {
