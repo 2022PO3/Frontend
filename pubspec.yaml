@@ -33,6 +33,7 @@ dependencies:
   flutter_credit_card: ^3.0.4
   file_picker: ^5.2.3
   expandable: ^5.0.1
+  badges: ^2.0.3
 
 dev_dependencies:
   flutter_test:

@@ -8,6 +8,7 @@ class LoadingPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leading: const Icon(Icons.menu_rounded),
         automaticallyImplyLeading: false,
         flexibleSpace: Container(
           decoration: const BoxDecoration(
@@ -16,11 +17,6 @@ class LoadingPage extends StatelessWidget {
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
             ),
-          ),
-        ),
-        title: const Center(
-          child: Text(
-            'Parking Boys',
           ),
         ),
       ),

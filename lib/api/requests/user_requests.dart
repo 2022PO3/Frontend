@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/credit_card_model.dart';
 import 'package:po_frontend/api/models/device_model.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
+import 'package:po_frontend/api/models/notification_model.dart';
 import 'package:po_frontend/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -240,4 +241,47 @@ Future<List<Device>> getDevices() async {
     callBack: Device.listFromJSON,
     response: response,
   );
+}
+
+Future<List<FrontendNotification>> getNotifications() async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.get,
+    apiSlug: StaticValues.getNotificationsSlug,
+    useAuthToken: true,
+  );
+
+  List<FrontendNotification> notifications = await NetworkHelper.filterResponse(
+    callBack: FrontendNotification.listFromJSON,
+    response: response,
+  );
+  
+  return await NetworkHelper.filterResponse(
+    callBack: FrontendNotification.listFromJSON,
+    response: response,
+  );
+}
+
+Future<bool> setNotificationSeen(FrontendNotification notification) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.put,
+    apiSlug: StaticValues.pkNotificationsSlug,
+    useAuthToken: true,
+    pk: notification.id,
+    body: notification.toJSON(),
+  );
+
+  return NetworkHelper.validateResponse(response);
+}
+
+Future<bool> deleteNotification(
+  FrontendNotification notification,
+) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.delete,
+    apiSlug: StaticValues.pkNotificationsSlug,
+    useAuthToken: true,
+    pk: notification.id,
+  );
+
+  return NetworkHelper.validateResponse(response);
 }
