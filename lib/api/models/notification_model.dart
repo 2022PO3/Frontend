@@ -1,7 +1,7 @@
 /// Model which represents the backend `Notification`-model.
 class FrontendNotification {
   final int id;
-  final bool seen;
+  bool seen;
   final String title;
   final String content;
   final DateTime createdAt;

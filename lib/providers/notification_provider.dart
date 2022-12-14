@@ -9,12 +9,21 @@ class NotificationProvider with ChangeNotifier {
   FrontendNotification getNotification(int id) => _notifications[id]!;
 
   void setNotifications(List<FrontendNotification> notifications) {
-    _notifications = Map.fromIterable(notifications.map((n) => {n.id: n}));
+    Map<int, FrontendNotification> notificationsMap = {};
+    for (FrontendNotification notification in notifications) {
+      notificationsMap.addAll({notification.id: notification});
+    }
+    _notifications = notificationsMap;
     notifyListeners();
   }
 
   void setNotification(FrontendNotification notification) {
     _notifications[notification.id] = notification;
+    notifyListeners();
+  }
+
+  void deleteNotification(FrontendNotification notification) {
+    _notifications.remove(notification.id);
     notifyListeners();
   }
 }

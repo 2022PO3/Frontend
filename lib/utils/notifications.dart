@@ -39,3 +39,16 @@ void setNotification(
   );
   return notificationProvider.setNotification(notification);
 }
+
+void deleteProviderNotification(
+  BuildContext context,
+  FrontendNotification notification, {
+  bool listen = false,
+}) {
+  final NotificationProvider notificationProvider =
+      Provider.of<NotificationProvider>(
+    context,
+    listen: listen,
+  );
+  return notificationProvider.deleteNotification(notification);
+}

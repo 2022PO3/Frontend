@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       licencePlatesFuture = getLicencePlates();
       garagesFuture = getAllGarages();
-      notificationsFuture = getNotifications();
+      notificationsFuture = getNotifications(context);
     });
 
     saveUserToProvider(context);
@@ -121,17 +121,22 @@ class _HomePageState extends State<HomePage> {
       builder: ((context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {
+          List<FrontendNotification> notifications =
+              snapshot.data as List<FrontendNotification>;
+          int newNotifications = (notifications.where((n) => !n.seen)).length;
           return TextButton(
             onPressed: () {
               context.go('/home/notifications');
             },
-            child: Badge(
-              badgeColor: Colors.redAccent,
-              badgeContent: Text(
-                (snapshot.data)!.length.toString(),
-              ),
-              child: notificationIcon,
-            ),
+            child: newNotifications != 0
+                ? Badge(
+                    badgeColor: Colors.redAccent,
+                    badgeContent: Text(
+                      newNotifications.toString(),
+                    ),
+                    child: notificationIcon,
+                  )
+                : notificationIcon,
           );
         } else {
           return TextButton(

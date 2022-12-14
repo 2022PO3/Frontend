@@ -5,6 +5,7 @@ import 'package:po_frontend/api/models/device_model.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
 import 'package:po_frontend/api/models/notification_model.dart';
 import 'package:po_frontend/providers/user_provider.dart';
+import 'package:po_frontend/utils/notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -243,7 +244,8 @@ Future<List<Device>> getDevices() async {
   );
 }
 
-Future<List<FrontendNotification>> getNotifications() async {
+Future<List<FrontendNotification>> getNotifications(
+    BuildContext context) async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.get,
     apiSlug: StaticValues.getNotificationsSlug,
@@ -254,11 +256,9 @@ Future<List<FrontendNotification>> getNotifications() async {
     callBack: FrontendNotification.listFromJSON,
     response: response,
   );
-  
-  return await NetworkHelper.filterResponse(
-    callBack: FrontendNotification.listFromJSON,
-    response: response,
-  );
+  setNotifications(context, notifications);
+
+  return notifications;
 }
 
 Future<bool> setNotificationSeen(FrontendNotification notification) async {

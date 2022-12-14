@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:po_frontend/api/models/notification_model.dart';
 import 'package:po_frontend/api/widgets/notification_widget.dart';
 import 'package:po_frontend/core/app_bar.dart';
+import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/notifications.dart';
 
 class NotificationPage extends StatefulWidget {
@@ -35,7 +36,11 @@ class _NotificationPageState extends State<NotificationPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(title: 'Notifications'),
+      appBar: appBar(
+        title: 'Notifications',
+        refreshButton: true,
+        refreshFunction: () => setState(() => {}),
+      ),
       body: DefaultTabController(
         length: 2,
         child: Column(
@@ -93,16 +98,44 @@ class _NotificationPageState extends State<NotificationPage>
     bool unSeen = false,
   }) {
     if (unSeen) {
-      notificationList.where((n) => !n.seen);
+      notificationList = notificationList.where((n) => !n.seen).toList();
     }
-    return ListView.builder(
-      itemBuilder: (context, index) {
-        return NotificationWidget(
-          notification: notificationList[index],
-        );
-      },
-      itemCount: notificationList.length,
-      scrollDirection: Axis.vertical,
+    return notificationList.isEmpty
+        ? buildNoNotificationsCard()
+        : ListView.builder(
+            itemBuilder: (context, index) {
+              return NotificationWidget(
+                notification: notificationList[index],
+              );
+            },
+            itemCount: notificationList.length,
+            scrollDirection: Axis.vertical,
+          );
+  }
+
+  Widget buildNoNotificationsCard() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Card(
+                shape: Constants.cardBorder,
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
+                  child: Text(
+                    'There are currently no notifications for you!',
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
