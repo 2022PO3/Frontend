@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/enums.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
+import 'package:po_frontend/pages/settings/garage_settings/garage_settings_page.dart';
 import 'package:po_frontend/utils/button.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/user_data.dart';
 import '../../../api/network/network_exception.dart';
 import 'package:po_frontend/api/models/user_model.dart';
+
+import '../../settings/widgets/editing_widgets.dart';
 
 class UserInfo extends StatefulWidget {
   const UserInfo({super.key});
@@ -36,9 +39,9 @@ class _UserInfoState extends State<UserInfo> {
   String oldPassword = '';
   String passwordConfirmation = '';
 
-  String selectedValue = 'Select your province here';
+  ProvinceEnum? selectedValue;
 
-  ProvinceEnum? province;
+  //ProvinceEnum? province;
   String? location;
 
   onPasswordChanged(String password, String passwordConfirmation) {
@@ -106,35 +109,14 @@ class _UserInfoState extends State<UserInfo> {
                 const Text(
                   'what do you want to change your province to?',
                 ),
-                DropdownButton<String>(
-                  value: selectedValue,
-                  items: <String>[
-                    'Select your province here',
-                    'Antwerpen',
-                    'Henegouwen',
-                    'Limburg',
-                    'Luik',
-                    'Luxemburg',
-                    'Namen',
-                    'Oost-Vlaanderen',
-                    'Vlaams-Brabant',
-                    'Waals-Brabant',
-                    'West-Vlaanderen',
-                  ].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(
-                        value,
-                        style: const TextStyle(fontSize: 20),
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
+                ProvinceSelector(
+                  initialValue: selectedValue,
+                  onChanged: (newValue) {
                     setState(() {
                       selectedValue = newValue!;
                     });
                   },
-                ),
+                )
               ],
             ),
             actions: [
@@ -145,7 +127,7 @@ class _UserInfoState extends State<UserInfo> {
                   TextButton(
                     onPressed: () {
                       context.pop();
-                      selectedValue = 'Select your province here';
+                      selectedValue = null;
                     },
                     child: const Text(
                       'Cancel',
@@ -157,12 +139,12 @@ class _UserInfoState extends State<UserInfo> {
                   ),
                   TextButton(
                     onPressed: () async {
-                      setState(() {
+                      /*setState(() {
                         province = Province.toProvinceEnum(selectedValue);
-                      });
+                      });*/
                       try {
                         User oldUser = getUser(context);
-                        oldUser.location = province;
+                        oldUser.location = selectedValue;
                         User newUser = await updateUser(oldUser);
                         if (mounted) setUser(context, newUser);
                         if (mounted) context.pop();
@@ -170,7 +152,7 @@ class _UserInfoState extends State<UserInfo> {
                         print('Error occurred $e');
                         showFailureDialog(context, e);
                       }
-                      selectedValue = 'Select your province here';
+                      selectedValue = null;
                     },
                     child: const Text(
                       'Confirm',

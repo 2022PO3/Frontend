@@ -2,69 +2,77 @@ import 'package:enum_to_string/enum_to_string.dart';
 
 import '../network/network_exception.dart';
 
-enum ProvinceEnum { ANT, HAI, LIE, LIM, LUX, NAM, OVL, WVL, VBR, WBR }
+enum ProvinceEnum {
+  ANT('ANT', 'Antwerpen'),
+  HAI('HAI', 'Henegouwen'),
+  LIE('LIE', 'Luik'),
+  LIM('LIM', 'Limburg'),
+  LUX('LUX', 'Luxemburg'),
+  NAM('NAM', 'Namen'),
+  OVL('OVL', 'Oost-Vlaanderen'),
+  WVL('WVL', 'West-Vlaanderen'),
+  VBR('VBR', 'Vlaams-Brabant'),
+  WBR('WBR', 'Waals-Brabant');
 
-enum ValutaEnum { EUR, USD, GBP }
+  final String short;
+  final String name;
+  const ProvinceEnum(this.short, this.name);
 
-class Province {
-  static Map<ProvinceEnum, String> provinces = {
-    ProvinceEnum.ANT: 'Antwerpen',
-    ProvinceEnum.HAI: 'Henegouwen',
-    ProvinceEnum.LIE: 'Luik',
-    ProvinceEnum.LIM: 'Limburg',
-    ProvinceEnum.LUX: 'Luxemburg',
-    ProvinceEnum.NAM: 'Namen',
-    ProvinceEnum.OVL: 'Oost-Vlaandern',
-    ProvinceEnum.WVL: 'West-Vlaanderen',
-    ProvinceEnum.VBR: 'Vlaams-Brabant',
-    ProvinceEnum.WBR: 'Waals-Brabant',
-  };
+  factory ProvinceEnum.fromString(String province) => ProvinceEnum.values
+          .firstWhere((e) => e.short == province || e.name == province,
+              orElse: () {
+        throw BackendException(['Province string is not a valid value.']);
+      });
 
-  static String getProvinceName(ProvinceEnum? provinceAbr) {
-    String? provinceName = provinces[provinceAbr];
-    if (provinceName == null) {
-      throw Exception('Province is not defined.');
-    }
-    return provinceName;
+  factory ProvinceEnum.fromShort(String province) =>
+      ProvinceEnum.values.firstWhere((e) => e.short == province, orElse: () {
+        throw BackendException(['Province short is not a valid value.']);
+      });
+
+  factory ProvinceEnum.fromName(String province) =>
+      ProvinceEnum.values.firstWhere((e) => e.name == province, orElse: () {
+        throw BackendException(['Province name is not a valid value.']);
+      });
+
+  @override
+  String toString() {
+    return name;
   }
 
-  static ProvinceEnum? toProvinceEnum(String? province) {
-    if (province == null) {
-      return null;
-    }
-    ProvinceEnum? prov = EnumToString.fromString(ProvinceEnum.values, province);
-    if (prov == null) {
-      throw BackendException(['Province is not a valid value.']);
-    }
-    return prov;
-  }
+  String get databaseValue => short;
 }
 
-class Valuta {
-  static Map<ValutaEnum, String> valutas = {
-    ValutaEnum.EUR: '€',
-    ValutaEnum.USD: '\$',
-    ValutaEnum.GBP: '£',
-  };
+enum ValutaEnum {
+  EUR('EUR', '€'),
+  USD('USD', '\$'),
+  GBP('GBP', '£');
 
-  static String getValutaSymbol(ValutaEnum valuta) {
-    String? valutaSymbol = valutas[valuta];
-    if (valutaSymbol == null) {
-      throw Exception('Province is not defined.');
-    }
-    return valutaSymbol;
+  final String short;
+  final String symbol;
+  const ValutaEnum(this.short, this.symbol);
+
+  factory ValutaEnum.fromString(String province) => ValutaEnum.values
+          .firstWhere((e) => e.short == province || e.name == province,
+              orElse: () {
+        throw BackendException(['Valuta string is not a valid value.']);
+      });
+
+  factory ValutaEnum.fromShort(String province) =>
+      ValutaEnum.values.firstWhere((e) => e.short == province, orElse: () {
+        throw BackendException(['Valuta short is not a valid value.']);
+      });
+
+  factory ValutaEnum.fromName(String province) =>
+      ValutaEnum.values.firstWhere((e) => e.name == province, orElse: () {
+        throw BackendException(['Valuta name is not a valid value.']);
+      });
+
+  @override
+  String toString() {
+    return symbol;
   }
 
-  static ValutaEnum? toValutaEnum(String? valuta) {
-    if (valuta == null) {
-      return null;
-    }
-    ValutaEnum? val = EnumToString.fromString(ValutaEnum.values, valuta);
-    if (val == null) {
-      throw BackendException(['Valuta is not a valid value.']);
-    }
-    return val;
-  }
+  String get databaseValue => short;
 }
 
 class WeekDays {

@@ -103,7 +103,7 @@ class _NavbarState extends State<Navbar> {
                 context.push('/home/statistics');
               }),
           if (user.isOwner) const Divider(),
-          if (user.isOwner) GarageSettingsTile(),
+          if (user.isOwner) const GarageSettingsTile(),
           const Divider(),
           ListTile(
               leading: const Icon(Icons.settings, color: Colors.indigo),
@@ -198,7 +198,6 @@ class GarageListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(garage.name),
-      leading: const Icon(Icons.car_rental_rounded),
       onTap: () => context.go('/home/settings/garage/${garage.id}'),
       trailing: const Icon(Icons.keyboard_arrow_right),
     );
@@ -213,10 +212,11 @@ class _NewGarageButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
-        style: ButtonStyle(
-            shape: MaterialStateProperty.all(const StadiumBorder())),
-        onPressed: null,
-        icon: const Icon(Icons.add),
-        label: const Text('Add new Garage'));
+      style:
+          ButtonStyle(shape: MaterialStateProperty.all(const StadiumBorder())),
+      onPressed: null,
+      icon: const Icon(Icons.add),
+      label: const Text('Add new Garage'),
+    );
   }
 }

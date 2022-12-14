@@ -44,10 +44,7 @@ class Price {
       priceString: json['priceString'] as String,
       price: json['price'] as double,
       duration: parseDuration(json['duration'] as String),
-      valuta: Valuta.toValutaEnum(json['valuta']) ??
-          (throw BackendException(
-            ['No valid province given.'],
-          )),
+      valuta: ValutaEnum.fromString(json['valuta'] as String),
     );
   }
 
@@ -59,7 +56,7 @@ class Price {
         'priceString': price.priceString,
         'price': price.price,
         'duration': price.duration.inSeconds,
-        'valuta': price.valuta.toString(),
+        'valuta': price.valuta.databaseValue,
       };
 
   static List<Price> listFromJSON(List<dynamic> json) =>

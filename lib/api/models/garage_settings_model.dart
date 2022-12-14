@@ -59,4 +59,21 @@ class GarageSettings {
         'maxWidth': garageSettings.maxWidth,
         'maxHandicappedLots': garageSettings.maxHandicappedLots,
       };
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+    return other is GarageSettings &&
+        other.id == id &&
+        //other.location == location &&
+        other.electricCars == electricCars &&
+        other.maxHandicappedLots == maxHandicappedLots &&
+        other.maxHeight == maxHeight &&
+        other.maxWidth == maxWidth;
+  }
 }

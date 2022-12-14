@@ -65,19 +65,19 @@ class NetworkService {
       case RequestType.get:
         return http
             .get(uri, headers: headers)
-            .timeout(const Duration(seconds: 5));
+            .timeout(const Duration(seconds: 15));
       case RequestType.post:
         return http
             .post(uri, headers: headers, body: body)
-            .timeout(const Duration(seconds: 5));
+            .timeout(const Duration(seconds: 15));
       case RequestType.put:
         return http
             .put(uri, headers: headers, body: body)
-            .timeout(const Duration(seconds: 5));
+            .timeout(const Duration(seconds: 15));
       case RequestType.delete:
         return http
             .delete(uri, headers: headers, body: body)
-            .timeout(const Duration(seconds: 5));
+            .timeout(const Duration(seconds: 15));
     }
   }
 

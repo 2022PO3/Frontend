@@ -117,7 +117,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                               height: 65,
                               width: width,
                               child: Text(
-                                '${garageSettings.location.country}, ${Province.getProvinceName(garageSettings.location.province)}, ${garageSettings.location.street} ${garageSettings.location.number}, ${garageSettings.location.postCode} ${garageSettings.location.municipality}',
+                                '${garageSettings.location.country}, ${garageSettings.location.province}, ${garageSettings.location.street} ${garageSettings.location.number}, ${garageSettings.location.postCode} ${garageSettings.location.municipality}',
                                 style: const TextStyle(
                                   color: Colors.indigo,
                                 ),
