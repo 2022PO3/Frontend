@@ -4,6 +4,7 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
+import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/pages/payment_widgets/pay_button.dart';
 import 'package:po_frontend/pages/settings/add_automatic_payment_page.dart';
 import 'package:po_frontend/utils/dialogs.dart';
@@ -24,6 +25,54 @@ class _UserSettingsState extends State<UserSettings> {
     final bool hasAutomaticPayment =
         getUserHasAutomaticPayment(context, listen: true);
     return Scaffold(
+      appBar: appBar(title: 'Settings'),
+      body: Center(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 400),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Card(
+                shape: Constants.cardBorder,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 20,
+                    horizontal: 20,
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Two factor enabled',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 17,
+                            ),
+                          ),
+                          FlutterSwitch(
+                            height: 30,
+                            width: 60,
+                            activeColor: Colors.green,
+                            inactiveColor: Colors.red,
+                            toggleSize: 15,
+                            value: userTwoFactor,
+                            borderRadius: 30.0,
+                            padding: 8.0,
+                            onToggle: (val) {
+                              if (!userTwoFactor && val) {
+                                _showRedirectDialog();
+                              } else {
+                                _showConfirmationDialog();
+                              }
+                            },
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
       appBar: appBar('Settings', false, null),
       body: RefreshIndicator(
         onRefresh: () async {

@@ -22,7 +22,13 @@ class _SelectLicencePlatePageState extends State<SelectLicencePlatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar('Select licence plate', true, setState),
+      appBar: appBar(
+        title: 'Select licence plate',
+        refreshButton: true,
+        refreshFunction: () => setState(
+          () => {},
+        ),
+      ),
       body: FutureBuilder(
         future: getLicencePlates(),
         builder: (context, snapshot) {
@@ -56,9 +62,10 @@ class _SelectLicencePlatePageState extends State<SelectLicencePlatePage> {
                     },
                     itemCount: enabledLicencePlates.length,
                   ),
-                buildCard(
-                  'We could not find enabled licence plates for your account. If you have already registered a licence plate, enabled them in the profile page.',
-                ),
+                if (enabledLicencePlates.isEmpty)
+                  buildCard(
+                    'We could not find enabled licence plates for your account. If you have already registered a licence plate, enabled them in the profile page.',
+                  ),
               ],
             );
           } else if (snapshot.hasError) {

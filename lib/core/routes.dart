@@ -14,8 +14,7 @@ import 'package:po_frontend/pages/navbar/profile/user_info.dart';
 import 'package:po_frontend/pages/payment_page/failed_payment_page.dart';
 import 'package:po_frontend/pages/reservations/confirm_reservation.dart';
 import 'package:po_frontend/pages/reservations/make_reservation_page.dart';
-import 'package:po_frontend/pages/navbar/help.dart';
-import 'package:po_frontend/pages/reservations/select_licecence_plate.dart';
+import 'package:po_frontend/pages/reservations/select_licence_plate.dart';
 import 'package:po_frontend/pages/reservations/user_reservations.dart';
 import 'package:po_frontend/pages/navbar/profile/profile.dart';
 import 'package:po_frontend/pages/navbar/statistics.dart';
@@ -112,14 +111,6 @@ class Routes {
                   ],
                 ),
               ],
-            ),
-            GoRoute(
-              path: 'statistics',
-              builder: (context, state) => const Statistics(),
-            ),
-            GoRoute(
-              path: 'help',
-              builder: (context, state) => const HelpF(),
             ),
           ],
         ),
