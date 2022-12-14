@@ -9,7 +9,6 @@ import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/requests/garage_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/utils/dialogs.dart';
-import 'package:po_frontend/utils/user_data.dart';
 
 class MakeReservationPage extends StatefulWidget {
   const MakeReservationPage({
@@ -322,7 +321,6 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
 
       return Reservation(
         licencePlate: widget.garageAndLicencePlate.licencePlate,
-        userId: getUserId(context),
         fromDate: startDate,
         toDate: endDate,
         parkingLot: parkingLot,
