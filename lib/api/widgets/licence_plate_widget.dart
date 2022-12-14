@@ -162,6 +162,22 @@ class _AddLicencePlateWidgetState extends State<AddLicencePlateWidget> {
         const Text(
           'You can only enable this licence plate when you are the owner of this licence plate. You can verify your ownership by uploading the registration certificate of your licence plate. Continue by clicking Next.',
         ),
+        Row(
+          children: [
+            const Text('Why do we ask this?'),
+            TextButton(
+              onPressed: () => context.push(
+                '/home/profile/licence-plates/explication',
+              ),
+              child: const Text(
+                'See here why.',
+                style: TextStyle(
+                  color: Colors.indigoAccent,
+                ),
+              ),
+            )
+          ],
+        ),
       ],
       () => handleEnableLicencePlate(licencePlate),
       leftButtonText: 'Next',
@@ -172,30 +188,6 @@ class _AddLicencePlateWidgetState extends State<AddLicencePlateWidget> {
     context.pop();
     context.push(
       '/home/profile/licence-plates/enable',
-      extra: licencePlate,
-    );
-  }
-
-  void showReportDialog(LicencePlate licencePlate) {
-    return showFrontendDialog2(
-      context,
-      'Licence plate already exists',
-      [
-        const Text(
-          'This licence plate is already found in our system, but not yet activated. Do you think someone else registered your licence plate? Report it to us, such that we can investigate the case.',
-        ),
-        const Text(
-          'Please note that a vehicle registration certificate is needed for us to verify the ownership of the licence plate.',
-        ),
-      ],
-      () => handleReportLicencePlate(licencePlate),
-    );
-  }
-
-  void handleReportLicencePlate(LicencePlate licencePlate) {
-    context.pop();
-    context.push(
-      '/home/profile/licence-plates/report',
       extra: licencePlate,
     );
   }

@@ -1,7 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/licence_plate_model.dart';
-import 'package:po_frontend/api/models/notification_model.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
 import 'package:po_frontend/pages/auth/login_page.dart';
 import 'package:po_frontend/pages/auth/register.dart';
@@ -11,6 +10,7 @@ import 'package:po_frontend/pages/garage_info.dart';
 import 'package:po_frontend/pages/home/home_page.dart';
 import 'package:po_frontend/pages/home/notifications.dart';
 import 'package:po_frontend/pages/navbar/profile/licence_plates/confirm_licence_plate.dart';
+import 'package:po_frontend/pages/navbar/profile/licence_plates/explication_page.dart';
 import 'package:po_frontend/pages/navbar/profile/licence_plates/licence_plates.dart';
 import 'package:po_frontend/pages/navbar/profile/licence_plates/report_licence_place.dart';
 import 'package:po_frontend/pages/navbar/profile/user_info.dart';
@@ -113,9 +113,13 @@ class Routes {
                     GoRoute(
                       path: 'report',
                       builder: (context, state) => ReportLicencePlatePage(
-                        licencePlate: state.extra as LicencePlate,
+                        licencePlate: state.extra as String,
                       ),
                     ),
+                    GoRoute(
+                      path: 'explication',
+                      builder: (context, state) => const ExplicationPage(),
+                    )
                   ],
                 ),
               ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:po_frontend/utils/constants.dart';
 
-Widget buildCard(String text) {
+Widget buildCard({required List<Widget> children}) {
   return Card(
     shape: Constants.cardBorder,
     child: Padding(
@@ -9,11 +9,8 @@ Widget buildCard(String text) {
         horizontal: 20,
         vertical: 8,
       ),
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontSize: 17,
-        ),
+      child: Column(
+        children: [...children],
       ),
     ),
   );

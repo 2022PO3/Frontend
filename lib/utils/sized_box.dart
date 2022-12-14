@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 
 class Height extends StatelessWidget {
-  const Height({
+  const Height(
+    this.height, {
     Key? key,
-    required this.height,
   }) : super(key: key);
 
   final double height;
