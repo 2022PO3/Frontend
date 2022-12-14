@@ -17,7 +17,6 @@ import 'package:po_frontend/pages/reservations/make_reservation_page.dart';
 import 'package:po_frontend/pages/reservations/select_licence_plate.dart';
 import 'package:po_frontend/pages/reservations/user_reservations.dart';
 import 'package:po_frontend/pages/navbar/profile/profile.dart';
-import 'package:po_frontend/pages/navbar/statistics.dart';
 import 'package:po_frontend/pages/settings/add_automatic_payment_page.dart';
 import 'package:po_frontend/pages/settings/add_two_factor_device_page.dart';
 import 'package:po_frontend/pages/settings/user_settings.dart';

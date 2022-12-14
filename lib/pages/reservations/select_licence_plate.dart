@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/licence_plate_model.dart';
 import 'package:po_frontend/api/requests/licence_plate_requests.dart';
 import 'package:po_frontend/api/widgets/licence_plate_widget.dart';
@@ -63,8 +64,11 @@ class _SelectLicencePlatePageState extends State<SelectLicencePlatePage> {
                     itemCount: enabledLicencePlates.length,
                   ),
                 if (enabledLicencePlates.isEmpty)
-                  buildCard(
-                    'We could not find enabled licence plates for your account. If you have already registered a licence plate, enabled them in the profile page.',
+                  InkWell(
+                    child: buildCard(
+                      'We could not find enabled licence plates for your account. If you have already registered a licence plate, enabled them in the profile page.',
+                    ),
+                    onTap: () => context.push('/home/profile/licence-plates'),
                   ),
               ],
             );

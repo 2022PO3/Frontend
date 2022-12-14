@@ -47,7 +47,14 @@ void showFrontendDialog2(
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ...children,
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 15,
+              ),
+              child: Column(
+                children: [...children],
+              ),
+            ),
             const SizedBox(
               height: 20,
             ),

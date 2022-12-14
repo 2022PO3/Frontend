@@ -213,3 +213,31 @@ Future<bool> removeAutomaticPayment() async {
 
   return NetworkHelper.validateResponse(response);
 }
+
+Future<String> addTwoFactorDevice(
+  String name,
+) async {
+  final response = await NetworkService.sendRequest(
+      requestType: RequestType.post,
+      apiSlug: StaticValues.addTwoFactorDeviceSlug,
+      useAuthToken: true,
+      body: {'name': name});
+
+  return await NetworkHelper.filterResponse(
+    callBack: User.extractSecret,
+    response: response,
+  );
+}
+
+Future<List<Device>> getDevices() async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.get,
+    apiSlug: StaticValues.twoFactorDevicesSlug,
+    useAuthToken: true,
+  );
+
+  return await NetworkHelper.filterResponse(
+    callBack: Device.listFromJSON,
+    response: response,
+  );
+}
