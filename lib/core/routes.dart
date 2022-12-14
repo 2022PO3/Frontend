@@ -12,6 +12,7 @@ import 'package:po_frontend/pages/home/home_page.dart';
 import 'package:po_frontend/pages/home/notifications.dart';
 import 'package:po_frontend/pages/navbar/profile/licence_plates/confirm_licence_plate.dart';
 import 'package:po_frontend/pages/navbar/profile/licence_plates/licence_plates.dart';
+import 'package:po_frontend/pages/navbar/profile/licence_plates/report_licence_place.dart';
 import 'package:po_frontend/pages/navbar/profile/user_info.dart';
 import 'package:po_frontend/pages/payment_page/failed_payment_page.dart';
 import 'package:po_frontend/pages/reservations/confirm_reservation.dart';
@@ -106,6 +107,12 @@ class Routes {
                     GoRoute(
                       path: 'enable',
                       builder: (context, state) => ConfirmLicencePlatePage(
+                        licencePlate: state.extra as LicencePlate,
+                      ),
+                    ),
+                    GoRoute(
+                      path: 'report',
+                      builder: (context, state) => ReportLicencePlatePage(
                         licencePlate: state.extra as LicencePlate,
                       ),
                     ),
