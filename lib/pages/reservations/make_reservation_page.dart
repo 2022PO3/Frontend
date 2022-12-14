@@ -46,7 +46,7 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
     hours.add('0');
 
     return Scaffold(
-      appBar: appBar('New reservation', false, null),
+      appBar: appBar(title: 'New reservation'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -352,31 +352,14 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
 }
 
 void showDateErrorPopUp(BuildContext context) {
-  // set up the buttons
-  Widget backButton = TextButton(
-    child: const Text('Back'),
-    onPressed: () {
-      Navigator.pop(context);
-    },
-  );
-
-  // set up the AlertDialog
-  AlertDialog alert = AlertDialog(
-    title: const Text('Error'),
-    content: const Text(
-      'One of the times is before the current time and date, or the second time and date is before the first',
-    ),
-    actions: [
-      backButton,
+  showFrontendDialog1(
+    context,
+    'Date error',
+    [
+      const Text(
+        'One of the times is before the current time and date, or the second time and date is before the first.',
+      ),
     ],
-  );
-
-  // show the dialog
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
   );
 }
 

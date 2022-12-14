@@ -4,6 +4,7 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
+import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/pages/payment_widgets/pay_button.dart';
 import 'package:po_frontend/pages/settings/add_automatic_payment_page.dart';
 import 'package:po_frontend/utils/dialogs.dart';

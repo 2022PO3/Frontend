@@ -12,6 +12,30 @@ import '../network/network_helper.dart';
 import '../network/network_service.dart';
 import '../network/static_values.dart';
 
+Future<bool> registerUser(
+    String emailUser,
+    String passwordUser,
+    String confirmPasswordUser,
+    String? firstNameUser,
+    String? lastNameUser) async {
+  Map<String, dynamic> body = {
+    'email': emailUser,
+    'password': passwordUser,
+    'passwordConfirmation': confirmPasswordUser,
+    'role': 1,
+    'firstName': firstNameUser == '' ? null : firstNameUser,
+    'lastName': lastNameUser == '' ? null : lastNameUser,
+  };
+  print(body);
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.post,
+    apiSlug: StaticValues.postRegisterUser,
+    body: body,
+    useAuthToken: false,
+  );
+  return NetworkHelper.validateResponse(response);
+}
+
 Future<User> loginUser(
     BuildContext context, String emailUser, String passwordUser) async {
   Map<String, dynamic> body = {
@@ -56,6 +80,16 @@ Future<void> logOutUser(BuildContext context) async {
   }
   // Make sure to redirect to user.
   context.go('/login');
+}
+
+Future<bool> sendAuthenticationCode(String code) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.post,
+    apiSlug: '${StaticValues.sendAuthenticationCodeSlug}/$code',
+    useAuthToken: true,
+  );
+
+  return NetworkHelper.validateResponse(response);
 }
 
 Future<User> getUserInfo() async {

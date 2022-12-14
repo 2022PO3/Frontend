@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
+import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/user_data.dart';
 
 class Navbar extends StatefulWidget {
@@ -13,42 +14,6 @@ class Navbar extends StatefulWidget {
 class _NavbarState extends State<Navbar> {
   @override
   Widget build(BuildContext context) {
-    Future openDialog() => showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text(
-              'Dear ${getUserFirstName(context)},',
-              style: const TextStyle(color: Colors.indigoAccent),
-            ),
-            content: const Text('Are you sure you want to sign out?'),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      context.pop();
-                    },
-                    child: const Text(
-                      'Cancel',
-                      style: TextStyle(color: Colors.indigo, fontSize: 15),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      logOutUser(context);
-                    },
-                    child: const Text(
-                      'Confirm',
-                      style: TextStyle(color: Colors.indigo, fontSize: 15),
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
-        );
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,

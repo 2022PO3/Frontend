@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
-AppBar appBar(String title, bool refreshButton, Function? setState) {
+AppBar appBar({
+  String? title,
+  bool refreshButton = false,
+  Function()? refreshFunction,
+}) {
   return AppBar(
     automaticallyImplyLeading: true,
     flexibleSpace: Container(
@@ -12,14 +16,16 @@ AppBar appBar(String title, bool refreshButton, Function? setState) {
         ),
       ),
     ),
-    title: Text(
-      title,
-    ),
+    title: title != null
+        ? Text(
+            title,
+          )
+        : null,
     actions: refreshButton
         ? [
             IconButton(
               onPressed: () {
-                setState!(() {});
+                refreshFunction!();
               },
               icon: const Icon(Icons.refresh_rounded),
             ),

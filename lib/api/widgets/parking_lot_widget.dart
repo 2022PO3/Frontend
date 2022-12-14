@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:po_frontend/api/models/parking_lot_model.dart';
+import 'package:po_frontend/utils/constants.dart';
 
 class ParkingLotsWidget extends StatelessWidget {
   const ParkingLotsWidget({
@@ -13,6 +14,7 @@ class ParkingLotsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     bool booked = parkingLot.booked ?? false;
     return Card(
+      shape: Constants.cardBorder,
       color: booked ? Colors.red.shade300 : Colors.lightGreen.shade400,
       child: Padding(
         padding: const EdgeInsets.symmetric(

@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
+import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/pages/auth/register.dart';
-import 'package:simple_gradient_text/simple_gradient_text.dart';
+import 'package:po_frontend/utils/constants.dart';
+import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/api/models/user_model.dart';
 
 import '../../api/network/network_exception.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key, required this.email, required this.password});
+  const LoginPage({
+    super.key,
+    required this.email,
+    required this.password,
+  });
 
   final String? email;
   final String? password;
@@ -58,17 +64,7 @@ class _LoginPageState extends State<LoginPage> {
             );
           }
           return Scaffold(
-            appBar: AppBar(
-              flexibleSpace: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [(Colors.indigo), (Colors.indigoAccent)],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
-                ),
-              ),
-            ),
+            appBar: appBar(),
             body: const Center(
               child: CircularProgressIndicator(),
             ),
@@ -77,172 +73,140 @@ class _LoginPageState extends State<LoginPage> {
       );
     }
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Center(
-          child: Text('Parking Boys'),
-        ),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [(Colors.indigo), (Colors.indigoAccent)],
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-            ),
-          ),
-        ),
-      ),
+      appBar: appBar(title: 'Parking Boys'),
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: GradientText(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              const Text(
                 'Hello Again!',
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
+                  color: Colors.indigoAccent,
                 ),
-                colors: const [(Colors.indigoAccent), (Colors.indigo)],
               ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: GradientText(
+              const SizedBox(
+                height: 10,
+              ),
+              const Text(
                 "Welcome back, you've been missed!",
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
+                  color: Colors.indigoAccent,
                 ),
-                colors: const [(Colors.indigoAccent), (Colors.indigo)],
               ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            TextInput(controller: _emailTextController, label: 'Email'),
-            const SizedBox(
-              height: 10,
-            ),
-            //password textfield
-
-            PasswordInput(
-              controller: _passwordTextController,
-              label: 'Password',
-            ),
-
-            const SizedBox(
-              height: 20,
-            ),
-            //sign in button
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [(Colors.indigo), (Colors.indigoAccent)],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    minimumSize: const Size.fromHeight(20),
-                  ),
-                  child: Text(
-                    'Sign in',
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.9),
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+              const SizedBox(
+                height: 30,
+              ),
+              buildInputField(_emailTextController, 'Email'),
+              const SizedBox(
+                height: 10,
+              ),
+              PasswordInput(
+                controller: _passwordTextController,
+                label: 'Password',
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.indigoAccent,
+                        borderRadius: BorderRadius.circular(
+                          Constants.borderRadius,
+                        ),
+                      ),
+                      child: TextButton(
+                        child: Text(
+                          'Sign in',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.9),
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        onPressed: () async {
+                          setState(() {
+                            userMail = _emailTextController.text;
+                            userPassword = _passwordTextController.text;
+                          });
+                          try {
+                            User user = await loginUser(
+                              context,
+                              userMail,
+                              userPassword,
+                            );
+                            if (mounted) {
+                              context.go(user.twoFactor
+                                  ? '/login/two-factor'
+                                  : '/home');
+                            }
+                          } on BackendException catch (e) {
+                            print(e);
+                            showFailureDialog(context, e);
+                          }
+                        },
+                      ),
                     ),
                   ),
-                  onPressed: () async {
-                    setState(() {
-                      userMail = _emailTextController.text;
-                      userPassword = _passwordTextController.text;
-                    });
-                    try {
-                      User user = await loginUser(
-                        context,
-                        userMail,
-                        userPassword,
-                      );
-                      if (mounted) {
-                        context
-                            .go(user.twoFactor ? '/login/two-factor' : '/home');
-                      }
-                    } on BackendException catch (e) {
-                      print(e);
-                      showFailureDialog(e.toString());
-                    }
-                  },
-                ),
+                ],
               ),
-            ),
-            const SizedBox(height: 10),
-            //not a member? register now
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Not a member? '),
-                TextButton(
-                  onPressed: () {
-                    context.go('/login/register');
-                  },
-                  child: const Text(
-                    'Register now',
-                    style: TextStyle(
-                        color: Colors.blue, fontWeight: FontWeight.bold),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Not a member?'),
+                  const SizedBox(
+                    width: 2,
                   ),
-                ),
-              ],
-            ),
-          ],
+                  TextButton(
+                    onPressed: () {
+                      context.go('/login/register');
+                    },
+                    child: const Text(
+                      'Register now',
+                      style: TextStyle(
+                        color: Colors.indigoAccent,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  void showFailureDialog(String error) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(
-            error.contains('credentials')
-                ? 'Invalid credentials entered'
-                : error,
-          ),
-          content: Text(
-            error.contains('credentials')
-                ? 'Either  your password or your email address is wrong. Please try again.'
-                : error,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                context.pop();
-              },
-              child: const Text(
-                'OK',
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-          ],
-        );
-      },
+  void showFailedLoginDialog(BuildContext context, BackendException error) {
+    return showFrontendDialog1(
+      context,
+      error.toString().contains('credentials')
+          ? 'Invalid credentials entered'
+          : error.toString(),
+      [
+        Text(
+          error.toString().contains('credentials')
+              ? 'Either  your password or your email address is wrong. Please try again.'
+              : error.toString(),
+        ),
+      ],
     );
   }
 

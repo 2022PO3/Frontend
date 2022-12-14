@@ -99,7 +99,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
           );
         }
         return Scaffold(
-          appBar: appBar('', true, setState),
+          appBar: appBar(),
           body: const Center(
             child: CircularProgressIndicator(),
           ),

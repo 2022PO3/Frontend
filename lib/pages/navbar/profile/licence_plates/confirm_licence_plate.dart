@@ -43,7 +43,7 @@ class _ConfirmLicencePlatePageState extends State<ConfirmLicencePlatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar('Enable licence plate', false, null),
+      appBar: appBar(title: 'Enable licence plate'),
       body: Column(
         children: [
           buildCard(

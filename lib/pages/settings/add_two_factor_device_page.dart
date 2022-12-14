@@ -34,7 +34,11 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
     return isLoading
         ? const LoadingPage()
         : Scaffold(
-            appBar: appBar('Two factor devices', true, setState),
+            appBar: appBar(
+              title: 'Two factor devices',
+              refreshButton: true,
+              refreshFunction: () => setState(() => {}),
+            ),
             body: FutureBuilder(
               future: getDevices(),
               builder: (context, snapshot) {
