@@ -1,9 +1,11 @@
 import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
+import 'package:po_frontend/api/network/network_helper.dart';
+import 'package:po_frontend/api/network/network_service.dart';
+import 'package:po_frontend/api/network/static_values.dart';
+
 import 'package:flutter/material.dart';
-import 'package:po_frontend/api/requests/user_requests.dart';
-import 'package:po_frontend/core/app_bar.dart';
-import 'package:po_frontend/utils/constants.dart';
+import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 enum ButtonState { init, loading, done, error }
 
@@ -29,48 +31,79 @@ class _TwoFactorPageState extends State<TwoFactorPage> {
     final isStretched = state == ButtonState.init;
 
     return Scaffold(
-      appBar: appBar(
-        title: 'Two Factor authentication',
-        refreshButton: true,
-        refreshFunction: () => setState(() => {}),
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [(Colors.indigo), (Colors.indigoAccent)],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+          ),
+        ),
+        title: const Center(
+          child: Text('Two factor authentication'),
+        ),
       ),
       body: Center(
         child: Container(
           constraints: const BoxConstraints(maxWidth: 400),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: GradientText(
                   'Authentication code',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
-                    color: Colors.indigoAccent,
                   ),
+                  colors: const [(Colors.indigoAccent), (Colors.indigo)],
                 ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Form(
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: Form(
                   key: _twoFactorFormKey,
                   child: TextFormField(
                     controller: twoFactorCodeController,
                     keyboardType: TextInputType.number,
                     maxLength: 6,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(14),
-                      prefixIcon: const Icon(
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.all(14),
+                      prefixIcon: Icon(
                         Icons.phone_android_sharp,
                         color: Colors.indigoAccent,
                       ),
                       hintText: 'xxxxxx',
                       counterText: '',
-                      hintStyle: const TextStyle(color: Colors.black38),
-                      enabledBorder: textFieldBorder(Colors.indigo),
-                      focusedBorder: textFieldBorder(Colors.indigoAccent),
-                      focusedErrorBorder: textFieldBorder(Colors.red),
+                      hintStyle: TextStyle(color: Colors.black38),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderSide: BorderSide(
+                          color: Colors.indigo,
+                          width: 1,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderSide: BorderSide(
+                          color: Colors.indigoAccent,
+                          width: 1,
+                        ),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderSide: BorderSide(
+                          color: Colors.redAccent,
+                          width: 1,
+                        ),
+                      ),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -82,31 +115,22 @@ class _TwoFactorPageState extends State<TwoFactorPage> {
                     },
                   ),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                isStretched ? buildButton() : buildSmallButton(isDone, isError),
-                const SizedBox(
-                  height: 15,
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: isStretched
+                    ? buildButton()
+                    : buildSmallButton(isDone, isError),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+            ],
           ),
         ),
-      ),
-    );
-  }
-
-  OutlineInputBorder textFieldBorder(Color color) {
-    return OutlineInputBorder(
-      borderRadius: const BorderRadius.all(
-        Radius.circular(
-          Constants.borderRadius,
-        ),
-      ),
-      borderSide: BorderSide(
-        color: color,
-        width: 1,
       ),
     );
   }
@@ -115,41 +139,40 @@ class _TwoFactorPageState extends State<TwoFactorPage> {
     return Container(
       height: 50,
       decoration: BoxDecoration(
-        color: Colors.indigoAccent,
-        borderRadius: BorderRadius.circular(
-          Constants.borderRadius,
+        gradient: const LinearGradient(
+          colors: [(Colors.indigo), (Colors.indigoAccent)],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
         ),
+        borderRadius: BorderRadius.circular(10),
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextButton(
-              child: const Text(
-                'Verify',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              onPressed: () async {
-                if (_twoFactorFormKey.currentState!.validate()) {
-                  setState(() => {state = ButtonState.loading});
-                  try {
-                    await sendAuthenticationCode(twoFactorCodeController.text);
-                    setState(() => state = ButtonState.done);
-                    await Future.delayed(const Duration(seconds: 1));
-                    if (mounted) context.go('/home');
-                  } on BackendException {
-                    setState(() => state = ButtonState.error);
-                    await Future.delayed(const Duration(seconds: 1));
-                    setState(() => state = ButtonState.init);
-                  }
-                }
-              },
-            ),
+      child: TextButton(
+        style: TextButton.styleFrom(
+          minimumSize: const Size.fromHeight(35),
+        ),
+        child: const Text(
+          'Verify',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
           ),
-        ],
+        ),
+        onPressed: () async {
+          if (_twoFactorFormKey.currentState!.validate()) {
+            setState(() => {state = ButtonState.loading});
+            try {
+              await sendAuthenticationCode();
+              setState(() => state = ButtonState.done);
+              await Future.delayed(const Duration(seconds: 1));
+              if (mounted) context.go('/home');
+            } on BackendException {
+              setState(() => state = ButtonState.error);
+              await Future.delayed(const Duration(seconds: 1));
+              setState(() => state = ButtonState.init);
+            }
+          }
+        },
       ),
     );
   }
@@ -179,10 +202,19 @@ class _TwoFactorPageState extends State<TwoFactorPage> {
                 size: 50,
                 color: Colors.white,
               )
-            : const CircularProgressIndicator(
-                color: Colors.white,
-              ),
+            : const CircularProgressIndicator(color: Colors.white),
       ),
     );
+  }
+
+  Future<bool> sendAuthenticationCode() async {
+    final response = await NetworkService.sendRequest(
+      requestType: RequestType.post,
+      apiSlug:
+          '${StaticValues.sendAuthenticationCodeSlug}/${twoFactorCodeController.text.toString()}',
+      useAuthToken: true,
+    );
+
+    return NetworkHelper.validateResponse(response);
   }
 }

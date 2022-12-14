@@ -6,7 +6,7 @@ import '../network/static_values.dart';
 Future<List<LicencePlate>> getLicencePlates() async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.get,
-    apiSlug: StaticValues.licencePlatesSlug,
+    apiSlug: StaticValues.licenceplatesSlug,
     useAuthToken: true,
   );
   return await NetworkHelper.filterResponse(
@@ -18,7 +18,7 @@ Future<List<LicencePlate>> getLicencePlates() async {
 Future<LicencePlate> addLicencePlate(Map<String, dynamic> body) async {
   final response = await NetworkService.sendRequest(
       requestType: RequestType.post,
-      apiSlug: StaticValues.licencePlatesSlug,
+      apiSlug: StaticValues.licenceplatesSlug,
       useAuthToken: true,
       body: body);
 
@@ -31,7 +31,7 @@ Future<LicencePlate> addLicencePlate(Map<String, dynamic> body) async {
 Future<bool> deleteLicencePlate(LicencePlate lp) async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.delete,
-    apiSlug: StaticValues.licencePlatesSlug,
+    apiSlug: StaticValues.licenceplatesSlug,
     useAuthToken: true,
     pk: lp.id,
   );

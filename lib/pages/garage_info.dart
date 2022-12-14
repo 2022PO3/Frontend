@@ -41,11 +41,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
           List<Price> prices = garageData.prices;
 
           return Scaffold(
-            appBar: appBar(
-              title: garageData.garage.name,
-              refreshButton: true,
-              refreshFunction: () => setState(() => {}),
-            ),
+            appBar: appBar(garageData.garage.name, true, setState),
             body: SingleChildScrollView(
               child: SafeArea(
                 child: Column(
@@ -292,7 +288,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
           );
         }
         return Scaffold(
-          appBar: appBar(),
+          appBar: appBar('', true, setState),
           body: const Center(
             child: CircularProgressIndicator(),
           ),

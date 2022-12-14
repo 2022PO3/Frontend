@@ -8,7 +8,6 @@ import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/parking_lot_model.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/pages/reservations/make_reservation_page.dart';
-import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/user_data.dart';
 
 class SpotSelectionPage extends StatefulWidget {
@@ -30,11 +29,7 @@ class _SpotSelectionPageState extends State<SpotSelectionPage> {
     final DateTime endDate = widget.garageLicenceAndTime.endDate;
 
     return Scaffold(
-      appBar: appBar(
-        title: 'Spot selection',
-        refreshButton: true,
-        refreshFunction: () => setState(() => {}),
-      ),
+      appBar: appBar('Spot selection', true, setState),
       body: FutureBuilder(
         future: getGarageParkingLots(garage.id, {
           'fromDate': startDate.toIso8601String(),
@@ -99,7 +94,7 @@ class _SpotSelectionPageState extends State<SpotSelectionPage> {
       child: ParkingLotsWidget(parkingLot: parkingLot),
       onTap: () {
         (parkingLot.booked ?? false)
-            ? showSpotErrorPopUp(context)
+            ? showSpotErrorPopUp()
             : context.push(
                 '/home/reserve/confirm-reservation',
                 extra: Reservation(
@@ -115,15 +110,27 @@ class _SpotSelectionPageState extends State<SpotSelectionPage> {
     );
   }
 
-  void showSpotErrorPopUp(BuildContext context) {
-    showFrontendDialog1(
-      context,
-      'Spot occupied',
-      [
-        const Text(
-          'This spot is occupied and cannot be selected.',
-        ),
+  void showSpotErrorPopUp() {
+    Widget backButton = TextButton(
+      child: const Text('Back'),
+      onPressed: () {
+        context.pop();
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: const Text('Error'),
+      content: const Text('This spot is occupied.'),
+      actions: [
+        backButton,
       ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

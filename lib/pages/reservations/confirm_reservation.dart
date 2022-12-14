@@ -6,7 +6,6 @@ import 'package:po_frontend/api/widgets/reservation_widget.dart';
 import 'package:po_frontend/api/widgets/parking_lot_widget.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
 import 'package:po_frontend/core/app_bar.dart';
-import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 
 class ConfirmReservationPage extends StatefulWidget {
@@ -27,7 +26,7 @@ class _ConfirmReservationPageState extends State<ConfirmReservationPage> {
     final Reservation reservation = widget.reservation;
 
     return Scaffold(
-      appBar: appBar(title: 'Reservation overview'),
+      appBar: appBar('Reservation overview', false, null),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -113,10 +112,6 @@ class _ConfirmReservationPageState extends State<ConfirmReservationPage> {
         ),
       ),
     );
-  }
-
-  Widget buildReservationConfirmationCard(String text) {
-    return Card(shape: Constants.cardBorder);
   }
 
   bool checkReservation(DateTime date, DateTime date2) {
