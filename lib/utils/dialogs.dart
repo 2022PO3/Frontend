@@ -58,8 +58,6 @@ void showFrontendDialog2(
             const SizedBox(
               height: 20,
             ),
-          ),
-        ],
             Row(
               children: [
                 buildDialogButton(

@@ -84,6 +84,7 @@ class _SelectLicencePlatePageState extends State<SelectLicencePlatePage> {
                   ),
                   const SizedBox(
                     height: 10,
+                  ),
                   Text(
                     snapshot.error.toString(),
                   ),
