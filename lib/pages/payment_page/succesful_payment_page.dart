@@ -59,10 +59,10 @@ class ReturnToAppButton extends StatelessWidget {
           try {
             launchUrlString('https://po3backend.ddns.net/app$route');
           } catch (e) {
-            context.pop();
+            context.go('/home');
           }
         } else {
-          context.pop();
+          context.go('/home');
         }
       },
       child: Text(text),
