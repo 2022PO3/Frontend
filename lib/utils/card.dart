@@ -4,6 +4,7 @@ import 'package:po_frontend/utils/constants.dart';
 Widget buildCard({
   required List<Widget> children,
   bool expanded = false,
+  CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center,
 }) {
   return expanded
       ? Row(
@@ -14,7 +15,10 @@ Widget buildCard({
       : _buildCard(children: children);
 }
 
-Widget _buildCard({required List<Widget> children}) {
+Widget _buildCard({
+  required List<Widget> children,
+  CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center,
+}) {
   return Card(
     shape: Constants.cardBorder,
     child: Padding(
@@ -23,6 +27,7 @@ Widget _buildCard({required List<Widget> children}) {
         vertical: 8,
       ),
       child: Column(
+        crossAxisAlignment: crossAxisAlignment,
         children: [...children],
       ),
     ),

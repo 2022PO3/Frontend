@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
 import 'package:po_frontend/utils/constants.dart';
+import 'package:po_frontend/utils/sized_box.dart';
 
 class ReservationWidget extends StatelessWidget {
   const ReservationWidget({
@@ -12,10 +13,21 @@ class ReservationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool active = (reservation.fromDate.millisecondsSinceEpoch <=
+            DateTime.now().millisecondsSinceEpoch &&
+        DateTime.now().millisecondsSinceEpoch <=
+            reservation.toDate.millisecondsSinceEpoch);
+    final bool done = DateTime.now().isAfter(reservation.toDate);
+    final Color color = done ? Colors.black26 : Colors.black;
+
     return Padding(
       padding: const EdgeInsets.all(5),
       child: Card(
+        color: active
+            ? Colors.green.shade100
+            : (done ? Colors.grey.shade300 : Colors.white),
         shape: Constants.cardBorder,
+        elevation: active ? 10 : (done ? 1 : 0),
         child: Padding(
           padding: const EdgeInsets.symmetric(
             vertical: 8,
@@ -29,39 +41,42 @@ class ReservationWidget extends StatelessWidget {
                 children: [
                   Text(
                     reservation.garage.name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
+                      color: color,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 5,
-              ),
+              const Height(5),
               const Divider(
                 indent: 5,
                 endIndent: 5,
               ),
               Row(
                 children: [
-                  const Text('Licence plate:'),
+                  Text(
+                    'Licence plate:',
+                    style: TextStyle(
+                      color: color,
+                    ),
+                  ),
                   Expanded(
                     child: Center(
                       child: Text(
                         reservation.licencePlate.formatLicencePlate(),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 15,
+                          color: color,
                         ),
                       ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 5,
-              ),
+              const Height(5),
               const Divider(
                 indent: 5,
                 endIndent: 5,
@@ -70,20 +85,22 @@ class ReservationWidget extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       'No.',
                       style: TextStyle(
                         fontSize: 20,
+                        color: color,
                       ),
                     ),
                     Text(
                       reservation.parkingLot.parkingLotNo.toString(),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 20,
+                        color: color,
                       ),
                     ),
                     const VerticalDivider(),
-                    buildReservationTime(reservation),
+                    buildReservationTime(reservation, color),
                   ],
                 ),
               ),
@@ -95,13 +112,14 @@ class ReservationWidget extends StatelessWidget {
   }
 }
 
-Widget buildReservationTime(Reservation reservation) {
+Widget buildReservationTime(Reservation reservation, Color color) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      const Icon(
+      Icon(
         Icons.access_time,
         size: 40,
+        color: color,
       ),
       const SizedBox(
         width: 10,
@@ -109,31 +127,38 @@ Widget buildReservationTime(Reservation reservation) {
       buildDateAndTime(
         reservation.fromDate.toIso8601String().substring(11, 16),
         reservation.fromDate.toIso8601String().substring(0, 10),
+        color,
       ),
-      const Icon(
+      Icon(
         Icons.arrow_right_alt_outlined,
         size: 40,
+        color: color,
       ),
       buildDateAndTime(
         reservation.toDate.toIso8601String().substring(11, 16),
         reservation.toDate.toIso8601String().substring(0, 10),
+        color,
       ),
     ],
   );
 }
 
-Widget buildDateAndTime(String time, String date) {
+Widget buildDateAndTime(String time, String date, Color color) {
   return Column(
     children: [
       Text(
         time,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
+          color: color,
         ),
       ),
       Text(
         date,
+        style: TextStyle(
+          color: color,
+        ),
       ),
     ],
   );

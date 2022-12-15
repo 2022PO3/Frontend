@@ -32,19 +32,35 @@ class _UserReservationsState extends State<UserReservations> {
               List<Reservation> reservations =
                   snapshot.data as List<Reservation>;
 
-              reservations.sort(
+              List<Reservation> doneReservations = reservations
+                  .where((r) => DateTime.now().isAfter(r.toDate))
+                  .toList();
+
+              List<Reservation> activeReservations = reservations
+                  .where((r) => !DateTime.now().isAfter(r.toDate))
+                  .toList();
+
+              doneReservations.sort(
                 (r1, r2) => r1.fromDate.millisecondsSinceEpoch
                     .compareTo(r2.fromDate.millisecondsSinceEpoch),
               );
+
+              activeReservations.sort(
+                (r1, r2) => r1.fromDate.millisecondsSinceEpoch
+                    .compareTo(r2.fromDate.millisecondsSinceEpoch),
+              );
+
+              List<Reservation> allReservations = activeReservations
+                ..addAll(doneReservations);
 
               return ListView.builder(
                 physics: const AlwaysScrollableScrollPhysics().applyTo(
                   const BouncingScrollPhysics(),
                 ),
                 itemBuilder: (context, index) {
-                  return ReservationWidget(reservation: reservations[index]);
+                  return ReservationWidget(reservation: allReservations[index]);
                 },
-                itemCount: reservations.length,
+                itemCount: allReservations.length,
               );
             } else if (snapshot.hasError) {
               return Center(

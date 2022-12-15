@@ -287,6 +287,7 @@ class CurrentParkingSessionWidget extends StatelessWidget {
     return SizedBox(
       width: MediaQuery.of(context).size.shortestSide,
       child: Card(
+        elevation: 10,
         shape: Constants.cardBorder,
         child: LayoutBuilder(
           builder: (context, constraints) {

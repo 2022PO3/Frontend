@@ -8,6 +8,7 @@ import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/parking_lot_model.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/pages/reservations/make_reservation_page.dart';
+import 'package:po_frontend/utils/card.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 
 class SpotSelectionPage extends StatefulWidget {
@@ -44,8 +45,12 @@ class _SpotSelectionPageState extends State<SpotSelectionPage> {
               snapshot.hasData) {
             final List<ParkingLot> parkingLots =
                 snapshot.data as List<ParkingLot>;
-
+            parkingLots.sort(
+              (pl1, pl2) => pl1.floorNumber.compareTo(pl2.floorNumber),
+            );
             return GridView.count(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
               crossAxisCount: 4,
               crossAxisSpacing: 5,
               mainAxisSpacing: 5,

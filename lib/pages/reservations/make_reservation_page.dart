@@ -58,8 +58,8 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
               children: [
                 buildTitleCard(),
                 const Height(5),
-                buildTimePickCard('From: ', startDate),
-                buildTimePickCard('Until:', endDate),
+                buildFromTimePick(),
+                buildToTimePick(),
               ],
             ),
             buildButtons(),
@@ -85,22 +85,22 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
     );
   }
 
-  Widget buildTimePickCard(String text, DateTime date) {
+  Widget buildFromTimePick() {
     return buildCard(
       children: [
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              text,
-              style: const TextStyle(
+            const Text(
+              'From:',
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.indigoAccent,
                 fontSize: 20,
               ),
             ),
-            const Height(5),
+            const Height(10),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
@@ -113,7 +113,95 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
                   maxTime: DateTime(2030, 12, 31),
                   onConfirm: (_date) {
                     setState(() {
-                      date = _date;
+                      startDate = _date;
+                    });
+                  },
+                  currentTime: startDate,
+                  locale: LocaleType.en,
+                );
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.date_range,
+                        size: 18.0,
+                        color: Colors.indigoAccent,
+                      ),
+                      const Width(2),
+                      Text(
+                        startDate.toString().substring(0, 10),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                          color: Colors.indigoAccent,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.access_time,
+                        size: 18.0,
+                        color: Colors.indigoAccent,
+                      ),
+                      const Width(2),
+                      Text(
+                        startDate.toString().substring(10, 16),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                          color: Colors.indigoAccent,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Icon(
+                    Icons.edit,
+                    size: 18.0,
+                    color: Colors.indigoAccent,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget buildToTimePick() {
+    return buildCard(
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Until',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.indigoAccent,
+                fontSize: 20,
+              ),
+            ),
+            const Height(10),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+              ),
+              onPressed: () {
+                DatePicker.showDateTimePicker(
+                  context,
+                  showTitleActions: true,
+                  minTime: DateTime(2022, 11, 1),
+                  maxTime: DateTime(2030, 12, 31),
+                  onConfirm: (_date) {
+                    setState(() {
+                      endDate = _date;
                     });
                   },
                   currentTime: endDate,
@@ -132,7 +220,7 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
                       ),
                       const Width(2),
                       Text(
-                        date.toString().substring(0, 10),
+                        endDate.toString().substring(0, 10),
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18.0,
