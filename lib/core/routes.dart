@@ -25,6 +25,8 @@ import 'package:po_frontend/pages/settings/add_two_factor_device_page.dart';
 import 'package:po_frontend/pages/settings/user_settings.dart';
 import 'package:po_frontend/pages/reservations/spot_selection.dart';
 import 'package:po_frontend/utils/loading_page.dart';
+import 'package:po_frontend/pages/navbar/profile/change_password.dart';
+import 'package:po_frontend/pages/navbar/profile/change_province.dart';
 
 import '../pages/payment_page/succesful_payment_page.dart';
 
@@ -99,6 +101,14 @@ class Routes {
                 GoRoute(
                   path: 'user-info',
                   builder: (context, state) => const UserInfo(),
+                ),
+                GoRoute(
+                  path: 'change-password',
+                  builder: (context, state) => const ChangePasswordPage(),
+                ),
+                GoRoute(
+                  path: 'change-province',
+                  builder: (context, state) => const ChangeProvincePage(),
                 ),
                 GoRoute(
                   path: 'licence-plates',
