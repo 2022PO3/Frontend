@@ -9,7 +9,6 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:po_frontend/api/models/opening_hour_model.dart';
-import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/widgets/garage_opening_hours_widget.dart';
 import 'package:po_frontend/api/models/price_model.dart';
@@ -65,7 +64,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                   buildExpandableCard(
                     'Location',
                     Text(
-                      '${garageSettings.location.country}, ${Province.getProvinceName(garageSettings.location.province)}, ${garageSettings.location.street} ${garageSettings.location.number}, ${garageSettings.location.postCode} ${garageSettings.location.municipality}',
+                      '${garageSettings.location.country}, ${(garageSettings.location.province).toString()}, ${garageSettings.location.street} ${garageSettings.location.number}, ${garageSettings.location.postCode} ${garageSettings.location.municipality}',
                       style: const TextStyle(
                         color: Colors.indigo,
                       ),

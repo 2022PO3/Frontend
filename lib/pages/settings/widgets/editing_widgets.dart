@@ -2,7 +2,7 @@ import 'package:duration_picker/duration_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinbox/flutter_spinbox.dart';
+import 'package:flutter_spinbox/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:po_frontend/pages/payment_widgets/timer_widget.dart';
 import 'package:po_frontend/utils/request_button.dart';
@@ -324,8 +324,9 @@ class _PriceEditorState extends State<PriceEditor> {
             Text(
               widget.price.valuta.symbol,
               style: TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: MediaQuery.of(context).size.shortestSide / 14),
+                fontWeight: FontWeight.w900,
+                fontSize: MediaQuery.of(context).size.shortestSide / 14,
+              ),
             ),
             const SizedBox(
               width: 10,
@@ -333,12 +334,14 @@ class _PriceEditorState extends State<PriceEditor> {
             Expanded(
               flex: 3,
               child: SpinBox(
-                  min: 0,
-                  value: widget.price.price,
-                  decimals: 2,
-                  step: 0.1,
-                  onChanged: (v) =>
-                      widget.onChanged(widget.price.copyWith(price: v))),
+                min: 0,
+                value: widget.price.price,
+                decimals: 2,
+                step: 0.1,
+                onChanged: (v) => widget.onChanged(
+                  widget.price.copyWith(price: v),
+                ),
+              ),
             ),
             const Spacer(),
           ],
@@ -357,8 +360,9 @@ class _PriceEditorState extends State<PriceEditor> {
             child: Text(
               'For staying ${widget.price.duration.toPrettyString(showSeconds: false)}',
               style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: MediaQuery.of(context).size.shortestSide / 20),
+                fontWeight: FontWeight.w500,
+                fontSize: MediaQuery.of(context).size.shortestSide / 20,
+              ),
             ),
           ),
         ),
@@ -383,8 +387,11 @@ class _PriceEditorState extends State<PriceEditor> {
         DurationPicker(
             key: ValueKey(unit),
             duration: widget.price.duration,
-            onChange: (d) =>
-                widget.onChanged(widget.price.copyWith(duration: d)),
+            onChange: (d) => widget.onChanged(
+                  widget.price.copyWith(
+                    duration: d,
+                  ),
+                ),
             snapToMins: 1,
             baseUnit: unit),
       ],
@@ -399,8 +406,11 @@ class _PriceEditorState extends State<PriceEditor> {
           hintText: 'Title'),
       key: ValueKey(widget.price.id),
       initialValue: widget.price.priceString,
-      onChanged: (newValue) =>
-          widget.onChanged(widget.price.copyWith(priceString: newValue)),
+      onChanged: (newValue) => widget.onChanged(
+        widget.price.copyWith(
+          priceString: newValue,
+        ),
+      ),
     );
   }
 }

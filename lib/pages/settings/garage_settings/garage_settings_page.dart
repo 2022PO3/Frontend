@@ -1,16 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinbox/flutter_spinbox.dart';
-import 'package:go_router/go_router.dart';
-import 'package:po_frontend/api/models/enums.dart';
 import 'package:po_frontend/api/requests/garage_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/pages/settings/garage_settings/prices_editor.dart';
-import 'package:po_frontend/utils/request_button.dart';
-import 'package:po_frontend/utils/user_data.dart';
 import '../../../api/models/garage_model.dart';
-import '../../../api/models/garage_settings_model.dart';
-import '../../../api/models/location_model.dart';
 import '../../../api/models/price_model.dart';
 import '../../../utils/error_widget.dart';
 import '../widgets/editing_widgets.dart';
@@ -52,7 +44,7 @@ class _GarageSettingsPageState extends State<GarageSettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar('Garage Settings', false, null),
+      appBar: appBar(title: 'Garage Settings', refreshButton: false),
       body: RefreshIndicator(
         onRefresh: reloadFutures,
         child: SingleChildScrollView(
@@ -65,8 +57,10 @@ class _GarageSettingsPageState extends State<GarageSettingsPage> {
                 onChanged: (garage) => setGarage(garage),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15.0,
+                  vertical: 10,
+                ),
                 child: FutureBuilder<Garage>(
                   future: garageFuture,
                   builder: (context, snapshot) {
@@ -92,8 +86,10 @@ class _GarageSettingsPageState extends State<GarageSettingsPage> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15.0,
+                  vertical: 10,
+                ),
                 child: FutureBuilder<List<Price>>(
                   future: pricesFuture,
                   builder: (context, snapshot) {
@@ -178,10 +174,15 @@ class _Header extends StatelessWidget {
             currentValue: garage.name,
             showFieldName: false,
             valueTextStyle: TextStyle(
-                fontWeight: FontWeight.w900, fontSize: shortestSide / 12),
+              fontWeight: FontWeight.w900,
+              fontSize: shortestSide / 12,
+            ),
             onEdit: (garageName) async {
-              Garage updatedGarage =
-                  await updateGarage(garage.copyWith(name: garageName));
+              Garage updatedGarage = await updateGarage(
+                garage.copyWith(
+                  name: garageName,
+                ),
+              );
               onChanged?.call(updatedGarage);
             },
           ),
@@ -189,7 +190,9 @@ class _Header extends StatelessWidget {
             '${garage.parkingLots - garage.unoccupiedLots} / ${garage.parkingLots}'
                 .toUpperCase(),
             style: TextStyle(
-                fontWeight: FontWeight.w300, fontSize: shortestSide / 16),
+              fontWeight: FontWeight.w300,
+              fontSize: shortestSide / 16,
+            ),
           ),
         ],
       ),
@@ -208,7 +211,7 @@ class CustomCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: EdgeInsets.all(15),
+        padding: const EdgeInsets.all(15),
         child: Column(
           children: [
             if (title != null)

@@ -149,7 +149,7 @@ class GarageWidget extends StatelessWidget {
               height: 2,
             ),
             Text(
-              Province.getProvinceName(location.province),
+              location.province.toString(),
               style: const TextStyle(
                 color: Colors.black87,
               ),

@@ -84,7 +84,7 @@ class _ChangeProvincePageState extends State<ChangeProvincePage> {
                     ),
                     onPressed: () async {
                       setState(() {
-                        province = Province.toProvinceEnum(selectedValue);
+                        province = ProvinceEnum.fromName(selectedValue);
                       });
                       try {
                         User oldUser = getUser(context);

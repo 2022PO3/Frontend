@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_switch/flutter_switch.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
-import 'package:po_frontend/pages/payment_widgets/pay_button.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/settings_card.dart';
 import 'package:po_frontend/utils/user_data.dart';
@@ -27,7 +25,7 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
     final bool hasAutomaticPayment =
         getUserHasAutomaticPayment(context, listen: true);
     return Scaffold(
-      appBar: appBar('Settings', false, null),
+      appBar: appBar(title: 'Settings', refreshButton: false),
       body: RefreshIndicator(
         onRefresh: () async {
           await updateUserInfo(context);
