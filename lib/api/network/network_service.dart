@@ -125,7 +125,9 @@ class NetworkService {
       Map<String, dynamic>? body, int? pk) {
     if (url.contains('user')) {
       return url;
-    } else if (requestType == RequestType.get && pk != null) {
+    } else if ((requestType == RequestType.get ||
+            requestType == RequestType.delete) &&
+        pk != null) {
       return '$url/${pk.toString()}';
     } else if (requestType == RequestType.put) {
       if (body == null) {

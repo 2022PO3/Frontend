@@ -23,7 +23,7 @@ class StaticValues {
   static const String getReservationSlug = 'api/reservations';
 
   // Payment slugs
-  static const String licenceplatesSlug = 'api/licence-plates';
+  static const String licencePlatesSlug = 'api/licence-plates';
   static const String createPaymentSessionSlug = 'api/checkout/create-session';
   static const String getPaymentPreviewSlug = 'api/checkout/preview';
   static const String stripeConnectionSlug = 'api/stripe-connection';
@@ -35,7 +35,11 @@ class StaticValues {
   static const String sendAuthenticationCodeSlug = 'api/auth/totp/login';
   static const String disable2FASlug = 'api/auth/totp/disable';
 
+  // Misc
+  static const String getNotificationsSlug = 'api/notifications';
+  static const String pkNotificationsSlug = 'api/notification';
+
   // Custom settings
-  static const bool debug = true;
-  static const bool overrideServerUrl = true;
+  static const bool debug = false;
+  static const bool overrideServerUrl = false;
 }

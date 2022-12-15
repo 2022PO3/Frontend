@@ -6,6 +6,9 @@ import 'package:po_frontend/api/widgets/reservation_widget.dart';
 import 'package:po_frontend/api/widgets/parking_lot_widget.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
 import 'package:po_frontend/core/app_bar.dart';
+import 'package:po_frontend/utils/button.dart';
+import 'package:po_frontend/utils/card.dart';
+import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 
 class ConfirmReservationPage extends StatefulWidget {
@@ -26,92 +29,143 @@ class _ConfirmReservationPageState extends State<ConfirmReservationPage> {
     final Reservation reservation = widget.reservation;
 
     return Scaffold(
-      appBar: appBar('Reservation overview', false, null),
+      appBar: appBar(title: 'Reservation overview'),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              'Your selected garage:',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-            ),
-            Text(
-              reservation.garage.name,
-            ),
-            const Text(
-              'Numberplate for this reservation:',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-            ),
-            Text(
-              reservation.licencePlate.formatLicencePlate(),
-            ),
-            const Text(
-              'Your selected time and date:',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-            ),
-            buildReservationTime(reservation),
-            const Text(
-              'Your selected spot:',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-            ),
-            ParkingLotsWidget(parkingLot: reservation.parkingLot),
-            Container(
-              decoration: BoxDecoration(
-                  color: Colors.indigo, borderRadius: BorderRadius.circular(5)),
-              child: TextButton(
-                onPressed: () async {
-                  if (checkReservation(
-                    reservation.fromDate,
-                    reservation.toDate,
-                  )) {
-                    try {
-                      await postReservation(reservation);
-                      if (mounted) {
-                        showSuccessDialog(
-                          context,
-                          'Successfully created reservation',
-                          'Your reservation has been created successfully. You will no be redirected to the home screen',
-                        );
-                      }
-                      await Future.delayed(
-                        const Duration(seconds: 2),
-                      );
-                      if (mounted) context.go('/home');
-                    } on BackendException catch (e) {
-                      print(e);
-                      showFailureDialog(context, e);
-                    }
-                  } else {
-                    showReservationErrorPopUp(context);
-                  }
-                },
-                child: const Text(
-                  'Confirm reservation',
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+            Column(
+              children: [
+                buildCard(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Your selected garage:',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 17,
+                        color: Colors.indigoAccent,
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        reservation.garage.name,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                  expanded: true,
                 ),
+                buildCard(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Numberplate for this reservation:',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 17,
+                        color: Colors.indigoAccent,
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        reservation.licencePlate.formatLicencePlate(),
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                  expanded: true,
+                ),
+                buildCard(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Your selected time and date:',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 17,
+                        color: Colors.indigoAccent,
+                      ),
+                    ),
+                    Center(
+                      child: buildReservationTime(
+                        reservation,
+                        Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+                buildCard(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Your selected spot:',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 17,
+                        color: Colors.indigoAccent,
+                      ),
+                    ),
+                    Center(
+                      child: ParkingLotsWidget(
+                        parkingLot: reservation.parkingLot,
+                      ),
+                    ),
+                  ],
+                  expanded: true,
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: buildButton(
+                'Confirm reservation',
+                Colors.indigoAccent,
+                () => handleConfirmReservation(reservation),
               ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  Widget buildReservationConfirmationCard(String text) {
+    return Card(shape: Constants.cardBorder);
+  }
+
+  void handleConfirmReservation(Reservation reservation) async {
+    if (checkReservation(
+      reservation.fromDate,
+      reservation.toDate,
+    )) {
+      try {
+        await postReservation(reservation);
+        if (mounted) {
+          showSuccessDialog(
+            context,
+            'Successfully created reservation',
+            'Your reservation has been created successfully. You will no be redirected to the home screen',
+          );
+        }
+        await Future.delayed(
+          const Duration(seconds: 2),
+        );
+        if (mounted) context.go('/home');
+      } on BackendException catch (e) {
+        print(e);
+        showFailureDialog(context, e);
+      }
+    } else {
+      showReservationErrorPopUp(context);
+    }
   }
 
   bool checkReservation(DateTime date, DateTime date2) {

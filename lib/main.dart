@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:po_frontend/core/routes.dart';
 import 'package:po_frontend/pages/auth/auth_service.dart';
+import 'package:po_frontend/providers/notification_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
@@ -26,7 +27,10 @@ void main() async {
   usePathUrlStrategy();
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => UserProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => NotificationProvider())
+      ],
       child: MyApp(
         initialLocation: initialLocation,
       ),

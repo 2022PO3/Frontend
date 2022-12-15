@@ -43,11 +43,18 @@ class _ConfirmLicencePlatePageState extends State<ConfirmLicencePlatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar('Enable licence plate', false, null),
+      appBar: appBar(title: 'Enable licence plate'),
       body: Column(
         children: [
           buildCard(
-            'Confirm the licence plate ${widget.licencePlate.formatLicencePlate()} by uploading the registration by clicking the button below.',
+            children: [
+              Text(
+                'Confirm the licence plate ${widget.licencePlate.formatLicencePlate()} by uploading the registration by clicking the button below.',
+                style: const TextStyle(
+                  fontSize: 17,
+                ),
+              ),
+            ],
           ),
           const Divider(
             indent: 10,

@@ -15,47 +15,76 @@ class _UserReservationsState extends State<UserReservations> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar('My reservations', true, setState),
-      body: FutureBuilder(
-        future: getReservations(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.hasData) {
-            List<Reservation> reservations = snapshot.data as List<Reservation>;
-
-            reservations.sort(
-              (r1, r2) => r1.fromDate.millisecondsSinceEpoch
-                  .compareTo(r2.fromDate.millisecondsSinceEpoch),
-            );
-
-            return ListView.builder(
-              itemBuilder: (context, index) {
-                return ReservationWidget(reservation: reservations[index]);
-              },
-              itemCount: reservations.length,
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.error_outline,
-                    color: Colors.red,
-                    size: 25,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(snapshot.error.toString()),
-                ],
-              ),
-            );
-          }
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+      appBar: appBar(
+        title: 'My reservations',
+        refreshButton: true,
+        refreshFunction: () => setState(() => {}),
+      ),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          setState(() => {});
         },
+        child: FutureBuilder(
+          future: getReservations(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done &&
+                snapshot.hasData) {
+              List<Reservation> reservations =
+                  snapshot.data as List<Reservation>;
+
+              List<Reservation> doneReservations = reservations
+                  .where((r) => DateTime.now().isAfter(r.toDate))
+                  .toList();
+
+              List<Reservation> activeReservations = reservations
+                  .where((r) => !DateTime.now().isAfter(r.toDate))
+                  .toList();
+
+              doneReservations.sort(
+                (r1, r2) => r1.fromDate.millisecondsSinceEpoch
+                    .compareTo(r2.fromDate.millisecondsSinceEpoch),
+              );
+
+              activeReservations.sort(
+                (r1, r2) => r1.fromDate.millisecondsSinceEpoch
+                    .compareTo(r2.fromDate.millisecondsSinceEpoch),
+              );
+
+              List<Reservation> allReservations = activeReservations
+                ..addAll(doneReservations);
+
+              return ListView.builder(
+                physics: const AlwaysScrollableScrollPhysics().applyTo(
+                  const BouncingScrollPhysics(),
+                ),
+                itemBuilder: (context, index) {
+                  return ReservationWidget(reservation: allReservations[index]);
+                },
+                itemCount: allReservations.length,
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.error_outline,
+                      color: Colors.red,
+                      size: 25,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(snapshot.error.toString()),
+                  ],
+                ),
+              );
+            }
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        ),
       ),
     );
   }

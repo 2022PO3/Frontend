@@ -6,6 +6,7 @@ import 'package:flutter_credit_card/glassmorphism_config.dart';
 import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/credit_card_model.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
+import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/pages/payment_widgets/pay_button.dart';
 
 import '../../../utils/request_button.dart';
@@ -36,6 +37,7 @@ class _AddAutomaticPaymentPageState extends State<AddAutomaticPaymentPage> {
   Widget build(BuildContext context) {
     final Color primaryColor = Theme.of(context).primaryColor;
     return Scaffold(
+      appBar: appBar(title: 'Add automatic payment'),
       body: SafeArea(
         child: Scrollbar(
           child: ListView(

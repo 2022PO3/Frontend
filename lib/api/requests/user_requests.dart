@@ -3,7 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/credit_card_model.dart';
 import 'package:po_frontend/api/models/device_model.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
+import 'package:po_frontend/api/models/notification_model.dart';
 import 'package:po_frontend/providers/user_provider.dart';
+import 'package:po_frontend/utils/notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,6 +13,30 @@ import '../models/user_model.dart';
 import '../network/network_helper.dart';
 import '../network/network_service.dart';
 import '../network/static_values.dart';
+
+Future<bool> registerUser(
+    String emailUser,
+    String passwordUser,
+    String confirmPasswordUser,
+    String? firstNameUser,
+    String? lastNameUser) async {
+  Map<String, dynamic> body = {
+    'email': emailUser,
+    'password': passwordUser,
+    'passwordConfirmation': confirmPasswordUser,
+    'role': 1,
+    'firstName': firstNameUser == '' ? null : firstNameUser,
+    'lastName': lastNameUser == '' ? null : lastNameUser,
+  };
+  print(body);
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.post,
+    apiSlug: StaticValues.postRegisterUser,
+    body: body,
+    useAuthToken: false,
+  );
+  return NetworkHelper.validateResponse(response);
+}
 
 Future<User> loginUser(
     BuildContext context, String emailUser, String passwordUser) async {
@@ -56,6 +82,16 @@ Future<void> logOutUser(BuildContext context) async {
   }
   // Make sure to redirect to user.
   context.go('/login');
+}
+
+Future<bool> sendAuthenticationCode(String code) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.post,
+    apiSlug: '${StaticValues.sendAuthenticationCodeSlug}/$code',
+    useAuthToken: true,
+  );
+
+  return NetworkHelper.validateResponse(response);
 }
 
 Future<User> getUserInfo() async {
@@ -175,6 +211,76 @@ Future<bool> removeAutomaticPayment() async {
     requestType: RequestType.delete,
     apiSlug: StaticValues.stripeConnectionSlug,
     useAuthToken: true,
+  );
+
+  return NetworkHelper.validateResponse(response);
+}
+
+Future<String> addTwoFactorDevice(
+  String name,
+) async {
+  final response = await NetworkService.sendRequest(
+      requestType: RequestType.post,
+      apiSlug: StaticValues.addTwoFactorDeviceSlug,
+      useAuthToken: true,
+      body: {'name': name});
+
+  return await NetworkHelper.filterResponse(
+    callBack: User.extractSecret,
+    response: response,
+  );
+}
+
+Future<List<Device>> getDevices() async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.get,
+    apiSlug: StaticValues.twoFactorDevicesSlug,
+    useAuthToken: true,
+  );
+
+  return await NetworkHelper.filterResponse(
+    callBack: Device.listFromJSON,
+    response: response,
+  );
+}
+
+Future<List<FrontendNotification>> getNotifications(
+    BuildContext context) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.get,
+    apiSlug: StaticValues.getNotificationsSlug,
+    useAuthToken: true,
+  );
+
+  List<FrontendNotification> notifications = await NetworkHelper.filterResponse(
+    callBack: FrontendNotification.listFromJSON,
+    response: response,
+  );
+  setNotifications(context, notifications);
+
+  return notifications;
+}
+
+Future<bool> setNotificationSeen(FrontendNotification notification) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.put,
+    apiSlug: StaticValues.pkNotificationsSlug,
+    useAuthToken: true,
+    pk: notification.id,
+    body: notification.toJSON(),
+  );
+
+  return NetworkHelper.validateResponse(response);
+}
+
+Future<bool> deleteNotification(
+  FrontendNotification notification,
+) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.delete,
+    apiSlug: StaticValues.pkNotificationsSlug,
+    useAuthToken: true,
+    pk: notification.id,
   );
 
   return NetworkHelper.validateResponse(response);
