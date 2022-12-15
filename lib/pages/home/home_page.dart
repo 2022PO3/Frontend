@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:po_frontend/core/app_bar.dart';
+import 'package:po_frontend/api/models/notification_model.dart';
+import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/utils/constants.dart';
+import 'package:po_frontend/utils/loading_page.dart';
 import 'package:po_frontend/utils/user_data.dart';
 import '../../api/models/licence_plate_model.dart';
 import '../../api/requests/garage_requests.dart';
@@ -10,6 +12,7 @@ import '../../utils/error_widget.dart';
 import '../navbar/navbar.dart';
 import '../payment_widgets/pay_button.dart';
 import '../payment_widgets/timer_widget.dart';
+import 'package:badges/badges.dart';
 
 import 'dart:async';
 
@@ -25,59 +28,125 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   // Save futures here to use refresh indicator
+  bool isLoading = true;
   late Future<List<LicencePlate>> licencePlatesFuture;
   late Future<List<Garage>> garagesFuture;
+  late Future<List<FrontendNotification>> notificationsFuture;
 
   @override
   void initState() {
     super.initState();
-
     getFutures();
   }
 
-  Future getFutures() async {
+  Future<List<dynamic>> getFutures() async {
     setState(() {
       licencePlatesFuture = getLicencePlates();
       garagesFuture = getAllGarages();
+      notificationsFuture = getNotifications(context);
     });
-    saveUserToProvider(context);
 
-    return Future.wait([licencePlatesFuture, garagesFuture]);
+    saveUserToProvider(context);
+    List<dynamic> futureList = await Future.wait([
+      licencePlatesFuture,
+      garagesFuture,
+      notificationsFuture,
+    ]);
+
+    setState(() {
+      isLoading = false;
+    });
+
+    return futureList;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      endDrawer: const Navbar(),
-      appBar: appBar(
-        title: getUserFirstName(context),
-      ),
-      body: RefreshIndicator(
-        onRefresh: getFutures,
-        child: CustomScrollView(
-          physics: const AlwaysScrollableScrollPhysics().applyTo(
-            const BouncingScrollPhysics(),
-          ),
-          slivers: [
-            SliverPersistentHeader(
-              pinned: true,
-              floating: true,
-              delegate: SimpleHeaderDelegate(
-                child: CurrentParkingSessionsListWidget(
-                  licencePlatesFuture: licencePlatesFuture,
+    return isLoading
+        ? const LoadingPage()
+        : Scaffold(
+            drawer: const Navbar(),
+            appBar: AppBar(
+              automaticallyImplyLeading: true,
+              flexibleSpace: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [(Colors.indigo), (Colors.indigoAccent)],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
                 ),
-                maxHeight: MediaQuery.of(context).size.shortestSide / 2.5,
-                minHeight: MediaQuery.of(context).size.shortestSide / 5,
+              ),
+              title: Text(
+                getUserFirstName(context),
+              ),
+              actions: [generateNotificationsButton()],
+            ),
+            body: RefreshIndicator(
+              onRefresh: getFutures,
+              child: CustomScrollView(
+                physics: const AlwaysScrollableScrollPhysics().applyTo(
+                  const BouncingScrollPhysics(),
+                ),
+                slivers: [
+                  SliverPersistentHeader(
+                    pinned: true,
+                    floating: true,
+                    delegate: SimpleHeaderDelegate(
+                      child: CurrentParkingSessionsListWidget(
+                        licencePlatesFuture: licencePlatesFuture,
+                      ),
+                      maxHeight: MediaQuery.of(context).size.shortestSide / 2.5,
+                      minHeight: MediaQuery.of(context).size.shortestSide / 5,
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: GarageListWidget(
+                      garagesFuture: garagesFuture,
+                    ),
+                  ),
+                ],
               ),
             ),
-            SliverToBoxAdapter(
-              child: GarageListWidget(
-                garagesFuture: garagesFuture,
-              ),
-            ),
-          ],
-        ),
-      ),
+          );
+  }
+
+  Widget generateNotificationsButton() {
+    const Icon notificationIcon = Icon(
+      Icons.notifications_rounded,
+      color: Colors.white,
+    );
+    return FutureBuilder(
+      future: notificationsFuture,
+      builder: ((context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData) {
+          List<FrontendNotification> notifications =
+              snapshot.data as List<FrontendNotification>;
+          int newNotifications = (notifications.where((n) => !n.seen)).length;
+          return TextButton(
+            onPressed: () {
+              context.go('/home/notifications');
+            },
+            child: newNotifications != 0
+                ? Badge(
+                    badgeColor: Colors.redAccent,
+                    badgeContent: Text(
+                      newNotifications.toString(),
+                    ),
+                    child: notificationIcon,
+                  )
+                : notificationIcon,
+          );
+        } else {
+          return TextButton(
+            onPressed: () {
+              context.go('/home/notifications');
+            },
+            child: notificationIcon,
+          );
+        }
+      }),
     );
   }
 }

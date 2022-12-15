@@ -33,6 +33,10 @@ class StaticValues {
   static const String sendAuthenticationCodeSlug = 'api/auth/totp/login';
   static const String disable2FASlug = 'api/auth/totp/disable';
 
+  // Misc
+  static const String getNotificationsSlug = 'api/notifications';
+  static const String pkNotificationsSlug = 'api/notification';
+
   // Custom settings
   static const bool debug = true;
   static const bool overrideServerUrl = true;

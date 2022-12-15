@@ -9,7 +9,6 @@ import 'package:po_frontend/api/models/parking_lot_model.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/pages/reservations/make_reservation_page.dart';
 import 'package:po_frontend/utils/dialogs.dart';
-import 'package:po_frontend/utils/user_data.dart';
 
 class SpotSelectionPage extends StatefulWidget {
   const SpotSelectionPage({
@@ -104,7 +103,6 @@ class _SpotSelectionPageState extends State<SpotSelectionPage> {
                 '/home/reserve/confirm-reservation',
                 extra: Reservation(
                   licencePlate: widget.garageLicenceAndTime.licencePlate,
-                  userId: getUserId(context),
                   fromDate: startDate,
                   toDate: endDate,
                   parkingLot: parkingLot,
