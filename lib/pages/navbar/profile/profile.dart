@@ -13,7 +13,7 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(title: 'Settings'),
+      appBar: appBar(title: 'Profile'),
       body: Center(
         child: Container(
           constraints: const BoxConstraints(maxWidth: 400),

@@ -47,7 +47,14 @@ class _ConfirmLicencePlatePageState extends State<ConfirmLicencePlatePage> {
       body: Column(
         children: [
           buildCard(
-            'Confirm the licence plate ${widget.licencePlate.formatLicencePlate()} by uploading the registration by clicking the button below.',
+            children: [
+              Text(
+                'Confirm the licence plate ${widget.licencePlate.formatLicencePlate()} by uploading the registration by clicking the button below.',
+                style: const TextStyle(
+                  fontSize: 17,
+                ),
+              ),
+            ],
           ),
           const Divider(
             indent: 10,

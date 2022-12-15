@@ -115,17 +115,16 @@ class _LicencePlatesPageState extends State<LicencePlatesPage> {
   }
 
   void addLicencePlateFromDialog() async {
+    final String licencePlate = formatLicencePlate(
+      addLicencePlateController.text,
+    );
     if (_addLicencePlateFormKey.currentState!.validate()) {
       context.pop();
       setState(() {
         isLoading = true;
       });
       try {
-        await addLicencePlate({
-          'licencePlate': formatLicencePlate(
-            addLicencePlateController.text,
-          ),
-        });
+        await addLicencePlate({'licencePlate': licencePlate});
         setState(() {
           isLoading = false;
         });
@@ -142,12 +141,41 @@ class _LicencePlatesPageState extends State<LicencePlatesPage> {
         setState(() {
           isLoading = false;
         });
-        showFailureDialog(context, e);
+        if (e.toString().contains('already exists')) {
+          showReportDialog(licencePlate);
+        } else {
+          showFailureDialog(context, e);
+        }
       }
     }
   }
 
   String formatLicencePlate(String lp) {
     return lp.replaceAll('-', '').toUpperCase();
+  }
+
+  void showReportDialog(String licencePlate) {
+    return showFrontendDialog2(
+      context,
+      'Licence plate already exists',
+      [
+        const Text(
+          'This licence plate is already found in our system, but not yet activated. Do you think someone else registered your licence plate? Report it to us, such that we can investigate the case.',
+        ),
+        const Text(
+          'Please note that a vehicle registration certificate is needed for us to verify the ownership of the licence plate.',
+        ),
+      ],
+      () => handleReportLicencePlate(licencePlate),
+      leftButtonText: 'Report',
+    );
+  }
+
+  void handleReportLicencePlate(String licencePlate) {
+    context.pop();
+    context.push(
+      '/home/profile/licence-plates/report',
+      extra: licencePlate,
+    );
   }
 }

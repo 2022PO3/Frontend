@@ -6,6 +6,7 @@ import 'package:po_frontend/api/requests/licence_plate_requests.dart';
 import 'package:po_frontend/pages/reservations/make_reservation_page.dart';
 import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/dialogs.dart';
+import 'package:po_frontend/utils/sized_box.dart';
 
 import '../network/network_exception.dart';
 
@@ -93,9 +94,7 @@ class _AddLicencePlateWidgetState extends State<AddLicencePlateWidget> {
                     Icons.directions_car_rounded,
                     size: 50,
                   ),
-                  const SizedBox(
-                    width: 10,
-                  ),
+                  const Width(10),
                   Text(
                     widget.licencePlate.formatLicencePlate(),
                     style: const TextStyle(
@@ -122,97 +121,74 @@ class _AddLicencePlateWidgetState extends State<AddLicencePlateWidget> {
   }
 
   void showLicencePlateDeletionPopUp(LicencePlate licencePlate) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Delete this licence plate?'),
-          content: const Text(
-            'Are you sure that you want to delete this licence plate? This will remove all reservations made with this licence plate.',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () async {
-                context.pop();
-                try {
-                  await deleteLicencePlate(licencePlate);
-                } on BackendException catch (e) {
-                  print(e);
-                  showFailureDialog(context, e);
-                  return;
-                }
-                if (mounted) {
-                  showSuccessDialog(
-                    context,
-                    'Success',
-                    'Your device is successfully deleted and two factor authentication is disabled.',
-                  );
-                }
-                setState(() {});
-              },
-              child: const Text(
-                'Confirm',
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                context.pop();
-              },
-              child: const Text(
-                'Cancel',
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
+    showFrontendDialog2(
+      context,
+      'Delete this licence plate?',
+      [
+        const Text(
+          'Are you sure that you want to delete this licence plate? This will remove all reservations made with this licence plate.',
+        ),
+      ],
+      () => handleLicencePlateDeletion(licencePlate),
+      leftButtonText: 'Yes',
+      rightButtonText: 'No',
     );
   }
 
+  void handleLicencePlateDeletion(LicencePlate licencePlate) async {
+    context.pop();
+    try {
+      await deleteLicencePlate(licencePlate);
+    } on BackendException catch (e) {
+      print(e);
+      showFailureDialog(context, e);
+      return;
+    }
+    if (mounted) {
+      showSuccessDialog(
+        context,
+        'Success',
+        'Your device is successfully deleted and two factor authentication is disabled.',
+      );
+    }
+    setState(() {});
+  }
+
   void showEnableLicencePlatePopUp(LicencePlate licencePlate) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Enable this licence plate?'),
-          content: const Text(
-            'You can only enable this licence plate when you are the owner of this licence plate. You can verify your ownership by uploading the registration certificate of your licence plate. Continue by clicking Next.',
-          ),
-          actions: [
+    showFrontendDialog2(
+      context,
+      'Enable this licence plate?',
+      [
+        const Text(
+          'You can only enable this licence plate when you are the owner of this licence plate. You can verify your ownership by uploading the registration certificate of your licence plate. Continue by clicking Next.',
+        ),
+        Row(
+          children: [
+            const Text('Why do we ask this?'),
             TextButton(
-              onPressed: () {
-                context.pop();
-                context.push(
-                  '/home/profile/licence-plates/enable',
-                  extra: licencePlate,
-                );
-              },
+              onPressed: () => context.push(
+                '/home/profile/licence-plates/explication',
+              ),
               child: const Text(
-                'Next',
+                'See here why.',
                 style: TextStyle(
-                  color: Colors.black,
+                  color: Colors.indigoAccent,
                 ),
               ),
-            ),
-            TextButton(
-              onPressed: () {
-                context.pop();
-              },
-              child: const Text(
-                'Cancel',
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
-            ),
+            )
           ],
-        );
-      },
+        ),
+      ],
+      () => handleEnableLicencePlate(licencePlate),
+      leftButtonText: 'Next',
+    );
+  }
+
+  void handleEnableLicencePlate(LicencePlate licencePlate) {
+    context.pop();
+    context.push(
+      '/home/profile/licence-plates/enable',
+      extra: licencePlate,
     );
   }
 }

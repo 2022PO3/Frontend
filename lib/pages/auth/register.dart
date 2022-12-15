@@ -372,9 +372,10 @@ class _RegisterPageState extends State<RegisterPage> {
 }
 
 Widget buildInputField(
-  TextEditingController controller,
-  String hintText,
-) {
+  TextEditingController? controller,
+  String hintText, {
+  String? initialValue,
+}) {
   return Container(
     decoration: BoxDecoration(
       color: Colors.white,
@@ -387,7 +388,8 @@ Widget buildInputField(
         left: 20,
         right: 10,
       ),
-      child: TextField(
+      child: TextFormField(
+        initialValue: initialValue,
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: hintText,
@@ -396,7 +398,7 @@ Widget buildInputField(
           ),
           suffixIcon: IconButton(
             onPressed: () {
-              controller.clear();
+              controller!.clear();
             },
             icon: const Icon(
               Icons.clear,

@@ -8,7 +8,10 @@ import 'package:po_frontend/api/models/reservation_model.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/requests/garage_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
+import 'package:po_frontend/utils/button.dart';
+import 'package:po_frontend/utils/card.dart';
 import 'package:po_frontend/utils/dialogs.dart';
+import 'package:po_frontend/utils/sized_box.dart';
 
 class MakeReservationPage extends StatefulWidget {
   const MakeReservationPage({
@@ -47,262 +50,272 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
     return Scaffold(
       appBar: appBar(title: 'New reservation'),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            const Text('Please pick a time and date:',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                )),
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
             Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'From:',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    DatePicker.showDateTimePicker(
-                      context,
-                      theme: const DatePickerTheme(
-                        containerHeight: 210.0,
-                      ),
-                      showTitleActions: true,
-                      minTime: DateTime(2022, 11, 10),
-                      maxTime: DateTime(2030, 12, 31),
-                      onConfirm: (date) {
-                        setState(
-                          () {
-                            startDate = date;
-                          },
-                        );
-                      },
-                      currentTime: startDate,
-                      locale: LocaleType.en,
-                    );
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: 50.0,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                const Icon(
-                                  Icons.date_range,
-                                  size: 18.0,
-                                  color: Colors.white,
-                                ),
-                                Text(
-                                  startDate.toString().substring(0, 10),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18.0,
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.access_time,
-                              size: 18.0,
-                              color: Colors.white,
-                            ),
-                            Text(
-                              startDate.toString().substring(10, 16),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18.0,
-                              ),
-                            )
-                          ],
-                        ),
-                        const Icon(
-                          Icons.edit,
-                          size: 18.0,
-                          color: Colors.white,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                buildTitleCard(),
+                const Height(5),
+                buildFromTimePick(),
+                buildToTimePick(),
               ],
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Until:',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    )),
-                ElevatedButton(
-                  onPressed: () {
-                    DatePicker.showDateTimePicker(
-                      context,
-                      theme: const DatePickerTheme(
-                        containerHeight: 210.0,
-                      ),
-                      showTitleActions: true,
-                      minTime: DateTime(2022, 11, 1),
-                      maxTime: DateTime(2030, 12, 31),
-                      onConfirm: (date) {
-                        setState(() {
-                          endDate = date;
-                        });
-                      },
-                      currentTime: endDate,
-                      locale: LocaleType.en,
-                    );
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: 50.0,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                const Icon(
-                                  Icons.date_range,
-                                  size: 18.0,
-                                  color: Colors.white,
-                                ),
-                                Text(
-                                  endDate.toString().substring(0, 10),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18.0,
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.access_time,
-                              size: 18.0,
-                              color: Colors.white,
-                            ),
-                            Text(
-                              endDate.toString().substring(10, 16),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18.0,
-                              ),
-                            )
-                          ],
-                        ),
-                        const Icon(
-                          Icons.edit,
-                          size: 18.0,
-                          color: Colors.white,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.indigo,
-                        borderRadius: BorderRadius.circular(5)),
-                    child: TextButton(
-                      onPressed: () async {
-                        if (compareDates(startDate, endDate)) {
-                          Reservation reservation = await assignReservation(
-                            widget.garageAndLicencePlate.garage,
-                            startDate,
-                            endDate,
-                          );
-                          if (mounted) {
-                            context.push('/home/reserve/confirm-reservation',
-                                extra: reservation);
-                          }
-                        } else {
-                          showDateErrorPopUp(context);
-                        }
-                      },
-                      child: const Text(
-                        'Random spot',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.indigo,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: TextButton(
-                      onPressed: () async {
-                        if (compareDates(startDate, endDate)) {
-                          context.push(
-                            '/home/reserve/spot-selection',
-                            extra: GarageLicencePlateAndTime(
-                              licencePlate:
-                                  widget.garageAndLicencePlate.licencePlate,
-                              garage: widget.garageAndLicencePlate.garage,
-                              startDate: startDate,
-                              endDate: endDate,
-                            ),
-                          );
-                        } else {
-                          showDateErrorPopUp(context);
-                        }
-                      },
-                      child: const Text(
-                        'Select a spot',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            buildButtons(),
           ],
         ),
       ),
     );
+  }
+
+  Widget buildTitleCard() {
+    return buildCard(
+      children: [
+        const Text(
+          'Please pick a time and date:',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Colors.indigoAccent,
+          ),
+        ),
+      ],
+      expanded: true,
+    );
+  }
+
+  Widget buildFromTimePick() {
+    return buildCard(
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'From:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.indigoAccent,
+                fontSize: 20,
+              ),
+            ),
+            const Height(10),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+              ),
+              onPressed: () {
+                DatePicker.showDateTimePicker(
+                  context,
+                  showTitleActions: true,
+                  minTime: DateTime(2022, 11, 1),
+                  maxTime: DateTime(2030, 12, 31),
+                  onConfirm: (_date) {
+                    setState(() {
+                      startDate = _date;
+                    });
+                  },
+                  currentTime: startDate,
+                  locale: LocaleType.en,
+                );
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.date_range,
+                        size: 18.0,
+                        color: Colors.indigoAccent,
+                      ),
+                      const Width(2),
+                      Text(
+                        startDate.toString().substring(0, 10),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                          color: Colors.indigoAccent,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.access_time,
+                        size: 18.0,
+                        color: Colors.indigoAccent,
+                      ),
+                      const Width(2),
+                      Text(
+                        startDate.toString().substring(10, 16),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                          color: Colors.indigoAccent,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Icon(
+                    Icons.edit,
+                    size: 18.0,
+                    color: Colors.indigoAccent,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget buildToTimePick() {
+    return buildCard(
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Until',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.indigoAccent,
+                fontSize: 20,
+              ),
+            ),
+            const Height(10),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+              ),
+              onPressed: () {
+                DatePicker.showDateTimePicker(
+                  context,
+                  showTitleActions: true,
+                  minTime: DateTime(2022, 11, 1),
+                  maxTime: DateTime(2030, 12, 31),
+                  onConfirm: (_date) {
+                    setState(() {
+                      endDate = _date;
+                    });
+                  },
+                  currentTime: endDate,
+                  locale: LocaleType.en,
+                );
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.date_range,
+                        size: 18.0,
+                        color: Colors.indigoAccent,
+                      ),
+                      const Width(2),
+                      Text(
+                        endDate.toString().substring(0, 10),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                          color: Colors.indigoAccent,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.access_time,
+                        size: 18.0,
+                        color: Colors.indigoAccent,
+                      ),
+                      const Width(2),
+                      Text(
+                        endDate.toString().substring(10, 16),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                          color: Colors.indigoAccent,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Icon(
+                    Icons.edit,
+                    size: 18.0,
+                    color: Colors.indigoAccent,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget buildButtons() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 4,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          buildButton(
+            'Random spot',
+            Colors.indigoAccent,
+            () => handleRandomSpotSelection(),
+            onlyExpanded: true,
+          ),
+          const Width(10),
+          buildButton(
+            'Select a spot',
+            Colors.indigoAccent,
+            () => handleManualSpotSelection(),
+            onlyExpanded: true,
+          ),
+        ],
+      ),
+    );
+  }
+
+  void handleRandomSpotSelection() async {
+    if (compareDates(startDate, endDate)) {
+      Reservation reservation = await assignReservation(
+        widget.garageAndLicencePlate.garage,
+        startDate,
+        endDate,
+      );
+      if (mounted) {
+        context.push('/home/reserve/confirm-reservation', extra: reservation);
+      }
+    } else {
+      showDateErrorPopUp(context);
+    }
+  }
+
+  void handleManualSpotSelection() {
+    if (compareDates(startDate, endDate)) {
+      context.push(
+        '/home/reserve/spot-selection',
+        extra: GarageLicencePlateAndTime(
+          licencePlate: widget.garageAndLicencePlate.licencePlate,
+          garage: widget.garageAndLicencePlate.garage,
+          startDate: startDate,
+          endDate: endDate,
+        ),
+      );
+    } else {
+      showDateErrorPopUp(context);
+    }
   }
 
   Future<Reservation> assignReservation(
@@ -333,9 +346,8 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
     throw Exception();
   }
 
-  var now = DateTime.now();
   bool compareDates(DateTime date, DateTime date2) {
-    now = DateTime.now();
+    DateTime now = DateTime.now();
     if (now.compareTo(date) > 0) {
       return false;
     }
