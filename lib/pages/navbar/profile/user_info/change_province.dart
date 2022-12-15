@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/enums.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
+import 'package:po_frontend/core/app_bar.dart';
+import 'package:po_frontend/utils/button.dart';
+import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/user_data.dart';
-import '../../../api/network/network_exception.dart';
+import '../../../../api/network/network_exception.dart';
 import 'package:po_frontend/api/models/user_model.dart';
 
 class ChangeProvincePage extends StatefulWidget {
@@ -23,10 +26,11 @@ class _ChangeProvincePageState extends State<ChangeProvincePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Change your password')),
+      appBar: appBar(title: 'Change your province'),
       body: Column(
         children: [
           Card(
+            shape: Constants.cardBorder,
             child: Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 20,
@@ -34,9 +38,7 @@ class _ChangeProvincePageState extends State<ChangeProvincePage> {
               ),
               child: Column(
                 children: [
-                  const Text(
-                    'Please select your province in the list below.'
-                  ),
+                  const Text('Please select your province in the list below.'),
                   DropdownButton<String>(
                     isExpanded: true,
                     value: selectedValue,
@@ -67,56 +69,35 @@ class _ChangeProvincePageState extends State<ChangeProvincePage> {
                       });
                     },
                   ),
-                ]
-              )
-            )
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 5,
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(Colors.indigo),
-                    ),
-                    onPressed: () async {
-                      setState(() {
-                        province = ProvinceEnum.fromName(selectedValue);
-                      });
-                      try {
-                        User oldUser = getUser(context);
-                        oldUser.location = province;
-                        User newUser = await updateUser(oldUser);
-                        if (mounted) setUser(context, newUser);
-                        if (mounted) context.pop();
-                      } on BackendException catch (e) {
-                        print('Error occurred $e');
-                        showFailureDialog(context, e);
-                      }
-                      selectedValue = 'Select your province here';
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 15,
-                      ),
-                      child: Text(
-                        'Confirm',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ]
-      )
+          buildButton(
+            'Confirm',
+            Colors.indigoAccent,
+            () => handleChangeProvince(),
+            withCardPadding: true,
+          ),
+        ],
+      ),
     );
+  }
+
+  void handleChangeProvince() async {
+    setState(() {
+      province = ProvinceEnum.fromName(selectedValue);
+    });
+    try {
+      User oldUser = getUser(context);
+      oldUser.location = province;
+      User newUser = await updateUser(oldUser);
+      if (mounted) setUser(context, newUser);
+      if (mounted) context.pop();
+    } on BackendException catch (e) {
+      print('Error occurred $e');
+      showFailureDialog(context, e);
+    }
+    selectedValue = 'Select your province here';
   }
 }

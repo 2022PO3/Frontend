@@ -13,23 +13,22 @@ import 'package:po_frontend/pages/navbar/profile/licence_plates/confirm_licence_
 import 'package:po_frontend/pages/navbar/profile/licence_plates/explication_page.dart';
 import 'package:po_frontend/pages/navbar/profile/licence_plates/licence_plates.dart';
 import 'package:po_frontend/pages/navbar/profile/licence_plates/report_licence_place.dart';
-import 'package:po_frontend/pages/navbar/profile/user_info.dart';
+import 'package:po_frontend/pages/navbar/profile/user_info/user_info.dart';
 import 'package:po_frontend/pages/payment_page/failed_payment_page.dart';
+import 'package:po_frontend/pages/payment_page/succesful_payment_page.dart';
 import 'package:po_frontend/pages/reservations/confirm_reservation.dart';
 import 'package:po_frontend/pages/reservations/make_reservation_page.dart';
 import 'package:po_frontend/pages/reservations/select_licence_plate.dart';
 import 'package:po_frontend/pages/reservations/user_reservations.dart';
 import 'package:po_frontend/pages/navbar/profile/profile.dart';
 import 'package:po_frontend/pages/settings/garage_settings/garage_settings_page.dart';
+import 'package:po_frontend/pages/settings/user_settings/add_automatic_payment_page.dart';
 import 'package:po_frontend/pages/settings/user_settings/add_two_factor_device_page.dart';
 import 'package:po_frontend/pages/reservations/spot_selection.dart';
+import 'package:po_frontend/pages/settings/user_settings/user_settings_page.dart';
 import 'package:po_frontend/utils/loading_page.dart';
-import 'package:po_frontend/pages/navbar/profile/change_password.dart';
-import 'package:po_frontend/pages/navbar/profile/change_province.dart';
-
-import '../pages/payment_page/succesful_payment_page.dart';
-import '../pages/settings/user_settings/add_automatic_payment_page.dart';
-import '../pages/settings/user_settings/user_settings_page.dart';
+import 'package:po_frontend/pages/navbar/profile/user_info/change_password.dart';
+import 'package:po_frontend/pages/navbar/profile/user_info/change_province.dart';
 
 class Routes {
   static GoRouter generateRoutes(String initialLocation) {
@@ -171,14 +170,12 @@ class Routes {
             token: state.queryParams['token'],
           ),
         ),
-        GoRoute(path: '/checkout', redirect: (_, __) => '/', routes: [
-          GoRoute(
-              path: 'success',
-              builder: (context, state) => const SuccessFulPaymentPage()),
-          GoRoute(
-              path: 'failed',
-              builder: (context, state) => const FailedPaymentPage()),
-        ])
+        GoRoute(
+            path: 'success',
+            builder: (context, state) => const SuccessFulPaymentPage()),
+        GoRoute(
+            path: 'failed',
+            builder: (context, state) => const FailedPaymentPage()),
       ],
     );
   }

@@ -8,38 +8,42 @@ class FailedPaymentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Spacer(flex: 10),
-            const Icon(
-              Icons.check_circle,
-              color: Colors.green,
-            ),
-            const Spacer(),
-            Text(
-              'Your payment failed',
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: MediaQuery.of(context).size.shortestSide / 15,
+        body: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Spacer(flex: 10),
+              const Icon(
+                Icons.cancel_rounded,
+                color: Colors.red,
+                size: 50,
               ),
-            ),
-            Text(
-              'Please try again later',
-              style: TextStyle(
-                fontWeight: FontWeight.w300,
-                fontSize: MediaQuery.of(context).size.shortestSide / 20,
+              const Spacer(),
+              Text(
+                'Your payment failed',
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: MediaQuery.of(context).size.shortestSide / 15,
+                ),
               ),
-            ),
-            const Spacer(flex: 4),
-            const ReturnToAppButton(text: 'Take me Home'),
-            const Spacer(
-              flex: 10,
-            ),
-          ],
-        ),
+              Text(
+                'Please try again later',
+                style: TextStyle(
+                  fontWeight: FontWeight.w300,
+                  fontSize: MediaQuery.of(context).size.shortestSide / 20,
+                ),
+              ),
+              const Spacer(flex: 4),
+              const ReturnToAppButton(text: 'Take me Home'),
+              const Spacer(flex: 10),
+            ],
+          ),
+        ],
       ),
-    );
+    ));
   }
 }

@@ -1,24 +1,21 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:po_frontend/api/models/enums.dart';
+import 'package:po_frontend/api/models/price_model.dart';
 import 'package:po_frontend/api/requests/price_requests.dart';
 import 'package:po_frontend/pages/payment_widgets/timer_widget.dart';
 import 'package:po_frontend/pages/settings/garage_settings/garage_settings_page.dart';
 import 'package:po_frontend/pages/settings/widgets/editing_widgets.dart';
 import 'package:po_frontend/utils/request_button.dart';
 
-import '../../../api/models/enums.dart';
-import '../../../api/models/garage_model.dart';
-import '../../../api/models/price_model.dart';
-import '../../../utils/error_widget.dart';
-
 class PricesEditor extends StatelessWidget {
-  const PricesEditor(
-      {Key? key,
-      required this.prices,
-      required this.garageId,
-      required this.onChanged})
-      : super(key: key);
+  const PricesEditor({
+    Key? key,
+    required this.prices,
+    required this.garageId,
+    required this.onChanged,
+  }) : super(key: key);
 
   final List<Price> prices;
   final int garageId;

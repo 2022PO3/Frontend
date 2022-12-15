@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:po_frontend/api/requests/garage_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/pages/settings/garage_settings/prices_editor.dart';
+import 'package:po_frontend/utils/card.dart';
+import 'package:po_frontend/utils/constants.dart';
 import '../../../api/models/garage_model.dart';
 import '../../../api/models/price_model.dart';
 import '../../../utils/error_widget.dart';
@@ -48,8 +50,9 @@ class _GarageSettingsPageState extends State<GarageSettingsPage> {
       body: RefreshIndicator(
         onRefresh: reloadFutures,
         child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics()
-              .applyTo(const BouncingScrollPhysics()),
+          physics: const AlwaysScrollableScrollPhysics().applyTo(
+            const BouncingScrollPhysics(),
+          ),
           child: Column(
             children: [
               _Header(
@@ -58,7 +61,7 @@ class _GarageSettingsPageState extends State<GarageSettingsPage> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 15.0,
+                  horizontal: 4,
                   vertical: 10,
                 ),
                 child: FutureBuilder<Garage>(
@@ -87,7 +90,7 @@ class _GarageSettingsPageState extends State<GarageSettingsPage> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 15.0,
+                  horizontal: 4,
                   vertical: 10,
                 ),
                 child: FutureBuilder<List<Price>>(
@@ -132,8 +135,11 @@ class _GarageSettingsPageState extends State<GarageSettingsPage> {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({Key? key, required this.garageFuture, this.onChanged})
-      : super(key: key);
+  const _Header({
+    Key? key,
+    required this.garageFuture,
+    this.onChanged,
+  }) : super(key: key);
 
   final Future<Garage> garageFuture;
   final Function(Garage garage)? onChanged;
@@ -165,7 +171,7 @@ class _Header extends StatelessWidget {
   Widget _buildData(BuildContext context, Garage garage) {
     final double shortestSide = MediaQuery.of(context).size.shortestSide;
     return Padding(
-      padding: const EdgeInsets.all(15.0),
+      padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -209,27 +215,23 @@ class CustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Column(
-          children: [
-            if (title != null)
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  title!,
-                  style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.shortestSide / 16,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
+    return buildCard(
+      children: [
+        if (title != null)
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              title!,
+              style: TextStyle(
+                fontSize: MediaQuery.of(context).size.shortestSide / 16,
+                fontWeight: FontWeight.w700,
               ),
-            if (title != null) const Divider(),
-            child,
-          ],
-        ),
-      ),
+            ),
+          ),
+        if (title != null) const Divider(),
+        child,
+      ],
+      crossAxisAlignment: CrossAxisAlignment.start,
     );
   }
 }

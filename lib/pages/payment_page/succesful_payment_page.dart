@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class SuccessFulPaymentPage extends StatelessWidget {
@@ -10,7 +9,8 @@ class SuccessFulPaymentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -18,6 +18,7 @@ class SuccessFulPaymentPage extends StatelessWidget {
             const Icon(
               Icons.check_circle,
               color: Colors.green,
+              size: 50,
             ),
             const Spacer(),
             Text(
@@ -36,9 +37,7 @@ class SuccessFulPaymentPage extends StatelessWidget {
             ),
             const Spacer(flex: 4),
             const ReturnToAppButton(text: 'Take me Home'),
-            const Spacer(
-              flex: 10,
-            ),
+            const Spacer(flex: 10),
           ],
         ),
       ),

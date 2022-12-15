@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/enums.dart';
+import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
-import 'package:po_frontend/pages/settings/garage_settings/garage_settings_page.dart';
+import 'package:po_frontend/core/app_bar.dart';
+import 'package:po_frontend/pages/settings/widgets/editing_widgets.dart';
 import 'package:po_frontend/utils/button.dart';
+import 'package:po_frontend/utils/card.dart';
+import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/dialogs.dart';
+import 'package:po_frontend/utils/sized_box.dart';
 import 'package:po_frontend/utils/user_data.dart';
-import '../../../api/network/network_exception.dart';
 import 'package:po_frontend/api/models/user_model.dart';
-
-import '../../settings/widgets/editing_widgets.dart';
 
 class UserInfo extends StatefulWidget {
   const UserInfo({super.key});
@@ -34,169 +36,18 @@ class _UserInfoState extends State<UserInfo> {
 
   @override
   Widget build(BuildContext context) {
-    void openLocationDialog() => showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Row(
-              children: [
-                const Text(
-                  'Dear, ',
-                  style: TextStyle(color: Colors.indigoAccent),
-                ),
-                Text(
-                  getUserFirstName(context),
-                  style: const TextStyle(
-                    color: Colors.indigoAccent,
-                  ),
-                ),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  'what do you want to change your province to?',
-                ),
-                ProvinceSelector(
-                  initialValue: selectedValue,
-                  onChanged: (newValue) {
-                    setState(() {
-                      selectedValue = newValue!;
-                    });
-                  },
-                )
-              ],
-            ),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      context.pop();
-                      selectedValue = null;
-                    },
-                    child: const Text(
-                      'Cancel',
-                      style: TextStyle(
-                        color: Colors.indigo,
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      /*setState(() {
-                        province = Province.toProvinceEnum(selectedValue);
-                      });*/
-                      try {
-                        User oldUser = getUser(context);
-                        oldUser.location = selectedValue;
-                        User newUser = await updateUser(oldUser);
-                        if (mounted) setUser(context, newUser);
-                        if (mounted) context.pop();
-                      } on BackendException catch (e) {
-                        print('Error occurred $e');
-                        showFailureDialog(context, e);
-                      }
-                      selectedValue = null;
-                    },
-                    child: const Text(
-                      'Confirm',
-                      style: TextStyle(color: Colors.indigo, fontSize: 15),
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
-        );
-
-    void openDeleteUserDialog() => showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Dear, ',
-                    style: TextStyle(color: Colors.indigoAccent),
-                  ),
-                  Text(
-                    getUserFirstName(context),
-                    style: const TextStyle(
-                      color: Colors.indigoAccent,
-                    ),
-                  ),
-                ],
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  Text(
-                    'You are about to delete your account!',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text('Are you sure you want to continue?'),
-                  SizedBox(height: 10),
-                  Text('Please note that this is a permanent action.'),
-                  Text('You cannot restore this account after deleting it.'),
-                  Text('If you want an account later on,'),
-                  Text('you can always register a new one.'),
-                ],
-              ),
-              actions: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        context.pop();
-                        newLastNameTextController.clear();
-                      },
-                      child: const Text(
-                        'Cancel',
-                        style: TextStyle(color: Colors.indigo, fontSize: 15),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        deleteUser();
-                        context.go('/login');
-                      },
-                      child: const Text(
-                        'Confirm',
-                        style: TextStyle(color: Colors.indigo, fontSize: 15),
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ));
-
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
+      appBar: appBar(
+        title: 'User info',
+        refreshButton: true,
+        refreshFunction: () => setState(() => {}),
+      ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
               children: [
-                const Text(
-                  'User Info:',
-                  style: TextStyle(
-                    fontSize: 35,
-                    fontWeight: FontWeight.bold,
-                    decoration: TextDecoration.underline,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 25),
                 UserField(
                   fieldName: 'User ID',
                   fieldNameValue: getUserId(context).toString(),
@@ -234,13 +85,9 @@ class _UserInfoState extends State<UserInfo> {
                       textController: newEmailTextController,
                       updateFunction: setEmail),
                 ),
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 8,
-                    ),
-                    child: Row(
+                buildCard(
+                  children: [
+                    Row(
                       children: [
                         const Text(
                           'Province:',
@@ -270,10 +117,10 @@ class _UserInfoState extends State<UserInfo> {
                         ),
                       ],
                     ),
-                  ),
+                  ],
                 ),
                 UserField(
-                  fieldName: 'Favorite garage name',
+                  fieldName: 'Favourite garage name',
                   fieldNameValue: 'test',
                   onButtonPressed: openDeleteUserDialog,
                 ),
@@ -284,36 +131,11 @@ class _UserInfoState extends State<UserInfo> {
                 const SizedBox(
                   height: 5,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 5,
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(Colors.indigo),
-                          ),
-                          onPressed: () {
-                            context.push('/home/profile/change-password');
-                          },
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 15,
-                            ),
-                            child: Text(
-                              'Change your password',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                buildButton(
+                  'Change your password',
+                  Colors.indigoAccent,
+                  () => context.push('/home/profile/change-password'),
+                  withCardPadding: true,
                 ),
                 const SizedBox(
                   height: 10,
@@ -322,12 +144,43 @@ class _UserInfoState extends State<UserInfo> {
                   'Delete your account',
                   Colors.red,
                   openDeleteUserDialog,
+                  withCardPadding: true,
                 ),
               ],
             ),
           ],
         ),
       ),
+    );
+  }
+
+  void handleDeleteUser() {
+    deleteUser();
+    context.go('/login');
+  }
+
+  void openDeleteUserDialog() {
+    return showFrontendDialog2(
+      context,
+      'Dear ${getUserFirstName(context)}',
+      [
+        const Text(
+          'You are about to delete your account!',
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const Text('Are you sure you want to continue?'),
+        const Height(10),
+        const Text('Please note that this is a permanent action.'),
+        const Text('You cannot restore this account after deleting it.'),
+        const Text('If you want an account later on,'),
+        const Text('you can always register a new one.'),
+      ],
+      () => handleDeleteUser(),
+      leftButtonText: 'Yes',
+      rightButtonText: 'No',
     );
   }
 
@@ -479,6 +332,7 @@ class UserField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      shape: Constants.cardBorder,
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 20,

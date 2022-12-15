@@ -40,6 +40,6 @@ class StaticValues {
   static const String pkNotificationsSlug = 'api/notification';
 
   // Custom settings
-  static const bool debug = false;
-  static const bool overrideServerUrl = false;
+  static const bool debug = true;
+  static const bool overrideServerUrl = true;
 }

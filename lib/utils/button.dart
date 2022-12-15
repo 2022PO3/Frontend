@@ -6,12 +6,20 @@ Widget buildButton(
   Color color,
   Function onPressed, {
   bool onlyExpanded = false,
+  bool withCardPadding = false,
 }) {
   return onlyExpanded
       ? _buildButton(text, color, onPressed)
-      : Row(
-          children: [_buildButton(text, color, onPressed)],
-        );
+      : withCardPadding
+          ? Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Row(
+                children: [_buildButton(text, color, onPressed)],
+              ),
+            )
+          : Row(
+              children: [_buildButton(text, color, onPressed)],
+            );
 }
 
 Widget _buildButton(

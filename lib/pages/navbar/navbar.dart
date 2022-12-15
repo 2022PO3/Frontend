@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:po_frontend/api/models/user_model.dart';
 import 'package:po_frontend/api/requests/garage_requests.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/user_data.dart';
 
 import '../../api/models/garage_model.dart';
-import '../../api/models/user_model.dart';
 import '../../utils/error_widget.dart';
 
 class Navbar extends StatefulWidget {
@@ -17,45 +17,9 @@ class Navbar extends StatefulWidget {
 }
 
 class _NavbarState extends State<Navbar> {
-  Future openDialog() => showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(
-            'Dear ${getUserFirstName(context)},',
-            style: const TextStyle(color: Colors.indigoAccent),
-          ),
-          content: const Text('Are you sure you want to sign out?'),
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    context.pop();
-                  },
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(color: Colors.indigo, fontSize: 15),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    logOutUser(context);
-                  },
-                  child: const Text(
-                    'Confirm',
-                    style: TextStyle(color: Colors.indigo, fontSize: 15),
-                  ),
-                ),
-              ],
-            )
-          ],
-        ),
-      );
-
   @override
   Widget build(BuildContext context) {
+    final User user = getUser(context);
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -79,6 +43,7 @@ class _NavbarState extends State<Navbar> {
             title: 'My reservations',
             onTap: () => context.push('/home/reservations'),
           ),
+          if (user.isGarageOwner) const GarageSettingsTile(),
           buildListTile(
             leadingIcon: Icons.account_circle_rounded,
             title: 'Profile',
@@ -123,6 +88,8 @@ class _NavbarState extends State<Navbar> {
       'Sign out',
       [const Text('Are you sure you want to sign out?')],
       () => logOutUser(context),
+      leftButtonText: 'Yes',
+      rightButtonText: 'No',
     );
   }
 }
@@ -136,15 +103,20 @@ class GarageSettingsTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color primaryColor = Theme.of(context).primaryColor;
 
-    return Theme(
-      data: Theme.of(context).copyWith(
-          dividerColor:
-              Colors.transparent), // Remove dividers the expansiontile adds
-      child: ExpansionTile(
-        leading: Icon(Icons.settings, color: primaryColor),
-        title: const Text('My Garages'),
-        children: const <Widget>[_OwnedGaragesList(), _NewGarageButton()],
-      ),
+    return Column(
+      children: [
+        Theme(
+          data: Theme.of(context).copyWith(
+            dividerColor: Colors.transparent,
+          ),
+          child: ExpansionTile(
+            leading: Icon(Icons.garage_rounded, color: primaryColor),
+            title: const Text('My Garages'),
+            children: const <Widget>[_OwnedGaragesList(), _NewGarageButton()],
+          ),
+        ),
+        const Divider(),
+      ],
     );
   }
 }
@@ -207,8 +179,11 @@ class _NewGarageButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
-      style:
-          ButtonStyle(shape: MaterialStateProperty.all(const StadiumBorder())),
+      style: ButtonStyle(
+        shape: MaterialStateProperty.all(
+          const StadiumBorder(),
+        ),
+      ),
       onPressed: null,
       icon: const Icon(Icons.add),
       label: const Text('Add new Garage'),

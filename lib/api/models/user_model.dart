@@ -26,13 +26,7 @@ class User {
     required this.twoFactorValidated,
   });
 
-  //set email(String email) => this.email = email;
-  //set firstName(String? firstName) => this.firstName = firstName;
-  //set lastName(String? lastName) => this.lastName = lastName;
-  //set favGarageId(int? favGarageId) => this.favGarageId = favGarageId;
-  //set location(ProvinceEnum? location) => this.location = location;
-
-  get isOwner => role == 2;
+  get isGarageOwner => role == 2;
 
   static User fromJSON(Map<String, dynamic> json) {
     return User(
