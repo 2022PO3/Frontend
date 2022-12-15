@@ -21,6 +21,7 @@ import 'package:po_frontend/pages/reservations/make_reservation_page.dart';
 import 'package:po_frontend/pages/reservations/select_licence_plate.dart';
 import 'package:po_frontend/pages/reservations/user_reservations.dart';
 import 'package:po_frontend/pages/navbar/profile/profile.dart';
+import 'package:po_frontend/pages/settings/garage_settings/add_garage_page.dart';
 import 'package:po_frontend/pages/settings/garage_settings/garage_settings_page.dart';
 import 'package:po_frontend/pages/settings/user_settings/add_automatic_payment_page.dart';
 import 'package:po_frontend/pages/settings/user_settings/add_two_factor_device_page.dart';
@@ -29,6 +30,7 @@ import 'package:po_frontend/pages/settings/user_settings/user_settings_page.dart
 import 'package:po_frontend/utils/loading_page.dart';
 import 'package:po_frontend/pages/navbar/profile/user_info/change_password.dart';
 import 'package:po_frontend/pages/navbar/profile/user_info/change_province.dart';
+import 'package:po_frontend/utils/user_data.dart';
 
 class Routes {
   static GoRouter generateRoutes(String initialLocation) {
@@ -47,6 +49,12 @@ class Routes {
               path: 'settings/garage/:garageId',
               builder: (context, state) => GarageSettingsPage(
                 garageId: int.parse(state.params['garageId']!),
+              ),
+            ),
+            GoRoute(
+              path: 'settings/add-garage',
+              builder: (context, state) => AddGaragePage(
+                userId: getUserId(context),
               ),
             ),
             GoRoute(

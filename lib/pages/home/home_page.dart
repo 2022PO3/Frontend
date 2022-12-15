@@ -217,7 +217,6 @@ class CurrentParkingSessionsListWidget extends StatelessWidget {
           } else {
             return Scrollbar(
               child: ListView.builder(
-                shrinkWrap: true,
                 physics: const BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {

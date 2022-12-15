@@ -215,11 +215,10 @@ class _EditorDialogState<T> extends State<EditorDialog<T>> {
     return Builder(builder: (context) {
       switch (T) {
         case String:
-          final controller = TextEditingController(text: newValue as String);
           return Padding(
             padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: controller,
+            child: TextFormField(
+              initialValue: newValue as String,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
               ),
@@ -448,6 +447,67 @@ class ProvinceSelector extends StatelessWidget {
         onChanged: (newValue) {
           onChanged?.call(newValue);
         });
+  }
+}
+
+class RequestValutaSelector extends StatefulWidget {
+  const RequestValutaSelector(
+      {Key? key, required this.canBeNull, this.initialValue, this.onChanged})
+      : super(key: key);
+
+  @override
+  State<RequestValutaSelector> createState() => _RequestValutaSelectorState();
+
+  final bool canBeNull;
+  final ValutaEnum? initialValue;
+  final Future<void> Function(ValutaEnum? valuta)? onChanged;
+}
+
+class _RequestValutaSelectorState extends State<RequestValutaSelector> {
+  Future<void>? future;
+
+  @override
+  Widget build(BuildContext context) {
+    if (future == null) {
+      return _buildSelector(context);
+    }
+
+    return FutureBuilder<void>(
+      future: future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasError) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'The action failed: ${snapshot.error}',
+                style: const TextStyle(color: Colors.red),
+              ),
+              _buildSelector(context)
+            ],
+          );
+        } else {
+          return _buildSelector(context);
+        }
+      },
+    );
+  }
+
+  Widget _buildSelector(context) {
+    return ValutaSelector(
+      initialValue: widget.initialValue,
+      canBeNull: widget.canBeNull,
+      onChanged: (valuta) {
+        setState(() {
+          future = widget.onChanged?.call(valuta);
+        });
+      },
+    );
   }
 }
 
