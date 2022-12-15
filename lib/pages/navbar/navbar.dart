@@ -179,12 +179,13 @@ class _NewGarageButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
-      style: ButtonStyle(
-        shape: MaterialStateProperty.all(
-          const StadiumBorder(),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.indigoAccent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
         ),
       ),
-      onPressed: null,
+      onPressed: () => {},
       icon: const Icon(Icons.add),
       label: const Text('Add new Garage'),
     );

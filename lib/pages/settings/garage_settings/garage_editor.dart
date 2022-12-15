@@ -9,9 +9,11 @@ import '../widgets/editing_widgets.dart';
 import 'garage_settings_page.dart';
 
 class GarageEditor extends StatefulWidget {
-  const GarageEditor(
-      {Key? key, required this.original, required this.onChanged})
-      : super(key: key);
+  const GarageEditor({
+    Key? key,
+    required this.original,
+    required this.onChanged,
+  }) : super(key: key);
 
   final Garage original;
   final Future Function(Garage garage) onChanged;
@@ -39,14 +41,20 @@ class _GarageEditorState extends State<GarageEditor> {
           onChanged: (Location location) async {
             setState(() {
               garage = garage.copyWith(
-                  garageSettings:
-                      garage.garageSettings.copyWith(location: location));
+                garageSettings: garage.garageSettings.copyWith(
+                  location: location,
+                ),
+              );
             });
           },
           onConfirm: (Location location) async {
-            await widget.onChanged(garage.copyWith(
-                garageSettings:
-                    garage.garageSettings.copyWith(location: location)));
+            await widget.onChanged(
+              garage.copyWith(
+                garageSettings: garage.garageSettings.copyWith(
+                  location: location,
+                ),
+              ),
+            );
           },
         ),
         const SizedBox(
@@ -61,7 +69,11 @@ class _GarageEditorState extends State<GarageEditor> {
             });
           },
           onConfirm: (GarageSettings settings) async {
-            await widget.onChanged(garage.copyWith(garageSettings: settings));
+            await widget.onChanged(
+              garage.copyWith(
+                garageSettings: settings,
+              ),
+            );
           },
         )
       ],
@@ -70,13 +82,13 @@ class _GarageEditorState extends State<GarageEditor> {
 }
 
 class _LocationWidget extends StatelessWidget {
-  const _LocationWidget(
-      {Key? key,
-      required this.original,
-      required this.onChanged,
-      required this.onConfirm,
-      required this.currentValue})
-      : super(key: key);
+  const _LocationWidget({
+    Key? key,
+    required this.original,
+    required this.onChanged,
+    required this.onConfirm,
+    required this.currentValue,
+  }) : super(key: key);
 
   final Location original;
   final Location currentValue;
