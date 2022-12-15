@@ -18,6 +18,24 @@ class GarageSettings {
     required this.maxHandicappedLots,
   });
 
+  GarageSettings copyWith({
+    int? id,
+    Location? location,
+    int? electricCars,
+    double? maxHeight,
+    double? maxWidth,
+    int? maxHandicappedLots,
+  }) {
+    return GarageSettings(
+      id: id ?? this.id,
+      location: location ?? this.location,
+      electricCars: electricCars ?? this.electricCars,
+      maxHeight: maxHeight ?? this.maxHeight,
+      maxWidth: maxWidth ?? this.maxWidth,
+      maxHandicappedLots: maxHandicappedLots ?? this.maxHandicappedLots,
+    );
+  }
+
   /// Serializes a JSON-object into a Dart `GarageSettings`-object with all properties.
   static GarageSettings fromJSON(Map<String, dynamic> json) {
     return GarageSettings(
@@ -41,4 +59,21 @@ class GarageSettings {
         'maxWidth': garageSettings.maxWidth,
         'maxHandicappedLots': garageSettings.maxHandicappedLots,
       };
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+    return other is GarageSettings &&
+        other.id == id &&
+        //other.location == location &&
+        other.electricCars == electricCars &&
+        other.maxHandicappedLots == maxHandicappedLots &&
+        other.maxHeight == maxHeight &&
+        other.maxWidth == maxWidth;
+  }
 }

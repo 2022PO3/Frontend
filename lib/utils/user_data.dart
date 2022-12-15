@@ -57,9 +57,7 @@ String getUserLocation(
     listen: listen,
   );
   ProvinceEnum? userProvince = userProvider.getUser.location;
-  return userProvince == null
-      ? 'Not given'
-      : Province.getProvinceName(userProvince);
+  return userProvince == null ? 'Not given' : userProvince.name;
 }
 
 Future<String> getUserFavGarageName(

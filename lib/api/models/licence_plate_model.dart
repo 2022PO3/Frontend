@@ -25,7 +25,7 @@ class LicencePlate {
       garageId: json['garageId'] as int?,
       userId: json['userId'] as int,
       updatedAt: DateTime.parse(json['updatedAt']),
-      enabled: json['enabled'],
+      enabled: json['enabled'] ?? true,
     );
   }
 

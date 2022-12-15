@@ -69,7 +69,7 @@ extension DurationToString on Duration {
       prettyString += ', ';
     }
 
-    if (hours > 0) {
+    if (hours >= 0) {
       if (hours < 10) {
         prettyString += '0';
       }

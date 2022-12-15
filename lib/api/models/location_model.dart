@@ -26,15 +26,32 @@ class Location {
     return '$street $number, $municipality, $country';
   }
 
+  Location copyWith({
+    int? id,
+    String? country,
+    ProvinceEnum? province,
+    String? municipality,
+    int? postCode,
+    String? street,
+    int? number,
+  }) {
+    return Location(
+      id: id ?? this.id,
+      country: country ?? this.country,
+      province: province ?? this.province,
+      municipality: municipality ?? this.municipality,
+      postCode: postCode ?? this.postCode,
+      street: street ?? this.street,
+      number: number ?? this.number,
+    );
+  }
+
   /// Serializes a JSON-object into a Dart `Location`-object with all properties.
   static Location fromJSON(Map<String, dynamic> json) {
-    ProvinceEnum? province =
-        Province.toProvinceEnum(json['province'] as String);
     return Location(
         id: json['id'] as int,
         country: json['country'] as String,
-        province:
-            province ?? (throw BackendException(['No valid province given.'])),
+        province: ProvinceEnum.fromString(json['province'] as String),
         municipality: json['municipality'] as String,
         postCode: json['postCode'] as int,
         street: json['street'] as String,
@@ -46,10 +63,28 @@ class Location {
   static Map<String, dynamic> toJSON(Location location) => <String, dynamic>{
         'id': location.id,
         'country': location.country,
-        'province': location.province.toString(),
+        'province': location.province.databaseValue,
         'municipality': location.municipality,
-        'postcode': location.postCode,
+        'postCode': location.postCode,
         'street': location.street,
         'number': location.number
       };
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
+    return other is Location &&
+        other.id == id &&
+        other.country == country &&
+        other.province == province &&
+        other.municipality == municipality &&
+        other.postCode == postCode &&
+        other.street == street &&
+        other.number == number;
+  }
 }

@@ -19,6 +19,23 @@ class Price {
     required this.valuta,
   });
 
+  Price copyWith({
+    int? id,
+    int? garageId,
+    String? priceString,
+    double? price,
+    Duration? duration,
+    ValutaEnum? valuta,
+  }) {
+    return Price(
+        id: id ?? this.id,
+        garageId: garageId ?? this.garageId,
+        priceString: priceString ?? this.priceString,
+        price: price ?? this.price,
+        duration: duration ?? this.duration,
+        valuta: valuta ?? this.valuta);
+  }
+
   /// Serializes a JSON-object into a Dart `Price`-object with all properties.
   static Price fromJSON(Map<String, dynamic> json) {
     return Price(
@@ -27,10 +44,7 @@ class Price {
       priceString: json['priceString'] as String,
       price: json['price'] as double,
       duration: parseDuration(json['duration'] as String),
-      valuta: Valuta.toValutaEnum(json['valuta']) ??
-          (throw BackendException(
-            ['No valid province given.'],
-          )),
+      valuta: ValutaEnum.fromString(json['valuta'] as String),
     );
   }
 
@@ -42,7 +56,7 @@ class Price {
         'priceString': price.priceString,
         'price': price.price,
         'duration': price.duration.inSeconds,
-        'valuta': price.valuta.toString(),
+        'valuta': price.valuta.databaseValue,
       };
 
   static List<Price> listFromJSON(List<dynamic> json) =>

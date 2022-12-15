@@ -9,7 +9,7 @@ import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/user_data.dart';
 
-import '../../utils/loading_page.dart';
+import '../../../utils/loading_page.dart';
 
 enum ButtonState { init, loading, done, error }
 

@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/enums.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
+import 'package:po_frontend/pages/settings/garage_settings/garage_settings_page.dart';
 import 'package:po_frontend/utils/button.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/user_data.dart';
 import '../../../api/network/network_exception.dart';
 import 'package:po_frontend/api/models/user_model.dart';
+
+import '../../settings/widgets/editing_widgets.dart';
 
 class UserInfo extends StatefulWidget {
   const UserInfo({super.key});
@@ -24,14 +27,93 @@ class _UserInfoState extends State<UserInfo> {
   String userLastName = '';
   String userEmail = '';
 
-  String selectedValue = 'Select your province here';
+  ProvinceEnum? selectedValue;
 
-  ProvinceEnum? province;
+  //ProvinceEnum? province;
   String? location;
 
   @override
   Widget build(BuildContext context) {
-        void openDeleteUserDialog() => showDialog(
+    void openLocationDialog() => showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Row(
+              children: [
+                const Text(
+                  'Dear, ',
+                  style: TextStyle(color: Colors.indigoAccent),
+                ),
+                Text(
+                  getUserFirstName(context),
+                  style: const TextStyle(
+                    color: Colors.indigoAccent,
+                  ),
+                ),
+              ],
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'what do you want to change your province to?',
+                ),
+                ProvinceSelector(
+                  initialValue: selectedValue,
+                  onChanged: (newValue) {
+                    setState(() {
+                      selectedValue = newValue!;
+                    });
+                  },
+                )
+              ],
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      context.pop();
+                      selectedValue = null;
+                    },
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(
+                        color: Colors.indigo,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      /*setState(() {
+                        province = Province.toProvinceEnum(selectedValue);
+                      });*/
+                      try {
+                        User oldUser = getUser(context);
+                        oldUser.location = selectedValue;
+                        User newUser = await updateUser(oldUser);
+                        if (mounted) setUser(context, newUser);
+                        if (mounted) context.pop();
+                      } on BackendException catch (e) {
+                        print('Error occurred $e');
+                        showFailureDialog(context, e);
+                      }
+                      selectedValue = null;
+                    },
+                    child: const Text(
+                      'Confirm',
+                      style: TextStyle(color: Colors.indigo, fontSize: 15),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        );
+
+    void openDeleteUserDialog() => showDialog(
         context: context,
         builder: (context) => AlertDialog(
               title: Row(

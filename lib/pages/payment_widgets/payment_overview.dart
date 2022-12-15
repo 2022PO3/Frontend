@@ -187,7 +187,7 @@ class _TotalWidget extends StatelessWidget {
       entries.map((e) => e.key.price * e.value).reduce((a, b) => a + b)
           as double;
   String get _pricesSumString =>
-      '${Valuta.getValutaSymbol(entries[0].key.valuta)} ${(_pricesSum).toStringAsFixed(2)}';
+      '${entries[0].key.valuta} ${(_pricesSum).toStringAsFixed(2)}';
 
   @override
   Widget build(BuildContext context) {
@@ -232,7 +232,7 @@ class _PreviewItemWidget extends StatelessWidget {
   final int quantity;
 
   String get _totalPriceString =>
-      '${Valuta.getValutaSymbol(price.valuta)} ${(price.price * quantity).toStringAsFixed(2)}';
+      '${price.valuta} ${(price.price * quantity).toStringAsFixed(2)}';
 
   @override
   Widget build(BuildContext context) {

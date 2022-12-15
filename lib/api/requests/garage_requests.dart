@@ -5,6 +5,7 @@ import 'package:po_frontend/pages/garage_info.dart';
 
 import '../models/garage_model.dart';
 import '../models/parking_lot_model.dart';
+import '../models/user_model.dart';
 import '../network/network_helper.dart';
 import '../network/network_service.dart';
 import '../network/static_values.dart';
@@ -15,6 +16,19 @@ Future<Garage> getGarage(int garageId) async {
     apiSlug: StaticValues.getGarageSlug,
     useAuthToken: true,
     pk: garageId,
+  );
+  return await NetworkHelper.filterResponse(
+    callBack: Garage.fromJSON,
+    response: response,
+  );
+}
+
+Future<Garage> updateGarage(Garage garage) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.put,
+    apiSlug: StaticValues.getGarageSlug,
+    useAuthToken: true,
+    body: garage.toJSON(),
   );
   return await NetworkHelper.filterResponse(
     callBack: Garage.fromJSON,
@@ -125,6 +139,18 @@ Future<ParkingLot> assignParkingLot(
 
   return await NetworkHelper.filterResponse(
     callBack: ParkingLot.fromJSON,
+    response: response,
+  );
+}
+
+Future<List<Garage>> getOwnedGarages(User owner) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.get,
+    apiSlug: StaticValues.getOwnedGaragesSlug,
+    useAuthToken: true,
+  );
+  return await NetworkHelper.filterResponse(
+    callBack: Garage.listFromJSON,
     response: response,
   );
 }
