@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../api/models/enums.dart';
 import '../../api/models/licence_plate_model.dart';
 import '../../api/models/price_model.dart';
 import '../../api/network/network_helper.dart';
@@ -29,7 +28,7 @@ class PaymentOverview extends StatefulWidget {
 
 class _PaymentOverviewState extends State<PaymentOverview> {
   late Future<Map<Price, int>> previewFuture;
-  late Timer timer;
+  Timer? timer;
 
   Map<Price, int> fromPaymentPreviewJSON(Map<String, dynamic> json) {
     Map<Price, int> items = {};
@@ -37,7 +36,12 @@ class _PaymentOverviewState extends State<PaymentOverview> {
       items[Price.fromJSON(item)] = item['quantity'] as int;
     }
 
-    timer = Timer(Duration(seconds: json['refreshTime'] + 2), reloadFuture);
+    int refreshTime = json['refreshTime'] ?? -1;
+
+    if (refreshTime >= 0) {
+      timer?.cancel();
+      timer = Timer(Duration(seconds: json['refreshTime'] + 2), reloadFuture);
+    }
 
     return items;
   }
@@ -63,11 +67,14 @@ class _PaymentOverviewState extends State<PaymentOverview> {
 
   @override
   void dispose() {
-    timer.cancel();
+    timer?.cancel();
+    timer = null;
     super.dispose();
   }
 
   Future<Map<Price, int>> reloadFuture() async {
+    timer?.cancel();
+    timer = null;
     setState(() {
       previewFuture = getPaymentPreview();
     });
