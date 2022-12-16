@@ -59,10 +59,11 @@ class _UserInfoState extends State<UserInfo> {
                     dummy: 'No first name given',
                   ),
                   onButtonPressed: () => openDialog(
-                      fieldName: 'first name',
-                      newFieldValue: userFirstName,
-                      textController: newFirstNameTextController,
-                      updateFunction: setFirstName),
+                    fieldName: 'first name',
+                    newFieldValue: userFirstName,
+                    textController: newFirstNameTextController,
+                    updateFunction: setFirstName,
+                  ),
                 ),
                 UserField(
                   fieldName: 'Last name',
@@ -71,19 +72,21 @@ class _UserInfoState extends State<UserInfo> {
                     dummy: 'No last name given',
                   ),
                   onButtonPressed: () => openDialog(
-                      fieldName: 'last name',
-                      newFieldValue: userLastName,
-                      textController: newLastNameTextController,
-                      updateFunction: setLastName),
+                    fieldName: 'last name',
+                    newFieldValue: userLastName,
+                    textController: newLastNameTextController,
+                    updateFunction: setLastName,
+                  ),
                 ),
                 UserField(
                   fieldName: 'Email address',
                   fieldNameValue: getUserEmail(context),
                   onButtonPressed: () => openDialog(
-                      fieldName: 'email',
-                      newFieldValue: userEmail,
-                      textController: newEmailTextController,
-                      updateFunction: setEmail),
+                    fieldName: 'email',
+                    newFieldValue: userEmail,
+                    textController: newEmailTextController,
+                    updateFunction: setEmail,
+                  ),
                 ),
                 buildCard(
                   children: [
@@ -121,7 +124,7 @@ class _UserInfoState extends State<UserInfo> {
                 ),
                 UserField(
                   fieldName: 'Favourite garage name',
-                  fieldNameValue: 'test',
+                  fieldNameValue: 'QPark Leuven',
                   onButtonPressed: openDeleteUserDialog,
                 ),
                 const Divider(

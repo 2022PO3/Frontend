@@ -178,16 +178,20 @@ class Routes {
             token: state.queryParams['token'],
           ),
         ),
-        GoRoute(path: '/checkout', redirect: (_, __) => '/', routes: [
-          GoRoute(
-            path: 'success',
-            builder: (context, state) => const SuccessFulPaymentPage(),
-          ),
-          GoRoute(
-            path: 'failed',
-            builder: (context, state) => const FailedPaymentPage(),
-          ),
-        ])
+        GoRoute(
+          path: '/checkout',
+          redirect: (_, __) => '/',
+          routes: [
+            GoRoute(
+              path: 'success',
+              builder: (context, state) => const SuccessFulPaymentPage(),
+            ),
+            GoRoute(
+              path: 'failed',
+              builder: (context, state) => const FailedPaymentPage(),
+            ),
+          ],
+        )
       ],
     );
   }
