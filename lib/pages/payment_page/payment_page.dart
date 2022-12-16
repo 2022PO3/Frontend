@@ -142,8 +142,7 @@ class _Header extends StatelessWidget {
               child: Material(
                 color: Colors.transparent,
                 child: Text(
-                  '${kIsWeb ? 'Checkout ' : ''}${garage.name}',
-                  maxLines: 3,
+                  'Complete your parking session with ${licencePlate.formatLicencePlate()}',
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
