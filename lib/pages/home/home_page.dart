@@ -189,12 +189,13 @@ class SimpleHeaderDelegate extends SliverPersistentHeaderDelegate {
 class CurrentParkingSessionsListWidget extends StatelessWidget {
   /// Horizontal scrollview with a CurrentParkingSessionWidget for every garage
   /// the user is parked at.
-  const CurrentParkingSessionsListWidget({
+  CurrentParkingSessionsListWidget({
     Key? key,
     required this.licencePlatesFuture,
   }) : super(key: key);
 
   final Future<List<LicencePlate>> licencePlatesFuture;
+  final ScrollController mainController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -216,8 +217,10 @@ class CurrentParkingSessionsListWidget extends StatelessWidget {
             );
           } else {
             return Scrollbar(
+              controller: mainController,
               child: ListView.builder(
                 physics: const BouncingScrollPhysics(),
+                controller: mainController,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
                   return CurrentParkingSessionWidget(
