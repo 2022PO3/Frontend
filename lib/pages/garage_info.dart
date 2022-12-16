@@ -121,11 +121,12 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
 
   Widget buildOccupancyCard(Garage garage, double width) {
     final bool full = garage.unoccupiedLots == 0;
-    final int ratio =
-        (((garage.parkingLots - garage.unoccupiedLots) / garage.parkingLots) *
-                100)
-            .round();
-    final Color color = determineFreePlacesColor(garage);
+    final double occupiedLots =
+        (garage.parkingLots - garage.unoccupiedLots).toDouble();
+    final double ratio = occupiedLots / garage.parkingLots;
+    final int percentage = (ratio * 100).round();
+    final Color color = determineFreePlacesColor(garage, ratio.toDouble());
+
     return Card(
       shape: Constants.cardBorder,
       child: Padding(
@@ -158,10 +159,9 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                     ),
                     pointers: <GaugePointer>[
                       RangePointer(
-                        value: garage.unoccupiedLots == garage.parkingLots
+                        value: occupiedLots == garage.parkingLots
                             ? 1
-                            : (garage.parkingLots - garage.unoccupiedLots)
-                                .toDouble(),
+                            : (occupiedLots).toDouble(),
                         width: 0.15,
                         sizeUnit: GaugeSizeUnit.factor,
                         cornerStyle:
@@ -179,7 +179,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                               height: 10,
                             ),
                             Text(
-                              '$ratio %',
+                              '$percentage %',
                               style: TextStyle(
                                 fontSize: 35,
                                 fontWeight: FontWeight.bold,
@@ -219,7 +219,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                   ),
                 ),
                 Text(
-                  (garage.parkingLots - garage.unoccupiedLots).toString(),
+                  (occupiedLots.toInt()).toString(),
                   style: TextStyle(
                     fontSize: 45,
                     color: color,

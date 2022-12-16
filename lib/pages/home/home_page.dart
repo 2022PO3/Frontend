@@ -253,6 +253,7 @@ class CurrentParkingSessionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double height = MediaQuery.of(context).size.longestSide;
     return FutureBuilder<Garage>(
       future: getGarage(licencePlate.garageId!),
       builder: (context, snapshot) {
@@ -260,7 +261,7 @@ class CurrentParkingSessionWidget extends StatelessWidget {
             snapshot.hasData) {
           final Garage garage = snapshot.data as Garage;
 
-          return _buildData(context, garage);
+          return _buildData(context, garage, height);
         } else if (snapshot.hasError) {
           return SnapshotErrorWidget(
             snapshot: snapshot,
@@ -273,8 +274,10 @@ class CurrentParkingSessionWidget extends StatelessWidget {
 
   Widget _buildLoading(BuildContext context) {
     return Card(
+      margin: const EdgeInsets.all(4),
+      shape: Constants.cardBorder,
       child: SizedBox(
-        width: MediaQuery.of(context).size.shortestSide,
+        width: MediaQuery.of(context).size.shortestSide - 8,
         child: const Center(
           child: CircularProgressIndicator(),
         ),
@@ -282,34 +285,77 @@ class CurrentParkingSessionWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildData(BuildContext context, Garage garage) {
-    int switchHeight = 135;
+  Widget _buildData(BuildContext context, Garage garage, double height) {
+    double switchHeight = height / 6;
     return Card(
       elevation: 10,
+      margin: const EdgeInsets.all(4),
       shape: Constants.cardBorder,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
+      child: SizedBox(
+        width: MediaQuery.of(context).size.shortestSide - 8,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Hero(
+                            tag: 'title_${licencePlate.licencePlate}',
+                            child: Material(
+                              color: Colors.transparent,
+                              child: Text(
+                                'Parked with ${licencePlate.formatLicencePlate()}',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (constraints.maxHeight < switchHeight)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 15,
+                        ),
+                        child: PayPreviewButton(
+                          licencePlate: licencePlate,
+                          garage: garage,
+                        ),
+                      ),
+                  ],
+                ),
+                if (constraints.maxHeight > switchHeight) const Spacer(),
+                if (constraints.maxHeight > switchHeight)
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Hero(
-                          tag: 'title_${licencePlate.licencePlate}',
-                          child: Material(
-                            color: Colors.transparent,
-                            child: Text(
-                              'Parked with ${licencePlate.formatLicencePlate()}',
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w900,
+                        const Text('Duration:'),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Hero(
+                            tag: 'timer_${licencePlate.licencePlate}',
+                            child: TimerWidget(
+                              start: licencePlate.updatedAt,
+                              textStyle: TextStyle(
+                                fontSize:
+                                    MediaQuery.of(context).size.shortestSide /
+                                        20,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ),
@@ -317,57 +363,23 @@ class CurrentParkingSessionWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  if (constraints.maxHeight < switchHeight)
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
+                if (constraints.maxHeight > switchHeight)
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0,
+                        vertical: 2,
+                      ),
                       child: PayPreviewButton(
                         licencePlate: licencePlate,
                         garage: garage,
                       ),
                     ),
-                ],
-              ),
-              if (constraints.maxHeight > switchHeight) const Spacer(),
-              if (constraints.maxHeight > switchHeight)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      const Text('Duration:'),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Hero(
-                          tag: 'timer_${licencePlate.licencePlate}',
-                          child: TimerWidget(
-                            start: licencePlate.updatedAt,
-                            textStyle: TextStyle(
-                              fontSize:
-                                  MediaQuery.of(context).size.shortestSide / 20,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
                   ),
-                ),
-              if (constraints.maxHeight > switchHeight)
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8.0,
-                      vertical: 2,
-                    ),
-                    child: PayPreviewButton(
-                      licencePlate: licencePlate,
-                      garage: garage,
-                    ),
-                  ),
-                ),
-            ],
-          );
-        },
+              ],
+            );
+          },
+        ),
       ),
     );
   }

@@ -54,7 +54,10 @@ class GarageWidget extends StatelessWidget {
   ) {
     final double maxSpots = garage.parkingLots.toDouble();
     final double unoccupiedLots = garage.unoccupiedLots.toDouble();
+    final double occupiedLots =
+        (garage.parkingLots - garage.unoccupiedLots).toDouble();
     final bool full = maxSpots == unoccupiedLots;
+    final double ratio = occupiedLots / garage.parkingLots;
 
     return AspectRatio(
       aspectRatio: 1,
@@ -85,12 +88,12 @@ class GarageWidget extends StatelessWidget {
                 ),
                 pointers: <GaugePointer>[
                   RangePointer(
-                    value: unoccupiedLots == maxSpots ? 1 : unoccupiedLots,
+                    value: occupiedLots == maxSpots ? 1 : occupiedLots,
                     width: 0.15,
                     sizeUnit: GaugeSizeUnit.factor,
                     cornerStyle:
                         full ? CornerStyle.bothFlat : CornerStyle.bothCurve,
-                    color: determineFreePlacesColor(garage),
+                    color: determineFreePlacesColor(garage, ratio),
                   ),
                 ],
                 annotations: <GaugeAnnotation>[
@@ -100,8 +103,7 @@ class GarageWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          (garage.parkingLots - garage.unoccupiedLots)
-                              .toString(),
+                          unoccupiedLots.toInt().toString(),
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -165,23 +167,9 @@ class GarageWidget extends StatelessWidget {
       ),
     );
   }
-
-  Color determineFreePlacesColor(Garage garage) {
-    final double ratio = garage.unoccupiedLots / garage.parkingLots;
-
-    if (ratio <= 0.5) {
-      return const Color.fromARGB(255, 16, 137, 20);
-    } else if (0.5 < ratio && ratio <= 0.95) {
-      return Colors.deepOrangeAccent;
-    } else {
-      return Colors.red.shade600;
-    }
-  }
 }
 
-Color determineFreePlacesColor(Garage garage) {
-  final double ratio = garage.unoccupiedLots / garage.parkingLots;
-
+Color determineFreePlacesColor(Garage garage, double ratio) {
   if (ratio <= 0.5) {
     return const Color.fromARGB(255, 16, 137, 20);
   } else if (0.5 < ratio && ratio <= 0.95) {

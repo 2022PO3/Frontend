@@ -18,14 +18,15 @@ class AuthService {
 
   static Future<String> _tryLocalRequest() async {
     print(
-        'Could not reach https://po3backend.ddns.net/liveliness. Redirecting to localhost.');
+      'Could not reach https://po3backend.ddns.net/liveliness. Redirecting to localhost.',
+    );
     try {
       http.Response response = await http.get(
-        Uri.parse('http://192.168.49.1:8000/liveliness'),
+        Uri.parse('${StaticValues.localURL}/liveliness'),
       );
-      print('Sending request to http://192.168.49.1:8000/liveliness.');
+      print('Sending request to ${StaticValues.localURL}/liveliness.');
       if (response.statusCode == 200) {
-        return 'http://192.168.49.1:8000/';
+        return StaticValues.localURL;
       }
     } on SocketException {
       throw Exception('No backend host found.');
@@ -45,7 +46,7 @@ class AuthService {
     bool debug = StaticValues.debug;
     if (debug) {
       print('Debug enabled, redirecting to localhost.');
-      return 'http://192.168.135.56:8000/';
+      return StaticValues.localURL;
     }
     try {
       http.Response response = await http.get(

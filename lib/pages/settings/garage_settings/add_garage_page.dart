@@ -8,6 +8,7 @@ import 'package:po_frontend/api/models/location_model.dart';
 import 'package:po_frontend/api/models/price_model.dart';
 import 'package:po_frontend/api/requests/garage_requests.dart';
 import 'package:po_frontend/api/requests/price_requests.dart';
+import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/pages/settings/garage_settings/garage_editor.dart';
 import 'package:po_frontend/pages/settings/garage_settings/garage_settings_page.dart';
 import 'package:po_frontend/pages/settings/garage_settings/prices_editor.dart';
@@ -38,25 +39,27 @@ class _AddGaragePageState extends State<AddGaragePage> {
     unoccupiedLots: 0,
     parkingLots: 0,
     garageSettings: GarageSettings(
-        id: -1,
-        location: Location(
-            id: -1,
-            country: 'België',
-            province: ProvinceEnum.ANT,
-            municipality: '',
-            postCode: 0,
-            street: '',
-            number: 1),
-        electricCars: 0,
-        maxHeight: 2.3,
-        maxWidth: 3,
-        maxHandicappedLots: 0),
+      id: -1,
+      location: Location(
+          id: -1,
+          country: 'België',
+          province: ProvinceEnum.ANT,
+          municipality: '',
+          postCode: 0,
+          street: '',
+          number: 1),
+      electricCars: 0,
+      maxHeight: 2.3,
+      maxWidth: 3,
+      maxHandicappedLots: 0,
+    ),
   );
 
   List<Price> prices = [];
 
-  late TextEditingController nameEditingController =
-      TextEditingController(text: garage.name);
+  late TextEditingController nameEditingController = TextEditingController(
+    text: garage.name,
+  );
 
   int stepIndex = 0;
 
@@ -89,6 +92,7 @@ class _AddGaragePageState extends State<AddGaragePage> {
     double shortestSide = MediaQuery.of(context).size.shortestSide;
 
     return Scaffold(
+      appBar: appBar(title: 'Add new garage'),
       body: SafeArea(
         child: Scrollbar(
           controller: mainController,
@@ -106,11 +110,13 @@ class _AddGaragePageState extends State<AddGaragePage> {
                   ),
                   onEdit: (garageName) async {
                     nameEditingController.text = garageName;
-                    setState(() {
-                      garage = garage.copyWith(
-                        name: garageName,
-                      );
-                    });
+                    setState(
+                      () {
+                        garage = garage.copyWith(
+                          name: garageName,
+                        );
+                      },
+                    );
                   },
                 ),
               ),
@@ -124,7 +130,8 @@ class _AddGaragePageState extends State<AddGaragePage> {
                           ElevatedButton(
                             style: ButtonStyle(
                               shape: MaterialStateProperty.all(
-                                  const StadiumBorder()),
+                                const StadiumBorder(),
+                              ),
                             ),
                             onPressed: canGoToStep(details.currentStep + 1)
                                 ? details.onStepContinue
@@ -174,8 +181,9 @@ class _AddGaragePageState extends State<AddGaragePage> {
                         child: TextFormField(
                           controller: nameEditingController,
                           decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Garage name'),
+                            border: OutlineInputBorder(),
+                            labelText: 'Garage name',
+                          ),
                           onChanged: (garageName) {
                             setState(() {
                               garage = garage.copyWith(name: garageName);
@@ -192,26 +200,29 @@ class _AddGaragePageState extends State<AddGaragePage> {
                         currentValue: garage.garageSettings.location,
                         onChanged: (location) => setState(() {
                           garage = garage.copyWith(
-                              garageSettings: garage.garageSettings
-                                  .copyWith(location: location));
+                            garageSettings: garage.garageSettings.copyWith(
+                              location: location,
+                            ),
+                          );
                         }),
                         onConfirm: (location) async {},
                       ),
                     ),
                     Step(
-                        title: Text(
-                          'Edit Details',
-                          style: stepTextStyle,
-                        ),
-                        content: GarageDetailsEditorWidget(
-                          showTitle: false,
-                          original: garage.garageSettings,
-                          currentValue: garage.garageSettings,
-                          onChanged: (settings) => setState(() {
-                            garage = garage.copyWith(garageSettings: settings);
-                          }),
-                          onConfirm: (location) async {},
-                        )),
+                      title: Text(
+                        'Edit Details',
+                        style: stepTextStyle,
+                      ),
+                      content: GarageDetailsEditorWidget(
+                        showTitle: false,
+                        original: garage.garageSettings,
+                        currentValue: garage.garageSettings,
+                        onChanged: (settings) => setState(() {
+                          garage = garage.copyWith(garageSettings: settings);
+                        }),
+                        onConfirm: (location) async {},
+                      ),
+                    ),
                     Step(
                       title: Text(
                         'Add prices',
@@ -260,11 +271,12 @@ class _AddGaragePageState extends State<AddGaragePage> {
                         style: stepTextStyle,
                       ),
                       content: Align(
-                          alignment: Alignment.centerLeft,
-                          child: CreateGarageButton(
-                            garage: garage,
-                            prices: prices,
-                          )),
+                        alignment: Alignment.centerLeft,
+                        child: CreateGarageButton(
+                          garage: garage,
+                          prices: prices,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -335,7 +347,7 @@ class _CreateGarageButtonState extends State<CreateGarageButton> {
     if (garageFuture == null && pricesFuture == null) {
       return ElevatedButton.icon(
         style: ButtonStyle(
-          shape: MaterialStateProperty.all(StadiumBorder()),
+          shape: MaterialStateProperty.all(const StadiumBorder()),
           backgroundColor: MaterialStateProperty.all(Colors.green),
         ),
         onPressed: startCreatingGarage,

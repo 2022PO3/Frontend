@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinbox/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:po_frontend/pages/payment_widgets/timer_widget.dart';
+import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/request_button.dart';
 
 import '../../../api/models/enums.dart';
@@ -62,8 +63,10 @@ class _EditableFieldState<T> extends State<EditableField<T>> {
                 if (widget.showFieldName)
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text('${widget.fieldName}:',
-                        style: widget.nameTextStyle),
+                    child: Text(
+                      '${widget.fieldName}:',
+                      style: widget.nameTextStyle,
+                    ),
                   ),
                 Text(
                   widget.currentValue.toString(),
@@ -101,10 +104,12 @@ class EditButton<T> extends StatelessWidget {
     return SizedBox(
       height: 50,
       child: RequestButtonIcon(
-        makeRequest: () async => await EditorDialog.show(context,
-            fieldName: fieldName,
-            currentValue: currentValue,
-            onConfirm: (newValue) async => await onEdit.call(newValue)),
+        makeRequest: () async => await EditorDialog.show(
+          context,
+          fieldName: fieldName,
+          currentValue: currentValue,
+          onConfirm: (newValue) async => await onEdit.call(newValue),
+        ),
         icon: Icon(
           Icons.edit,
           color: Theme.of(context).primaryColor,
@@ -158,8 +163,9 @@ class _EditorDialogState<T> extends State<EditorDialog<T>> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      shape: Constants.cardBorder,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(15),
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -170,43 +176,47 @@ class _EditorDialogState<T> extends State<EditorDialog<T>> {
                     child: Text(
                       'Edit ${widget.fieldName}',
                       style: const TextStyle(
-                          fontWeight: FontWeight.w600, fontSize: 25),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 25,
+                      ),
                     ),
                   ),
                   IconButton(
-                      onPressed: () => context.pop(),
-                      icon: const Icon(Icons.close))
+                    onPressed: () => context.pop(),
+                    icon: const Icon(Icons.close),
+                  )
                 ],
               ),
               LayoutBuilder(builder: (context, constraints) {
-                print(constraints.maxHeight);
                 return _typeBuilder();
               }),
               Row(
                 children: [
                   const Spacer(),
                   Expanded(
-                    flex: 2,
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                          shape: MaterialStateProperty.all(
-                            const StadiumBorder(),
-                          ),
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.red.shade900)),
-                      onPressed: context.pop,
-                      child: const Text('Cancel'),
+                    flex: 3,
+                    child: RequestButton(
+                      makeRequest: () async {
+                        await widget.onConfirm?.call(newValue);
+                        if (mounted) context.pop();
+                      },
+                      text: 'Confirm',
                     ),
                   ),
                   const Spacer(),
                   Expanded(
                     flex: 3,
-                    child: RequestButton(
-                      makeRequest: () async {
-                        await widget.onConfirm?.call(newValue);
-                        context.pop();
-                      },
-                      text: 'Confirm',
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(
+                          const StadiumBorder(),
+                        ),
+                        backgroundColor: MaterialStateProperty.all(
+                          Colors.red.shade900,
+                        ),
+                      ),
+                      onPressed: context.pop,
+                      child: const Text('Cancel'),
                     ),
                   ),
                   const Spacer(),
@@ -220,71 +230,77 @@ class _EditorDialogState<T> extends State<EditorDialog<T>> {
   }
 
   Builder _typeBuilder() {
-    return Builder(builder: (context) {
-      switch (T) {
-        case String:
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              initialValue: newValue as String,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
+    return Builder(
+      builder: (context) {
+        switch (T) {
+          case String:
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                initialValue: newValue as String,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (String v) => setState(() {
+                  newValue = v as T;
+                }),
               ),
-              onChanged: (String v) => setState(() {
+            );
+
+          case int:
+            return SpinBox(
+              min: 0,
+              max: double.infinity,
+              value: (newValue as int).toDouble(),
+              decimals: 0,
+              step: 1,
+              onChanged: (v) => setState(() {
+                newValue = v.toInt() as T;
+              }),
+            );
+          case double:
+          case num:
+            return SpinBox(
+              min: 0,
+              value: newValue as double,
+              decimals: 2,
+              step: 0.1,
+              onChanged: (v) => setState(() {
                 newValue = v as T;
               }),
-            ),
-          );
+            );
+          case Price:
+            return PriceEditor(
+              price: newValue as Price,
+              onChanged: (v) => setState(() {
+                newValue = v as T;
+              }),
+            );
+          case ProvinceEnum:
+            return ProvinceSelector(
+              canBeNull: false,
+              initialValue: newValue as ProvinceEnum,
+              onChanged: (v) => setState(() {
+                newValue = v as T;
+              }),
+            );
 
-        case int:
-          return SpinBox(
-            min: 0,
-            max: double.infinity,
-            value: (newValue as int).toDouble(),
-            decimals: 0,
-            step: 1,
-            onChanged: (v) => setState(() {
-              newValue = v.toInt() as T;
-            }),
-          );
-        case double:
-        case num:
-          return SpinBox(
-            min: 0,
-            value: newValue as double,
-            decimals: 2,
-            step: 0.1,
-            onChanged: (v) => setState(() {
-              newValue = v as T;
-            }),
-          );
-        case Price:
-          return PriceEditor(
-            price: newValue as Price,
-            onChanged: (v) => setState(() {
-              newValue = v as T;
-            }),
-          );
-        case ProvinceEnum:
-          return ProvinceSelector(
-            canBeNull: false,
-            initialValue: newValue as ProvinceEnum,
-            onChanged: (v) => setState(() {
-              newValue = v as T;
-            }),
-          );
-
-        default:
-          throw UnimplementedError(
-              'Type $T is not implemented for EditorDialog');
-      }
-    });
+          default:
+            throw UnimplementedError(
+              'Type $T is not implemented for EditorDialog',
+            );
+        }
+      },
+    );
   }
 }
 
 class PriceEditor extends StatefulWidget {
-  const PriceEditor({Key? key, required this.price, required this.onChanged})
-      : super(key: key);
+  const PriceEditor({
+    Key? key,
+    required this.price,
+    required this.onChanged,
+  }) : super(key: key);
 
   final Price price;
   final Function(Price price) onChanged;
@@ -320,8 +336,9 @@ class _PriceEditorState extends State<PriceEditor> {
             child: Text(
               'Customers have to pay',
               style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: MediaQuery.of(context).size.shortestSide / 20),
+                fontWeight: FontWeight.w500,
+                fontSize: MediaQuery.of(context).size.shortestSide / 20,
+              ),
             ),
           ),
         ),
@@ -375,7 +392,6 @@ class _PriceEditorState extends State<PriceEditor> {
         ),
         CupertinoSlidingSegmentedControl<BaseUnit>(
           backgroundColor: CupertinoColors.systemGrey2,
-          //thumbColor: skyColors[_selectedSegment]!,
           // This represents the currently selected segmented control.
           groupValue: unit,
           // Callback that sets the selected segmented control.
@@ -392,15 +408,16 @@ class _PriceEditorState extends State<PriceEditor> {
           },
         ),
         DurationPicker(
-            key: ValueKey(unit),
-            duration: widget.price.duration,
-            onChange: (d) => widget.onChanged(
-                  widget.price.copyWith(
-                    duration: d,
-                  ),
-                ),
-            snapToMins: 1,
-            baseUnit: unit),
+          key: ValueKey(unit),
+          duration: widget.price.duration,
+          onChange: (d) => widget.onChanged(
+            widget.price.copyWith(
+              duration: d,
+            ),
+          ),
+          snapToMins: 1,
+          baseUnit: unit,
+        ),
       ],
     );
   }
@@ -408,9 +425,10 @@ class _PriceEditorState extends State<PriceEditor> {
   Widget _buildPriceStringEditor() {
     return TextFormField(
       decoration: const InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: 'Title of price',
-          hintText: 'Title'),
+        border: OutlineInputBorder(),
+        labelText: 'Title of price',
+        hintText: 'Title',
+      ),
       key: ValueKey(widget.price.id),
       initialValue: widget.price.priceString,
       onChanged: (newValue) => widget.onChanged(
@@ -437,24 +455,25 @@ class ProvinceSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButton<ProvinceEnum?>(
-        hint: const Text('Select your province here'),
-        value: initialValue,
-        items: [
-          if (canBeNull && initialValue != null)
-            const DropdownMenuItem<ProvinceEnum>(
-              value: null,
-              child: Text('No Province'),
-            ),
-          ...ProvinceEnum.values.map((e) {
-            return DropdownMenuItem<ProvinceEnum>(
-              value: e,
-              child: Text(e.name),
-            );
-          }).toList()
-        ],
-        onChanged: (newValue) {
-          onChanged?.call(newValue);
-        });
+      hint: const Text('Select your province here'),
+      value: initialValue,
+      items: [
+        if (canBeNull && initialValue != null)
+          const DropdownMenuItem<ProvinceEnum>(
+            value: null,
+            child: Text('No Province'),
+          ),
+        ...ProvinceEnum.values.map((e) {
+          return DropdownMenuItem<ProvinceEnum>(
+            value: e,
+            child: Text(e.name),
+          );
+        }).toList()
+      ],
+      onChanged: (newValue) {
+        onChanged?.call(newValue);
+      },
+    );
   }
 }
 
@@ -534,25 +553,26 @@ class ValutaSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButton<ValutaEnum?>(
-        hint: (canBeNull || initialValue == null)
-            ? const Text('Select Currency')
-            : null,
-        value: initialValue,
-        items: [
-          if (canBeNull && initialValue != null)
-            const DropdownMenuItem<ValutaEnum>(
-              value: null,
-              child: Text(''),
-            ),
-          ...ValutaEnum.values.map((e) {
-            return DropdownMenuItem<ValutaEnum>(
-              value: e,
-              child: Text('${e.name} (${e.symbol})'),
-            );
-          }).toList()
-        ],
-        onChanged: (newValue) {
-          onChanged?.call(newValue);
-        });
+      hint: (canBeNull || initialValue == null)
+          ? const Text('Select Currency')
+          : null,
+      value: initialValue,
+      items: [
+        if (canBeNull && initialValue != null)
+          const DropdownMenuItem<ValutaEnum>(
+            value: null,
+            child: Text(''),
+          ),
+        ...ValutaEnum.values.map((e) {
+          return DropdownMenuItem<ValutaEnum>(
+            value: e,
+            child: Text('${e.name} (${e.symbol})'),
+          );
+        }).toList()
+      ],
+      onChanged: (newValue) {
+        onChanged?.call(newValue);
+      },
+    );
   }
 }
