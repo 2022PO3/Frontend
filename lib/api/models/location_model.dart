@@ -26,6 +26,13 @@ class Location {
     return '$street $number, $municipality, $country';
   }
 
+  bool get isValid => (country != '' &&
+      municipality != '' &&
+      postCode > 1000 &&
+      postCode < 9999 &&
+      street != '' &&
+      number > 0);
+
   Location copyWith({
     int? id,
     String? country,

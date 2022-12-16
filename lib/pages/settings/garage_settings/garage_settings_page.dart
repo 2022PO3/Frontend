@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:po_frontend/api/requests/garage_requests.dart';
+import 'package:po_frontend/api/requests/price_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/pages/settings/garage_settings/prices_editor.dart';
 import 'package:po_frontend/utils/card.dart';
 import 'package:po_frontend/utils/constants.dart';
+import '../../../api/models/enums.dart';
 import '../../../api/models/garage_model.dart';
 import '../../../api/models/price_model.dart';
 import '../../../utils/error_widget.dart';
@@ -99,15 +101,38 @@ class _GarageSettingsPageState extends State<GarageSettingsPage> {
                     if (snapshot.connectionState == ConnectionState.done &&
                         snapshot.hasData) {
                       List<Price> prices = snapshot.data as List<Price>;
+                      prices.sort((a, b) => b.duration.compareTo(a.duration));
                       return PricesEditor(
                         prices: prices,
-                        garageId: widget.garageId,
-                        onChanged: (prices) {
-                          setState(
-                            () {
-                              pricesFuture = getGaragePrices(widget.garageId);
-                            },
-                          );
+                        onPriceChanged: (price) async {
+                          if (prices.map((e) => e.id).contains(price.id)) {
+                            print('Updating price');
+                            await updatePrice(price);
+                          } else {
+                            print('Creating price');
+                            await createPrice(
+                                price.copyWith(garageId: widget.garageId));
+                          }
+                          setState(() {
+                            pricesFuture = getGaragePrices(widget.garageId);
+                          });
+                        },
+                        onDelete: (price) async {
+                          await deletePrice(price);
+                          setState(() {
+                            pricesFuture = getGaragePrices(widget.garageId);
+                          });
+                        },
+                        onValutaChanged: (ValutaEnum valuta) async {
+                          List<Future> futures = [];
+                          for (var price in prices) {
+                            futures.add(
+                                updatePrice(price.copyWith(valuta: valuta)));
+                          }
+                          await Future.wait(futures);
+                          setState(() {
+                            pricesFuture = getGaragePrices(widget.garageId);
+                          });
                         },
                       );
                     } else if (snapshot.hasError) {

@@ -3,23 +3,42 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/enums.dart';
 import 'package:po_frontend/api/models/price_model.dart';
-import 'package:po_frontend/api/requests/price_requests.dart';
 import 'package:po_frontend/pages/payment_widgets/timer_widget.dart';
 import 'package:po_frontend/pages/settings/garage_settings/garage_settings_page.dart';
 import 'package:po_frontend/pages/settings/widgets/editing_widgets.dart';
 import 'package:po_frontend/utils/request_button.dart';
 
-class PricesEditor extends StatelessWidget {
+class PricesEditor extends StatefulWidget {
   const PricesEditor({
     Key? key,
     required this.prices,
-    required this.garageId,
-    required this.onChanged,
+    this.onPriceChanged,
+    this.onValutaChanged,
+    this.onDelete,
   }) : super(key: key);
 
   final List<Price> prices;
-  final int garageId;
-  final Function(List<Price> prices) onChanged;
+  final Function(Price price)? onPriceChanged;
+  final Function(Price price)? onDelete;
+  final Function(ValutaEnum valuta)? onValutaChanged;
+
+  @override
+  State<PricesEditor> createState() => _PricesEditorState();
+}
+
+class _PricesEditorState extends State<PricesEditor> {
+  bool _showSameDurationError = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
+  void didUpdateWidget(covariant PricesEditor oldWidget) {
+    _showSameDurationError = false;
+    super.didUpdateWidget(oldWidget);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,18 +55,16 @@ class PricesEditor extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              Spacer(),
-              ValutaSelector(
-                initialValue: prices.first.valuta,
+              const Spacer(),
+              RequestValutaSelector(
+                initialValue: widget.prices.isNotEmpty
+                    ? widget.prices.first.valuta
+                    : ValutaEnum.EUR,
                 canBeNull: false,
                 onChanged: (newValue) async {
-                  List<Future> futures = [];
-                  for (var price in prices) {
-                    futures.add(updatePrice(price.copyWith(valuta: newValue)));
+                  if (newValue != null) {
+                    await widget.onValutaChanged?.call(newValue);
                   }
-                  await Future.wait(futures);
-                  await onChanged.call(
-                      prices.map((e) => e.copyWith(valuta: newValue)).toList());
                 },
               ),
               IconButton(
@@ -77,7 +94,7 @@ class PricesEditor extends StatelessWidget {
                         Center(
                           child: ElevatedButton(
                               onPressed: () => context.pop(),
-                              child: Text('Close')),
+                              child: const Text('Close')),
                         )
                       ],
                     ),
@@ -87,25 +104,43 @@ class PricesEditor extends StatelessWidget {
               ),
             ],
           ),
-          ...prices
+          ...widget.prices
               .map((price) => Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Divider(),
                       PriceEditorWidget(
+                        isDuplicate: widget.prices
+                                .where((e) => e.duration == price.duration)
+                                .length >=
+                            2,
                         price: price,
-                        onChanged: (newPrice) {
-                          List<Price> newPrices = List.from(prices);
-                          newPrices.remove(price);
-                          if (newPrice != null) {
-                            newPrices.add(newPrice);
+                        onChanged: (price) {
+                          if (widget.prices
+                              .where((e) =>
+                                  e.duration == price.duration &&
+                                  e.price != price.price)
+                              .isNotEmpty) {
+                            setState(() {
+                              _showSameDurationError = true;
+                            });
+                          } else {
+                            widget.onPriceChanged?.call(price);
                           }
-                          onChanged.call(newPrices);
                         },
+                        onDelete: () => widget.onDelete?.call(price),
                       ),
                     ],
                   ))
               .toList(),
+          if (_showSameDurationError)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Text(
+                'A price with the same duration and different price already exists for this garage.',
+                style: TextStyle(color: Colors.red.shade900),
+              ),
+            ),
           Center(
             child: RequestButton(
                 text: 'Add new price',
@@ -115,17 +150,25 @@ class PricesEditor extends StatelessWidget {
                     context,
                     fieldName: 'your new price',
                     currentValue: Price(
-                      id: 0,
-                      garageId: garageId,
+                      id: -1,
+                      garageId: -1,
                       priceString: '',
                       price: 1,
                       duration: const Duration(hours: 1),
                       valuta: ValutaEnum.EUR,
                     ),
                     onConfirm: (price) async {
-                      createFuture = createPrice(price);
-                      await createFuture;
-                      onChanged([...prices, price]);
+                      if (widget.prices
+                          .where((e) =>
+                              e.duration == price.duration &&
+                              e.price != price.price)
+                          .isNotEmpty) {
+                        setState(() {
+                          _showSameDurationError = true;
+                        });
+                      } else {
+                        await widget.onPriceChanged?.call(price);
+                      }
                     },
                   );
                   await createFuture;
@@ -138,12 +181,20 @@ class PricesEditor extends StatelessWidget {
 }
 
 class PriceEditorWidget extends StatefulWidget {
-  const PriceEditorWidget({Key? key, required this.price, this.onChanged})
+  const PriceEditorWidget(
+      {Key? key,
+      required this.price,
+      this.onChanged,
+      required this.onDelete,
+      required this.isDuplicate})
       : super(key: key);
 
   final Price price;
 
-  final Function(Price? price)? onChanged;
+  final bool isDuplicate;
+
+  final Function(Price price)? onChanged;
+  final Function onDelete;
 
   @override
   State<PriceEditorWidget> createState() => _PriceEditorWidgetState();
@@ -175,7 +226,18 @@ class _PriceEditorWidgetState extends State<PriceEditorWidget> {
                   ),
                 ),
                 Text(
-                    '${widget.price.valuta} ${widget.price.price.toStringAsFixed(2)} for ${widget.price.duration.toPrettyString(showSeconds: false)}'),
+                  '${widget.price.valuta} ${widget.price.price.toStringAsFixed(2)} for ${widget.price.duration.toPrettyString(showSeconds: false)}',
+                ),
+                if (widget.isDuplicate)
+                  Text(
+                    'Another price has the same duration.',
+                    style: TextStyle(color: Colors.red.shade900),
+                  ),
+                if (widget.price.priceString.trim() == '')
+                  Text(
+                    'The price should have a title.',
+                    style: TextStyle(color: Colors.red.shade900),
+                  ),
               ],
             ),
           ),
@@ -183,17 +245,11 @@ class _PriceEditorWidgetState extends State<PriceEditorWidget> {
             EditButton<Price>(
               currentValue: widget.price,
               fieldName: 'price',
-              onEdit: (price) async {
-                await updatePrice(price);
-                widget.onChanged?.call(price);
-              },
+              onEdit: (price) async => await widget.onChanged?.call(price),
             ),
           if (!kIsWeb || isHovering)
             RequestButtonIcon(
-              makeRequest: () async {
-                await deletePrice(widget.price);
-                widget.onChanged?.call(null);
-              },
+              makeRequest: () async => widget.onDelete(),
               icon: const Icon(
                 Icons.delete,
                 color: Colors.red,

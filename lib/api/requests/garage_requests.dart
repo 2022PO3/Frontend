@@ -36,6 +36,22 @@ Future<Garage> updateGarage(Garage garage) async {
   );
 }
 
+Future<Garage> createGarage(Garage garage) async {
+  var data = garage.toJSON();
+  data.remove('id');
+
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.post,
+    apiSlug: StaticValues.getGaragesSlug,
+    useAuthToken: true,
+    body: data,
+  );
+  return await NetworkHelper.filterResponse(
+    callBack: Garage.fromJSON,
+    response: response,
+  );
+}
+
 Future<List<Garage>> getAllGarages() async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.get,

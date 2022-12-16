@@ -12,7 +12,7 @@ import '../../utils/error_widget.dart';
 import '../navbar/navbar.dart';
 import '../payment_widgets/pay_button.dart';
 import '../payment_widgets/timer_widget.dart';
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badges;
 
 import 'dart:async';
 
@@ -129,7 +129,7 @@ class _HomePageState extends State<HomePage> {
               context.go('/home/notifications');
             },
             child: newNotifications != 0
-                ? Badge(
+                ? badges.Badge(
                     badgeColor: Colors.redAccent,
                     badgeContent: Text(
                       newNotifications.toString(),
@@ -217,7 +217,6 @@ class CurrentParkingSessionsListWidget extends StatelessWidget {
           } else {
             return Scrollbar(
               child: ListView.builder(
-                shrinkWrap: true,
                 physics: const BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
@@ -284,113 +283,91 @@ class CurrentParkingSessionWidget extends StatelessWidget {
   }
 
   Widget _buildData(BuildContext context, Garage garage) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.shortestSide,
-      child: Card(
-        elevation: 10,
-        shape: Constants.cardBorder,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Hero(
-                            tag: 'title_${licencePlate.licencePlate}',
-                            child: Material(
-                              color: Colors.transparent,
-                              child: Text(
-                                'Parked at ${garage.name}',
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w900,
-                                ),
+    int switchHeight = 135;
+    return Card(
+      elevation: 10,
+      shape: Constants.cardBorder,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Hero(
+                          tag: 'title_${licencePlate.licencePlate}',
+                          child: Material(
+                            color: Colors.transparent,
+                            child: Text(
+                              'Parked with ${licencePlate.formatLicencePlate()}',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w900,
                               ),
                             ),
-                          ),
-                          Text(
-                            garage.garageSettings.location.toString(),
-                          )
-                        ],
-                      ),
-                    ),
-                    if (constraints.maxHeight < 110)
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: PayPreviewButton(
-                          licencePlate: licencePlate,
-                          garage: garage,
-                        ),
-                      ),
-                  ],
-                ),
-                Spacer(
-                  flex: constraints.maxHeight > 131 ? 3 : 1,
-                ),
-                if (constraints.maxHeight > 125)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const Text('Licence plate:'),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.shortestSide / 5,
-                        ),
-                        Text(
-                          licencePlate.formatLicencePlate(),
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
                           ),
                         ),
                       ],
                     ),
                   ),
-                if (constraints.maxHeight > 110)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Hero(
+                  if (constraints.maxHeight < switchHeight)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: PayPreviewButton(
+                        licencePlate: licencePlate,
+                        garage: garage,
+                      ),
+                    ),
+                ],
+              ),
+              if (constraints.maxHeight > switchHeight) const Spacer(),
+              if (constraints.maxHeight > switchHeight)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const Text('Duration:'),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Hero(
                           tag: 'timer_${licencePlate.licencePlate}',
                           child: TimerWidget(
                             start: licencePlate.updatedAt,
                             textStyle: TextStyle(
                               fontSize:
                                   MediaQuery.of(context).size.shortestSide / 20,
-                              fontWeight: FontWeight.w900,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.shortestSide / 5,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0,
-                            vertical: 2,
-                          ),
-                          child: PayPreviewButton(
-                            licencePlate: licencePlate,
-                            garage: garage,
-                          ),
-                        ),
-                      ],
+                      ),
+                    ],
+                  ),
+                ),
+              if (constraints.maxHeight > switchHeight)
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8.0,
+                      vertical: 2,
+                    ),
+                    child: PayPreviewButton(
+                      licencePlate: licencePlate,
+                      garage: garage,
                     ),
                   ),
-              ],
-            );
-          },
-        ),
+                ),
+            ],
+          );
+        },
       ),
     );
   }

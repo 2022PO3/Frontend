@@ -185,7 +185,7 @@ class _NewGarageButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(30),
         ),
       ),
-      onPressed: () => {},
+      onPressed: () => context.go('/home/settings/add-garage'),
       icon: const Icon(Icons.add),
       label: const Text('Add new Garage'),
     );

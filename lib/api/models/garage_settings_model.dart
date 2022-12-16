@@ -18,6 +18,12 @@ class GarageSettings {
     required this.maxHandicappedLots,
   });
 
+  bool get isValid => (location.isValid &&
+      electricCars >= 0 &&
+      maxHeight > 0 &&
+      maxWidth > 0 &&
+      maxHandicappedLots >= 0);
+
   GarageSettings copyWith({
     int? id,
     Location? location,

@@ -37,7 +37,7 @@ class _RequestButtonState<T> extends State<RequestButton> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'The request to our servers failed: ${snapshot.error}',
+                'The action failed: ${snapshot.error}',
                 style: const TextStyle(color: Colors.red),
               ),
               _buildButton(context, 'Retry')
@@ -101,7 +101,7 @@ class _RequestButtonIconState<T> extends State<RequestButtonIcon> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'The request to our servers failed: ${snapshot.error}',
+                'The action failed: ${snapshot.error}',
                 style: const TextStyle(color: Colors.red),
               ),
               _buildButton(context, widget.icon)
