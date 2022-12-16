@@ -1,5 +1,4 @@
 import 'package:po_frontend/api/models/enums.dart';
-import 'package:po_frontend/api/network/network_exception.dart';
 
 /// Model which represents the backend `Location`-model.
 class Location {
@@ -94,4 +93,15 @@ class Location {
         other.street == street &&
         other.number == number;
   }
+
+  @override
+  int get hashCode => Object.hash(
+        id,
+        country,
+        province.index,
+        municipality,
+        postCode,
+        street,
+        number,
+      );
 }

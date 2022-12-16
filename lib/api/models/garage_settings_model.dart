@@ -82,4 +82,14 @@ class GarageSettings {
         other.maxHeight == maxHeight &&
         other.maxWidth == maxWidth;
   }
+
+  @override
+  int get hashCode => Object.hash(
+        id,
+        location,
+        electricCars,
+        maxHeight,
+        maxWidth,
+        maxHandicappedLots,
+      );
 }
