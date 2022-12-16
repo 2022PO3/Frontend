@@ -8,7 +8,6 @@ import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/parking_lot_model.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/pages/reservations/make_reservation_page.dart';
-import 'package:po_frontend/utils/card.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 
 class SpotSelectionPage extends StatefulWidget {

@@ -1,5 +1,4 @@
 import 'package:po_frontend/api/models/enums.dart';
-import '../network/network_exception.dart';
 
 /// Model which represents the backend `Price`-model.
 class Price {

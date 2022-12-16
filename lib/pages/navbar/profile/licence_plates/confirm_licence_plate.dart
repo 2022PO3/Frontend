@@ -28,17 +28,15 @@ class ConfirmLicencePlatePage extends StatefulWidget {
 class _ConfirmLicencePlatePageState extends State<ConfirmLicencePlatePage> {
   ButtonState state = ButtonState.init;
   bool isLoading = false;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   final _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
   String? _fileName;
   String? _saveAsFileName;
   List<PlatformFile>? _paths;
-  String? _directoryPath;
-  String? _extension;
+
   bool _isLoading = false;
   bool _userAborted = false;
-  FileType _pickingType = FileType.custom;
-  TextEditingController _controller = TextEditingController();
+  final FileType _pickingType = FileType.custom;
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +174,6 @@ class _ConfirmLicencePlatePageState extends State<ConfirmLicencePlatePage> {
     }
     setState(() {
       _isLoading = true;
-      _directoryPath = null;
       _fileName = null;
       _paths = null;
       _saveAsFileName = null;

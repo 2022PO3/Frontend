@@ -14,7 +14,6 @@ import 'package:po_frontend/api/widgets/garage_opening_hours_widget.dart';
 import 'package:po_frontend/api/models/price_model.dart';
 import 'package:po_frontend/api/widgets/price_widget.dart';
 import 'package:po_frontend/api/models/garage_settings_model.dart';
-import 'package:po_frontend/api/models/enums.dart';
 
 class GarageInfoPage extends StatefulWidget {
   const GarageInfoPage({Key? key, required this.garageId}) : super(key: key);

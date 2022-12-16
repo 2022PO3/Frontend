@@ -16,7 +16,7 @@ class _NotificationPageState extends State<NotificationPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  int _selectedTab = 0;
+  //int _selectedTab = 0;
 
   @override
   void initState() {
@@ -24,13 +24,13 @@ class _NotificationPageState extends State<NotificationPage>
 
     _tabController = TabController(vsync: this, length: 2);
 
-    _tabController.addListener(() {
+    /*_tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
-        setState(() {
+        /*setState(() {
           _selectedTab = _tabController.index;
-        });
+        });*/
       }
-    });
+    });*/
   }
 
   @override

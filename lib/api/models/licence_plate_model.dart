@@ -16,9 +16,8 @@ class LicencePlate {
     required this.enabled,
   });
 
-  /// Serializes a JSON-object into a Dart `Device`-object with all properties.
+  /// Serializes a JSON-object into a Dart `LicencePlate`-object with all properties.
   static LicencePlate fromJSON(Map<String, dynamic> json) {
-    print(json);
     return LicencePlate(
       id: json['id'] as int,
       licencePlate: json['licencePlate'] as String,

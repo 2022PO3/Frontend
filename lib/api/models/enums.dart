@@ -1,4 +1,4 @@
-import 'package:enum_to_string/enum_to_string.dart';
+// ignore_for_file: constant_identifier_names
 
 import '../network/network_exception.dart';
 

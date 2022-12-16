@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_credit_card/credit_card_model.dart';
-import 'package:po_frontend/utils/user_data.dart';
 
 /// Model which represents the backend `Card`-model.
 class CreditCard {
@@ -17,8 +16,6 @@ class CreditCard {
   });
 
   factory CreditCard.empty(BuildContext context) {
-    final String name =
-        '${getUserFirstName(context)} ${getUserLastName(context)}';
     return CreditCard(
       number: '',
       cvc: '',

@@ -4,7 +4,6 @@ import 'package:po_frontend/api/requests/price_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/pages/settings/garage_settings/prices_editor.dart';
 import 'package:po_frontend/utils/card.dart';
-import 'package:po_frontend/utils/constants.dart';
 import '../../../api/models/enums.dart';
 import '../../../api/models/garage_model.dart';
 import '../../../api/models/price_model.dart';

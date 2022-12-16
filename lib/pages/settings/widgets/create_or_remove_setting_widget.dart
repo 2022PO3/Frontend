@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../utils/request_button.dart';
-import '../../payment_widgets/pay_button.dart';
 
 class CreateOrRemoveSettingWidget extends StatelessWidget {
   const CreateOrRemoveSettingWidget({

@@ -1,17 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:po_frontend/api/models/licence_plate_model.dart';
 import 'package:po_frontend/pages/payment_widgets/pay_button.dart';
 
-import '../../api/models/enums.dart';
 import '../../api/models/garage_model.dart';
-import '../../api/models/price_model.dart';
-import '../../api/network/network_helper.dart';
-import '../../api/network/network_service.dart';
-import '../../api/network/static_values.dart';
-import '../../utils/error_widget.dart';
 import '../payment_widgets/payment_overview.dart';
 import '../payment_widgets/timer_widget.dart';
 

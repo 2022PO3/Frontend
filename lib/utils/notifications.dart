@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:po_frontend/api/models/notification_model.dart';
-import 'package:po_frontend/api/models/user_model.dart';
 import 'package:po_frontend/providers/notification_provider.dart';
 import 'package:provider/provider.dart';
 

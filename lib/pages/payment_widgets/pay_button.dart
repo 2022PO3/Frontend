@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import '../../api/models/garage_model.dart';
 import '../../api/models/licence_plate_model.dart';
-import '../../api/network/network_helper.dart';
-import '../../api/network/network_service.dart';
-import '../../api/network/static_values.dart';
 import '../../api/requests/payment_requests.dart';
-import '../../utils/error_widget.dart';
 import '../../utils/request_button.dart';
 import '../payment_page/payment_page.dart';
 
