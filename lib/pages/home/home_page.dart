@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/notification_model.dart';
@@ -93,12 +95,14 @@ class _HomePageState extends State<HomePage> {
                     pinned: true,
                     floating: true,
                     delegate: SimpleHeaderDelegate(
-                      child: CurrentParkingSessionsListWidget(
-                        licencePlatesFuture: licencePlatesFuture,
-                      ),
-                      maxHeight: MediaQuery.of(context).size.shortestSide / 2.5,
-                      minHeight: MediaQuery.of(context).size.shortestSide / 5,
-                    ),
+                        child: CurrentParkingSessionsListWidget(
+                          licencePlatesFuture: licencePlatesFuture,
+                        ),
+                        maxHeight: min(
+                            MediaQuery.of(context).size.shortestSide / 2.5,
+                            220),
+                        minHeight: min(
+                            MediaQuery.of(context).size.shortestSide / 5, 100)),
                   ),
                   SliverToBoxAdapter(
                     child: GarageListWidget(
