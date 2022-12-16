@@ -104,7 +104,7 @@ class EditButton<T> extends StatelessWidget {
         makeRequest: () async => await EditorDialog.show(context,
             fieldName: fieldName,
             currentValue: currentValue,
-            onConfirm: onEdit),
+            onConfirm: (newValue) async => await onEdit.call(newValue)),
         icon: Icon(
           Icons.edit,
           color: Theme.of(context).primaryColor,
@@ -183,25 +183,33 @@ class _EditorDialogState<T> extends State<EditorDialog<T>> {
                 return _typeBuilder();
               }),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ElevatedButton(
-                    style: ButtonStyle(
-                        shape: MaterialStateProperty.all(
-                          const StadiumBorder(),
-                        ),
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.red.shade900)),
-                    onPressed: context.pop,
-                    child: const Text('Cancel'),
+                  const Spacer(),
+                  Expanded(
+                    flex: 2,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                            const StadiumBorder(),
+                          ),
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.red.shade900)),
+                      onPressed: context.pop,
+                      child: const Text('Cancel'),
+                    ),
                   ),
-                  RequestButton(
-                    makeRequest: () async {
-                      await widget.onConfirm?.call(newValue);
-                      context.pop();
-                    },
-                    text: 'Confirm',
+                  const Spacer(),
+                  Expanded(
+                    flex: 3,
+                    child: RequestButton(
+                      makeRequest: () async {
+                        await widget.onConfirm?.call(newValue);
+                        context.pop();
+                      },
+                      text: 'Confirm',
+                    ),
                   ),
+                  const Spacer(),
                 ],
               )
             ],

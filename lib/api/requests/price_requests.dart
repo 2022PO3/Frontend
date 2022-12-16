@@ -52,7 +52,7 @@ Future<Price> updatePrice(Price price) async {
 Future<void> deletePrice(Price price) async {
   await NetworkService.sendRequest(
     requestType: RequestType.delete,
-    apiSlug: '${StaticValues.pricesSlug}/${price.id}',
+    apiSlug: StaticValues.pricesSlug,
     useAuthToken: true,
     pk: price.id,
     body: Price.toJSON(price),

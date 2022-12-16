@@ -106,8 +106,10 @@ class _GarageSettingsPageState extends State<GarageSettingsPage> {
                         prices: prices,
                         onPriceChanged: (price) async {
                           if (prices.map((e) => e.id).contains(price.id)) {
+                            print('Updating price');
                             await updatePrice(price);
                           } else {
+                            print('Creating price');
                             await createPrice(
                                 price.copyWith(garageId: widget.garageId));
                           }

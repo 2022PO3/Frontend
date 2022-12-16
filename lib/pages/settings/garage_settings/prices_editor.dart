@@ -117,10 +117,10 @@ class _PricesEditorState extends State<PricesEditor> {
                         price: price,
                         onChanged: (price) {
                           if (widget.prices
-                              .map((e) =>
+                              .where((e) =>
                                   e.duration == price.duration &&
                                   e.price != price.price)
-                              .contains(true)) {
+                              .isNotEmpty) {
                             setState(() {
                               _showSameDurationError = true;
                             });
@@ -157,17 +157,17 @@ class _PricesEditorState extends State<PricesEditor> {
                       duration: const Duration(hours: 1),
                       valuta: ValutaEnum.EUR,
                     ),
-                    onConfirm: (price) {
+                    onConfirm: (price) async {
                       if (widget.prices
-                          .map((e) =>
+                          .where((e) =>
                               e.duration == price.duration &&
                               e.price != price.price)
-                          .contains(true)) {
+                          .isNotEmpty) {
                         setState(() {
                           _showSameDurationError = true;
                         });
                       } else {
-                        widget.onPriceChanged?.call(price);
+                        await widget.onPriceChanged?.call(price);
                       }
                     },
                   );
@@ -245,7 +245,7 @@ class _PriceEditorWidgetState extends State<PriceEditorWidget> {
             EditButton<Price>(
               currentValue: widget.price,
               fieldName: 'price',
-              onEdit: (price) => widget.onChanged?.call(price),
+              onEdit: (price) async => await widget.onChanged?.call(price),
             ),
           if (!kIsWeb || isHovering)
             RequestButtonIcon(
