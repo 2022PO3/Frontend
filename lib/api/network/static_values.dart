@@ -27,8 +27,7 @@ class StaticValues {
   static const String stripeConnectionSlug = 'api/stripe-connection';
 
   // Two factor slugs
-  static const String addTwoFactorDeviceSlug = 'api/auth/totp/create';
-  static const String getTwoFactorDevicesSlug = 'api/auth/totp';
+  static const String totpListSlug = 'api/auth/totp';
   static const String twoFactorDevicesSlug = 'api/auth/totp';
   static const String sendAuthenticationCodeSlug = 'api/auth/totp/login';
   static const String disable2FASlug = 'api/auth/totp/disable';
@@ -40,5 +39,5 @@ class StaticValues {
   // Custom settings
   static const bool debug = true;
   static const bool overrideServerUrl = true;
-  static const String localURL = 'http://192.168.1.125:8000/';
+  static const String localURL = 'http://192.168.49.1:8000/';
 }

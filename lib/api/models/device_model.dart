@@ -21,10 +21,8 @@ class Device {
 
   /// Serializes a Dart `Device`-object to a JSON-object with the attributes defined in
   /// the database.
-  static Map<String, dynamic> toJSON(Device device) => <String, dynamic>{
-        'id': device.id,
-        'name': device.name,
-        'confirmed': device.confirmed
+  Map<String, dynamic> toJSON() => <String, dynamic>{
+        'name': name,
       };
 
   /// Serializes a list JSON-objects into a list of Dart `Device`-objects.

@@ -9,7 +9,6 @@ import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/notification_model.dart';
 import 'package:po_frontend/api/requests/notification_requests.dart';
-import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/api/widgets/garage_widget.dart';
 import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/loading_page.dart';
@@ -40,7 +39,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     getFutures();
-    print('init');
   }
 
   @override
@@ -52,7 +50,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<List<dynamic>> getFutures() async {
-    print('future');
     setState(() {
       licencePlatesFuture = getLicencePlates();
       garagesFuture = getGarages();
@@ -79,7 +76,9 @@ class _HomePageState extends State<HomePage> {
         ? const LoadingPage()
         : LayoutBuilder(builder: (context, constraints) {
             return Scaffold(
-              drawer: constraints.maxWidth > 600 ? null : const Navbar(),
+              drawer: constraints.maxWidth > 600
+                  ? null
+                  : Navbar(garagesFuture: garagesFuture),
               appBar: AppBar(
                 automaticallyImplyLeading: true,
                 flexibleSpace: Container(
@@ -98,7 +97,10 @@ class _HomePageState extends State<HomePage> {
               ),
               body: Row(
                 children: [
-                  if (constraints.maxWidth > 600) Navbar(),
+                  if (constraints.maxWidth > 600)
+                    Navbar(
+                      garagesFuture: garagesFuture,
+                    ),
                   Expanded(
                     child: RefreshIndicator(
                       onRefresh: getFutures,
@@ -111,17 +113,18 @@ class _HomePageState extends State<HomePage> {
                             pinned: true,
                             floating: true,
                             delegate: SimpleHeaderDelegate(
-                                child: CurrentParkingSessionsListWidget(
-                                  licencePlatesFuture: licencePlatesFuture,
-                                ),
-                                maxHeight: min(
-                                    MediaQuery.of(context).size.shortestSide /
-                                        2.5,
-                                    220),
-                                minHeight: min(
-                                    MediaQuery.of(context).size.shortestSide /
-                                        5,
-                                    100)),
+                              child: CurrentParkingSessionsListWidget(
+                                licencePlatesFuture: licencePlatesFuture,
+                              ),
+                              maxHeight: min(
+                                MediaQuery.of(context).size.shortestSide / 2.5,
+                                220,
+                              ),
+                              minHeight: min(
+                                MediaQuery.of(context).size.shortestSide / 5,
+                                100,
+                              ),
+                            ),
                           ),
                           SliverToBoxAdapter(
                             child: GarageListWidget(

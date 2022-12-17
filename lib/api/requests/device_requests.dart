@@ -21,10 +21,11 @@ Future<String> postDevice(
   String name,
 ) async {
   final response = await NetworkService.sendRequest(
-      requestType: RequestType.post,
-      apiSlug: StaticValues.addTwoFactorDeviceSlug,
-      useAuthToken: true,
-      body: {'name': name});
+    requestType: RequestType.post,
+    apiSlug: StaticValues.totpListSlug,
+    useAuthToken: true,
+    body: {'name': name},
+  );
 
   return await NetworkHelper.filterResponse(
     callBack: User.extractSecret,
