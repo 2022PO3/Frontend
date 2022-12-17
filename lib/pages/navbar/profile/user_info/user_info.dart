@@ -258,7 +258,7 @@ class _UserInfoState extends State<UserInfo> {
                     if (mounted) {
                       context.pop();
                     }
-                    newFirstNameTextController.clear();
+                    textController.clear();
                   } on BackendException catch (e) {
                     print('Error occurred $e');
                     showFailureDialog(context, e);
