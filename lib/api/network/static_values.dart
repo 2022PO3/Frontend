@@ -42,5 +42,5 @@ class StaticValues {
   // Custom settings
   static const bool debug = true;
   static const bool overrideServerUrl = true;
-  static const String localURL = 'http://192.168.135.56:8000/';
+  static const String localURL = 'http://192.168.1.125:8000/';
 }
