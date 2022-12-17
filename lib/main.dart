@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+
+import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:provider/provider.dart';
+
 import 'package:po_frontend/core/routes.dart';
 import 'package:po_frontend/pages/auth/auth_service.dart';
 import 'package:po_frontend/providers/notification_provider.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_web_plugins/url_strategy.dart';
-
 import 'providers/user_provider.dart';
 
 void main() async {

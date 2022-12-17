@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:po_frontend/api/requests/garage_requests.dart';
 import 'package:po_frontend/api/requests/price_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
@@ -27,13 +28,13 @@ class _GarageSettingsPageState extends State<GarageSettingsPage> {
   Future<Future<List<Object>>> reloadFutures() async {
     setState(() {
       garageFuture = getGarage(widget.garageId);
-      pricesFuture = getGaragePrices(widget.garageId);
+      pricesFuture = getPrices(widget.garageId);
     });
     return Future.wait([garageFuture, pricesFuture]);
   }
 
   Future<void> setGarage(Garage garage) async {
-    garageFuture = updateGarage(garage);
+    garageFuture = putGarage(garage);
     await garageFuture;
     setState(() {});
   }
@@ -106,31 +107,32 @@ class _GarageSettingsPageState extends State<GarageSettingsPage> {
                         onPriceChanged: (price) async {
                           if (prices.map((e) => e.id).contains(price.id)) {
                             print('Updating price');
-                            await updatePrice(price);
+                            await putPrice(price);
                           } else {
                             print('Creating price');
-                            await createPrice(
-                                price.copyWith(garageId: widget.garageId));
+                            await postPrice(
+                                price.copyWith(garageId: widget.garageId),
+                                widget.garageId);
                           }
                           setState(() {
-                            pricesFuture = getGaragePrices(widget.garageId);
+                            pricesFuture = getPrices(widget.garageId);
                           });
                         },
                         onDelete: (price) async {
                           await deletePrice(price);
                           setState(() {
-                            pricesFuture = getGaragePrices(widget.garageId);
+                            pricesFuture = getPrices(widget.garageId);
                           });
                         },
                         onValutaChanged: (ValutaEnum valuta) async {
                           List<Future> futures = [];
                           for (var price in prices) {
-                            futures.add(
-                                updatePrice(price.copyWith(valuta: valuta)));
+                            futures
+                                .add(putPrice(price.copyWith(valuta: valuta)));
                           }
                           await Future.wait(futures);
                           setState(() {
-                            pricesFuture = getGaragePrices(widget.garageId);
+                            pricesFuture = getPrices(widget.garageId);
                           });
                         },
                       );
@@ -208,7 +210,7 @@ class _Header extends StatelessWidget {
               fontSize: shortestSide / 12,
             ),
             onEdit: (garageName) async {
-              Garage updatedGarage = await updateGarage(
+              Garage updatedGarage = await putGarage(
                 garage.copyWith(
                   name: garageName,
                 ),

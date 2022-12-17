@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+
 import 'package:go_router/go_router.dart';
+
 import 'package:po_frontend/api/models/enums.dart';
 import 'package:po_frontend/api/models/garage_settings_model.dart';
 import 'package:po_frontend/api/models/location_model.dart';
@@ -12,7 +14,6 @@ import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/pages/settings/garage_settings/garage_editor.dart';
 import 'package:po_frontend/pages/settings/garage_settings/garage_settings_page.dart';
 import 'package:po_frontend/pages/settings/garage_settings/prices_editor.dart';
-
 import '../../../api/models/garage_model.dart';
 import '../widgets/editing_widgets.dart';
 
@@ -311,7 +312,7 @@ class _CreateGarageButtonState extends State<CreateGarageButton> {
 
   void startCreatingGarage() async {
     setState(() {
-      garageFuture = createGarage(widget.garage);
+      garageFuture = postGarage(widget.garage);
     });
     garageId = (await garageFuture!).id;
     startCreatingPrices();
@@ -321,7 +322,7 @@ class _CreateGarageButtonState extends State<CreateGarageButton> {
     if (garageId != null) {
       List<Future> futures = [];
       for (var price in widget.prices) {
-        var future = createPrice(price.copyWith(garageId: garageId!));
+        var future = postPrice(price.copyWith(garageId: garageId!), garageId!);
         future.then((value) => setState(() {
               pricesCreated += 1;
             }));

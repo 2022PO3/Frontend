@@ -1,10 +1,12 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:go_router/go_router.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
+
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/location_model.dart';
 import 'package:po_frontend/utils/constants.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class GarageWidget extends StatelessWidget {
   const GarageWidget({

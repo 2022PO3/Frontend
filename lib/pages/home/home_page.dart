@@ -1,9 +1,16 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+
+import 'package:badges/badges.dart' as badges;
 import 'package:go_router/go_router.dart';
+
+import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/notification_model.dart';
+import 'package:po_frontend/api/requests/notification_requests.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
+import 'package:po_frontend/api/widgets/garage_widget.dart';
 import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/loading_page.dart';
 import 'package:po_frontend/utils/user_data.dart';
@@ -14,12 +21,6 @@ import '../../utils/error_widget.dart';
 import '../navbar/navbar.dart';
 import '../payment_widgets/pay_button.dart';
 import '../payment_widgets/timer_widget.dart';
-import 'package:badges/badges.dart' as badges;
-
-import 'dart:async';
-
-import 'package:po_frontend/api/models/garage_model.dart';
-import 'package:po_frontend/api/widgets/garage_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -44,7 +45,7 @@ class _HomePageState extends State<HomePage> {
   Future<List<dynamic>> getFutures() async {
     setState(() {
       licencePlatesFuture = getLicencePlates();
-      garagesFuture = getAllGarages();
+      garagesFuture = getGarages();
       notificationsFuture = getNotifications(context);
     });
 

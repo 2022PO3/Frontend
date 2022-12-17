@@ -1,19 +1,20 @@
-import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+
+import 'package:expandable/expandable.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
+
+import 'package:po_frontend/api/models/garage_model.dart';
+import 'package:po_frontend/api/models/garage_settings_model.dart';
+import 'package:po_frontend/api/models/opening_hour_model.dart';
+import 'package:po_frontend/api/models/price_model.dart';
 import 'package:po_frontend/api/requests/garage_requests.dart';
+import 'package:po_frontend/api/widgets/garage_opening_hours_widget.dart';
 import 'package:po_frontend/api/widgets/garage_widget.dart';
+import 'package:po_frontend/api/widgets/price_widget.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/utils/constants.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import 'package:po_frontend/api/models/opening_hour_model.dart';
-import 'package:po_frontend/api/models/garage_model.dart';
-import 'package:po_frontend/api/widgets/garage_opening_hours_widget.dart';
-import 'package:po_frontend/api/models/price_model.dart';
-import 'package:po_frontend/api/widgets/price_widget.dart';
-import 'package:po_frontend/api/models/garage_settings_model.dart';
 
 class GarageInfoPage extends StatefulWidget {
   const GarageInfoPage({Key? key, required this.garageId}) : super(key: key);

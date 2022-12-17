@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_credit_card/credit_card_form.dart';
 import 'package:flutter_credit_card/credit_card_model.dart';
 import 'package:flutter_credit_card/credit_card_widget.dart';
 import 'package:flutter_credit_card/glassmorphism_config.dart';
 import 'package:go_router/go_router.dart';
+
 import 'package:po_frontend/api/models/credit_card_model.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
-
 import '../../../utils/request_button.dart';
 import '../../../utils/user_data.dart';
 
@@ -103,7 +104,7 @@ class _AddAutomaticPaymentPageState extends State<AddAutomaticPaymentPage> {
                     text: 'Add Card',
                     makeRequest: () async {
                       if (formKey.currentState!.validate()) {
-                        await addAutomaticPayment(card);
+                        await putAutomaticPayment(card);
                         context.pop();
                         await updateUserInfo(context);
                       }

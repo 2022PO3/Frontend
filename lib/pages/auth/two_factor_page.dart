@@ -1,7 +1,9 @@
-import 'package:go_router/go_router.dart';
-import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:flutter/material.dart';
-import 'package:po_frontend/api/requests/user_requests.dart';
+
+import 'package:go_router/go_router.dart';
+
+import 'package:po_frontend/api/network/network_exception.dart';
+import 'package:po_frontend/api/requests/auth_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/utils/constants.dart';
 

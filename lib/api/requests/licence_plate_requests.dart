@@ -1,7 +1,7 @@
-import '../models/licence_plate_model.dart';
-import '../network/network_helper.dart';
-import '../network/network_service.dart';
-import '../network/static_values.dart';
+import 'package:po_frontend/api/models/licence_plate_model.dart';
+import 'package:po_frontend/api/network/network_helper.dart';
+import 'package:po_frontend/api/network/network_service.dart';
+import 'package:po_frontend/api/network/static_values.dart';
 
 Future<List<LicencePlate>> getLicencePlates() async {
   final response = await NetworkService.sendRequest(
@@ -15,7 +15,7 @@ Future<List<LicencePlate>> getLicencePlates() async {
   );
 }
 
-Future<LicencePlate> addLicencePlate(Map<String, dynamic> body) async {
+Future<LicencePlate> postLicencePlate(Map<String, dynamic> body) async {
   final response = await NetworkService.sendRequest(
       requestType: RequestType.post,
       apiSlug: StaticValues.licencePlatesSlug,

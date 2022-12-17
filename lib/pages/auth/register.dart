@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+
 import 'package:go_router/go_router.dart';
+import 'package:po_frontend/api/requests/auth_requests.dart';
+
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/dialogs.dart';
-
 import '../../api/network/network_exception.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -289,7 +291,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 _hasPasswordOneNumber &&
                                 _isPasswordEightCharacters) {
                               try {
-                                await registerUser(
+                                await register(
                                     userMail,
                                     userPassword,
                                     userConfirmPassword,
@@ -301,7 +303,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                       'Successfully registered!',
                                       'You have successfully registered your account. You\'ll receive an email shortly on the email address that you\'ve entered, such that you can activate your account. You\'ll now be redirected to the login page.');
                                   await Future.delayed(
-                                      const Duration(seconds: 4));
+                                    const Duration(seconds: 4),
+                                  );
                                   if (mounted) context.pop();
                                 }
                               } on BackendException catch (e) {

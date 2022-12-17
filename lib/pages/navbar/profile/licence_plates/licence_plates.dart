@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:go_router/go_router.dart';
+
 import 'package:po_frontend/api/models/licence_plate_model.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/requests/licence_plate_requests.dart';
@@ -124,7 +126,7 @@ class _LicencePlatesPageState extends State<LicencePlatesPage> {
         isLoading = true;
       });
       try {
-        await addLicencePlate({'licencePlate': licencePlate});
+        await postLicencePlate({'licencePlate': licencePlate});
         setState(() {
           isLoading = false;
         });

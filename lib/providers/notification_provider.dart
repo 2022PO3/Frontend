@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+
 import 'package:po_frontend/api/models/notification_model.dart';
 
 class NotificationProvider with ChangeNotifier {

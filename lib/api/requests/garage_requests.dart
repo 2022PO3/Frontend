@@ -1,19 +1,18 @@
-import 'package:po_frontend/api/models/garage_settings_model.dart';
+import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/opening_hour_model.dart';
 import 'package:po_frontend/api/models/price_model.dart';
+import 'package:po_frontend/api/models/user_model.dart';
+import 'package:po_frontend/api/network/network_helper.dart';
+import 'package:po_frontend/api/network/network_service.dart';
+import 'package:po_frontend/api/network/static_values.dart';
+import 'package:po_frontend/api/requests/opening_hours_requests.dart';
+import 'package:po_frontend/api/requests/price_requests.dart';
 import 'package:po_frontend/pages/garage_info.dart';
-
-import '../models/garage_model.dart';
-import '../models/parking_lot_model.dart';
-import '../models/user_model.dart';
-import '../network/network_helper.dart';
-import '../network/network_service.dart';
-import '../network/static_values.dart';
 
 Future<Garage> getGarage(int garageId) async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.get,
-    apiSlug: StaticValues.getGarageSlug,
+    apiSlug: StaticValues.garagesDetailSlug,
     useAuthToken: true,
     pk: garageId,
   );
@@ -23,20 +22,56 @@ Future<Garage> getGarage(int garageId) async {
   );
 }
 
-Future<Garage> updateGarage(Garage garage) async {
+Future<GarageData> getGarageData(int garageId) async {
   final response = await NetworkService.sendRequest(
-    requestType: RequestType.put,
-    apiSlug: StaticValues.getGarageSlug,
+    requestType: RequestType.get,
+    apiSlug: StaticValues.garagesDetailSlug,
     useAuthToken: true,
-    body: garage.toJSON(),
+    pk: garageId,
+  );
+
+  Garage garage = await NetworkHelper.filterResponse(
+    callBack: Garage.fromJSON,
+    response: response,
+  );
+
+  List<OpeningHour> openingHours = await getOpeningHours(garageId);
+  List<Price> prices = await getPrices(garageId);
+
+  return GarageData(
+    garage: garage,
+    openingHours: openingHours,
+    prices: prices,
+    garageSettings: garage.garageSettings,
+  );
+}
+
+Future<List<Garage>> getGarages() async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.get,
+    apiSlug: StaticValues.getGaragesSlug,
+    useAuthToken: true,
   );
   return await NetworkHelper.filterResponse(
-    callBack: Garage.fromJSON,
+    callBack: Garage.listFromJSON,
     response: response,
   );
 }
 
-Future<Garage> createGarage(Garage garage) async {
+Future<List<Garage>> getOwnedGarages(User owner) async {
+  final response = await NetworkService.sendRequest(
+    requestType: RequestType.get,
+    apiSlug: StaticValues.garagesDetailSlug,
+    useAuthToken: true,
+  );
+  List<Garage> garages = await NetworkHelper.filterResponse(
+    callBack: Garage.listFromJSON,
+    response: response,
+  );
+  return garages..where((garage) => garage.userId == owner.id);
+}
+
+Future<Garage> postGarage(Garage garage) async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.post,
     apiSlug: StaticValues.getGaragesSlug,
@@ -49,121 +84,15 @@ Future<Garage> createGarage(Garage garage) async {
   );
 }
 
-Future<List<Garage>> getAllGarages() async {
+Future<Garage> putGarage(Garage garage) async {
   final response = await NetworkService.sendRequest(
-    requestType: RequestType.get,
-    apiSlug: StaticValues.getGaragesSlug,
+    requestType: RequestType.put,
+    apiSlug: StaticValues.garagesDetailSlug,
     useAuthToken: true,
+    body: garage.toJSON(),
   );
   return await NetworkHelper.filterResponse(
-    callBack: Garage.listFromJSON,
-    response: response,
-  );
-}
-
-Future<List<Price>> getGaragePrices(int garageId) async {
-  final response = await NetworkService.sendRequest(
-    requestType: RequestType.get,
-    apiSlug: StaticValues.getGaragePricesSlug,
-    useAuthToken: true,
-    pk: garageId,
-  );
-  return await NetworkHelper.filterResponse(
-      callBack: Price.listFromJSON, response: response);
-}
-
-Future<GarageSettings> getGarageSettings(int garageId) async {
-  final response = await NetworkService.sendRequest(
-    requestType: RequestType.get,
-    apiSlug: StaticValues.getGarageSettingsSlug,
-    useAuthToken: true,
-    pk: garageId,
-  );
-
-  return await NetworkHelper.filterResponse(
-      callBack: GarageSettings.fromJSON, response: response);
-}
-
-Future<List<OpeningHour>> getGarageOpeningHours(int garageId) async {
-  final response = await NetworkService.sendRequest(
-    requestType: RequestType.get,
-    apiSlug: StaticValues.getGarageOpeningHoursSlug,
-    useAuthToken: true,
-    pk: garageId,
-  );
-  return await NetworkHelper.filterResponse(
-      callBack: OpeningHourListFromJson, response: response);
-}
-
-Future<GarageData> getGarageData(int garageId) async {
-  final response = await NetworkService.sendRequest(
-    requestType: RequestType.get,
-    apiSlug: StaticValues.getGarageSlug,
-    useAuthToken: true,
-    pk: garageId,
-  );
-
-  Garage garage = await NetworkHelper.filterResponse(
     callBack: Garage.fromJSON,
-    response: response,
-  );
-
-  List<OpeningHour> openingHours = await getGarageOpeningHours(garageId);
-  List<Price> prices = await getGaragePrices(garageId);
-  GarageSettings garageSettings = await getGarageSettings(garageId);
-
-  return GarageData(
-    garage: garage,
-    openingHours: openingHours,
-    prices: prices,
-    garageSettings: garageSettings,
-  );
-}
-
-Future<List<ParkingLot>> getGarageParkingLots(
-  int garageId,
-  Map<String, String> queryParams,
-) async {
-  final response = await NetworkService.sendRequest(
-    requestType: RequestType.get,
-    apiSlug: StaticValues.getParkingLotsSlug,
-    useAuthToken: true,
-    pk: garageId,
-    queryParams: queryParams,
-  );
-
-  return await NetworkHelper.filterResponse(
-    callBack: ParkingLot.listFromJSON,
-    response: response,
-  );
-}
-
-Future<ParkingLot> assignParkingLot(
-  int garageId,
-  Map<String, String> queryParams,
-) async {
-  final response = await NetworkService.sendRequest(
-    requestType: RequestType.get,
-    apiSlug: StaticValues.assignParkingLotSlug,
-    useAuthToken: true,
-    pk: garageId,
-    queryParams: queryParams,
-  );
-
-  return await NetworkHelper.filterResponse(
-    callBack: ParkingLot.fromJSON,
-    response: response,
-  );
-}
-
-Future<List<Garage>> getOwnedGarages(User owner) async {
-  final response = await NetworkService.sendRequest(
-    requestType: RequestType.get,
-    apiSlug: StaticValues.getOwnedGaragesSlug,
-    useAuthToken: true,
-  );
-  return await NetworkHelper.filterResponse(
-    callBack: Garage.listFromJSON,
     response: response,
   );
 }

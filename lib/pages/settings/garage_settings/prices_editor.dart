@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import 'package:go_router/go_router.dart';
+
 import 'package:po_frontend/api/models/enums.dart';
 import 'package:po_frontend/api/models/price_model.dart';
 import 'package:po_frontend/pages/payment_widgets/timer_widget.dart';
@@ -143,36 +145,36 @@ class _PricesEditorState extends State<PricesEditor> {
             ),
           Center(
             child: RequestButton(
-                text: 'Add new price',
-                makeRequest: () async {
-                  Future createFuture = Future(() => null);
-                  await EditorDialog.show<Price>(
-                    context,
-                    fieldName: 'your new price',
-                    currentValue: Price(
-                      id: -1,
-                      garageId: -1,
-                      priceString: '',
-                      price: 1,
-                      duration: const Duration(hours: 1),
-                      valuta: ValutaEnum.EUR,
-                    ),
-                    onConfirm: (price) async {
-                      if (widget.prices
-                          .where((e) =>
-                              e.duration == price.duration &&
-                              e.price != price.price)
-                          .isNotEmpty) {
-                        setState(() {
-                          _showSameDurationError = true;
-                        });
-                      } else {
-                        await widget.onPriceChanged?.call(price);
-                      }
-                    },
-                  );
-                  await createFuture;
-                }),
+              text: 'Add new price',
+              makeRequest: () async {
+                Future createFuture = Future(() => null);
+                await EditorDialog.show<Price>(
+                  context,
+                  fieldName: 'your new price',
+                  currentValue: Price(
+                    id: -1,
+                    priceString: '',
+                    price: 1,
+                    duration: const Duration(hours: 1),
+                    valuta: ValutaEnum.EUR,
+                  ),
+                  onConfirm: (price) async {
+                    if (widget.prices
+                        .where((e) =>
+                            e.duration == price.duration &&
+                            e.price != price.price)
+                        .isNotEmpty) {
+                      setState(() {
+                        _showSameDurationError = true;
+                      });
+                    } else {
+                      await widget.onPriceChanged?.call(price);
+                    }
+                  },
+                );
+                await createFuture;
+              },
+            ),
           ),
         ],
       ),

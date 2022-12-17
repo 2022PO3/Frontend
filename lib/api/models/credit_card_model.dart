@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+
 import 'package:flutter_credit_card/credit_card_model.dart';
 
 /// Model which represents the backend `Card`-model.

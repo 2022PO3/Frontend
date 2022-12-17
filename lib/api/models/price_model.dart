@@ -3,7 +3,6 @@ import 'package:po_frontend/api/models/enums.dart';
 /// Model which represents the backend `Price`-model.
 class Price {
   final int id;
-  final int garageId;
   final String priceString;
   final double price;
   final Duration duration;
@@ -11,7 +10,6 @@ class Price {
 
   Price({
     required this.id,
-    required this.garageId,
     required this.priceString,
     required this.price,
     required this.duration,
@@ -28,7 +26,6 @@ class Price {
   }) {
     return Price(
         id: id ?? this.id,
-        garageId: garageId ?? this.garageId,
         priceString: priceString ?? this.priceString,
         price: price ?? this.price,
         duration: duration ?? this.duration,
@@ -39,7 +36,6 @@ class Price {
   static Price fromJSON(Map<String, dynamic> json) {
     return Price(
       id: json['id'] as int,
-      garageId: json['garageId'] as int,
       priceString: json['priceString'] as String,
       price: json['price'] as double,
       duration: parseDuration(json['duration'] as String),
@@ -49,13 +45,12 @@ class Price {
 
   /// Serializes a Dart `Price`-object to a JSON-object with the attributes defined in
   /// the database.
-  static Map<String, dynamic> toJSON(Price price) => <String, dynamic>{
-        'id': price.id,
-        'garageId': price.garageId,
-        'priceString': price.priceString,
-        'price': price.price,
-        'duration': price.duration.inSeconds,
-        'valuta': price.valuta.databaseValue,
+  Map<String, dynamic> toJSON() => <String, dynamic>{
+        'id': id,
+        'priceString': priceString,
+        'price': price,
+        'duration': duration.inSeconds,
+        'valuta': valuta.databaseValue,
       };
 
   static List<Price> listFromJSON(List<dynamic> json) =>

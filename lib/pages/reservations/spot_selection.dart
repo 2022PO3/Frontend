@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:po_frontend/api/models/reservation_model.dart';
-import 'package:po_frontend/api/requests/garage_requests.dart';
 
-import 'package:po_frontend/api/widgets/parking_lot_widget.dart';
+import 'package:go_router/go_router.dart';
+
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/parking_lot_model.dart';
+import 'package:po_frontend/api/models/reservation_model.dart';
+import 'package:po_frontend/api/requests/garage_requests.dart';
+import 'package:po_frontend/api/requests/parking_lot_requests.dart';
+import 'package:po_frontend/api/widgets/parking_lot_widget.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/pages/reservations/make_reservation_page.dart';
 import 'package:po_frontend/utils/dialogs.dart';
@@ -35,7 +37,7 @@ class _SpotSelectionPageState extends State<SpotSelectionPage> {
         refreshFunction: () => setState(() => {}),
       ),
       body: FutureBuilder(
-        future: getGarageParkingLots(garage.id, {
+        future: getParkingLots(garage.id, {
           'fromDate': startDate.toIso8601String(),
           'toDate': endDate.toIso8601String(),
         }),

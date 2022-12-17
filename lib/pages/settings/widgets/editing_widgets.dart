@@ -1,13 +1,14 @@
-import 'package:duration_picker/duration_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import 'package:duration_picker/duration_picker.dart';
 import 'package:flutter_spinbox/material.dart';
 import 'package:go_router/go_router.dart';
+
 import 'package:po_frontend/pages/payment_widgets/timer_widget.dart';
 import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/request_button.dart';
-
 import '../../../api/models/enums.dart';
 import '../../../api/models/price_model.dart';
 

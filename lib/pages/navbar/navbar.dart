@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+
 import 'package:go_router/go_router.dart';
+
 import 'package:po_frontend/api/models/user_model.dart';
+import 'package:po_frontend/api/requests/auth_requests.dart';
 import 'package:po_frontend/api/requests/garage_requests.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/user_data.dart';
-
 import '../../api/models/garage_model.dart';
 import '../../utils/error_widget.dart';
 
@@ -19,7 +21,7 @@ class Navbar extends StatefulWidget {
 class _NavbarState extends State<Navbar> {
   @override
   Widget build(BuildContext context) {
-    final User user = getUser(context);
+    final User user = getProviderUser(context);
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -87,7 +89,7 @@ class _NavbarState extends State<Navbar> {
       context,
       'Sign out',
       [const Text('Are you sure you want to sign out?')],
-      () => logOutUser(context),
+      () => logOut(context),
       leftButtonText: 'Yes',
       rightButtonText: 'No',
     );
@@ -127,7 +129,7 @@ class _OwnedGaragesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Garage>>(
-      future: getOwnedGarages(getUser(context)),
+      future: getOwnedGarages(getProviderUser(context)),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {

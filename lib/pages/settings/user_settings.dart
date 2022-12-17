@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:go_router/go_router.dart';
+import 'package:po_frontend/api/requests/device_requests.dart';
+
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/pages/settings/user_settings/add_automatic_payment_page.dart';
@@ -61,7 +64,7 @@ class _UserSettingsState extends State<UserSettings> {
                   context.go(AddAutomaticPaymentPage.route);
                 },
                 onRemove: () async {
-                  await removeAutomaticPayment();
+                  await deleteAutomaticPayment();
                   await updateUserInfo(context);
                 },
               )

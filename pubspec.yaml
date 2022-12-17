@@ -49,6 +49,10 @@ dev_dependencies:
       url: https://github.com/ThexXTURBOXx/envify.git
       ref: dev
       path: envify_generator
+  import_sorter: ^4.6.0
+
+import_sorter:
+  comments: false
 
 flutter:
   # The following line ensures that the Material Icons font is
