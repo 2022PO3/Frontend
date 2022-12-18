@@ -11,19 +11,19 @@ import 'package:go_router/go_router.dart';
 
 // Project imports:
 import 'package:po_frontend/api/models/garage_model.dart';
+import 'package:po_frontend/api/models/licence_plate_model.dart';
 import 'package:po_frontend/api/models/notification_model.dart';
+import 'package:po_frontend/api/requests/garage_requests.dart';
+import 'package:po_frontend/api/requests/licence_plate_requests.dart';
 import 'package:po_frontend/api/requests/notification_requests.dart';
 import 'package:po_frontend/api/widgets/garage_widget.dart';
+import 'package:po_frontend/pages/navbar/navbar.dart';
+import 'package:po_frontend/pages/payment_widgets/pay_button.dart';
+import 'package:po_frontend/pages/payment_widgets/timer_widget.dart';
 import 'package:po_frontend/utils/constants.dart';
+import 'package:po_frontend/utils/error_widget.dart';
 import 'package:po_frontend/utils/loading_page.dart';
 import 'package:po_frontend/utils/user_data.dart';
-import '../../api/models/licence_plate_model.dart';
-import '../../api/requests/garage_requests.dart';
-import '../../api/requests/licence_plate_requests.dart';
-import '../../utils/error_widget.dart';
-import '../navbar/navbar.dart';
-import '../payment_widgets/pay_button.dart';
-import '../payment_widgets/timer_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -661,7 +661,7 @@ class _GarageListWidgetState extends State<GarageListWidget> {
   List<Garage> sortGarages(List<Garage> garages) {
     final bool up = sortDirection == SortDirection.up;
     // Filter out garages with no parking lots
-    garages = garages.where((element) => element.parkingLots > 0).toList();
+    garages = garages.where((element) => element.maxSpots > 0).toList();
     switch (sortBy) {
       case SortByEnum.none:
         break;
@@ -676,10 +676,10 @@ class _GarageListWidgetState extends State<GarageListWidget> {
         break;
       case SortByEnum.freeSpots:
         up
-            ? garages.sort((g1, g2) => (g1.unoccupiedLots / g1.parkingLots)
-                .compareTo((g2.unoccupiedLots / g2.parkingLots)))
-            : garages.sort((g2, g1) => (g1.unoccupiedLots / g1.parkingLots)
-                .compareTo((g2.unoccupiedLots / g2.parkingLots)));
+            ? garages.sort((g1, g2) => (g1.unoccupiedLots / g1.maxSpots)
+                .compareTo((g2.unoccupiedLots / g2.maxSpots)))
+            : garages.sort((g2, g1) => (g1.unoccupiedLots / g1.maxSpots)
+                .compareTo((g2.unoccupiedLots / g2.maxSpots)));
         break;
     }
     return garages;

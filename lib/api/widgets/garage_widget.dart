@@ -56,13 +56,6 @@ class GarageWidget extends StatelessWidget {
     Garage garage,
     double borderRadius,
   ) {
-    final double maxSpots = garage.parkingLots.toDouble();
-    final double unoccupiedLots = garage.unoccupiedLots.toDouble();
-    final double occupiedLots =
-        (garage.parkingLots - garage.unoccupiedLots).toDouble();
-    final bool full = maxSpots == unoccupiedLots;
-    final double ratio = occupiedLots / garage.parkingLots;
-
     return AspectRatio(
       aspectRatio: 1,
       child: Container(
@@ -81,7 +74,7 @@ class GarageWidget extends StatelessWidget {
                 startAngle: 270,
                 endAngle: 270,
                 minimum: 0,
-                maximum: maxSpots == 0 ? 1 : maxSpots,
+                maximum: garage.maxSpots == 0 ? 1 : garage.maxSpots.toDouble(),
                 showLabels: false,
                 showTicks: false,
                 axisLineStyle: const AxisLineStyle(
@@ -92,12 +85,13 @@ class GarageWidget extends StatelessWidget {
                 ),
                 pointers: <GaugePointer>[
                   RangePointer(
-                    value: occupiedLots == maxSpots ? 1 : occupiedLots,
+                    value: garage.isFull ? 1 : garage.occupiedLots.toDouble(),
                     width: 0.15,
                     sizeUnit: GaugeSizeUnit.factor,
-                    cornerStyle:
-                        full ? CornerStyle.bothFlat : CornerStyle.bothCurve,
-                    color: determineFreePlacesColor(garage, ratio),
+                    cornerStyle: garage.isFull
+                        ? CornerStyle.bothFlat
+                        : CornerStyle.bothCurve,
+                    color: determineFreePlacesColor(garage, garage.ratio),
                   ),
                 ],
                 annotations: <GaugeAnnotation>[
@@ -107,7 +101,7 @@ class GarageWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          unoccupiedLots.toInt().toString(),
+                          garage.unoccupiedLots.toString(),
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:po_frontend/utils/sized_box.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 // Project imports:
@@ -123,12 +124,8 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
   }
 
   Widget buildOccupancyCard(Garage garage, double width) {
-    final bool full = garage.unoccupiedLots == 0;
-    final double occupiedLots =
-        (garage.parkingLots - garage.unoccupiedLots).toDouble();
-    final double ratio = occupiedLots / garage.parkingLots;
-    final int percentage = (ratio * 100).round();
-    final Color color = determineFreePlacesColor(garage, ratio.toDouble());
+    final int percentage = (garage.ratio * 100).round();
+    final Color color = determineFreePlacesColor(garage, garage.ratio);
 
     return Card(
       shape: Constants.cardBorder,
@@ -151,7 +148,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                     startAngle: 270,
                     endAngle: 270,
                     minimum: 0,
-                    maximum: garage.parkingLots.toDouble(),
+                    maximum: garage.maxSpots.toDouble(),
                     showLabels: false,
                     showTicks: false,
                     axisLineStyle: const AxisLineStyle(
@@ -162,13 +159,14 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                     ),
                     pointers: <GaugePointer>[
                       RangePointer(
-                        value: occupiedLots == garage.parkingLots
+                        value: garage.isFull
                             ? 1
-                            : (occupiedLots).toDouble(),
+                            : (garage.occupiedLots).toDouble(),
                         width: 0.15,
                         sizeUnit: GaugeSizeUnit.factor,
-                        cornerStyle:
-                            full ? CornerStyle.bothFlat : CornerStyle.bothCurve,
+                        cornerStyle: garage.isFull
+                            ? CornerStyle.bothFlat
+                            : CornerStyle.bothCurve,
                         color: color,
                       ),
                     ],
@@ -212,42 +210,79 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                 ],
               ),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'Visitors',
-                  style: TextStyle(
-                    fontSize: 10,
-                  ),
-                ),
-                Text(
-                  (occupiedLots.toInt()).toString(),
-                  style: TextStyle(
-                    fontSize: 45,
-                    color: color,
-                  ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                const Text(
-                  'Free spots',
-                  style: TextStyle(
-                    fontSize: 10,
-                  ),
-                ),
-                Text(
-                  garage.unoccupiedLots.toString(),
-                  style: const TextStyle(
-                    fontSize: 45,
-                  ),
-                ),
-              ],
-            ),
+            buildSpotNumbers(garage, color),
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildSpotNumbers(Garage garage, Color color) {
+    return Row(
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'Free spots',
+              style: TextStyle(
+                fontSize: 10,
+              ),
+            ),
+            Text(
+              garage.unoccupiedLots.toString(),
+              style: TextStyle(
+                fontSize: 55,
+                color: color,
+              ),
+            ),
+          ],
+        ),
+        const Width(50),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'Visitors',
+              style: TextStyle(
+                fontSize: 10,
+              ),
+            ),
+            Text(
+              (garage.takenLots).toString(),
+              style: const TextStyle(
+                fontSize: 35,
+              ),
+            ),
+            const Height(15),
+            const Text(
+              'Booked',
+              style: TextStyle(
+                fontSize: 10,
+              ),
+            ),
+            Text(
+              garage.bookedLots.toString(),
+              style: const TextStyle(
+                fontSize: 35,
+              ),
+            ),
+            const Height(15),
+            const Text(
+              'Disabled',
+              style: TextStyle(
+                fontSize: 10,
+              ),
+            ),
+            Text(
+              garage.disabledLots.toString(),
+              style: const TextStyle(
+                fontSize: 35,
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 

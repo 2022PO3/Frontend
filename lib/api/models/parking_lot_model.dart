@@ -4,7 +4,8 @@ class ParkingLot {
   final int floorNumber;
   final bool occupied;
   final int parkingLotNo;
-  final bool? booked;
+  final bool booked;
+  final bool disabled;
 
   ParkingLot({
     required this.id,
@@ -12,7 +13,10 @@ class ParkingLot {
     required this.occupied,
     required this.parkingLotNo,
     required this.booked,
+    required this.disabled,
   });
+
+  bool get isFree => !booked && !disabled && !occupied;
 
   static ParkingLot fromJSON(Map<String, dynamic> json) {
     return ParkingLot(
@@ -20,7 +24,8 @@ class ParkingLot {
       floorNumber: json['floorNumber'] as int,
       occupied: json['occupied'] as bool,
       parkingLotNo: json['parkingLotNo'] as int,
-      booked: json['booked'] as bool?,
+      booked: json['booked'] as bool,
+      disabled: json['disabled'] as bool,
     );
   }
 

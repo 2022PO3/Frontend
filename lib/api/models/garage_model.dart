@@ -1,22 +1,19 @@
 // Project imports:
 import 'package:po_frontend/api/models/base_model.dart';
 import 'package:po_frontend/api/models/garage_settings_model.dart';
+import 'package:po_frontend/api/models/parking_lot_model.dart';
 
 /// Model which represents the backend `Garage`-model.
 class Garage extends BaseModel {
   final int userId;
   final String name;
-  final bool isFull;
-  final int unoccupiedLots;
-  final int parkingLots;
+  final List<ParkingLot> parkingLots;
   final GarageSettings garageSettings;
 
   Garage({
     required id,
     required this.userId,
     required this.name,
-    required this.isFull,
-    required this.unoccupiedLots,
     required this.parkingLots,
     required this.garageSettings,
   }) : super(id: id);
@@ -31,8 +28,6 @@ class Garage extends BaseModel {
       id: id ?? this.id,
       userId: userId ?? this.userId,
       name: name ?? this.name,
-      isFull: isFull,
-      unoccupiedLots: unoccupiedLots,
       parkingLots: parkingLots,
       garageSettings: garageSettings ?? this.garageSettings,
     );
@@ -41,18 +36,30 @@ class Garage extends BaseModel {
   /// Serializes a JSON-object into a Dart `Garage`-object with all properties.
   static Garage fromJSON(Map<String, dynamic> json) {
     return Garage(
-        id: json['id'] as int,
-        userId: json['userId'] as int,
-        name: json['name'] as String,
-        isFull: json['isFull'] as bool,
-        unoccupiedLots: json['unoccupiedLots'] as int,
-        parkingLots: json['parkingLots'] as int,
-        garageSettings: GarageSettings.fromJSON(
-            json['garageSettings'] as Map<String, dynamic>));
+      id: json['id'] as int,
+      userId: json['userId'] as int,
+      name: json['name'] as String,
+      parkingLots: ParkingLot.listFromJSON(json['parkingLots']),
+      garageSettings: GarageSettings.fromJSON(
+        json['garageSettings'] as Map<String, dynamic>,
+      ),
+    );
   }
+
+  int get maxSpots => parkingLots.length;
+  int get bookedLots => parkingLots.where((pl) => pl.booked).length;
+  int get takenLots => parkingLots.where((pl) => pl.occupied).length;
+  int get occupiedLots => bookedLots + takenLots;
+  int get disabledLots => parkingLots.where((pl) => pl.disabled).length;
+  int get unoccupiedLots => maxSpots - occupiedLots - disabledLots;
+  bool get isFull => maxSpots == occupiedLots;
+  double get ratio => occupiedLots / maxSpots;
+
+  //final double bookedLots = parkingLots.where((pl) => pl.booked ?? false );
 
   /// Serializes a Dart `Garage`-object to a JSON-object with the attributes defined in
   /// the database.
+  @override
   Map<String, dynamic> toJSON() => <String, dynamic>{
         'id': id,
         'name': name,

@@ -221,8 +221,7 @@ class _Header extends StatelessWidget {
             },
           ),
           Text(
-            '${garage.parkingLots - garage.unoccupiedLots} / ${garage.parkingLots}'
-                .toUpperCase(),
+            '${garage.unoccupiedLots} / ${garage.parkingLots}'.toUpperCase(),
             style: TextStyle(
               fontWeight: FontWeight.w300,
               fontSize: shortestSide / 16,

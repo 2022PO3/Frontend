@@ -40,9 +40,7 @@ class _AddGaragePageState extends State<AddGaragePage> {
     id: -1,
     userId: widget.userId,
     name: 'My new Garage',
-    isFull: false,
-    unoccupiedLots: 0,
-    parkingLots: 0,
+    parkingLots: [],
     garageSettings: GarageSettings(
       id: -1,
       location: Location(

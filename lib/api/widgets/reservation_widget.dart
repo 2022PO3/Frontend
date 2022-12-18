@@ -7,6 +7,8 @@ import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/sized_box.dart';
 
 Widget buildReservationWidget(Reservation reservation) {
+  print(reservation.toDate);
+  print(DateTime.now().toUtc());
   final bool active = (reservation.fromDate.isBefore(DateTime.now()) &&
       DateTime.now().isBefore(reservation.toDate));
   final bool done = DateTime.now().isAfter(reservation.toDate);
@@ -114,8 +116,7 @@ Widget buildReservationTime(Reservation reservation, Color color) {
       ),
       const Width(10),
       _buildDateAndTime(
-        reservation.fromDate.toIso8601String().substring(11, 16),
-        reservation.fromDate.toIso8601String().substring(0, 10),
+        reservation.fromDate,
         color,
       ),
       Icon(
@@ -124,15 +125,20 @@ Widget buildReservationTime(Reservation reservation, Color color) {
         color: color,
       ),
       _buildDateAndTime(
-        reservation.toDate.toIso8601String().substring(11, 16),
-        reservation.toDate.toIso8601String().substring(0, 10),
+        reservation.toDate,
         color,
       ),
     ],
   );
 }
 
-Widget _buildDateAndTime(String time, String date, Color color) {
+Widget _buildDateAndTime(DateTime dateTime, Color color) {
+  String time = dateTime
+      .add(const Duration(hours: 1))
+      .toIso8601String()
+      .substring(11, 16);
+  String date =
+      dateTime.add(const Duration(hours: 1)).toIso8601String().substring(0, 10);
   return Column(
     children: [
       Text(
