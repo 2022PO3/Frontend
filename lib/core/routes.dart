@@ -31,7 +31,7 @@ import 'package:po_frontend/pages/settings/garage_settings/add_garage_page.dart'
 import 'package:po_frontend/pages/settings/garage_settings/garage_settings_page.dart';
 import 'package:po_frontend/pages/settings/user_settings/add_automatic_payment_page.dart';
 import 'package:po_frontend/pages/settings/user_settings/add_two_factor_device_page.dart';
-import 'package:po_frontend/pages/settings/user_settings/user_settings_page.dart';
+import 'package:po_frontend/pages/settings/user_settings/user_settings.dart';
 import 'package:po_frontend/utils/loading_page.dart';
 import 'package:po_frontend/utils/user_data.dart';
 
@@ -62,7 +62,7 @@ class Routes {
             ),
             GoRoute(
               path: 'settings',
-              builder: (context, state) => const UserSettingsPage(),
+              builder: (context, state) => const UserSettings(),
               routes: [
                 GoRoute(
                   path: 'two-factor',

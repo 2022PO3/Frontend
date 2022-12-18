@@ -25,15 +25,15 @@ class _ProfileState extends State<Profile> {
             children: [
               buildSettingsCard(
                 context,
-                '/home/profile/user-info',
                 'User information',
                 'View and edit your personal information.',
+                path: '/home/profile/user-info',
               ),
               buildSettingsCard(
                 context,
-                '/home/profile/licence-plates',
                 'Licence plates',
                 'View, edit and add licence plates to your account.',
+                path: '/home/profile/licence-plates',
               ),
             ],
           ),
