@@ -1,8 +1,9 @@
+// Project imports:
+import 'package:po_frontend/api/models/base_model.dart';
 import 'package:po_frontend/api/models/garage_settings_model.dart';
 
 /// Model which represents the backend `Garage`-model.
-class Garage {
-  final int id;
+class Garage extends BaseModel {
   final int userId;
   final String name;
   final bool isFull;
@@ -11,14 +12,14 @@ class Garage {
   final GarageSettings garageSettings;
 
   Garage({
-    required this.id,
+    required id,
     required this.userId,
     required this.name,
     required this.isFull,
     required this.unoccupiedLots,
     required this.parkingLots,
     required this.garageSettings,
-  });
+  }) : super(id: id);
 
   Garage copyWith({
     int? id,

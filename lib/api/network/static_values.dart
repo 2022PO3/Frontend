@@ -17,11 +17,15 @@ class StaticValues {
   static const String changePassword = 'api/user/change-password';
   static const String activateUserSlug = 'api/auth/activate-account';
 
-  // Reservation slugs
-  static const String getReservationSlug = 'api/reservations';
+  // Reservations
+  static const String reservationDetailSlug = 'api/reservation';
+  static const String reservationListSlug = 'api/reservations';
+
+  // Licence plates
+  static const String licencePlatesDetailSlug = 'api/licence-plate';
+  static const String licencePlatesListSlug = 'api/licence-plates';
 
   // Payment slugs
-  static const String licencePlatesSlug = 'api/licence-plates';
   static const String createPaymentSessionSlug = 'api/checkout/create-session';
   static const String getPaymentPreviewSlug = 'api/checkout/preview';
   static const String stripeConnectionSlug = 'api/stripe-connection';

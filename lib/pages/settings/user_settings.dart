@@ -1,9 +1,12 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 
+// Package imports:
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:go_router/go_router.dart';
-import 'package:po_frontend/api/requests/device_requests.dart';
 
+// Project imports:
+import 'package:po_frontend/api/requests/device_requests.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/pages/settings/user_settings/add_automatic_payment_page.dart';

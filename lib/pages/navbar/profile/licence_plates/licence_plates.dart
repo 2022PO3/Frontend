@@ -1,13 +1,17 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 
+// Package imports:
 import 'package:go_router/go_router.dart';
 
+// Project imports:
 import 'package:po_frontend/api/models/licence_plate_model.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/requests/licence_plate_requests.dart';
 import 'package:po_frontend/api/widgets/licence_plate_widget.dart';
-import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/utils/dialogs.dart';
+import 'package:po_frontend/utils/item_widgets.dart';
+import 'package:po_frontend/utils/sized_box.dart';
 
 enum ButtonState { init, loading, done, error }
 
@@ -27,59 +31,18 @@ class _LicencePlatesPageState extends State<LicencePlatesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appBar(title: 'Licence plates'),
-      body: FutureBuilder(
+    return buildEditItemsScreen<LicencePlate>(
+        title: 'Licence plates',
         future: getLicencePlates(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.hasData) {
-            final List<LicencePlate> licencePlates =
-                snapshot.data as List<LicencePlate>;
-
-            return ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                return AddLicencePlateWidget(
-                  licencePlate: licencePlates[index],
-                );
-              },
-              itemCount: licencePlates.length,
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.error_outline,
-                    color: Colors.red,
-                    size: 25,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    snapshot.error.toString(),
-                  ),
-                ],
-              ),
-            );
-          }
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+        itemWidget: buildOverviewLicencePlateWidget,
+        refreshFunction: () async {
+          setState(() => {});
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () => _showEnterLicencePlateDialog(),
-      ),
-    );
+        addButton: true,
+        addFunction: showEnterLicencePlateDialog);
   }
 
-  void _showEnterLicencePlateDialog() {
+  void showEnterLicencePlateDialog() {
     return showFrontendDialog1(
       context,
       'Enter your licence plate',
@@ -134,7 +97,7 @@ class _LicencePlatesPageState extends State<LicencePlatesPage> {
           showSuccessDialog(
             context,
             'Added licence plate',
-            'Your licence plate is added to your account. Please note that you cannot user this licence plate until it is verified. Click the licence plate for more information.',
+            'Your licence plate is added to your account. Please note that you cannot use this licence plate until it is verified. Click the licence plate for more information.',
           );
         }
         setState(() {});
@@ -164,6 +127,7 @@ class _LicencePlatesPageState extends State<LicencePlatesPage> {
         const Text(
           'This licence plate is already found in our system, but not yet activated. Do you think someone else registered your licence plate? Report it to us, such that we can investigate the case.',
         ),
+        const Height(5),
         const Text(
           'Please note that a vehicle registration certificate is needed for us to verify the ownership of the licence plate.',
         ),

@@ -1,10 +1,13 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 
+// Package imports:
 import 'package:expandable/expandable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
+// Project imports:
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/garage_settings_model.dart';
 import 'package:po_frontend/api/models/opening_hour_model.dart';

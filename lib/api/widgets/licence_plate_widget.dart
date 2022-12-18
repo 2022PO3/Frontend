@@ -1,7 +1,10 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 
+// Package imports:
 import 'package:go_router/go_router.dart';
 
+// Project imports:
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/licence_plate_model.dart';
 import 'package:po_frontend/api/requests/licence_plate_requests.dart';
@@ -62,134 +65,90 @@ class ReservationLicencePlateWidget extends StatelessWidget {
   }
 }
 
-class AddLicencePlateWidget extends StatefulWidget {
-  const AddLicencePlateWidget({
-    Key? key,
-    required this.licencePlate,
-  }) : super(key: key);
-
-  final LicencePlate licencePlate;
-  @override
-  State<AddLicencePlateWidget> createState() => _AddLicencePlateWidgetState();
-}
-
-class _AddLicencePlateWidgetState extends State<AddLicencePlateWidget> {
-  @override
-  Widget build(BuildContext context) {
-    final bool enabled = widget.licencePlate.enabled;
-    return InkWell(
-      child: Card(
-        shape: Constants.cardBorder,
-        color: enabled ? Colors.green.shade300 : Colors.red.shade300,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 10,
-          ),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const Icon(
-                    Icons.directions_car_rounded,
-                    size: 50,
-                  ),
-                  const Width(10),
-                  Text(
-                    widget.licencePlate.formatLicencePlate(),
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-              Text(
-                enabled ? 'Confirmed' : 'Not confirmed',
-                style: TextStyle(
-                  color: enabled ? Colors.green : Colors.red,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
+Widget buildOverviewLicencePlateWidget(LicencePlate licencePlate) {
+  final bool enabled = licencePlate.enabled;
+  return InkWell(
+    child: Card(
+      shape: Constants.cardBorder,
+      color: enabled ? Colors.green.shade300 : Colors.red.shade300,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 10,
         ),
-      ),
-      onTap: () => showEnableLicencePlatePopUp(widget.licencePlate),
-      onLongPress: () => showLicencePlateDeletionPopUp(widget.licencePlate),
-    );
-  }
-
-  void showLicencePlateDeletionPopUp(LicencePlate licencePlate) {
-    showFrontendDialog2(
-      context,
-      'Delete this licence plate?',
-      [
-        const Text(
-          'Are you sure that you want to delete this licence plate? This will remove all reservations made with this licence plate.',
-        ),
-      ],
-      () => handleLicencePlateDeletion(licencePlate),
-      leftButtonText: 'Yes',
-      rightButtonText: 'No',
-    );
-  }
-
-  void handleLicencePlateDeletion(LicencePlate licencePlate) async {
-    context.pop();
-    try {
-      await deleteLicencePlate(licencePlate);
-    } on BackendException catch (e) {
-      print(e);
-      showFailureDialog(context, e);
-      return;
-    }
-    if (mounted) {
-      showSuccessDialog(
-        context,
-        'Success',
-        'Your device is successfully deleted and two factor authentication is disabled.',
-      );
-    }
-    setState(() {});
-  }
-
-  void showEnableLicencePlatePopUp(LicencePlate licencePlate) {
-    showFrontendDialog2(
-      context,
-      'Enable this licence plate?',
-      [
-        const Text(
-          'You can only enable this licence plate when you are the owner of this licence plate. You can verify your ownership by uploading the registration certificate of your licence plate. Continue by clicking Next.',
-        ),
-        Row(
+        child: Column(
           children: [
-            const Text('Why do we ask this?'),
-            TextButton(
-              onPressed: () => context.push(
-                '/home/profile/licence-plates/explication',
-              ),
-              child: const Text(
-                'See here why.',
-                style: TextStyle(
-                  color: Colors.indigoAccent,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Icon(
+                  Icons.directions_car_rounded,
+                  size: 50,
                 ),
+                const Width(10),
+                Text(
+                  licencePlate.formatLicencePlate(),
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            Text(
+              enabled ? 'Confirmed' : 'Not confirmed',
+              style: TextStyle(
+                color: enabled ? Colors.green : Colors.red,
+                fontWeight: FontWeight.bold,
               ),
-            )
+            ),
           ],
         ),
-      ],
-      () => handleEnableLicencePlate(licencePlate),
-      leftButtonText: 'Next',
-    );
-  }
+      ),
+    ),
+  );
+}
 
-  void handleEnableLicencePlate(LicencePlate licencePlate) {
-    context.pop();
-    context.push(
-      '/home/profile/licence-plates/enable',
-      extra: licencePlate,
-    );
-  }
+void showEnableLicencePlatePopUp(
+  BuildContext context,
+  LicencePlate licencePlate,
+) {
+  showFrontendDialog2(
+    context,
+    'Enable this licence plate?',
+    [
+      const Text(
+        'You can only enable this licence plate when you are the owner of this licence plate. You can verify your ownership by uploading the registration certificate of your licence plate. Continue by clicking Next.',
+      ),
+      Row(
+        children: [
+          const Text('Why do we ask this?'),
+          TextButton(
+            onPressed: () => context.push(
+              '/home/profile/licence-plates/explication',
+            ),
+            child: const Text(
+              'See here why.',
+              style: TextStyle(
+                color: Colors.indigoAccent,
+              ),
+            ),
+          )
+        ],
+      ),
+    ],
+    () => handleEnableLicencePlate(context, licencePlate),
+    leftButtonText: 'Next',
+  );
+}
+
+void handleEnableLicencePlate(
+  BuildContext context,
+  LicencePlate licencePlate,
+) {
+  context.pop();
+  context.push(
+    '/home/profile/licence-plates/enable',
+    extra: licencePlate,
+  );
 }

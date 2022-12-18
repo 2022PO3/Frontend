@@ -1,5 +1,7 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 
+// Project imports:
 import 'package:po_frontend/pages/payment_page/succesful_payment_page.dart';
 
 class FailedPaymentPage extends StatelessWidget {

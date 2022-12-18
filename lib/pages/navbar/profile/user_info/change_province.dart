@@ -1,7 +1,10 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 
+// Package imports:
 import 'package:go_router/go_router.dart';
 
+// Project imports:
 import 'package:po_frontend/api/models/enums.dart';
 import 'package:po_frontend/api/models/user_model.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';

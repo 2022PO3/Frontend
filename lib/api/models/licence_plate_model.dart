@@ -1,18 +1,21 @@
+// Project imports:
+import 'package:po_frontend/api/models/base_model.dart';
+import 'package:po_frontend/api/network/static_values.dart';
+
 /// Model which represents the backend `Device`-model.
-class LicencePlate {
-  final int id;
+class LicencePlate extends BaseModel {
   final String licencePlate;
   final int? garageId;
   final DateTime updatedAt;
   final bool enabled;
 
   LicencePlate({
-    required this.id,
+    required id,
     required this.licencePlate,
     required this.garageId,
     required this.updatedAt,
     required this.enabled,
-  });
+  }) : super(id: id, detailSlug: StaticValues.licencePlatesDetailSlug);
 
   /// Serializes a JSON-object into a Dart `LicencePlate`-object with all properties.
   static LicencePlate fromJSON(Map<String, dynamic> json) {

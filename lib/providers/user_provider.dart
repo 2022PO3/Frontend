@@ -1,5 +1,7 @@
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
 
+// Project imports:
 import 'package:po_frontend/api/models/user_model.dart';
 
 class UserProvider with ChangeNotifier {

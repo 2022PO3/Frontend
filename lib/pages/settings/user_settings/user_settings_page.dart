@@ -1,7 +1,10 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 
+// Package imports:
 import 'package:go_router/go_router.dart';
 
+// Project imports:
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/requests/device_requests.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
@@ -11,7 +14,6 @@ import 'package:po_frontend/pages/settings/widgets/toggle_setting_widget.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/settings_card.dart';
 import 'package:po_frontend/utils/user_data.dart';
-
 import 'add_automatic_payment_page.dart';
 
 class UserSettingsPage extends StatefulWidget {

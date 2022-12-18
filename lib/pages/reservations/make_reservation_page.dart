@@ -1,8 +1,11 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 
+// Package imports:
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:go_router/go_router.dart';
 
+// Project imports:
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/licence_plate_model.dart';
 import 'package:po_frontend/api/models/parking_lot_model.dart';
@@ -336,6 +339,7 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
       );
 
       return Reservation(
+        id: 0,
         licencePlate: widget.garageAndLicencePlate.licencePlate,
         fromDate: startDate,
         toDate: endDate,
