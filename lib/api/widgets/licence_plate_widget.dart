@@ -7,12 +7,10 @@ import 'package:go_router/go_router.dart';
 // Project imports:
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/licence_plate_model.dart';
-import 'package:po_frontend/api/requests/licence_plate_requests.dart';
 import 'package:po_frontend/pages/reservations/make_reservation_page.dart';
 import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/sized_box.dart';
-import '../network/network_exception.dart';
 
 class ReservationLicencePlateWidget extends StatelessWidget {
   const ReservationLicencePlateWidget({
@@ -113,33 +111,35 @@ void showEnableLicencePlatePopUp(
   BuildContext context,
   LicencePlate licencePlate,
 ) {
-  showFrontendDialog2(
-    context,
-    'Enable this licence plate?',
-    [
-      const Text(
-        'You can only enable this licence plate when you are the owner of this licence plate. You can verify your ownership by uploading the registration certificate of your licence plate. Continue by clicking Next.',
-      ),
-      Row(
-        children: [
-          const Text('Why do we ask this?'),
-          TextButton(
-            onPressed: () => context.push(
-              '/home/profile/licence-plates/explication',
-            ),
-            child: const Text(
-              'See here why.',
-              style: TextStyle(
-                color: Colors.indigoAccent,
+  if (!licencePlate.enabled) {
+    showFrontendDialog2(
+      context,
+      'Enable this licence plate?',
+      [
+        const Text(
+          'You can only enable this licence plate when you are the owner of this licence plate. You can verify your ownership by uploading the registration certificate of your licence plate. Continue by clicking Next.',
+        ),
+        Row(
+          children: [
+            const Text('Why do we ask this?'),
+            TextButton(
+              onPressed: () => context.push(
+                '/home/profile/licence-plates/explication',
               ),
-            ),
-          )
-        ],
-      ),
-    ],
-    () => handleEnableLicencePlate(context, licencePlate),
-    leftButtonText: 'Next',
-  );
+              child: const Text(
+                'See here why.',
+                style: TextStyle(
+                  color: Colors.indigoAccent,
+                ),
+              ),
+            )
+          ],
+        ),
+      ],
+      () => handleEnableLicencePlate(context, licencePlate),
+      leftButtonText: 'Next',
+    );
+  }
 }
 
 void handleEnableLicencePlate(

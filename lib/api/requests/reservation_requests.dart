@@ -7,7 +7,7 @@ import 'package:po_frontend/api/network/static_values.dart';
 Future<List<Reservation>> getReservations() async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.get,
-    apiSlug: StaticValues.reservationListSlug,
+    apiSlug: StaticValues.reservationsListSlug,
     useAuthToken: true,
   );
 
@@ -20,23 +20,10 @@ Future<List<Reservation>> getReservations() async {
 Future<bool> postReservation(Reservation reservation) async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.post,
-    apiSlug: StaticValues.reservationListSlug,
+    apiSlug: StaticValues.reservationsListSlug,
     useAuthToken: true,
     body: reservation.toJSON(),
   );
 
   return NetworkHelper.validateResponse(response);
 }
-
-Future<bool> putReservation(Reservation reservation) async {
-  final response = await NetworkService.sendRequest(
-    requestType: RequestType.put,
-    apiSlug: StaticValues.reservationDetailSlug,
-    useAuthToken: true,
-    pk: reservation.id,
-    body: reservation.toJSON(),
-  );
-
-  return NetworkHelper.validateResponse(response);
-}
-

@@ -15,7 +15,7 @@ Widget buildEditItemsScreen<T extends BaseModel>({
   required Widget Function(T item) itemWidget,
   required Future<Object?>? future,
   required Future<void> Function() refreshFunction,
-  void Function()? editFunction,
+  void Function(BuildContext context, T item)? editFunction,
   bool addButton = false,
   void Function()? addFunction,
 }) {
@@ -44,6 +44,7 @@ Widget buildEditItemsScreen<T extends BaseModel>({
                   item: items[index],
                   refreshFunction: refreshFunction,
                   child: itemWidget(items[index]),
+                  editFunction: editFunction,
                 );
               },
               itemCount: items.length,
@@ -86,11 +87,11 @@ Widget buildEditAndDeleteItemWidget<T extends BaseModel>({
   required T item,
   required Widget child,
   required void Function() refreshFunction,
-  void Function()? editFunction,
+  void Function(BuildContext context, T item)? editFunction,
 }) {
   return InkWell(
     onLongPress: () => showDeletePopUp(context, item, refreshFunction),
-    onTap: editFunction,
+    onTap: () => editFunction!(context, item),
     child: child,
   );
 }

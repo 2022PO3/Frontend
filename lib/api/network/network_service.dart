@@ -130,6 +130,7 @@ class NetworkService {
     if (url.contains('user')) {
       return url;
     } else if ((requestType == RequestType.get ||
+            requestType == RequestType.post ||
             requestType == RequestType.delete) &&
         pk != null) {
       return '$url/${pk.toString()}';

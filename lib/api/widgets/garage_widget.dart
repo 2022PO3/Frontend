@@ -176,7 +176,7 @@ class GarageWidget extends StatelessWidget {
 Color determineFreePlacesColor(Garage garage, double ratio) {
   if (ratio <= 0.5) {
     return const Color.fromARGB(255, 16, 137, 20);
-  } else if (0.5 < ratio && ratio <= 0.95) {
+  } else if (0.5 < ratio && ratio <= 0.85) {
     return Colors.deepOrangeAccent;
   } else {
     return Colors.red.shade600;

@@ -1,22 +1,14 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 
-// Package imports:
-import 'package:go_router/go_router.dart';
-
 // Project imports:
 import 'package:po_frontend/api/models/reservation_model.dart';
-import 'package:po_frontend/api/network/network_exception.dart';
-import 'package:po_frontend/api/requests/reservation_requests.dart';
 import 'package:po_frontend/utils/constants.dart';
-import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/sized_box.dart';
 
 Widget buildReservationWidget(Reservation reservation) {
-  final bool active = (reservation.fromDate.millisecondsSinceEpoch <=
-          DateTime.now().millisecondsSinceEpoch &&
-      DateTime.now().millisecondsSinceEpoch <=
-          reservation.toDate.millisecondsSinceEpoch);
+  final bool active = (reservation.fromDate.isBefore(DateTime.now()) &&
+      DateTime.now().isBefore(reservation.toDate));
   final bool done = DateTime.now().isAfter(reservation.toDate);
   final Color color = done ? Colors.black26 : Colors.black;
 
@@ -120,9 +112,7 @@ Widget buildReservationTime(Reservation reservation, Color color) {
         size: 40,
         color: color,
       ),
-      const SizedBox(
-        width: 10,
-      ),
+      const Width(10),
       _buildDateAndTime(
         reservation.fromDate.toIso8601String().substring(11, 16),
         reservation.fromDate.toIso8601String().substring(0, 10),

@@ -66,7 +66,7 @@ Future<bool> putPassword(
   };
   final response = await NetworkService.sendRequest(
     requestType: RequestType.put,
-    apiSlug: StaticValues.changePassword,
+    apiSlug: StaticValues.changePasswordSlug,
     body: body,
     useAuthToken: true,
   );

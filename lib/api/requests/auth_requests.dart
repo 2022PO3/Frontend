@@ -29,7 +29,7 @@ Future<bool> register(
   };
   final response = await NetworkService.sendRequest(
     requestType: RequestType.post,
-    apiSlug: StaticValues.postRegisterUser,
+    apiSlug: StaticValues.registerSlug,
     body: body,
     useAuthToken: false,
   );
@@ -47,7 +47,7 @@ Future<User> login(
   };
   final response = await NetworkService.sendRequest(
     requestType: RequestType.post,
-    apiSlug: StaticValues.postLoginUser,
+    apiSlug: StaticValues.loginSlug,
     body: body,
     useAuthToken: false,
   );
@@ -81,7 +81,7 @@ Future<bool> sendAuthenticationCode(String code) async {
 Future<void> logOut(BuildContext context) async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.post,
-    apiSlug: StaticValues.postLogoutUser,
+    apiSlug: StaticValues.logOutSlug,
     useAuthToken: true,
   );
   if (NetworkHelper.validateResponse(response)) {

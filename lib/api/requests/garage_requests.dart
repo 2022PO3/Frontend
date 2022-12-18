@@ -50,7 +50,7 @@ Future<GarageData> getGarageData(int garageId) async {
 Future<List<Garage>> getGarages() async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.get,
-    apiSlug: StaticValues.getGaragesSlug,
+    apiSlug: StaticValues.garagesListSlug,
     useAuthToken: true,
   );
   return await NetworkHelper.filterResponse(
@@ -75,7 +75,7 @@ Future<List<Garage>> getOwnedGarages(User owner) async {
 Future<Garage> postGarage(Garage garage) async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.post,
-    apiSlug: StaticValues.getGaragesSlug,
+    apiSlug: StaticValues.garagesListSlug,
     useAuthToken: true,
     body: garage.toJSON(),
   );

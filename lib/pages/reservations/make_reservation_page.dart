@@ -52,6 +52,7 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
 
     List<String> hours = range(1, 23);
     hours.add('0');
+    const List<String> minutes = ['0', '15', '30', '45'];
 
     return Scaffold(
       appBar: appBar(title: 'New reservation'),
@@ -124,6 +125,7 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
                   },
                   currentTime: startDate,
                   locale: LocaleType.en,
+                  theme: DatePickerTheme()
                 );
               },
               child: Row(

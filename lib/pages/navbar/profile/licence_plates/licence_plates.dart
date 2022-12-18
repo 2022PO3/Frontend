@@ -32,14 +32,16 @@ class _LicencePlatesPageState extends State<LicencePlatesPage> {
   @override
   Widget build(BuildContext context) {
     return buildEditItemsScreen<LicencePlate>(
-        title: 'Licence plates',
-        future: getLicencePlates(),
-        itemWidget: buildOverviewLicencePlateWidget,
-        refreshFunction: () async {
-          setState(() => {});
-        },
-        addButton: true,
-        addFunction: showEnterLicencePlateDialog);
+      title: 'Licence plates',
+      future: getLicencePlates(),
+      itemWidget: buildOverviewLicencePlateWidget,
+      refreshFunction: () async {
+        setState(() => {});
+      },
+      addButton: true,
+      addFunction: showEnterLicencePlateDialog,
+      editFunction: showEnableLicencePlatePopUp,
+    );
   }
 
   void showEnterLicencePlateDialog() {
