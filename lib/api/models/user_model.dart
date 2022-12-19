@@ -64,7 +64,7 @@ class User {
         hasAutomaticPayment: json['user']['hasAutomaticPayment'] as bool,
         twoFactor: json['user']['twoFactor'] as bool,
         twoFactorValidated: json['user']['twoFactorValidated'] as bool?,
-        strikes: json['strikes'],
+        strikes: json['user']['strikes'] as int,
       ),
       json['token']
     ];

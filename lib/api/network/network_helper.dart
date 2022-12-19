@@ -45,8 +45,9 @@ class NetworkHelper {
         return onFailureCallBack(['Socket exception']);
       }
       return onFailureCallBack(['An unknown error occurred.']);
-    } catch (e) {
+    } catch (e, stackTrace) {
       print('Exception: $e');
+      print(stackTrace);
       return onFailureCallBack(['Exception: $e']);
     }
   }
@@ -83,8 +84,9 @@ class NetworkHelper {
         return onFailureCallBack(['Socket exception']);
       }
       return onFailureCallBack(['An unknown error occurred.']);
-    } catch (e) {
+    } catch (e, stackTrace) {
       print('Exception: $e');
+      print(stackTrace);
       return onFailureCallBack(['Exception: $e']);
     }
   }
