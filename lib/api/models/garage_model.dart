@@ -3,8 +3,6 @@ import 'package:po_frontend/api/models/base_model.dart';
 import 'package:po_frontend/api/models/garage_settings_model.dart';
 import 'package:po_frontend/api/models/parking_lot_model.dart';
 
-import 'package:flutter/services.dart';
-
 /// Model which represents the backend `Garage`-model.
 class Garage extends BaseModel {
   final int userId;
@@ -31,13 +29,14 @@ class Garage extends BaseModel {
     GarageSettings? garageSettings,
   }) {
     return Garage(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        name: name ?? this.name,
-        parkingLots: parkingLots,
-        garageSettings: garageSettings ?? this.garageSettings,
-        entered: entered,
-        reservations: reservations);
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      name: name ?? this.name,
+      parkingLots: parkingLots,
+      garageSettings: garageSettings ?? this.garageSettings,
+      entered: entered,
+      reservations: reservations,
+    );
   }
 
   /// Serializes a JSON-object into a Dart `Garage`-object with all properties.
@@ -58,7 +57,7 @@ class Garage extends BaseModel {
   int get maxSpots => parkingLots.length;
   int get occupiedLots => reservations + entered;
   int get disabledLots => parkingLots.where((pl) => pl.disabled).length;
-  int get unoccupiedLots => maxSpots - occupiedLots - disabledLots;
+  int get unoccupiedLots => parkingLots.where((pl) => pl.available).length;
   bool get isFull => maxSpots == occupiedLots;
 
   //final double bookedLots = parkingLots.where((pl) => pl.booked ?? false );

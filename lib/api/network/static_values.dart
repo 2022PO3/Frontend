@@ -46,6 +46,9 @@ class StaticValues {
   static const String notificationsDetailSlug = 'api/notification';
   static const String notificationsListSlug = 'api/notifications';
 
+  // Offset for reservations
+  static const Duration offset = Duration(hours: 8);
+
   // Custom settings
   static const bool debug = true;
   static const bool overrideServerUrl = true;

@@ -6,6 +6,7 @@ class ParkingLot {
   final int parkingLotNo;
   final bool booked;
   final bool disabled;
+  final bool available;
 
   ParkingLot({
     required this.id,
@@ -14,6 +15,7 @@ class ParkingLot {
     required this.parkingLotNo,
     required this.booked,
     required this.disabled,
+    required this.available,
   });
 
   bool get isFree => !booked && !disabled && !occupied;
@@ -26,6 +28,7 @@ class ParkingLot {
       parkingLotNo: json['parkingLotNo'] as int,
       booked: json['booked'] as bool,
       disabled: json['disabled'] as bool,
+      available: json['available'] as bool,
     );
   }
 
