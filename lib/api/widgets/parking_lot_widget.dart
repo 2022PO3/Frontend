@@ -54,7 +54,7 @@ class ParkingLotsWidget extends StatelessWidget {
   Color getColor() {
     if (parkingLot.disabled) {
       return Colors.grey.shade300;
-    } else if (parkingLot.occupied || parkingLot.booked) {
+    } else if (!parkingLot.available) {
       return Colors.red.shade300;
     } else {
       return Colors.green.shade400;

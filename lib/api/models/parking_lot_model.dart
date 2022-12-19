@@ -18,8 +18,6 @@ class ParkingLot {
     required this.available,
   });
 
-  bool get isFree => !booked && !disabled && !occupied;
-
   static ParkingLot fromJSON(Map<String, dynamic> json) {
     return ParkingLot(
       id: json['id'] as int,

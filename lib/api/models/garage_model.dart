@@ -11,6 +11,7 @@ class Garage extends BaseModel {
   final GarageSettings garageSettings;
   final int entered;
   final int reservations;
+  final DateTime? nextFreeSpot;
 
   Garage({
     required id,
@@ -20,6 +21,7 @@ class Garage extends BaseModel {
     required this.garageSettings,
     required this.entered,
     required this.reservations,
+    required this.nextFreeSpot,
   }) : super(id: id);
 
   Garage copyWith({
@@ -29,14 +31,14 @@ class Garage extends BaseModel {
     GarageSettings? garageSettings,
   }) {
     return Garage(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      name: name ?? this.name,
-      parkingLots: parkingLots,
-      garageSettings: garageSettings ?? this.garageSettings,
-      entered: entered,
-      reservations: reservations,
-    );
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        name: name ?? this.name,
+        parkingLots: parkingLots,
+        garageSettings: garageSettings ?? this.garageSettings,
+        entered: entered,
+        reservations: reservations,
+        nextFreeSpot: nextFreeSpot);
   }
 
   /// Serializes a JSON-object into a Dart `Garage`-object with all properties.
@@ -51,6 +53,9 @@ class Garage extends BaseModel {
       ),
       entered: json['entered'],
       reservations: json['reservations'],
+      nextFreeSpot: json['nextFreeSpot'] != null
+          ? DateTime.parse(json['nextFreeSpot'] as String).toLocal()
+          : null,
     );
   }
 

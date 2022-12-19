@@ -40,8 +40,8 @@ class _SpotSelectionPageState extends State<SpotSelectionPage> {
       ),
       body: FutureBuilder(
         future: getParkingLots(garage.id, {
-          'fromDate': startDate.toIso8601String(),
-          'toDate': endDate.toIso8601String(),
+          'fromDate': startDate.toUtc().toIso8601String(),
+          'toDate': endDate.toUtc().toIso8601String(),
         }),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
@@ -105,7 +105,7 @@ class _SpotSelectionPageState extends State<SpotSelectionPage> {
     return InkWell(
       child: ParkingLotsWidget(parkingLot: parkingLot),
       onTap: () {
-        !parkingLot.isFree
+        !parkingLot.available
             ? showSpotErrorPopUp(context)
             : context.push(
                 '/home/reserve/confirm-reservation',

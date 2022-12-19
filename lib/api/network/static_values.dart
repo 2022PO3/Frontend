@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class StaticValues {
   const StaticValues._();
   // Garage slugs
@@ -48,6 +50,9 @@ class StaticValues {
 
   // Offset for reservations
   static const Duration offset = Duration(hours: 8);
+
+  // Default date format
+  static DateFormat frontendDateFormat = DateFormat('HH:mm, dd/MM/y');
 
   // Custom settings
   static const bool debug = true;
