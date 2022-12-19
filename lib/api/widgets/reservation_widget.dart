@@ -7,10 +7,11 @@ import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/sized_box.dart';
 
 Widget buildReservationWidget(Reservation reservation) {
-  print(reservation.toDate);
-  print(DateTime.now().toUtc());
-  final bool active = (reservation.fromDate.isBefore(DateTime.now()) &&
-      DateTime.now().isBefore(reservation.toDate));
+  final bool active = (reservation.fromDate
+          .isBefore(DateTime.now().add(const Duration(hours: 1))) &&
+      DateTime.now()
+          .add(const Duration(hours: 1))
+          .isBefore(reservation.toDate));
   final bool done = DateTime.now().isAfter(reservation.toDate);
   final Color color = done ? Colors.black26 : Colors.black;
 
@@ -133,12 +134,8 @@ Widget buildReservationTime(Reservation reservation, Color color) {
 }
 
 Widget _buildDateAndTime(DateTime dateTime, Color color) {
-  String time = dateTime
-      .add(const Duration(hours: 1))
-      .toIso8601String()
-      .substring(11, 16);
-  String date =
-      dateTime.add(const Duration(hours: 1)).toIso8601String().substring(0, 10);
+  String time = dateTime.toIso8601String().substring(11, 16);
+  String date = dateTime.toIso8601String().substring(0, 10);
   return Column(
     children: [
       Text(

@@ -3,12 +3,16 @@ import 'package:po_frontend/api/models/base_model.dart';
 import 'package:po_frontend/api/models/garage_settings_model.dart';
 import 'package:po_frontend/api/models/parking_lot_model.dart';
 
+import 'package:flutter/services.dart';
+
 /// Model which represents the backend `Garage`-model.
 class Garage extends BaseModel {
   final int userId;
   final String name;
   final List<ParkingLot> parkingLots;
   final GarageSettings garageSettings;
+  final int entered;
+  final int reservations;
 
   Garage({
     required id,
@@ -16,6 +20,8 @@ class Garage extends BaseModel {
     required this.name,
     required this.parkingLots,
     required this.garageSettings,
+    required this.entered,
+    required this.reservations,
   }) : super(id: id);
 
   Garage copyWith({
@@ -25,12 +31,13 @@ class Garage extends BaseModel {
     GarageSettings? garageSettings,
   }) {
     return Garage(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      name: name ?? this.name,
-      parkingLots: parkingLots,
-      garageSettings: garageSettings ?? this.garageSettings,
-    );
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        name: name ?? this.name,
+        parkingLots: parkingLots,
+        garageSettings: garageSettings ?? this.garageSettings,
+        entered: entered,
+        reservations: reservations);
   }
 
   /// Serializes a JSON-object into a Dart `Garage`-object with all properties.
@@ -43,17 +50,16 @@ class Garage extends BaseModel {
       garageSettings: GarageSettings.fromJSON(
         json['garageSettings'] as Map<String, dynamic>,
       ),
+      entered: json['entered'],
+      reservations: json['reservations'],
     );
   }
 
   int get maxSpots => parkingLots.length;
-  int get bookedLots => parkingLots.where((pl) => pl.booked).length;
-  int get takenLots => parkingLots.where((pl) => pl.occupied).length;
-  int get occupiedLots => bookedLots + takenLots;
+  int get occupiedLots => reservations + entered;
   int get disabledLots => parkingLots.where((pl) => pl.disabled).length;
   int get unoccupiedLots => maxSpots - occupiedLots - disabledLots;
   bool get isFull => maxSpots == occupiedLots;
-  double get ratio => occupiedLots / maxSpots;
 
   //final double bookedLots = parkingLots.where((pl) => pl.booked ?? false );
 

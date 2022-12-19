@@ -27,8 +27,9 @@ class Reservation extends BaseModel {
         'id': id,
         'garageId': garage.id,
         'licencePlateId': licencePlate.id,
-        'fromDate': fromDate.toIso8601String(),
-        'toDate': toDate.toIso8601String(),
+        'fromDate':
+            (fromDate.subtract(const Duration(hours: 1))).toIso8601String(),
+        'toDate': (toDate.subtract(const Duration(hours: 1))).toIso8601String(),
         'parkingLotId': parkingLot.id,
       };
 
@@ -36,8 +37,8 @@ class Reservation extends BaseModel {
     return Reservation(
         id: json['id'] as int,
         licencePlate: LicencePlate.fromJSON(json['licencePlate']),
-        fromDate: DateTime.parse(json['fromDate']),
-        toDate: DateTime.parse(json['toDate']),
+        fromDate: DateTime.parse(json['fromDate']).add(const Duration(hours: 1)),
+        toDate: DateTime.parse(json['toDate']).add(const Duration(hours: 1)),
         parkingLot: ParkingLot.fromJSON(json['parkingLot']),
         garage: Garage.fromJSON(json['garage']));
   }

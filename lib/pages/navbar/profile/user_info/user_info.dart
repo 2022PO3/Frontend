@@ -41,6 +41,8 @@ class _UserInfoState extends State<UserInfo> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: appBar(
         title: 'User info',
@@ -132,6 +134,50 @@ class _UserInfoState extends State<UserInfo> {
                   fieldNameValue: 'QPark Leuven',
                   onButtonPressed: openDeleteUserDialog,
                 ),
+                if (getUserStrikes(context) != 0)
+                  Column(
+                    children: [
+                      const Divider(
+                        endIndent: 10,
+                        indent: 10,
+                      ),
+                      buildCard(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.error_rounded,
+                                color: Colors.redAccent,
+                              ),
+                              const Width(10),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Strikes: ${getUserStrikes(context)}',
+                                    style: const TextStyle(fontSize: 20),
+                                  ),
+                                  Container(
+                                    constraints:
+                                        BoxConstraints(maxWidth: width - 82),
+                                    child: const Text(
+                                      'If you have three strikes, your account will be deactivated for one month!',
+                                      softWrap: true,
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 const Divider(
                   endIndent: 10,
                   indent: 10,

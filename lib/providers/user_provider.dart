@@ -16,6 +16,7 @@ class UserProvider with ChangeNotifier {
     hasAutomaticPayment: false,
     twoFactor: false,
     twoFactorValidated: null,
+    strikes: 0,
   );
 
   User get getUser => _user;

@@ -30,7 +30,6 @@ class GarageWidget extends StatelessWidget {
               child: buildFreeSpotsBanner(
                 context,
                 garage,
-                //height,
                 Constants.borderRadius,
               ),
             ),
@@ -56,6 +55,8 @@ class GarageWidget extends StatelessWidget {
     Garage garage,
     double borderRadius,
   ) {
+    final double ratio =
+        garage.maxSpots == 0 ? 0 : garage.occupiedLots / garage.maxSpots;
     return AspectRatio(
       aspectRatio: 1,
       child: Container(
@@ -74,7 +75,7 @@ class GarageWidget extends StatelessWidget {
                 startAngle: 270,
                 endAngle: 270,
                 minimum: 0,
-                maximum: garage.maxSpots == 0 ? 1 : garage.maxSpots.toDouble(),
+                maximum: garage.maxSpots.toDouble(),
                 showLabels: false,
                 showTicks: false,
                 axisLineStyle: const AxisLineStyle(
@@ -85,13 +86,13 @@ class GarageWidget extends StatelessWidget {
                 ),
                 pointers: <GaugePointer>[
                   RangePointer(
-                    value: garage.isFull ? 1 : garage.occupiedLots.toDouble(),
+                    value: garage.occupiedLots.toDouble(),
                     width: 0.15,
                     sizeUnit: GaugeSizeUnit.factor,
                     cornerStyle: garage.isFull
                         ? CornerStyle.bothFlat
                         : CornerStyle.bothCurve,
-                    color: determineFreePlacesColor(garage, garage.ratio),
+                    color: determineFreePlacesColor(garage, ratio),
                   ),
                 ],
                 annotations: <GaugeAnnotation>[

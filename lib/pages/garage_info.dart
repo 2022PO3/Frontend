@@ -124,8 +124,10 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
   }
 
   Widget buildOccupancyCard(Garage garage, double width) {
-    final int percentage = (garage.ratio * 100).round();
-    final Color color = determineFreePlacesColor(garage, garage.ratio);
+    final double ratio =
+        garage.maxSpots == 0 ? 0 : garage.occupiedLots / garage.maxSpots;
+    final int percentage = (ratio * 100).round();
+    final Color color = determineFreePlacesColor(garage, ratio);
 
     return Card(
       shape: Constants.cardBorder,
@@ -159,9 +161,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                     ),
                     pointers: <GaugePointer>[
                       RangePointer(
-                        value: garage.isFull
-                            ? 1
-                            : (garage.occupiedLots).toDouble(),
+                        value: garage.occupiedLots.toDouble(),
                         width: 0.15,
                         sizeUnit: GaugeSizeUnit.factor,
                         cornerStyle: garage.isFull
@@ -180,7 +180,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                               height: 10,
                             ),
                             Text(
-                              '$percentage %',
+                              '$percentage%',
                               style: TextStyle(
                                 fontSize: 35,
                                 fontWeight: FontWeight.bold,
@@ -249,7 +249,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
               ),
             ),
             Text(
-              (garage.takenLots).toString(),
+              (garage.entered).toString(),
               style: const TextStyle(
                 fontSize: 35,
               ),
@@ -262,7 +262,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
               ),
             ),
             Text(
-              garage.bookedLots.toString(),
+              garage.reservations.toString(),
               style: const TextStyle(
                 fontSize: 35,
               ),

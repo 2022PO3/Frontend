@@ -11,12 +11,14 @@ import 'package:po_frontend/api/models/licence_plate_model.dart';
 import 'package:po_frontend/api/models/parking_lot_model.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
+import 'package:po_frontend/api/network/static_values.dart';
 import 'package:po_frontend/api/requests/parking_lot_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/utils/button.dart';
 import 'package:po_frontend/utils/card.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/sized_box.dart';
+import 'package:timezone/timezone.dart';
 
 class MakeReservationPage extends StatefulWidget {
   const MakeReservationPage({
@@ -40,8 +42,8 @@ class GarageAndLicencePlate {
 }
 
 class _MakeReservationPageState extends State<MakeReservationPage> {
-  DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime.now();
+  DateTime startDate = TZDateTime.now(StaticValues.localLocation);
+  DateTime endDate = TZDateTime.now(StaticValues.localLocation);
 
   @override
   Widget build(BuildContext context) {

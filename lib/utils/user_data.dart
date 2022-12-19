@@ -117,3 +117,11 @@ void setUser(BuildContext context, User user) {
       Provider.of<UserProvider>(context, listen: false);
   userProvider.setUser(user);
 }
+
+int getUserStrikes(BuildContext context, {bool listen = false}) {
+  final UserProvider userProvider = Provider.of<UserProvider>(
+    context,
+    listen: listen,
+  );
+  return userProvider.getUser.strikes;
+}
