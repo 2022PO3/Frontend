@@ -11,7 +11,6 @@ import 'package:po_frontend/api/models/licence_plate_model.dart';
 import 'package:po_frontend/api/models/parking_lot_model.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
-import 'package:po_frontend/api/network/static_values.dart';
 import 'package:po_frontend/api/requests/parking_lot_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/utils/button.dart';
