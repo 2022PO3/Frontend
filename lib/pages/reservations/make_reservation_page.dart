@@ -18,7 +18,6 @@ import 'package:po_frontend/utils/button.dart';
 import 'package:po_frontend/utils/card.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/sized_box.dart';
-import 'package:timezone/timezone.dart';
 
 class MakeReservationPage extends StatefulWidget {
   const MakeReservationPage({
@@ -42,8 +41,8 @@ class GarageAndLicencePlate {
 }
 
 class _MakeReservationPageState extends State<MakeReservationPage> {
-  DateTime startDate = TZDateTime.now(StaticValues.localLocation);
-  DateTime endDate = TZDateTime.now(StaticValues.localLocation);
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
