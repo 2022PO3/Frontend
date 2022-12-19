@@ -1,4 +1,7 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Project imports:
 import 'package:po_frontend/api/models/price_model.dart';
 
 class PriceWidget extends StatelessWidget {

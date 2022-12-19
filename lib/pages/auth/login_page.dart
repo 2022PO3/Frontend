@@ -1,13 +1,18 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:go_router/go_router.dart';
+
+// Project imports:
+import 'package:po_frontend/api/models/user_model.dart';
+import 'package:po_frontend/api/network/network_exception.dart';
+import 'package:po_frontend/api/requests/auth_requests.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/pages/auth/register.dart';
 import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/dialogs.dart';
-import 'package:po_frontend/api/models/user_model.dart';
-
-import '../../api/network/network_exception.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({
@@ -36,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
       String email = widget.email as String;
       String password = widget.password as String;
       return FutureBuilder(
-        future: loginUser(
+        future: login(
           context,
           email,
           password,
@@ -143,7 +148,7 @@ class _LoginPageState extends State<LoginPage> {
                             userPassword = _passwordTextController.text;
                           });
                           try {
-                            User user = await loginUser(
+                            User user = await login(
                               context,
                               userMail,
                               userPassword,

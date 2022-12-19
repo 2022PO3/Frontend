@@ -1,6 +1,11 @@
+// Dart imports:
 import 'dart:convert';
-import 'package:po_frontend/api/network/network_exception.dart';
+
+// Package imports:
 import 'package:http/http.dart' as http;
+
+// Project imports:
+import 'package:po_frontend/api/network/network_exception.dart';
 
 class NetworkHelper {
   const NetworkHelper._();

@@ -1,25 +1,29 @@
+// Dart imports:
+import 'dart:async';
 import 'dart:math';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:badges/badges.dart' as badges;
 import 'package:go_router/go_router.dart';
+
+// Project imports:
+import 'package:po_frontend/api/models/garage_model.dart';
+import 'package:po_frontend/api/models/licence_plate_model.dart';
 import 'package:po_frontend/api/models/notification_model.dart';
-import 'package:po_frontend/api/requests/user_requests.dart';
+import 'package:po_frontend/api/requests/garage_requests.dart';
+import 'package:po_frontend/api/requests/licence_plate_requests.dart';
+import 'package:po_frontend/api/requests/notification_requests.dart';
+import 'package:po_frontend/api/widgets/garage_widget.dart';
+import 'package:po_frontend/pages/navbar/navbar.dart';
+import 'package:po_frontend/pages/payment_widgets/pay_button.dart';
+import 'package:po_frontend/pages/payment_widgets/timer_widget.dart';
 import 'package:po_frontend/utils/constants.dart';
+import 'package:po_frontend/utils/error_widget.dart';
 import 'package:po_frontend/utils/loading_page.dart';
 import 'package:po_frontend/utils/user_data.dart';
-import '../../api/models/licence_plate_model.dart';
-import '../../api/requests/garage_requests.dart';
-import '../../api/requests/licence_plate_requests.dart';
-import '../../utils/error_widget.dart';
-import '../navbar/navbar.dart';
-import '../payment_widgets/pay_button.dart';
-import '../payment_widgets/timer_widget.dart';
-import 'package:badges/badges.dart' as badges;
-
-import 'dart:async';
-
-import 'package:po_frontend/api/models/garage_model.dart';
-import 'package:po_frontend/api/widgets/garage_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -41,10 +45,18 @@ class _HomePageState extends State<HomePage> {
     getFutures();
   }
 
+  @override
+  void dispose() {
+    licencePlatesFuture.ignore();
+    garagesFuture.ignore();
+    notificationsFuture.ignore();
+    super.dispose();
+  }
+
   Future<List<dynamic>> getFutures() async {
     setState(() {
       licencePlatesFuture = getLicencePlates();
-      garagesFuture = getAllGarages();
+      garagesFuture = getGarages();
       notificationsFuture = getNotifications(context);
     });
 
@@ -66,53 +78,71 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return isLoading
         ? const LoadingPage()
-        : Scaffold(
-            drawer: const Navbar(),
-            appBar: AppBar(
-              automaticallyImplyLeading: true,
-              flexibleSpace: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [(Colors.indigo), (Colors.indigoAccent)],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
+        : LayoutBuilder(builder: (context, constraints) {
+            return Scaffold(
+              drawer: constraints.maxWidth > 600
+                  ? null
+                  : Navbar(garagesFuture: garagesFuture),
+              appBar: AppBar(
+                automaticallyImplyLeading: true,
+                flexibleSpace: Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [(Colors.indigo), (Colors.indigoAccent)],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
                   ),
                 ),
-              ),
-              title: Text(
-                getUserFirstName(context),
-              ),
-              actions: [generateNotificationsButton()],
-            ),
-            body: RefreshIndicator(
-              onRefresh: getFutures,
-              child: CustomScrollView(
-                physics: const AlwaysScrollableScrollPhysics().applyTo(
-                  const BouncingScrollPhysics(),
+                title: Text(
+                  getUserFirstName(context),
                 ),
-                slivers: [
-                  SliverPersistentHeader(
-                    pinned: true,
-                    floating: true,
-                    delegate: SimpleHeaderDelegate(
-                        child: CurrentParkingSessionsListWidget(
-                          licencePlatesFuture: licencePlatesFuture,
-                        ),
-                        maxHeight: min(
-                            MediaQuery.of(context).size.shortestSide / 2.5,
-                            220),
-                        minHeight: min(
-                            MediaQuery.of(context).size.shortestSide / 5, 100)),
-                  ),
-                  SliverToBoxAdapter(
-                    child: GarageListWidget(
+                actions: [generateNotificationsButton()],
+              ),
+              body: Row(
+                children: [
+                  if (constraints.maxWidth > 600)
+                    Navbar(
                       garagesFuture: garagesFuture,
+                    ),
+                  Expanded(
+                    child: RefreshIndicator(
+                      onRefresh: getFutures,
+                      child: CustomScrollView(
+                        physics: const AlwaysScrollableScrollPhysics().applyTo(
+                          const BouncingScrollPhysics(),
+                        ),
+                        slivers: [
+                          SliverPersistentHeader(
+                            pinned: true,
+                            floating: true,
+                            delegate: SimpleHeaderDelegate(
+                              child: CurrentParkingSessionsListWidget(
+                                licencePlatesFuture: licencePlatesFuture,
+                              ),
+                              maxHeight: min(
+                                MediaQuery.of(context).size.shortestSide / 2.5,
+                                220,
+                              ),
+                              minHeight: min(
+                                MediaQuery.of(context).size.shortestSide / 5,
+                                100,
+                              ),
+                            ),
+                          ),
+                          SliverToBoxAdapter(
+                            child: GarageListWidget(
+                              garagesFuture: garagesFuture,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
               ),
-            ),
-          );
+            );
+          });
   }
 
   Widget generateNotificationsButton() {
@@ -248,7 +278,7 @@ class CurrentParkingSessionsListWidget extends StatelessWidget {
   }
 }
 
-class CurrentParkingSessionWidget extends StatelessWidget {
+class CurrentParkingSessionWidget extends StatefulWidget {
   /// Widget for showing information about a specific garage the user is parked
   /// at, how long the user has parked there and providing a pay button.
   const CurrentParkingSessionWidget({
@@ -259,10 +289,31 @@ class CurrentParkingSessionWidget extends StatelessWidget {
   final LicencePlate licencePlate;
 
   @override
+  State<CurrentParkingSessionWidget> createState() =>
+      _CurrentParkingSessionWidgetState();
+}
+
+class _CurrentParkingSessionWidgetState
+    extends State<CurrentParkingSessionWidget> {
+  late Future<Garage> garageFuture;
+
+  @override
+  void initState() {
+    garageFuture = getGarage(widget.licencePlate.garageId!);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    garageFuture.ignore();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.longestSide;
     return FutureBuilder<Garage>(
-      future: getGarage(licencePlate.garageId!),
+      future: garageFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {
@@ -316,11 +367,11 @@ class CurrentParkingSessionWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Hero(
-                            tag: 'title_${licencePlate.licencePlate}',
+                            tag: 'title_${widget.licencePlate.licencePlate}',
                             child: Material(
                               color: Colors.transparent,
                               child: Text(
-                                'Parked with ${licencePlate.formatLicencePlate()}',
+                                'Parked with ${widget.licencePlate.formatLicencePlate()}',
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w900,
@@ -338,7 +389,7 @@ class CurrentParkingSessionWidget extends StatelessWidget {
                           horizontal: 15,
                         ),
                         child: PayPreviewButton(
-                          licencePlate: licencePlate,
+                          licencePlate: widget.licencePlate,
                           garage: garage,
                         ),
                       ),
@@ -355,9 +406,9 @@ class CurrentParkingSessionWidget extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Hero(
-                            tag: 'timer_${licencePlate.licencePlate}',
+                            tag: 'timer_${widget.licencePlate.licencePlate}',
                             child: TimerWidget(
-                              start: licencePlate.updatedAt,
+                              start: widget.licencePlate.updatedAt,
                               textStyle: TextStyle(
                                 fontSize:
                                     MediaQuery.of(context).size.shortestSide /
@@ -378,7 +429,7 @@ class CurrentParkingSessionWidget extends StatelessWidget {
                         vertical: 2,
                       ),
                       child: PayPreviewButton(
-                        licencePlate: licencePlate,
+                        licencePlate: widget.licencePlate,
                         garage: garage,
                       ),
                     ),
@@ -418,8 +469,8 @@ class _GarageListWidgetState extends State<GarageListWidget> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {
-          final List<Garage> garages = snapshot.data as List<Garage>;
-          sortGarages(garages);
+          List<Garage> garages = snapshot.data as List<Garage>;
+          garages = sortGarages(garages);
 
           final List<Widget> garageWidgets =
               garages.map((e) => GarageWidget(garage: e)).toList();
@@ -607,12 +658,13 @@ class _GarageListWidgetState extends State<GarageListWidget> {
         });
   }
 
-  void sortGarages(List<Garage> garages) {
+  List<Garage> sortGarages(List<Garage> garages) {
     final bool up = sortDirection == SortDirection.up;
-    print(up);
+    // Filter out garages with no parking lots
+    garages = garages.where((element) => element.maxSpots > 0).toList();
     switch (sortBy) {
       case SortByEnum.none:
-        return;
+        break;
       case SortByEnum.province:
         up
             ? garages.sort((g1, g2) => g1.garageSettings.location.province
@@ -624,12 +676,13 @@ class _GarageListWidgetState extends State<GarageListWidget> {
         break;
       case SortByEnum.freeSpots:
         up
-            ? garages.sort((g1, g2) => (g1.unoccupiedLots / g1.parkingLots)
-                .compareTo((g2.unoccupiedLots / g2.parkingLots)))
-            : garages.sort((g2, g1) => (g1.unoccupiedLots / g1.parkingLots)
-                .compareTo((g2.unoccupiedLots / g2.parkingLots)));
+            ? garages.sort((g1, g2) => (g1.unoccupiedLots / g1.maxSpots)
+                .compareTo((g2.unoccupiedLots / g2.maxSpots)))
+            : garages.sort((g2, g1) => (g1.unoccupiedLots / g1.maxSpots)
+                .compareTo((g2.unoccupiedLots / g2.maxSpots)));
         break;
     }
+    return garages;
   }
 }
 

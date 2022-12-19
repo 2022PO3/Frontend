@@ -1,17 +1,26 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:go_router/go_router.dart';
+
+// Project imports:
 import 'package:po_frontend/api/models/user_model.dart';
+import 'package:po_frontend/api/requests/auth_requests.dart';
 import 'package:po_frontend/api/requests/garage_requests.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/user_data.dart';
-
 import '../../api/models/garage_model.dart';
 import '../../utils/error_widget.dart';
 
 class Navbar extends StatefulWidget {
-  const Navbar({Key? key}) : super(key: key);
+  const Navbar({
+    Key? key,
+    required this.garagesFuture,
+  }) : super(key: key);
 
+  final Future<List<Garage>> garagesFuture;
   @override
   State<Navbar> createState() => _NavbarState();
 }
@@ -19,7 +28,7 @@ class Navbar extends StatefulWidget {
 class _NavbarState extends State<Navbar> {
   @override
   Widget build(BuildContext context) {
-    final User user = getUser(context);
+    final User user = getProviderUser(context);
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -43,7 +52,10 @@ class _NavbarState extends State<Navbar> {
             title: 'My reservations',
             onTap: () => context.push('/home/reservations'),
           ),
-          if (user.isGarageOwner) const GarageSettingsTile(),
+          if (user.isGarageOwner)
+            GarageSettingsTile(
+              garagesFuture: widget.garagesFuture,
+            ),
           buildListTile(
             leadingIcon: Icons.account_circle_rounded,
             title: 'Profile',
@@ -87,7 +99,7 @@ class _NavbarState extends State<Navbar> {
       context,
       'Sign out',
       [const Text('Are you sure you want to sign out?')],
-      () => logOutUser(context),
+      () => logOut(context),
       leftButtonText: 'Yes',
       rightButtonText: 'No',
     );
@@ -96,8 +108,10 @@ class _NavbarState extends State<Navbar> {
 
 class GarageSettingsTile extends StatelessWidget {
   const GarageSettingsTile({
+    required this.garagesFuture,
     super.key,
   });
+  final Future<List<Garage>> garagesFuture;
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +126,10 @@ class GarageSettingsTile extends StatelessWidget {
           child: ExpansionTile(
             leading: Icon(Icons.garage_rounded, color: primaryColor),
             title: const Text('My Garages'),
-            children: const <Widget>[_OwnedGaragesList(), _NewGarageButton()],
+            children: [
+              _OwnedGaragesList(garagesFuture: garagesFuture),
+              const _NewGarageButton()
+            ],
           ),
         ),
         const Divider(),
@@ -122,21 +139,32 @@ class GarageSettingsTile extends StatelessWidget {
 }
 
 class _OwnedGaragesList extends StatelessWidget {
-  const _OwnedGaragesList({Key? key}) : super(key: key);
+  const _OwnedGaragesList({Key? key, required this.garagesFuture})
+      : super(key: key);
+
+  final Future<List<Garage>> garagesFuture;
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Garage>>(
-      future: getOwnedGarages(getUser(context)),
+      future: garagesFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {
-          List<Garage> garages = snapshot.data as List<Garage>;
+          List<Garage> ownedGarages = (snapshot.data as List<Garage>)
+              .where(
+                (g) => g.userId == getUserId(context),
+              )
+              .toList();
 
           return Padding(
             padding: const EdgeInsets.only(left: 50.0),
             child: Column(
-              children: garages.map((e) => GarageListTile(garage: e)).toList(),
+              children: ownedGarages
+                  .map(
+                    (e) => GarageListTile(garage: e),
+                  )
+                  .toList(),
             ),
           );
         } else if (snapshot.hasError) {

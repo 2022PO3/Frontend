@@ -1,14 +1,23 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+
+// Package imports:
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:go_router/go_router.dart';
+
+// Project imports:
+import 'package:po_frontend/api/requests/device_requests.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
+import 'package:po_frontend/pages/auth/auth_service.dart';
 import 'package:po_frontend/pages/settings/user_settings/add_automatic_payment_page.dart';
+import 'package:po_frontend/utils/card.dart';
 import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/request_button.dart';
 import 'package:po_frontend/utils/settings_card.dart';
 import 'package:po_frontend/utils/user_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserSettings extends StatefulWidget {
   const UserSettings({super.key});
@@ -18,6 +27,9 @@ class UserSettings extends StatefulWidget {
 }
 
 class _UserSettingsState extends State<UserSettings> {
+  final _changeServerURLFormKey = GlobalKey<FormState>();
+  final _serverURLTextController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final bool userTwoFactor = getUserTwoFactor(context, listen: true);
@@ -31,43 +43,73 @@ class _UserSettingsState extends State<UserSettings> {
         onRefresh: () async {
           await updateUserInfo(context);
         },
-        child: Builder(builder: (context) {
-          return ListView(
-            physics: const AlwaysScrollableScrollPhysics().applyTo(
-              const BouncingScrollPhysics(),
-            ),
-            children: [
-              ToggleSettingWidget(
-                settingName: 'Two Factor enabled',
-                currentValue: userTwoFactor,
-                onToggle: (val) {
-                  if (!userTwoFactor && val) {
-                    _showRedirectDialog();
-                  } else {
-                    _showConfirmationDialog();
-                  }
-                },
+        child: Builder(
+          builder: (context) {
+            return ListView(
+              physics: const AlwaysScrollableScrollPhysics().applyTo(
+                const BouncingScrollPhysics(),
               ),
-              buildSettingsCard(
-                context,
-                '/home/settings/two-factor',
-                'Two factor devices',
-                'View and edit your registered two factor devices.',
-              ),
-              CreateOrRemoveSettingWidget(
-                settingName: 'Automatic Payment',
-                exists: hasAutomaticPayment,
-                onCreate: () async {
-                  context.go(AddAutomaticPaymentPage.route);
-                },
-                onRemove: () async {
-                  await removeAutomaticPayment();
-                  await updateUserInfo(context);
-                },
-              )
-            ],
-          );
-        }),
+              children: [
+                ToggleSettingWidget(
+                  settingName: 'Two Factor enabled',
+                  currentValue: userTwoFactor,
+                  onToggle: (val) {
+                    if (!userTwoFactor && val) {
+                      _showRedirectDialog();
+                    } else {
+                      _showConfirmationDialog();
+                    }
+                  },
+                ),
+                buildSettingsCard(
+                  context,
+                  'Two factor devices',
+                  'View and edit your registered two factor devices.',
+                  path: '/home/settings/two-factor',
+                ),
+                CreateOrRemoveSettingWidget(
+                  settingName: 'Automatic Payment',
+                  exists: hasAutomaticPayment,
+                  onCreate: () async {
+                    context.go(AddAutomaticPaymentPage.route);
+                  },
+                  onRemove: () async {
+                    await deleteAutomaticPayment();
+                    await updateUserInfo(context);
+                  },
+                ),
+                FutureBuilder(
+                  future: getServerURL(),
+                  builder: ((context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done &&
+                        snapshot.hasData) {
+                      return buildSettingsCard(
+                          context, 'Server URL', snapshot.data ?? 'Not set',
+                          onTap: openChangeServerURLDialog);
+                    } else {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.error_outline,
+                              color: Colors.red,
+                              size: 25,
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text(snapshot.error.toString()),
+                          ],
+                        ),
+                      );
+                    }
+                  }),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -101,6 +143,57 @@ class _UserSettingsState extends State<UserSettings> {
       leftButtonText: 'No',
       rightButtonText: 'Yes',
     );
+  }
+
+  void openChangeServerURLDialog() {
+    return showFrontendDialog2(
+      context,
+      'Change server url',
+      [buildServerURLEnterWidget()],
+      () => changeServerURL(_serverURLTextController.text),
+      leftButtonText: 'Confirm',
+    );
+  }
+
+  Widget buildServerURLEnterWidget() {
+    return Form(
+      key: _changeServerURLFormKey,
+      child: TextFormField(
+        controller: _serverURLTextController,
+        keyboardType: TextInputType.text,
+        decoration: const InputDecoration(
+          contentPadding: EdgeInsets.all(14),
+          prefixIcon: Icon(
+            Icons.computer_rounded,
+            color: Colors.indigoAccent,
+          ),
+          hintText: 'Server URL...',
+          hintStyle: TextStyle(color: Colors.black38),
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter a server URL.';
+          } else if (value[value.length] != '/') {
+            return 'End with a \'/\'';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Future<String> getServerURL() async {
+    final pref = await SharedPreferences.getInstance();
+    return pref.getString('serverUrl') ?? 'Not set';
+  }
+
+  void changeServerURL(String serverURL) async {
+    if (_changeServerURLFormKey.currentState!.validate()) {
+      final pref = await SharedPreferences.getInstance();
+      final String serverURL = _serverURLTextController.text;
+      AuthService.setServerURL(pref, serverURL);
+      if (mounted) context.go('/login');
+    }
   }
 }
 

@@ -1,3 +1,4 @@
+// Project imports:
 import 'package:po_frontend/api/models/enums.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 
@@ -12,6 +13,7 @@ class User {
   final bool hasAutomaticPayment;
   final bool twoFactor;
   final bool? twoFactorValidated;
+  final int strikes;
 
   User({
     required this.id,
@@ -24,6 +26,7 @@ class User {
     required this.hasAutomaticPayment,
     required this.twoFactor,
     required this.twoFactorValidated,
+    required this.strikes,
   });
 
   get isGarageOwner => role == 2;
@@ -42,6 +45,7 @@ class User {
       hasAutomaticPayment: json['hasAutomaticPayment'] as bool,
       twoFactor: json['twoFactor'] as bool,
       twoFactorValidated: json['twoFactorValidated'] as bool?,
+      strikes: json['strikes'],
     );
   }
 
@@ -60,6 +64,7 @@ class User {
         hasAutomaticPayment: json['user']['hasAutomaticPayment'] as bool,
         twoFactor: json['user']['twoFactor'] as bool,
         twoFactorValidated: json['user']['twoFactorValidated'] as bool?,
+        strikes: json['strikes'],
       ),
       json['token']
     ];

@@ -1,7 +1,13 @@
+// Dart imports:
 import 'dart:math';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:go_router/go_router.dart';
+
+// Project imports:
 import 'package:po_frontend/api/models/enums.dart';
 import 'package:po_frontend/api/models/garage_settings_model.dart';
 import 'package:po_frontend/api/models/location_model.dart';
@@ -12,7 +18,6 @@ import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/pages/settings/garage_settings/garage_editor.dart';
 import 'package:po_frontend/pages/settings/garage_settings/garage_settings_page.dart';
 import 'package:po_frontend/pages/settings/garage_settings/prices_editor.dart';
-
 import '../../../api/models/garage_model.dart';
 import '../widgets/editing_widgets.dart';
 
@@ -35,9 +40,9 @@ class _AddGaragePageState extends State<AddGaragePage> {
     id: -1,
     userId: widget.userId,
     name: 'My new Garage',
-    isFull: false,
-    unoccupiedLots: 0,
-    parkingLots: 0,
+    parkingLots: [],
+    entered: 0,
+    reservations: 0,
     garageSettings: GarageSettings(
       id: -1,
       location: Location(
@@ -311,20 +316,26 @@ class _CreateGarageButtonState extends State<CreateGarageButton> {
 
   void startCreatingGarage() async {
     setState(() {
-      garageFuture = createGarage(widget.garage);
+      garageFuture = postGarage(widget.garage);
     });
     garageId = (await garageFuture!).id;
     startCreatingPrices();
   }
 
   void startCreatingPrices() async {
-    if (garageId != null) {
+    int? _garageId = garageId;
+    if (_garageId != null) {
       List<Future> futures = [];
       for (var price in widget.prices) {
-        var future = createPrice(price.copyWith(garageId: garageId!));
-        future.then((value) => setState(() {
-              pricesCreated += 1;
-            }));
+        Future<Price> future = postPrice(
+          price.copyWith(garageId: garageId!),
+          _garageId,
+        );
+        future.then(
+          (value) => setState(() {
+            pricesCreated += 1;
+          }),
+        );
         futures.add(future);
       }
       setState(() {

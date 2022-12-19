@@ -1,8 +1,10 @@
+// Package imports:
 import 'package:url_launcher/url_launcher.dart';
 
-import '../network/network_helper.dart';
-import '../network/network_service.dart';
-import '../network/static_values.dart';
+// Project imports:
+import 'package:po_frontend/api/network/network_helper.dart';
+import 'package:po_frontend/api/network/network_service.dart';
+import 'package:po_frontend/api/network/static_values.dart';
 
 Future<void> startPaymentSession({required String licencePlate}) async {
   final response = await NetworkService.sendRequest(

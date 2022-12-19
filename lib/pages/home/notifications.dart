@@ -1,4 +1,7 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Project imports:
 import 'package:po_frontend/api/models/notification_model.dart';
 import 'package:po_frontend/api/widgets/notification_widget.dart';
 import 'package:po_frontend/core/app_bar.dart';

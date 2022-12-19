@@ -1,8 +1,13 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:go_router/go_router.dart';
+
+// Project imports:
 import 'package:po_frontend/api/models/device_model.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
-import 'package:po_frontend/api/requests/user_requests.dart';
+import 'package:po_frontend/api/requests/device_requests.dart';
 import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 
@@ -107,7 +112,7 @@ class _DeviceWidgetState extends State<DeviceWidget> {
   void handleDeviceDelete(Device device) async {
     context.pop();
     try {
-      await removeDevice(device);
+      await deleteDevice(device);
     } on BackendException catch (e) {
       print(e);
       showFailureDialog(context, e);

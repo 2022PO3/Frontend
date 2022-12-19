@@ -1,9 +1,14 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:go_router/go_router.dart';
-import 'package:po_frontend/api/models/notification_model.dart';
-import 'package:po_frontend/api/requests/user_requests.dart';
-import 'package:po_frontend/utils/constants.dart';
 import 'package:intl/intl.dart';
+
+// Project imports:
+import 'package:po_frontend/api/models/notification_model.dart';
+import 'package:po_frontend/api/requests/notification_requests.dart';
+import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/notifications.dart';
 
@@ -92,7 +97,7 @@ class _NotificationWidgetState extends State<NotificationWidget> {
     if (!notification.seen) {
       notification.seen = true;
       setNotification(context, notification);
-      setNotificationSeen(notification);
+      putNotification(notification);
     }
   }
 

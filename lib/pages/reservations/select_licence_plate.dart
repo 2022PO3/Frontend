@@ -1,9 +1,14 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:go_router/go_router.dart';
+
+// Project imports:
+import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/licence_plate_model.dart';
 import 'package:po_frontend/api/requests/licence_plate_requests.dart';
 import 'package:po_frontend/api/widgets/licence_plate_widget.dart';
-import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/utils/card.dart';
 import 'package:po_frontend/utils/sized_box.dart';

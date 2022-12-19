@@ -1,7 +1,6 @@
 /// Model which represents the backend `OpeningHour`-model.
 class OpeningHour {
   final int id;
-  final int garageId;
   final int fromDay;
   final int toDay;
   final String fromHour;
@@ -9,7 +8,6 @@ class OpeningHour {
 
   OpeningHour(
       {required this.id,
-      required this.garageId,
       required this.fromDay,
       required this.toDay,
       required this.fromHour,
@@ -19,7 +17,6 @@ class OpeningHour {
   static OpeningHour fromJSON(Map<String, dynamic> json) {
     return OpeningHour(
       id: json['id'] as int,
-      garageId: json['garageId'] as int,
       fromDay: json['fromDay'] as int,
       toDay: json['toDay'] as int,
       fromHour: json['fromHour'] as String,
@@ -29,16 +26,14 @@ class OpeningHour {
 
   /// Serializes a Dart `OpeningHour`-object to a JSON-object with the attributes defined in
   /// the database.
-  static Map<String, dynamic> toJSON(OpeningHour openingHour) =>
-      <String, dynamic>{
+  Map<String, dynamic> toJSON(OpeningHour openingHour) => <String, dynamic>{
         'id': openingHour.id,
-        'garageId': openingHour.garageId,
         'fromDay': openingHour.fromDay,
         'toDay': openingHour.toDay,
         'fromHour': openingHour.fromHour,
         'toHour': openingHour.toHour,
       };
+  static List<OpeningHour> listFromJSON(List<dynamic> json) => (json)
+      .map((jsonOpeningHour) => OpeningHour.fromJSON(jsonOpeningHour))
+      .toList();
 }
-
-List<OpeningHour> OpeningHourListFromJson(List<dynamic> json) =>
-    (json).map((jsonopeninghour) => OpeningHour.fromJSON(jsonopeninghour)).toList();

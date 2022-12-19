@@ -1,14 +1,18 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:go_router/go_router.dart';
+
+// Project imports:
 import 'package:po_frontend/api/models/device_model.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
-
-import 'package:flutter/material.dart';
+import 'package:po_frontend/api/requests/device_requests.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/api/widgets/device_widget.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/user_data.dart';
-
 import '../../../utils/loading_page.dart';
 
 enum ButtonState { init, loading, done, error }
@@ -126,7 +130,7 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
         isLoading = true;
       });
       try {
-        String secret = await addTwoFactorDevice(addNameController.text);
+        String secret = await postDevice(addNameController.text);
         setState(() {
           isLoading = false;
         });

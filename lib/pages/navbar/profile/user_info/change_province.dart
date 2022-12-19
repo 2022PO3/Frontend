@@ -1,6 +1,12 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:go_router/go_router.dart';
+
+// Project imports:
 import 'package:po_frontend/api/models/enums.dart';
+import 'package:po_frontend/api/models/user_model.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/utils/button.dart';
@@ -8,7 +14,6 @@ import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/user_data.dart';
 import '../../../../api/network/network_exception.dart';
-import 'package:po_frontend/api/models/user_model.dart';
 
 class ChangeProvincePage extends StatefulWidget {
   const ChangeProvincePage({super.key});
@@ -89,9 +94,9 @@ class _ChangeProvincePageState extends State<ChangeProvincePage> {
       province = ProvinceEnum.fromName(selectedValue);
     });
     try {
-      User oldUser = getUser(context);
+      User oldUser = getProviderUser(context);
       oldUser.location = province;
-      User newUser = await updateUser(oldUser);
+      User newUser = await putUser(oldUser);
       if (mounted) setUser(context, newUser);
       if (mounted) context.pop();
     } on BackendException catch (e) {

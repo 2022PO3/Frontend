@@ -1,7 +1,10 @@
+// Dart imports:
 import 'dart:async';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
 
+// Project imports:
 import '../../api/models/licence_plate_model.dart';
 import '../../api/models/price_model.dart';
 import '../../api/network/network_helper.dart';

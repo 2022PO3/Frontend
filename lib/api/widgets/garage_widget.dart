@@ -1,10 +1,15 @@
-import 'package:auto_size_text/auto_size_text.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:go_router/go_router.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
+
+// Project imports:
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/location_model.dart';
 import 'package:po_frontend/utils/constants.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class GarageWidget extends StatelessWidget {
   const GarageWidget({
@@ -25,7 +30,6 @@ class GarageWidget extends StatelessWidget {
               child: buildFreeSpotsBanner(
                 context,
                 garage,
-                //height,
                 Constants.borderRadius,
               ),
             ),
@@ -51,13 +55,8 @@ class GarageWidget extends StatelessWidget {
     Garage garage,
     double borderRadius,
   ) {
-    final double maxSpots = garage.parkingLots.toDouble();
-    final double unoccupiedLots = garage.unoccupiedLots.toDouble();
-    final double occupiedLots =
-        (garage.parkingLots - garage.unoccupiedLots).toDouble();
-    final bool full = maxSpots == unoccupiedLots;
-    final double ratio = occupiedLots / garage.parkingLots;
-
+    final double ratio =
+        garage.maxSpots == 0 ? 0 : garage.occupiedLots / garage.maxSpots;
     return AspectRatio(
       aspectRatio: 1,
       child: Container(
@@ -76,7 +75,7 @@ class GarageWidget extends StatelessWidget {
                 startAngle: 270,
                 endAngle: 270,
                 minimum: 0,
-                maximum: maxSpots == 0 ? 1 : maxSpots,
+                maximum: garage.maxSpots.toDouble(),
                 showLabels: false,
                 showTicks: false,
                 axisLineStyle: const AxisLineStyle(
@@ -87,11 +86,12 @@ class GarageWidget extends StatelessWidget {
                 ),
                 pointers: <GaugePointer>[
                   RangePointer(
-                    value: occupiedLots == maxSpots ? 1 : occupiedLots,
+                    value: garage.occupiedLots.toDouble(),
                     width: 0.15,
                     sizeUnit: GaugeSizeUnit.factor,
-                    cornerStyle:
-                        full ? CornerStyle.bothFlat : CornerStyle.bothCurve,
+                    cornerStyle: garage.isFull
+                        ? CornerStyle.bothFlat
+                        : CornerStyle.bothCurve,
                     color: determineFreePlacesColor(garage, ratio),
                   ),
                 ],
@@ -102,7 +102,7 @@ class GarageWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          unoccupiedLots.toInt().toString(),
+                          garage.unoccupiedLots.toString(),
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -171,7 +171,7 @@ class GarageWidget extends StatelessWidget {
 Color determineFreePlacesColor(Garage garage, double ratio) {
   if (ratio <= 0.5) {
     return const Color.fromARGB(255, 16, 137, 20);
-  } else if (0.5 < ratio && ratio <= 0.95) {
+  } else if (0.5 < ratio && ratio <= 0.85) {
     return Colors.deepOrangeAccent;
   } else {
     return Colors.red.shade600;

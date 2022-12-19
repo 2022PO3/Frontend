@@ -1,13 +1,18 @@
+// Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+// Package imports:
+import 'package:file_picker/file_picker.dart';
 import 'package:go_router/go_router.dart';
+
+// Project imports:
 import 'package:po_frontend/api/models/licence_plate_model.dart';
 import 'package:po_frontend/api/requests/licence_plate_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/utils/button.dart';
 import 'package:po_frontend/utils/card.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 
 enum ButtonState { init, loading, done, error }

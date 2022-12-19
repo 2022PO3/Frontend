@@ -1,14 +1,18 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:go_router/go_router.dart';
-import 'package:po_frontend/api/network/network_exception.dart';
-import 'package:po_frontend/api/requests/user_requests.dart';
-import 'package:po_frontend/api/widgets/reservation_widget.dart';
-import 'package:po_frontend/api/widgets/parking_lot_widget.dart';
+
+// Project imports:
 import 'package:po_frontend/api/models/reservation_model.dart';
+import 'package:po_frontend/api/network/network_exception.dart';
+import 'package:po_frontend/api/requests/reservation_requests.dart';
+import 'package:po_frontend/api/widgets/parking_lot_widget.dart';
+import 'package:po_frontend/api/widgets/reservation_widget.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/utils/button.dart';
 import 'package:po_frontend/utils/card.dart';
-import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 
 class ConfirmReservationPage extends StatefulWidget {
@@ -137,10 +141,6 @@ class _ConfirmReservationPageState extends State<ConfirmReservationPage> {
     );
   }
 
-  Widget buildReservationConfirmationCard(String text) {
-    return Card(shape: Constants.cardBorder);
-  }
-
   void handleConfirmReservation(Reservation reservation) async {
     if (checkReservation(
       reservation.fromDate,
@@ -161,7 +161,19 @@ class _ConfirmReservationPageState extends State<ConfirmReservationPage> {
         if (mounted) context.go('/home');
       } on BackendException catch (e) {
         print(e);
-        showFailureDialog(context, e);
+        print(e.toString().contains('already'));
+        if (e.toString().contains('already')) {
+          showFrontendDialog1(
+            context,
+            'Already booked',
+            [
+              const Text(
+                  'The licence plate you have selected already has a reservation that day and time. Please go back and specify a different time.')
+            ],
+          );
+        } else {
+          showFailureDialog(context, e);
+        }
       }
     } else {
       showReservationErrorPopUp(context);
@@ -184,56 +196,12 @@ class _ConfirmReservationPageState extends State<ConfirmReservationPage> {
 }
 
 void showReservationErrorPopUp(BuildContext context) {
-  // set up the buttons
-  Widget backButton = TextButton(
-    child: const Text('Back'),
-    onPressed: () {
-      context.pop();
-    },
-  );
-
-  // set up the AlertDialog
-  AlertDialog alert = AlertDialog(
-    title: const Text('Error'),
-    content: const Text(
-        'The time selected is before the current time or the selected spot is already occupied (perhaps reserved by another user while making this reservation). Try changing the time or spot.'),
-    actions: [
-      backButton,
+  return showFrontendDialog1(
+    context,
+    'Date error',
+    [
+      const Text(
+          'The time selected is before the current time or the selected spot is already occupied (perhaps reserved by another user while making this reservation). Try changing the time or spot.'),
     ],
-  );
-
-  // show the dialog
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
-  );
-}
-
-void showPostErrorPopUp(BuildContext context) {
-  // set up the buttons
-  Widget backButton = TextButton(
-    child: const Text('Back'),
-    onPressed: () {
-      context.pop();
-    },
-  );
-
-  // set up the AlertDialog
-  AlertDialog alert = AlertDialog(
-    title: const Text('Error'),
-    content: const Text("Reservation wasn't booked, try again."),
-    actions: [
-      backButton,
-    ],
-  );
-
-  // show the dialog
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
   );
 }

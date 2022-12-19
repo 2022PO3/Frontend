@@ -1,4 +1,7 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Project imports:
 import 'package:po_frontend/api/models/parking_lot_model.dart';
 import 'package:po_frontend/utils/constants.dart';
 
@@ -12,10 +15,9 @@ class ParkingLotsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool booked = parkingLot.booked ?? false;
     return Card(
       shape: Constants.cardBorder,
-      color: booked ? Colors.red.shade300 : Colors.lightGreen.shade400,
+      color: getColor(),
       child: Padding(
         padding: const EdgeInsets.symmetric(
           vertical: 8,
@@ -26,9 +28,10 @@ class ParkingLotsWidget extends StatelessWidget {
           children: [
             Text(
               'Spot: ${parkingLot.parkingLotNo}',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
+                color: parkingLot.disabled ? Colors.black38 : Colors.black,
               ),
             ),
             const SizedBox(
@@ -36,14 +39,25 @@ class ParkingLotsWidget extends StatelessWidget {
             ),
             Text(
               'Floor: ${parkingLot.floorNumber}',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
+                color: parkingLot.disabled ? Colors.black38 : Colors.black,
               ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  Color getColor() {
+    if (parkingLot.disabled) {
+      return Colors.grey.shade300;
+    } else if (parkingLot.occupied || parkingLot.booked) {
+      return Colors.red.shade300;
+    } else {
+      return Colors.green.shade400;
+    }
   }
 }

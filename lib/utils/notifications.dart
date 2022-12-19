@@ -1,7 +1,12 @@
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
+
+// Package imports:
+import 'package:provider/provider.dart';
+
+// Project imports:
 import 'package:po_frontend/api/models/notification_model.dart';
 import 'package:po_frontend/providers/notification_provider.dart';
-import 'package:provider/provider.dart';
 
 List<FrontendNotification> getProviderNotifications(BuildContext context,
     {bool listen = false}) {

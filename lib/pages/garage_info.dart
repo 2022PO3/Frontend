@@ -1,19 +1,24 @@
-import 'package:expandable/expandable.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:expandable/expandable.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:po_frontend/utils/sized_box.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
+
+// Project imports:
+import 'package:po_frontend/api/models/garage_model.dart';
+import 'package:po_frontend/api/models/garage_settings_model.dart';
+import 'package:po_frontend/api/models/opening_hour_model.dart';
+import 'package:po_frontend/api/models/price_model.dart';
 import 'package:po_frontend/api/requests/garage_requests.dart';
+import 'package:po_frontend/api/widgets/garage_opening_hours_widget.dart';
 import 'package:po_frontend/api/widgets/garage_widget.dart';
+import 'package:po_frontend/api/widgets/price_widget.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/utils/constants.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import 'package:po_frontend/api/models/opening_hour_model.dart';
-import 'package:po_frontend/api/models/garage_model.dart';
-import 'package:po_frontend/api/widgets/garage_opening_hours_widget.dart';
-import 'package:po_frontend/api/models/price_model.dart';
-import 'package:po_frontend/api/widgets/price_widget.dart';
-import 'package:po_frontend/api/models/garage_settings_model.dart';
 
 class GarageInfoPage extends StatefulWidget {
   const GarageInfoPage({Key? key, required this.garageId}) : super(key: key);
@@ -119,12 +124,10 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
   }
 
   Widget buildOccupancyCard(Garage garage, double width) {
-    final bool full = garage.unoccupiedLots == 0;
-    final double occupiedLots =
-        (garage.parkingLots - garage.unoccupiedLots).toDouble();
-    final double ratio = occupiedLots / garage.parkingLots;
+    final double ratio =
+        garage.maxSpots == 0 ? 0 : garage.occupiedLots / garage.maxSpots;
     final int percentage = (ratio * 100).round();
-    final Color color = determineFreePlacesColor(garage, ratio.toDouble());
+    final Color color = determineFreePlacesColor(garage, ratio);
 
     return Card(
       shape: Constants.cardBorder,
@@ -147,7 +150,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                     startAngle: 270,
                     endAngle: 270,
                     minimum: 0,
-                    maximum: garage.parkingLots.toDouble(),
+                    maximum: garage.maxSpots.toDouble(),
                     showLabels: false,
                     showTicks: false,
                     axisLineStyle: const AxisLineStyle(
@@ -158,13 +161,12 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                     ),
                     pointers: <GaugePointer>[
                       RangePointer(
-                        value: occupiedLots == garage.parkingLots
-                            ? 1
-                            : (occupiedLots).toDouble(),
+                        value: garage.occupiedLots.toDouble(),
                         width: 0.15,
                         sizeUnit: GaugeSizeUnit.factor,
-                        cornerStyle:
-                            full ? CornerStyle.bothFlat : CornerStyle.bothCurve,
+                        cornerStyle: garage.isFull
+                            ? CornerStyle.bothFlat
+                            : CornerStyle.bothCurve,
                         color: color,
                       ),
                     ],
@@ -178,7 +180,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                               height: 10,
                             ),
                             Text(
-                              '$percentage %',
+                              '$percentage%',
                               style: TextStyle(
                                 fontSize: 35,
                                 fontWeight: FontWeight.bold,
@@ -208,42 +210,79 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
                 ],
               ),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'Visitors',
-                  style: TextStyle(
-                    fontSize: 10,
-                  ),
-                ),
-                Text(
-                  (occupiedLots.toInt()).toString(),
-                  style: TextStyle(
-                    fontSize: 45,
-                    color: color,
-                  ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                const Text(
-                  'Free spots',
-                  style: TextStyle(
-                    fontSize: 10,
-                  ),
-                ),
-                Text(
-                  garage.unoccupiedLots.toString(),
-                  style: const TextStyle(
-                    fontSize: 45,
-                  ),
-                ),
-              ],
-            ),
+            buildSpotNumbers(garage, color),
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildSpotNumbers(Garage garage, Color color) {
+    return Row(
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'Free spots',
+              style: TextStyle(
+                fontSize: 10,
+              ),
+            ),
+            Text(
+              garage.unoccupiedLots.toString(),
+              style: TextStyle(
+                fontSize: 55,
+                color: color,
+              ),
+            ),
+          ],
+        ),
+        const Width(50),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'Visitors',
+              style: TextStyle(
+                fontSize: 10,
+              ),
+            ),
+            Text(
+              (garage.entered).toString(),
+              style: const TextStyle(
+                fontSize: 35,
+              ),
+            ),
+            const Height(15),
+            const Text(
+              'Booked',
+              style: TextStyle(
+                fontSize: 10,
+              ),
+            ),
+            Text(
+              garage.reservations.toString(),
+              style: const TextStyle(
+                fontSize: 35,
+              ),
+            ),
+            const Height(15),
+            const Text(
+              'Disabled',
+              style: TextStyle(
+                fontSize: 10,
+              ),
+            ),
+            Text(
+              garage.disabledLots.toString(),
+              style: const TextStyle(
+                fontSize: 35,
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 

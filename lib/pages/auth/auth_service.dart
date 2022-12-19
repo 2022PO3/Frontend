@@ -1,13 +1,17 @@
+// Dart imports:
 import 'dart:async';
 import 'dart:io';
+
+// Package imports:
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+// Project imports:
 import 'package:po_frontend/api/models/user_model.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
 import 'package:po_frontend/api/network/network_service.dart';
-
 import 'package:po_frontend/api/network/static_values.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 enum LoginStatus { unAuthenticated, authenticated, verified }
 
@@ -65,16 +69,18 @@ class AuthService {
         'Host returned a non 200 status code to the liveliness request.');
   }
 
-  static Future<void> _setServerUrl(
-      SharedPreferences pref, String serverUrl) async {
-    await pref.setString('serverUrl', serverUrl);
+  static Future<void> setServerURL(
+    SharedPreferences pref,
+    String serverURL,
+  ) async {
+    await pref.setString('serverUrl', serverURL);
   }
 
   static Future<LoginStatus> checkLogin() async {
     final pref = await SharedPreferences.getInstance();
     String? serverUrl = await _determineHost(pref);
     if (serverUrl != null) {
-      AuthService._setServerUrl(pref, serverUrl);
+      AuthService.setServerURL(pref, serverUrl);
     }
     try {
       final response = await NetworkService.sendRequest(

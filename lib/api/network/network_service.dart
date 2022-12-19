@@ -1,11 +1,15 @@
+// Dart imports:
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:http/http.dart' as http;
-import 'package:po_frontend/api/network/network_exception.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:po_frontend/env/env.dart';
+// Package imports:
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+// Project imports:
+import 'package:po_frontend/api/network/network_exception.dart';
+import 'package:po_frontend/env/env.dart';
 
 enum RequestType { get, post, put, delete }
 
@@ -126,6 +130,7 @@ class NetworkService {
     if (url.contains('user')) {
       return url;
     } else if ((requestType == RequestType.get ||
+            requestType == RequestType.post ||
             requestType == RequestType.delete) &&
         pk != null) {
       return '$url/${pk.toString()}';

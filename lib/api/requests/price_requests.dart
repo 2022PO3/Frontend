@@ -1,3 +1,4 @@
+// Project imports:
 import '../models/price_model.dart';
 import '../network/network_helper.dart';
 import '../network/network_service.dart';
@@ -6,7 +7,7 @@ import '../network/static_values.dart';
 Future<List<Price>> getPrices(int garageId) async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.get,
-    apiSlug: StaticValues.getGaragePricesSlug,
+    apiSlug: StaticValues.pricesListSlug,
     useAuthToken: true,
     pk: garageId,
   );
@@ -17,15 +18,13 @@ Future<List<Price>> getPrices(int garageId) async {
   );
 }
 
-Future<Price> createPrice(Price price) async {
-  var data = Price.toJSON(price);
-  data.remove('id');
-
+Future<Price> postPrice(Price price, int garageId) async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.post,
-    apiSlug: '${StaticValues.getGaragePricesSlug}/${price.garageId}',
+    apiSlug: StaticValues.pricesListSlug,
     useAuthToken: true,
-    body: data,
+    pk: garageId,
+    body: price.toJSON(),
   );
 
   return await NetworkHelper.filterResponse(
@@ -34,13 +33,13 @@ Future<Price> createPrice(Price price) async {
   );
 }
 
-Future<Price> updatePrice(Price price) async {
+Future<Price> putPrice(Price price) async {
   final response = await NetworkService.sendRequest(
     requestType: RequestType.put,
-    apiSlug: StaticValues.pricesSlug,
+    apiSlug: StaticValues.pricesDetailSlug,
     useAuthToken: true,
     pk: price.id,
-    body: Price.toJSON(price),
+    body: price.toJSON(),
   );
 
   return await NetworkHelper.filterResponse(
@@ -52,9 +51,9 @@ Future<Price> updatePrice(Price price) async {
 Future<void> deletePrice(Price price) async {
   await NetworkService.sendRequest(
     requestType: RequestType.delete,
-    apiSlug: StaticValues.pricesSlug,
+    apiSlug: StaticValues.pricesDetailSlug,
     useAuthToken: true,
     pk: price.id,
-    body: Price.toJSON(price),
+    body: price.toJSON(),
   );
 }

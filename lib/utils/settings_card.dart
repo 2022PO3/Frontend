@@ -1,17 +1,23 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:go_router/go_router.dart';
+
+// Project imports:
 import 'package:po_frontend/utils/constants.dart';
 
 Widget buildSettingsCard(
   BuildContext context,
-  String path,
   String title,
-  String subtitle,
-) {
+  String subtitle, {
+  String? path,
+  void Function()? onTap,
+}) {
   return Card(
     shape: Constants.cardBorder,
     child: InkWell(
-      onTap: () => context.push(path),
+      onTap: path == null ? onTap : () => context.push(path),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(

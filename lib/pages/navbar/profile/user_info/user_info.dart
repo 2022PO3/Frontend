@@ -1,6 +1,12 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:go_router/go_router.dart';
+
+// Project imports:
 import 'package:po_frontend/api/models/enums.dart';
+import 'package:po_frontend/api/models/user_model.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
@@ -11,7 +17,6 @@ import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/sized_box.dart';
 import 'package:po_frontend/utils/user_data.dart';
-import 'package:po_frontend/api/models/user_model.dart';
 
 class UserInfo extends StatefulWidget {
   const UserInfo({super.key});
@@ -36,6 +41,8 @@ class _UserInfoState extends State<UserInfo> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: appBar(
         title: 'User info',
@@ -127,6 +134,50 @@ class _UserInfoState extends State<UserInfo> {
                   fieldNameValue: 'QPark Leuven',
                   onButtonPressed: openDeleteUserDialog,
                 ),
+                if (getUserStrikes(context) != 0)
+                  Column(
+                    children: [
+                      const Divider(
+                        endIndent: 10,
+                        indent: 10,
+                      ),
+                      buildCard(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.error_rounded,
+                                color: Colors.redAccent,
+                              ),
+                              const Width(10),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Strikes: ${getUserStrikes(context)}',
+                                    style: const TextStyle(fontSize: 20),
+                                  ),
+                                  Container(
+                                    constraints:
+                                        BoxConstraints(maxWidth: width - 82),
+                                    child: const Text(
+                                      'If you have three strikes, your account will be deactivated for one month!',
+                                      softWrap: true,
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 const Divider(
                   endIndent: 10,
                   indent: 10,
@@ -281,7 +332,7 @@ class _UserInfoState extends State<UserInfo> {
 
   void tryUpdateUser(User oldUser) async {
     try {
-      User newUser = await updateUser(oldUser);
+      User newUser = await putUser(oldUser);
       if (mounted) setUser(context, newUser);
     } on BackendException catch (e) {
       print(e);
@@ -290,31 +341,31 @@ class _UserInfoState extends State<UserInfo> {
   }
 
   void setFirstName(String newFirstName) async {
-    User oldUser = getUser(context);
+    User oldUser = getProviderUser(context);
     oldUser.firstName = newFirstName;
     tryUpdateUser(oldUser);
   }
 
   void setLastName(String newLastName) async {
-    User oldUser = getUser(context);
+    User oldUser = getProviderUser(context);
     oldUser.lastName = newLastName;
     tryUpdateUser(oldUser);
   }
 
   void setEmail(String newEmail) async {
-    User oldUser = getUser(context);
+    User oldUser = getProviderUser(context);
     oldUser.email = newEmail;
     tryUpdateUser(oldUser);
   }
 
   void setLocation(ProvinceEnum? location) async {
-    User oldUser = getUser(context);
+    User oldUser = getProviderUser(context);
     oldUser.location = location;
     tryUpdateUser(oldUser);
   }
 
   void setFavGarageId(int? favGarageId) async {
-    User oldUser = getUser(context);
+    User oldUser = getProviderUser(context);
     oldUser.favGarageId = favGarageId;
     tryUpdateUser(oldUser);
   }

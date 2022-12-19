@@ -7,3 +7,8 @@ class BackendException implements Exception {
     return errorMessages.join('');
   }
 }
+
+class FrontendException implements Exception {
+  String errorMessage;
+  FrontendException(this.errorMessage);
+}

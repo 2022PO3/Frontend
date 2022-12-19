@@ -1,9 +1,12 @@
+// Project imports:
+import 'package:po_frontend/api/models/base_model.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/licence_plate_model.dart';
 import 'package:po_frontend/api/models/parking_lot_model.dart';
+import 'package:po_frontend/api/network/static_values.dart';
 
 /// Model which represents the backend 'Reservation'-model
-class Reservation {
+class Reservation extends BaseModel {
   final LicencePlate licencePlate;
   final Garage garage;
   final DateTime fromDate;
@@ -11,26 +14,31 @@ class Reservation {
   final ParkingLot parkingLot;
 
   Reservation({
+    required id,
     required this.licencePlate,
     required this.fromDate,
     required this.toDate,
     required this.parkingLot,
     required this.garage,
-  });
+  }) : super(id: id, detailSlug: StaticValues.reservationsDetailSlug);
 
+  @override
   Map<String, dynamic> toJSON() => <String, dynamic>{
+        'id': id,
         'garageId': garage.id,
         'licencePlateId': licencePlate.id,
-        'fromDate': fromDate.toIso8601String(),
-        'toDate': toDate.toIso8601String(),
+        'fromDate':
+            (fromDate.subtract(const Duration(hours: 1))).toIso8601String(),
+        'toDate': (toDate.subtract(const Duration(hours: 1))).toIso8601String(),
         'parkingLotId': parkingLot.id,
       };
 
   static Reservation fromJSON(Map<String, dynamic> json) {
     return Reservation(
+        id: json['id'] as int,
         licencePlate: LicencePlate.fromJSON(json['licencePlate']),
-        fromDate: DateTime.parse(json['fromDate']),
-        toDate: DateTime.parse(json['toDate']),
+        fromDate: DateTime.parse(json['fromDate']).add(const Duration(hours: 1)),
+        toDate: DateTime.parse(json['toDate']).add(const Duration(hours: 1)),
         parkingLot: ParkingLot.fromJSON(json['parkingLot']),
         garage: Garage.fromJSON(json['garage']));
   }
