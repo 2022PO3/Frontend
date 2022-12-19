@@ -21,7 +21,7 @@ import 'package:po_frontend/pages/navbar/profile/user_info/change_password.dart'
 import 'package:po_frontend/pages/navbar/profile/user_info/change_province.dart';
 import 'package:po_frontend/pages/navbar/profile/user_info/user_info.dart';
 import 'package:po_frontend/pages/payment_page/failed_payment_page.dart';
-import 'package:po_frontend/pages/payment_page/succesful_payment_page.dart';
+import 'package:po_frontend/pages/payment_page/successful_payment_page.dart';
 import 'package:po_frontend/pages/reservations/confirm_reservation.dart';
 import 'package:po_frontend/pages/reservations/make_reservation_page.dart';
 import 'package:po_frontend/pages/reservations/select_licence_plate.dart';
