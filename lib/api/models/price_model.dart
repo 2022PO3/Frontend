@@ -59,8 +59,18 @@ class Price {
 }
 
 Duration parseDuration(String s) {
+  //format: DD HH:MM:SS
+  int days = 0;
+  if (s.contains(' ')) {
+    // Has days
+    List<String> parts = s.split(' ');
+    days = int.tryParse(parts[0]) ?? 0;
+    s = parts[1];
+  }
+
   List<String> parts = s.split(':');
   return Duration(
+    days: days,
     hours: int.tryParse(parts[0]) ?? 0,
     minutes: int.tryParse(parts[1]) ?? 0,
     seconds: int.tryParse(
