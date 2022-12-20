@@ -156,10 +156,9 @@ class _UserSettingsState extends State<UserSettings> {
     );
   }
 
-  void handleChangeDebug() {
+  void handleChangeDebug() async {
     flipDebug(context);
-    logOut(context);
-    context.go('/login');
+    await logOut(context);
   }
 
   void handleChangeLocalServerURL({
