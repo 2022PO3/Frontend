@@ -29,7 +29,7 @@ class User {
     required this.strikes,
   });
 
-  get isGarageOwner => role == 2;
+  get isGarageOwner => role >= 2;
 
   static User fromJSON(Map<String, dynamic> json) {
     return User(
