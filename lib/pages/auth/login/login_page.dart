@@ -8,7 +8,6 @@ import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/user_model.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/requests/auth_requests.dart';
-import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/pages/auth/register.dart';
 import 'package:po_frontend/utils/constants.dart';
@@ -69,7 +68,11 @@ class _LoginPageState extends State<LoginPage> {
             );
           }
           return Scaffold(
-            appBar: appBar(),
+            appBar: appBar(
+              title: 'Login',
+              actionIcon: Icons.settings_rounded,
+              actionFunction: goToLoginSettingsPage,
+            ),
             body: const Center(
               child: CircularProgressIndicator(),
             ),
@@ -78,7 +81,11 @@ class _LoginPageState extends State<LoginPage> {
       );
     }
     return Scaffold(
-      appBar: appBar(title: 'Parking Boys'),
+      appBar: appBar(
+        title: 'Login',
+        actionIcon: Icons.settings_rounded,
+        actionFunction: goToLoginSettingsPage,
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -213,6 +220,10 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ],
     );
+  }
+
+  void goToLoginSettingsPage() {
+    context.push('/login/settings');
   }
 
   bool automaticLogin(String? email, String? password) {

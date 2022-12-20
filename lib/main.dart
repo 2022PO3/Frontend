@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:po_frontend/providers/local_server_url_provider.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
@@ -33,7 +34,8 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
-        ChangeNotifierProvider(create: (_) => NotificationProvider())
+        ChangeNotifierProvider(create: (_) => NotificationProvider()),
+        ChangeNotifierProvider(create: (_) => LocalServerURLProvider())
       ],
       child: MyApp(
         initialLocation: initialLocation,

@@ -39,7 +39,7 @@ class _SpotSelectionPageState extends State<SpotSelectionPage> {
         refreshFunction: () => setState(() => {}),
       ),
       body: FutureBuilder(
-        future: getParkingLots(garage.id, {
+        future: getParkingLots(context, garage.id, {
           'fromDate': startDate.toUtc().toIso8601String(),
           'toDate': endDate.toUtc().toIso8601String(),
         }),

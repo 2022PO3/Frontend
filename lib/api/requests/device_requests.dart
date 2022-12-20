@@ -1,12 +1,14 @@
 // Project imports:
+import 'package:flutter/material.dart';
 import 'package:po_frontend/api/models/device_model.dart';
 import 'package:po_frontend/api/models/user_model.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
 import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
 
-Future<List<Device>> getDevices() async {
+Future<List<Device>> getDevices(BuildContext context) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.get,
     apiSlug: StaticValues.twoFactorDevicesSlug,
     useAuthToken: true,
@@ -19,9 +21,11 @@ Future<List<Device>> getDevices() async {
 }
 
 Future<String> postDevice(
+  BuildContext context,
   String name,
 ) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.post,
     apiSlug: StaticValues.totpListSlug,
     useAuthToken: true,
@@ -34,8 +38,9 @@ Future<String> postDevice(
   );
 }
 
-Future<bool> deleteDevice(Device device) async {
+Future<bool> deleteDevice(BuildContext context, Device device) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.delete,
     apiSlug: StaticValues.twoFactorDevicesSlug,
     useAuthToken: true,
@@ -45,8 +50,9 @@ Future<bool> deleteDevice(Device device) async {
   return NetworkHelper.validateResponse(response);
 }
 
-Future<bool> disable2FA() async {
+Future<bool> disable2FA(BuildContext context) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.post,
     apiSlug: StaticValues.disable2FASlug,
     useAuthToken: true,

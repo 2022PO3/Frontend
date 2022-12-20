@@ -316,7 +316,7 @@ class _CreateGarageButtonState extends State<CreateGarageButton> {
 
   void startCreatingGarage() async {
     setState(() {
-      garageFuture = postGarage(widget.garage);
+      garageFuture = postGarage(context, widget.garage);
     });
     garageId = (await garageFuture!).id;
     startCreatingPrices();
@@ -328,6 +328,7 @@ class _CreateGarageButtonState extends State<CreateGarageButton> {
       List<Future> futures = [];
       for (var price in widget.prices) {
         Future<Price> future = postPrice(
+          context,
           price.copyWith(garageId: garageId!),
           _garageId,
         );

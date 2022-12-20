@@ -77,7 +77,7 @@ class _UserSettingsState extends State<UserSettings> {
                     context.go(AddAutomaticPaymentPage.route);
                   },
                   onRemove: () async {
-                    await deleteAutomaticPayment();
+                    await deleteAutomaticPayment(context);
                     await updateUserInfo(context);
                   },
                 ),
@@ -127,7 +127,7 @@ class _UserSettingsState extends State<UserSettings> {
       'Disable two factor authentication',
       [const Text('Are you sure to disable two factor authentication?')],
       () => {
-        disable2FA(),
+        disable2FA(context),
         showSuccessDialog(
           context,
           'Two factor disabled',

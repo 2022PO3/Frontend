@@ -1,4 +1,5 @@
 // Project imports:
+import 'package:flutter/material.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/opening_hour_model.dart';
 import 'package:po_frontend/api/models/price_model.dart';
@@ -10,8 +11,9 @@ import 'package:po_frontend/api/requests/opening_hours_requests.dart';
 import 'package:po_frontend/api/requests/price_requests.dart';
 import 'package:po_frontend/pages/garage_info.dart';
 
-Future<Garage> getGarage(int garageId) async {
+Future<Garage> getGarage(BuildContext context, int garageId) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.get,
     apiSlug: StaticValues.garagesDetailSlug,
     useAuthToken: true,
@@ -23,8 +25,9 @@ Future<Garage> getGarage(int garageId) async {
   );
 }
 
-Future<GarageData> getGarageData(int garageId) async {
+Future<GarageData> getGarageData(BuildContext context, int garageId) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.get,
     apiSlug: StaticValues.garagesDetailSlug,
     useAuthToken: true,
@@ -36,8 +39,8 @@ Future<GarageData> getGarageData(int garageId) async {
     response: response,
   );
 
-  List<OpeningHour> openingHours = await getOpeningHours(garageId);
-  List<Price> prices = await getPrices(garageId);
+  List<OpeningHour> openingHours = await getOpeningHours(context, garageId);
+  List<Price> prices = await getPrices(context, garageId);
 
   return GarageData(
     garage: garage,
@@ -47,8 +50,9 @@ Future<GarageData> getGarageData(int garageId) async {
   );
 }
 
-Future<List<Garage>> getGarages() async {
+Future<List<Garage>> getGarages(BuildContext context) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.get,
     apiSlug: StaticValues.garagesListSlug,
     useAuthToken: true,
@@ -59,8 +63,9 @@ Future<List<Garage>> getGarages() async {
   );
 }
 
-Future<List<Garage>> getOwnedGarages(User owner) async {
+Future<List<Garage>> getOwnedGarages(BuildContext context, User owner) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.get,
     apiSlug: StaticValues.garagesDetailSlug,
     useAuthToken: true,
@@ -72,8 +77,9 @@ Future<List<Garage>> getOwnedGarages(User owner) async {
   return garages..where((garage) => garage.userId == owner.id);
 }
 
-Future<Garage> postGarage(Garage garage) async {
+Future<Garage> postGarage(BuildContext context, Garage garage) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.post,
     apiSlug: StaticValues.garagesListSlug,
     useAuthToken: true,
@@ -85,8 +91,9 @@ Future<Garage> postGarage(Garage garage) async {
   );
 }
 
-Future<Garage> putGarage(Garage garage) async {
+Future<Garage> putGarage(BuildContext context, Garage garage) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.put,
     apiSlug: StaticValues.garagesDetailSlug,
     useAuthToken: true,

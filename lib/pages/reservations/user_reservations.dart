@@ -26,34 +26,34 @@ class _UserReservationsState extends State<UserReservations> {
       },
     );
   }
-}
 
-Future<List<Reservation>> handleGetReservations() async {
-  List<Reservation> reservations = await getReservations();
+  Future<List<Reservation>> handleGetReservations() async {
+    List<Reservation> reservations = await getReservations(context);
 
-  List<Reservation> doneReservations = reservations
-      .where(
-        (r) => DateTime.now().isAfter(r.toDate),
-      )
-      .toList();
+    List<Reservation> doneReservations = reservations
+        .where(
+          (r) => DateTime.now().isAfter(r.toDate),
+        )
+        .toList();
 
-  List<Reservation> activeReservations = reservations
-      .where(
-        (r) => !DateTime.now().isAfter(r.toDate),
-      )
-      .toList();
+    List<Reservation> activeReservations = reservations
+        .where(
+          (r) => !DateTime.now().isAfter(r.toDate),
+        )
+        .toList();
 
-  doneReservations.sort(
-    (r1, r2) => r1.fromDate.millisecondsSinceEpoch.compareTo(
-      r2.fromDate.millisecondsSinceEpoch,
-    ),
-  );
+    doneReservations.sort(
+      (r1, r2) => r1.fromDate.millisecondsSinceEpoch.compareTo(
+        r2.fromDate.millisecondsSinceEpoch,
+      ),
+    );
 
-  activeReservations.sort(
-    (r1, r2) => r1.fromDate.millisecondsSinceEpoch.compareTo(
-      r2.fromDate.millisecondsSinceEpoch,
-    ),
-  );
+    activeReservations.sort(
+      (r1, r2) => r1.fromDate.millisecondsSinceEpoch.compareTo(
+        r2.fromDate.millisecondsSinceEpoch,
+      ),
+    );
 
-  return activeReservations..addAll(doneReservations);
+    return activeReservations..addAll(doneReservations);
+  }
 }

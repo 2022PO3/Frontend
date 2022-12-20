@@ -51,10 +51,12 @@ class _PaymentOverviewState extends State<PaymentOverview> {
 
   Future<Map<Price, int>> getPaymentPreview() async {
     final response = await NetworkService.sendRequest(
-        requestType: RequestType.get,
-        apiSlug: StaticValues.getPaymentPreviewSlug,
-        useAuthToken: true,
-        queryParams: {'licence_plate': widget.licencePlate.licencePlate});
+      context,
+      requestType: RequestType.get,
+      apiSlug: StaticValues.getPaymentPreviewSlug,
+      useAuthToken: true,
+      queryParams: {'licence_plate': widget.licencePlate.licencePlate},
+    );
 
     return await NetworkHelper.filterResponse(
       callBack: fromPaymentPreviewJSON,

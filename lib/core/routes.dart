@@ -5,7 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/licence_plate_model.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
-import 'package:po_frontend/pages/auth/login_page.dart';
+import 'package:po_frontend/pages/auth/login/login_page.dart';
+import 'package:po_frontend/pages/auth/login/login_settings.dart';
 import 'package:po_frontend/pages/auth/register.dart';
 import 'package:po_frontend/pages/auth/two_factor_page.dart';
 import 'package:po_frontend/pages/auth/user_activation_page.dart';
@@ -172,6 +173,10 @@ class Routes {
               path: 'register',
               builder: (context, state) => const RegisterPage(),
             ),
+            GoRoute(
+              path: 'settings',
+              builder: (context, state) => const LoginSettings(),
+            )
           ],
         ),
         GoRoute(

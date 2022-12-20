@@ -55,8 +55,8 @@ class _HomePageState extends State<HomePage> {
 
   Future<List<dynamic>> getFutures() async {
     setState(() {
-      licencePlatesFuture = getLicencePlates();
-      garagesFuture = getGarages();
+      licencePlatesFuture = getLicencePlates(context);
+      garagesFuture = getGarages(context);
       notificationsFuture = getNotifications(context);
     });
 
@@ -299,7 +299,7 @@ class _CurrentParkingSessionWidgetState
 
   @override
   void initState() {
-    garageFuture = getGarage(widget.licencePlate.garageId!);
+    garageFuture = getGarage(context, widget.licencePlate.garageId!);
     super.initState();
   }
 

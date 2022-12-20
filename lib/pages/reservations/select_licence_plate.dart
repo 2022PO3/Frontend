@@ -37,7 +37,7 @@ class _SelectLicencePlatePageState extends State<SelectLicencePlatePage> {
         ),
       ),
       body: FutureBuilder(
-        future: getLicencePlates(),
+        future: getLicencePlates(context),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {

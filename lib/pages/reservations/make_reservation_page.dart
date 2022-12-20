@@ -296,6 +296,7 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
   void handleRandomSpotSelection() async {
     if (compareDates(startDate, endDate)) {
       ParkingLot parkingLot = await assignParkingLot(
+        context,
         widget.garageAndLicencePlate.garage.id,
         {
           'fromDate': startDate.toUtc().toIso8601String(),

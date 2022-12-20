@@ -1,11 +1,13 @@
 // Project imports:
+import 'package:flutter/material.dart';
 import 'package:po_frontend/api/models/licence_plate_model.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
 import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
 
-Future<List<LicencePlate>> getLicencePlates() async {
+Future<List<LicencePlate>> getLicencePlates(BuildContext context) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.get,
     apiSlug: StaticValues.licencePlatesListSlug,
     useAuthToken: true,
@@ -16,8 +18,9 @@ Future<List<LicencePlate>> getLicencePlates() async {
   );
 }
 
-Future<LicencePlate> postLicencePlate(Map<String, dynamic> body) async {
-  final response = await NetworkService.sendRequest(
+Future<LicencePlate> postLicencePlate(
+    BuildContext context, Map<String, dynamic> body) async {
+  final response = await NetworkService.sendRequest(context,
       requestType: RequestType.post,
       apiSlug: StaticValues.licencePlatesListSlug,
       useAuthToken: true,
@@ -29,8 +32,9 @@ Future<LicencePlate> postLicencePlate(Map<String, dynamic> body) async {
   );
 }
 
-Future<bool> deleteLicencePlate(LicencePlate lp) async {
+Future<bool> deleteLicencePlate(BuildContext context, LicencePlate lp) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.delete,
     apiSlug: StaticValues.licencePlatesListSlug,
     useAuthToken: true,

@@ -191,6 +191,7 @@ class _UserActivationPageState extends State<UserActivationPage> {
 
   Future<bool> sendActivationRequest() async {
     final response = await NetworkService.sendRequest(
+      context,
       requestType: RequestType.get,
       apiSlug:
           '${StaticValues.activateUserSlug}/${widget.uidB64}/${widget.token}',

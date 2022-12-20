@@ -112,7 +112,7 @@ class _DeviceWidgetState extends State<DeviceWidget> {
   void handleDeviceDelete(Device device) async {
     context.pop();
     try {
-      await deleteDevice(device);
+      await deleteDevice(context, device);
     } on BackendException catch (e) {
       print(e);
       showFailureDialog(context, e);

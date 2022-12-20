@@ -96,7 +96,7 @@ class _ChangeProvincePageState extends State<ChangeProvincePage> {
     try {
       User oldUser = getProviderUser(context);
       oldUser.location = province;
-      User newUser = await putUser(oldUser);
+      User newUser = await putUser(context, oldUser);
       if (mounted) setUser(context, newUser);
       if (mounted) context.pop();
     } on BackendException catch (e) {

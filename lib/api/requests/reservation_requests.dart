@@ -1,11 +1,13 @@
 // Project imports:
+import 'package:flutter/material.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
 import 'package:po_frontend/api/network/network_service.dart';
 import 'package:po_frontend/api/network/static_values.dart';
 
-Future<List<Reservation>> getReservations() async {
+Future<List<Reservation>> getReservations(BuildContext context) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.get,
     apiSlug: StaticValues.reservationsListSlug,
     useAuthToken: true,
@@ -17,8 +19,12 @@ Future<List<Reservation>> getReservations() async {
   );
 }
 
-Future<bool> postReservation(Reservation reservation) async {
+Future<bool> postReservation(
+  BuildContext context,
+  Reservation reservation,
+) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.post,
     apiSlug: StaticValues.reservationsListSlug,
     useAuthToken: true,
@@ -27,4 +33,3 @@ Future<bool> postReservation(Reservation reservation) async {
 
   return NetworkHelper.validateResponse(response);
 }
-

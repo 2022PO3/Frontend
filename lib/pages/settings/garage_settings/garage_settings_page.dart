@@ -29,14 +29,14 @@ class _GarageSettingsPageState extends State<GarageSettingsPage> {
 
   Future<Future<List<Object>>> reloadFutures() async {
     setState(() {
-      garageFuture = getGarage(widget.garageId);
-      pricesFuture = getPrices(widget.garageId);
+      garageFuture = getGarage(context, widget.garageId);
+      pricesFuture = getPrices(context, widget.garageId);
     });
     return Future.wait([garageFuture, pricesFuture]);
   }
 
   Future<void> setGarage(Garage garage) async {
-    garageFuture = putGarage(garage);
+    garageFuture = putGarage(context, garage);
     await garageFuture;
     setState(() {});
   }
@@ -109,32 +109,37 @@ class _GarageSettingsPageState extends State<GarageSettingsPage> {
                         onPriceChanged: (price) async {
                           if (prices.map((e) => e.id).contains(price.id)) {
                             print('Updating price');
-                            await putPrice(price);
+                            await putPrice(context, price);
                           } else {
                             print('Creating price');
                             await postPrice(
+                                context,
                                 price.copyWith(garageId: widget.garageId),
                                 widget.garageId);
                           }
                           setState(() {
-                            pricesFuture = getPrices(widget.garageId);
+                            pricesFuture = getPrices(context, widget.garageId);
                           });
                         },
                         onDelete: (price) async {
-                          await deletePrice(price);
+                          await deletePrice(context, price);
                           setState(() {
-                            pricesFuture = getPrices(widget.garageId);
+                            pricesFuture = getPrices(context, widget.garageId);
                           });
                         },
                         onValutaChanged: (ValutaEnum valuta) async {
                           List<Future> futures = [];
                           for (var price in prices) {
-                            futures
-                                .add(putPrice(price.copyWith(valuta: valuta)));
+                            futures.add(
+                              putPrice(
+                                context,
+                                price.copyWith(valuta: valuta),
+                              ),
+                            );
                           }
                           await Future.wait(futures);
                           setState(() {
-                            pricesFuture = getPrices(widget.garageId);
+                            pricesFuture = getPrices(context, widget.garageId);
                           });
                         },
                       );
@@ -213,6 +218,7 @@ class _Header extends StatelessWidget {
             ),
             onEdit: (garageName) async {
               Garage updatedGarage = await putGarage(
+                context,
                 garage.copyWith(
                   name: garageName,
                 ),

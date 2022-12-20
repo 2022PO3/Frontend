@@ -117,7 +117,7 @@ void handleDelete<T extends BaseModel>(
   void Function() refreshFunction,
 ) {
   try {
-    item.delete();
+    item.delete(context);
   } on BackendException catch (e) {
     context.pop();
     showFailureDialog(context, e);

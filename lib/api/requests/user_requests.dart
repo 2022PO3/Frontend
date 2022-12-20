@@ -8,18 +8,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'package:po_frontend/api/models/credit_card_model.dart';
-import 'package:po_frontend/api/models/device_model.dart';
-import 'package:po_frontend/api/models/notification_model.dart';
-import 'package:po_frontend/api/models/reservation_model.dart';
-import 'package:po_frontend/providers/user_provider.dart';
-import 'package:po_frontend/utils/notifications.dart';
+
 import '../models/user_model.dart';
 import '../network/network_helper.dart';
 import '../network/network_service.dart';
 import '../network/static_values.dart';
 
-Future<User> getUser() async {
+Future<User> getUser(BuildContext context) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.get,
     apiSlug: StaticValues.userSlug,
     useAuthToken: true,
@@ -30,8 +27,9 @@ Future<User> getUser() async {
   );
 }
 
-Future<User> putUser(User user) async {
+Future<User> putUser(BuildContext context, User user) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.put,
     apiSlug: StaticValues.userSlug,
     useAuthToken: true,
@@ -44,8 +42,9 @@ Future<User> putUser(User user) async {
   );
 }
 
-Future<bool> deleteUser() async {
+Future<bool> deleteUser(BuildContext context) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.delete,
     apiSlug: StaticValues.userSlug,
     useAuthToken: true,
@@ -55,6 +54,7 @@ Future<bool> deleteUser() async {
 }
 
 Future<bool> putPassword(
+  BuildContext context,
   String oldPassword,
   String newPassword,
   String passwordConfirmation,
@@ -65,6 +65,7 @@ Future<bool> putPassword(
     'passwordConfirmation': passwordConfirmation,
   };
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.put,
     apiSlug: StaticValues.changePasswordSlug,
     body: body,
@@ -74,8 +75,9 @@ Future<bool> putPassword(
   return NetworkHelper.validateResponse(response);
 }
 
-Future<bool> putAutomaticPayment(CreditCard card) async {
+Future<bool> putAutomaticPayment(BuildContext context, CreditCard card) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.post,
     apiSlug: StaticValues.stripeConnectionSlug,
     body: card.toJSON(),
@@ -85,8 +87,9 @@ Future<bool> putAutomaticPayment(CreditCard card) async {
   return NetworkHelper.validateResponse(response);
 }
 
-Future<bool> deleteAutomaticPayment() async {
+Future<bool> deleteAutomaticPayment(BuildContext context) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.delete,
     apiSlug: StaticValues.stripeConnectionSlug,
     useAuthToken: true,

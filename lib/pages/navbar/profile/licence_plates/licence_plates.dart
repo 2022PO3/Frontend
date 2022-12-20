@@ -33,7 +33,7 @@ class _LicencePlatesPageState extends State<LicencePlatesPage> {
   Widget build(BuildContext context) {
     return buildEditItemsScreen<LicencePlate>(
       title: 'Licence plates',
-      future: getLicencePlates(),
+      future: getLicencePlates(context),
       itemWidget: buildOverviewLicencePlateWidget,
       refreshFunction: () async {
         setState(() => {});
@@ -91,7 +91,7 @@ class _LicencePlatesPageState extends State<LicencePlatesPage> {
         isLoading = true;
       });
       try {
-        await postLicencePlate({'licencePlate': licencePlate});
+        await postLicencePlate(context, {'licencePlate': licencePlate});
         setState(() {
           isLoading = false;
         });

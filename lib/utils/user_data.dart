@@ -77,7 +77,7 @@ Future<String> getUserFavGarageName(
   if (favGarageId == null) {
     return 'Not set';
   } else {
-    Garage garage = await getGarage(favGarageId);
+    Garage garage = await getGarage(context, favGarageId);
     return garage.name;
   }
 }
@@ -109,7 +109,7 @@ bool getUserHasAutomaticPayment(BuildContext context, {bool listen = false}) {
 Future<void> updateUserInfo(BuildContext context) async {
   final UserProvider userProvider =
       Provider.of<UserProvider>(context, listen: false);
-  userProvider.setUser(await getUser());
+  userProvider.setUser(await getUser(context));
 }
 
 void setUser(BuildContext context, User user) {

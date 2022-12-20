@@ -38,7 +38,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
     final width = MediaQuery.of(context).size.width;
 
     return FutureBuilder(
-      future: getGarageData(widget.garageId),
+      future: getGarageData(context, widget.garageId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {

@@ -1,11 +1,14 @@
 // Project imports:
+import 'package:flutter/material.dart';
+
 import '../models/price_model.dart';
 import '../network/network_helper.dart';
 import '../network/network_service.dart';
 import '../network/static_values.dart';
 
-Future<List<Price>> getPrices(int garageId) async {
+Future<List<Price>> getPrices(BuildContext context, int garageId) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.get,
     apiSlug: StaticValues.pricesListSlug,
     useAuthToken: true,
@@ -18,8 +21,9 @@ Future<List<Price>> getPrices(int garageId) async {
   );
 }
 
-Future<Price> postPrice(Price price, int garageId) async {
+Future<Price> postPrice(BuildContext context, Price price, int garageId) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.post,
     apiSlug: StaticValues.pricesListSlug,
     useAuthToken: true,
@@ -33,8 +37,9 @@ Future<Price> postPrice(Price price, int garageId) async {
   );
 }
 
-Future<Price> putPrice(Price price) async {
+Future<Price> putPrice(BuildContext context, Price price) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.put,
     apiSlug: StaticValues.pricesDetailSlug,
     useAuthToken: true,
@@ -48,8 +53,9 @@ Future<Price> putPrice(Price price) async {
   );
 }
 
-Future<void> deletePrice(Price price) async {
+Future<void> deletePrice(BuildContext context, Price price) async {
   await NetworkService.sendRequest(
+    context,
     requestType: RequestType.delete,
     apiSlug: StaticValues.pricesDetailSlug,
     useAuthToken: true,

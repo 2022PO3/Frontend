@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:po_frontend/providers/local_server_url_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 String getLocalServerURL(BuildContext context, {bool listen = false}) {
   final LocalServerURLProvider localServerURLProvider =
@@ -24,13 +25,20 @@ void setLocalServerURL(
   return localServerURLProvider.setLocalServerURL(localServerURL);
 }
 
-void flipDebug(BuildContext context, {bool listen = false}) {
+void flipDebug(BuildContext context, {bool listen = false}) async {
   final LocalServerURLProvider localServerURLProvider =
       Provider.of<LocalServerURLProvider>(
     context,
     listen: listen,
   );
   localServerURLProvider.setDebug();
+  final pref = await SharedPreferences.getInstance();
+  if (localServerURLProvider.debug) {
+    pref.setBool('override', true);
+    pref.setString('localServerURL', getLocalServerURL(context));
+  } else {
+    pref.setBool('false', true);
+  }
 }
 
 bool getDebug(BuildContext context, {bool listen = false}) {
@@ -52,6 +60,6 @@ String getServerURL(BuildContext context, {bool listen = false}) {
   if (debug) {
     return getLocalServerURL(context);
   } else {
-    return 'https://po3backend.ddns.net';
+    return 'https://po3backend.ddns.net/';
   }
 }
