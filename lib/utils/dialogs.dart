@@ -31,7 +31,7 @@ void showFrontendDialog2(
   BuildContext context,
   String title,
   List<Widget> children,
-  Function() leftButtonFunction, {
+  void Function() leftButtonFunction, {
   leftButtonText = 'OK',
   rightButtonText = 'Cancel',
 }) {

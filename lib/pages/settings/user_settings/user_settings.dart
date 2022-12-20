@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:go_router/go_router.dart';
+import 'package:po_frontend/api/network/static_values.dart';
 
 // Project imports:
 import 'package:po_frontend/api/requests/device_requests.dart';
@@ -15,6 +16,7 @@ import 'package:po_frontend/utils/card.dart';
 import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/request_button.dart';
+import 'package:po_frontend/utils/server_url.dart';
 import 'package:po_frontend/utils/settings_card.dart';
 import 'package:po_frontend/utils/user_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,7 +30,7 @@ class UserSettings extends StatefulWidget {
 
 class _UserSettingsState extends State<UserSettings> {
   final _changeServerURLFormKey = GlobalKey<FormState>();
-  final _serverURLTextController = TextEditingController();
+  final _localServerURLTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +39,7 @@ class _UserSettingsState extends State<UserSettings> {
       context,
       listen: true,
     );
+    String localServerURL = StaticValues.localURL;
     return Scaffold(
       appBar: appBar(title: 'Settings'),
       body: RefreshIndicator(
@@ -78,33 +81,24 @@ class _UserSettingsState extends State<UserSettings> {
                     await updateUserInfo(context);
                   },
                 ),
-                FutureBuilder(
-                  future: getServerURL(),
-                  builder: ((context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done &&
-                        snapshot.hasData) {
-                      return buildSettingsCard(
-                          context, 'Server URL', snapshot.data ?? 'Not set',
-                          onTap: openChangeServerURLDialog);
+                ToggleSettingWidget(
+                  settingName: 'Debug',
+                  currentValue: getDebug(context),
+                  onToggle: (val) {
+                    if (val) {
+                      handleChangeDebug();
                     } else {
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.error_outline,
-                              color: Colors.red,
-                              size: 25,
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Text(snapshot.error.toString()),
-                          ],
-                        ),
-                      );
+                      handleChangeDebug();
                     }
-                  }),
+                  },
+                ),
+                InkWell(
+                  onTap: openChangeLocalURLDialog,
+                  child: buildSettingsCard(
+                    context,
+                    'Local server url',
+                    getLocalServerURL(context),
+                  ),
                 ),
               ],
             );
@@ -145,21 +139,31 @@ class _UserSettingsState extends State<UserSettings> {
     );
   }
 
-  void openChangeServerURLDialog() {
+  void openChangeLocalURLDialog() {
     return showFrontendDialog2(
       context,
-      'Change server url',
-      [buildServerURLEnterWidget()],
-      () => changeServerURL(_serverURLTextController.text),
+      'Change local server url',
+      [buildLocalURLEnterWidget()],
+      handleChangeLocalServerURL,
       leftButtonText: 'Confirm',
     );
   }
 
-  Widget buildServerURLEnterWidget() {
+  void handleChangeDebug() {
+    flipDebug(context);
+    context.go('/login');
+  }
+
+  void handleChangeLocalServerURL() {
+    () => setLocalServerURL(context, _localServerURLTextController.text);
+    context.pop();
+  }
+
+  Widget buildLocalURLEnterWidget() {
     return Form(
       key: _changeServerURLFormKey,
       child: TextFormField(
-        controller: _serverURLTextController,
+        controller: _localServerURLTextController,
         keyboardType: TextInputType.text,
         decoration: const InputDecoration(
           contentPadding: EdgeInsets.all(14),
@@ -167,33 +171,19 @@ class _UserSettingsState extends State<UserSettings> {
             Icons.computer_rounded,
             color: Colors.indigoAccent,
           ),
-          hintText: 'Server URL...',
+          hintText: 'Local server URL...',
           hintStyle: TextStyle(color: Colors.black38),
         ),
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Please enter a server URL.';
-          } else if (value[value.length] != '/') {
+          } else if (value[value.length - 1] != '/') {
             return 'End with a \'/\'';
           }
           return null;
         },
       ),
     );
-  }
-
-  Future<String> getServerURL() async {
-    final pref = await SharedPreferences.getInstance();
-    return pref.getString('serverUrl') ?? 'Not set';
-  }
-
-  void changeServerURL(String serverURL) async {
-    if (_changeServerURLFormKey.currentState!.validate()) {
-      final pref = await SharedPreferences.getInstance();
-      final String serverURL = _serverURLTextController.text;
-      AuthService.setServerURL(pref, serverURL);
-      if (mounted) context.go('/login');
-    }
   }
 }
 

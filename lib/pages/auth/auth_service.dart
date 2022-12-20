@@ -73,7 +73,13 @@ class AuthService {
     SharedPreferences pref,
     String serverURL,
   ) async {
-    await pref.setString('serverUrl', serverURL);
+    if (serverURL.contains('po3backend')) {
+      await pref.setString('serverUrl', serverURL);
+      await pref.setBool('debug', false);
+    } else {
+      await pref.setString('serverUrl', serverURL);
+      await pref.setBool('debug', true);
+    }
   }
 
   static Future<LoginStatus> checkLogin() async {
