@@ -6,18 +6,21 @@ import 'package:po_frontend/api/network/static_values.dart';
 class LicencePlate extends BaseModel {
   final String licencePlate;
   final int? garageId;
-  final DateTime enteredAt;
-  final DateTime paidAt;
+  final DateTime? enteredAt;
+  final DateTime? paidAt;
   final bool enabled;
 
   LicencePlate({
     required id,
     required this.licencePlate,
     required this.garageId,
-    required this.enteredAt,
-    required this.paidAt,
+    this.enteredAt,
+    this.paidAt,
     required this.enabled,
-  }) : super(id: id, detailSlug: StaticValues.licencePlatesDetailSlug);
+  })  : assert(
+          garageId == null ? enteredAt == null : enteredAt != null,
+        ),
+        super(id: id, detailSlug: StaticValues.licencePlatesDetailSlug);
 
   /// Serializes a JSON-object into a Dart `LicencePlate`-object with all properties.
   static LicencePlate fromJSON(Map<String, dynamic> json) {
@@ -25,8 +28,10 @@ class LicencePlate extends BaseModel {
       id: json['id'] as int,
       licencePlate: json['licencePlate'] as String,
       garageId: json['garageId'] as int?,
-      enteredAt: DateTime.parse(json['enteredAt']),
-      paidAt: DateTime.parse(json['paidAt']),
+      enteredAt:
+          json['enteredAt'] != null ? DateTime.parse(json['enteredAt']) : null,
+      paidAt:
+          json['paidAt'] != null ? DateTime.parse(json['paidAtpaidAt']) : null,
       enabled: json['enabled'],
     );
   }

@@ -1,10 +1,10 @@
 // Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 // Project imports:
 import 'package:po_frontend/api/models/licence_plate_model.dart';
 import 'package:po_frontend/pages/payment_widgets/pay_button.dart';
+
 import '../../api/models/garage_model.dart';
 import '../payment_widgets/payment_overview.dart';
 import '../payment_widgets/timer_widget.dart';
@@ -148,7 +148,7 @@ class _Header extends StatelessWidget {
         Hero(
           tag: 'timer_${licencePlate.licencePlate}',
           child: TimerWidget(
-            start: licencePlate.enteredAt,
+            start: licencePlate.enteredAt!,
             textStyle: TextStyle(
               fontSize: shortestSide / 20,
               fontWeight: FontWeight.w900,
