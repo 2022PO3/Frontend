@@ -281,7 +281,7 @@ class GarageDetailsEditorWidget extends StatelessWidget {
                 setSettings(currentValue.copyWith(maxHeight: maxHeight)),
           ),
           EditableField<double>(
-            fieldName: 'Maximum Height',
+            fieldName: 'Maximum Width',
             currentValue: currentValue.maxWidth,
             nameTextStyle: nameTextStyle(context),
             valueTextStyle: valueTextStyle(context),

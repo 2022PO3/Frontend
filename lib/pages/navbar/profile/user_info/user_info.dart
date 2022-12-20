@@ -128,10 +128,10 @@ class _UserInfoState extends State<UserInfo> {
                     ),
                   ],
                 ),
-                UserField(
+                const UserField(
                   fieldName: 'Favourite garage name',
                   fieldNameValue: 'QPark Leuven',
-                  onButtonPressed: openDeleteUserDialog,
+                  onButtonPressed: null,
                 ),
                 if (getUserStrikes(context) != 0)
                   Column(
