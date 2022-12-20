@@ -129,8 +129,8 @@ class _UserSettingsState extends State<UserSettings> {
           'Two factor authentication is disabled for your account. You can turn it back on at any time you like.',
         )
       },
-      leftButtonText: 'No',
-      rightButtonText: 'Yes',
+      leftButtonText: 'Yes',
+      rightButtonText: 'No',
     );
   }
 
