@@ -82,7 +82,7 @@ Future<bool> sendAuthenticationCode(BuildContext context, String code) async {
   return NetworkHelper.validateResponse(response);
 }
 
-Future<void> logOut(BuildContext context) async {
+void logOut(BuildContext context) async {
   final response = await NetworkService.sendRequest(
     context,
     requestType: RequestType.post,
@@ -92,7 +92,6 @@ Future<void> logOut(BuildContext context) async {
   if (NetworkHelper.validateResponse(response)) {
     final userInfo = await SharedPreferences.getInstance();
     userInfo.remove('authToken');
+    context.go('/login');
   }
-  // Make sure to redirect the user.
-  context.go('/login');
 }

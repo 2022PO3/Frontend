@@ -82,13 +82,7 @@ class _UserSettingsState extends State<UserSettings> {
                 ToggleSettingWidget(
                   settingName: 'Debug',
                   currentValue: getDebug(context),
-                  onToggle: (val) {
-                    if (val) {
-                      handleChangeDebug();
-                    } else {
-                      handleChangeDebug();
-                    }
-                  },
+                  onToggle: (val) => handleChangeDebug(),
                 ),
                 InkWell(
                   onTap: () => openChangeLocalURLDialog(
@@ -157,8 +151,8 @@ class _UserSettingsState extends State<UserSettings> {
   }
 
   void handleChangeDebug() async {
+    logOut(context);
     flipDebug(context);
-    await logOut(context);
   }
 
   void handleChangeLocalServerURL({
