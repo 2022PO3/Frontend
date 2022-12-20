@@ -395,6 +395,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         _isPasswordEightCharacters) {
       try {
         await putPassword(
+          context,
           newPassword,
           oldPassword,
           passwordConfirmation,

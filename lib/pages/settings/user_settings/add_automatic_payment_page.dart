@@ -12,8 +12,8 @@ import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/credit_card_model.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
-import '../../../utils/request_button.dart';
-import '../../../utils/user_data.dart';
+import 'package:po_frontend/utils/request_button.dart';
+import 'package:po_frontend/utils/user_data.dart';
 
 class AddAutomaticPaymentPage extends StatefulWidget {
   const AddAutomaticPaymentPage({Key? key}) : super(key: key);
@@ -107,9 +107,11 @@ class _AddAutomaticPaymentPageState extends State<AddAutomaticPaymentPage> {
                     text: 'Add Card',
                     makeRequest: () async {
                       if (formKey.currentState!.validate()) {
-                        await putAutomaticPayment(card);
-                        context.pop();
-                        await updateUserInfo(context);
+                        await putAutomaticPayment(context, card);
+                        if (mounted) {
+                          context.pop();
+                          await updateUserInfo(context);
+                        }
                       }
                     },
                   ),

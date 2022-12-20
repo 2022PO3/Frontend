@@ -295,6 +295,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 _isPasswordEightCharacters) {
                               try {
                                 await register(
+                                    context,
                                     userMail,
                                     userPassword,
                                     userConfirmPassword,

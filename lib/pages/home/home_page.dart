@@ -55,8 +55,8 @@ class _HomePageState extends State<HomePage> {
 
   Future<List<dynamic>> getFutures() async {
     setState(() {
-      licencePlatesFuture = getLicencePlates();
-      garagesFuture = getGarages();
+      licencePlatesFuture = getLicencePlates(context);
+      garagesFuture = getGarages(context);
       notificationsFuture = getNotifications(context);
     });
 
@@ -78,71 +78,75 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return isLoading
         ? const LoadingPage()
-        : LayoutBuilder(builder: (context, constraints) {
-            return Scaffold(
-              drawer: constraints.maxWidth > 600
-                  ? null
-                  : Navbar(garagesFuture: garagesFuture),
-              appBar: AppBar(
-                automaticallyImplyLeading: true,
-                flexibleSpace: Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [(Colors.indigo), (Colors.indigoAccent)],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
-                  ),
-                ),
-                title: Text(
-                  getUserFirstName(context),
-                ),
-                actions: [generateNotificationsButton()],
-              ),
-              body: Row(
-                children: [
-                  if (constraints.maxWidth > 600)
-                    Navbar(
-                      garagesFuture: garagesFuture,
-                    ),
-                  Expanded(
-                    child: RefreshIndicator(
-                      onRefresh: getFutures,
-                      child: CustomScrollView(
-                        physics: const AlwaysScrollableScrollPhysics().applyTo(
-                          const BouncingScrollPhysics(),
-                        ),
-                        slivers: [
-                          SliverPersistentHeader(
-                            pinned: true,
-                            floating: true,
-                            delegate: SimpleHeaderDelegate(
-                              child: CurrentParkingSessionsListWidget(
-                                licencePlatesFuture: licencePlatesFuture,
-                              ),
-                              maxHeight: min(
-                                MediaQuery.of(context).size.shortestSide / 2.5,
-                                220,
-                              ),
-                              minHeight: min(
-                                MediaQuery.of(context).size.shortestSide / 5,
-                                100,
-                              ),
-                            ),
-                          ),
-                          SliverToBoxAdapter(
-                            child: GarageListWidget(
-                              garagesFuture: garagesFuture,
-                            ),
-                          ),
-                        ],
+        : LayoutBuilder(
+            builder: (context, constraints) {
+              return Scaffold(
+                drawer: constraints.maxWidth > 600
+                    ? null
+                    : Navbar(garagesFuture: garagesFuture),
+                appBar: AppBar(
+                  automaticallyImplyLeading: true,
+                  flexibleSpace: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [(Colors.indigo), (Colors.indigoAccent)],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
                       ),
                     ),
                   ),
-                ],
-              ),
-            );
-          });
+                  title: Text(
+                    getUserFirstName(context),
+                  ),
+                  actions: [generateNotificationsButton()],
+                ),
+                body: Row(
+                  children: [
+                    if (constraints.maxWidth > 600)
+                      Navbar(
+                        garagesFuture: garagesFuture,
+                      ),
+                    Expanded(
+                      child: RefreshIndicator(
+                        onRefresh: getFutures,
+                        child: CustomScrollView(
+                          physics:
+                              const AlwaysScrollableScrollPhysics().applyTo(
+                            const BouncingScrollPhysics(),
+                          ),
+                          slivers: [
+                            SliverPersistentHeader(
+                              pinned: true,
+                              floating: true,
+                              delegate: SimpleHeaderDelegate(
+                                child: CurrentParkingSessionsListWidget(
+                                  licencePlatesFuture: licencePlatesFuture,
+                                ),
+                                maxHeight: min(
+                                  MediaQuery.of(context).size.shortestSide /
+                                      2.5,
+                                  220,
+                                ),
+                                minHeight: min(
+                                  MediaQuery.of(context).size.shortestSide / 5,
+                                  100,
+                                ),
+                              ),
+                            ),
+                            SliverToBoxAdapter(
+                              child: GarageListWidget(
+                                garagesFuture: garagesFuture,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
   }
 
   Widget generateNotificationsButton() {
@@ -299,7 +303,7 @@ class _CurrentParkingSessionWidgetState
 
   @override
   void initState() {
-    garageFuture = getGarage(widget.licencePlate.garageId!);
+    garageFuture = getGarage(context, widget.licencePlate.garageId!);
     super.initState();
   }
 
@@ -443,7 +447,7 @@ class _CurrentParkingSessionWidgetState
   }
 }
 
-enum SortByEnum { none, province, freeSpots }
+enum SortByEnum { none, province, freeSpots, custom }
 
 enum SortDirection { none, up, down }
 
@@ -563,6 +567,9 @@ class _GarageListWidgetState extends State<GarageListWidget> {
       case SortByEnum.freeSpots:
         sortText = 'Sorted by free spots';
         break;
+      case SortByEnum.custom:
+        sortText = 'Custom sorting';
+        break;
     }
     return Text(
       sortText,
@@ -598,6 +605,7 @@ class _GarageListWidgetState extends State<GarageListWidget> {
               buildRadioButton('None', SortByEnum.none),
               buildRadioButton('Province', SortByEnum.province),
               buildRadioButton('Free spots', SortByEnum.freeSpots),
+              buildRadioButton('Custom', SortByEnum.custom),
               const SizedBox(
                 height: 10,
               ),
@@ -680,6 +688,11 @@ class _GarageListWidgetState extends State<GarageListWidget> {
                 .compareTo((g2.unoccupiedLots / g2.maxSpots)))
             : garages.sort((g2, g1) => (g1.unoccupiedLots / g1.maxSpots)
                 .compareTo((g2.unoccupiedLots / g2.maxSpots)));
+        break;
+      case SortByEnum.custom:
+        up
+            ? garages.sort((g1, g2) => g2.id.compareTo(g1.id))
+            : garages.sort((g1, g2) => g1.id.compareTo(g2.id));
         break;
     }
     return garages;

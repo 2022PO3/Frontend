@@ -1,3 +1,6 @@
+// Flutter imports:
+import 'package:flutter/cupertino.dart';
+
 // Project imports:
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/network/network_helper.dart';
@@ -16,8 +19,9 @@ abstract class BaseModel {
     throw FrontendException('toJSON-method is not implemented.');
   }
 
-  Future<bool> put() async {
+  Future<bool> put(BuildContext context) async {
     final response = await NetworkService.sendRequest(
+      context,
       requestType: RequestType.put,
       apiSlug: _getDetailSlug(),
       useAuthToken: true,
@@ -28,8 +32,9 @@ abstract class BaseModel {
     return NetworkHelper.validateResponse(response);
   }
 
-  Future<bool> delete() async {
+  Future<bool> delete(BuildContext context) async {
     final response = await NetworkService.sendRequest(
+      context,
       requestType: RequestType.delete,
       apiSlug: _getDetailSlug(),
       useAuthToken: true,

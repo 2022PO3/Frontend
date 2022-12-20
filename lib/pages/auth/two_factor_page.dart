@@ -141,7 +141,10 @@ class _TwoFactorPageState extends State<TwoFactorPage> {
                 if (_twoFactorFormKey.currentState!.validate()) {
                   setState(() => {state = ButtonState.loading});
                   try {
-                    await sendAuthenticationCode(twoFactorCodeController.text);
+                    await sendAuthenticationCode(
+                      context,
+                      twoFactorCodeController.text,
+                    );
                     setState(() => state = ButtonState.done);
                     await Future.delayed(const Duration(seconds: 1));
                     if (mounted) context.go('/home');

@@ -37,28 +37,28 @@ class _AddGaragePageState extends State<AddGaragePage> {
     fontWeight: FontWeight.w600,
   );
   late Garage garage = Garage(
-    id: -1,
-    userId: widget.userId,
-    name: 'My new Garage',
-    parkingLots: [],
-    entered: 0,
-    reservations: 0,
-    garageSettings: GarageSettings(
       id: -1,
-      location: Location(
-          id: -1,
-          country: 'België',
-          province: ProvinceEnum.ANT,
-          municipality: '',
-          postCode: 0,
-          street: '',
-          number: 1),
-      electricCars: 0,
-      maxHeight: 2.3,
-      maxWidth: 3,
-      maxHandicappedLots: 0,
-    ),
-  );
+      userId: widget.userId,
+      name: 'My new Garage',
+      parkingLots: [],
+      entered: 0,
+      reservations: 0,
+      garageSettings: GarageSettings(
+        id: -1,
+        location: Location(
+            id: -1,
+            country: 'België',
+            province: ProvinceEnum.ANT,
+            municipality: '',
+            postCode: 1000,
+            street: '',
+            number: 1),
+        electricCars: 0,
+        maxHeight: 2.3,
+        maxWidth: 3,
+        maxHandicappedLots: 0,
+      ),
+      nextFreeSpot: null);
 
   List<Price> prices = [];
 
@@ -316,7 +316,7 @@ class _CreateGarageButtonState extends State<CreateGarageButton> {
 
   void startCreatingGarage() async {
     setState(() {
-      garageFuture = postGarage(widget.garage);
+      garageFuture = postGarage(context, widget.garage);
     });
     garageId = (await garageFuture!).id;
     startCreatingPrices();
@@ -328,6 +328,7 @@ class _CreateGarageButtonState extends State<CreateGarageButton> {
       List<Future> futures = [];
       for (var price in widget.prices) {
         Future<Price> future = postPrice(
+          context,
           price.copyWith(garageId: garageId!),
           _garageId,
         );

@@ -1,3 +1,6 @@
+// Package imports:
+import 'package:intl/intl.dart';
+
 class StaticValues {
   const StaticValues._();
   // Garage slugs
@@ -46,8 +49,14 @@ class StaticValues {
   static const String notificationsDetailSlug = 'api/notification';
   static const String notificationsListSlug = 'api/notifications';
 
+  // Offset for reservations
+  static const Duration offset = Duration(hours: 8);
+
+  // Default date format
+  static DateFormat frontendDateFormat = DateFormat('HH:mm, dd/MM/y');
+
   // Custom settings
   static const bool debug = true;
-  static const bool overrideServerUrl = true;
+  static const bool override = true;
   static const String localURL = 'http://192.168.49.1:8000/';
 }

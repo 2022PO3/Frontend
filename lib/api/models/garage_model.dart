@@ -3,8 +3,6 @@ import 'package:po_frontend/api/models/base_model.dart';
 import 'package:po_frontend/api/models/garage_settings_model.dart';
 import 'package:po_frontend/api/models/parking_lot_model.dart';
 
-import 'package:flutter/services.dart';
-
 /// Model which represents the backend `Garage`-model.
 class Garage extends BaseModel {
   final int userId;
@@ -13,6 +11,7 @@ class Garage extends BaseModel {
   final GarageSettings garageSettings;
   final int entered;
   final int reservations;
+  final DateTime? nextFreeSpot;
 
   Garage({
     required id,
@@ -22,6 +21,7 @@ class Garage extends BaseModel {
     required this.garageSettings,
     required this.entered,
     required this.reservations,
+    required this.nextFreeSpot,
   }) : super(id: id);
 
   Garage copyWith({
@@ -37,7 +37,8 @@ class Garage extends BaseModel {
         parkingLots: parkingLots,
         garageSettings: garageSettings ?? this.garageSettings,
         entered: entered,
-        reservations: reservations);
+        reservations: reservations,
+        nextFreeSpot: nextFreeSpot);
   }
 
   /// Serializes a JSON-object into a Dart `Garage`-object with all properties.
@@ -52,13 +53,16 @@ class Garage extends BaseModel {
       ),
       entered: json['entered'],
       reservations: json['reservations'],
+      nextFreeSpot: json['nextFreeSpot'] != null
+          ? DateTime.parse(json['nextFreeSpot'] as String).toLocal()
+          : null,
     );
   }
 
   int get maxSpots => parkingLots.length;
   int get occupiedLots => reservations + entered;
   int get disabledLots => parkingLots.where((pl) => pl.disabled).length;
-  int get unoccupiedLots => maxSpots - occupiedLots - disabledLots;
+  int get unoccupiedLots => parkingLots.where((pl) => pl.available).length;
   bool get isFull => maxSpots == occupiedLots;
 
   //final double bookedLots = parkingLots.where((pl) => pl.booked ?? false );

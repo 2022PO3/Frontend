@@ -65,6 +65,7 @@ class PayButton extends StatelessWidget {
         tag: 'pay_button_${licencePlate.licencePlate}',
         child: RequestButton<void>(
           makeRequest: () => startPaymentSession(
+            context,
             licencePlate: licencePlate.licencePlate,
           ),
           text: 'Pay',

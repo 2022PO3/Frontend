@@ -5,7 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/licence_plate_model.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
-import 'package:po_frontend/pages/auth/login_page.dart';
+import 'package:po_frontend/pages/auth/login/login_page.dart';
+import 'package:po_frontend/pages/auth/login/login_settings.dart';
 import 'package:po_frontend/pages/auth/register.dart';
 import 'package:po_frontend/pages/auth/two_factor_page.dart';
 import 'package:po_frontend/pages/auth/user_activation_page.dart';
@@ -21,7 +22,7 @@ import 'package:po_frontend/pages/navbar/profile/user_info/change_password.dart'
 import 'package:po_frontend/pages/navbar/profile/user_info/change_province.dart';
 import 'package:po_frontend/pages/navbar/profile/user_info/user_info.dart';
 import 'package:po_frontend/pages/payment_page/failed_payment_page.dart';
-import 'package:po_frontend/pages/payment_page/succesful_payment_page.dart';
+import 'package:po_frontend/pages/payment_page/successful_payment_page.dart';
 import 'package:po_frontend/pages/reservations/confirm_reservation.dart';
 import 'package:po_frontend/pages/reservations/make_reservation_page.dart';
 import 'package:po_frontend/pages/reservations/select_licence_plate.dart';
@@ -172,6 +173,10 @@ class Routes {
               path: 'register',
               builder: (context, state) => const RegisterPage(),
             ),
+            GoRoute(
+              path: 'settings',
+              builder: (context, state) => const LoginSettings(),
+            )
           ],
         ),
         GoRoute(

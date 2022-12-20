@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 // Project imports:
 import 'package:po_frontend/core/routes.dart';
 import 'package:po_frontend/pages/auth/auth_service.dart';
+import 'package:po_frontend/providers/local_server_url_provider.dart';
 import 'package:po_frontend/providers/notification_provider.dart';
 import 'providers/user_provider.dart';
 
@@ -33,7 +34,8 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
-        ChangeNotifierProvider(create: (_) => NotificationProvider())
+        ChangeNotifierProvider(create: (_) => NotificationProvider()),
+        ChangeNotifierProvider(create: (_) => LocalServerURLProvider())
       ],
       child: MyApp(
         initialLocation: initialLocation,

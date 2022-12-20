@@ -6,18 +6,17 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:go_router/go_router.dart';
 
 // Project imports:
+import 'package:po_frontend/api/requests/auth_requests.dart';
 import 'package:po_frontend/api/requests/device_requests.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
-import 'package:po_frontend/pages/auth/auth_service.dart';
 import 'package:po_frontend/pages/settings/user_settings/add_automatic_payment_page.dart';
-import 'package:po_frontend/utils/card.dart';
 import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/request_button.dart';
+import 'package:po_frontend/utils/server_url.dart';
 import 'package:po_frontend/utils/settings_card.dart';
 import 'package:po_frontend/utils/user_data.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class UserSettings extends StatefulWidget {
   const UserSettings({super.key});
@@ -28,7 +27,6 @@ class UserSettings extends StatefulWidget {
 
 class _UserSettingsState extends State<UserSettings> {
   final _changeServerURLFormKey = GlobalKey<FormState>();
-  final _serverURLTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +34,9 @@ class _UserSettingsState extends State<UserSettings> {
     final bool hasAutomaticPayment = getUserHasAutomaticPayment(
       context,
       listen: true,
+    );
+    final _localServerURLTextController = TextEditingController(
+      text: getLocalServerURL(context),
     );
     return Scaffold(
       appBar: appBar(title: 'Settings'),
@@ -74,37 +75,25 @@ class _UserSettingsState extends State<UserSettings> {
                     context.go(AddAutomaticPaymentPage.route);
                   },
                   onRemove: () async {
-                    await deleteAutomaticPayment();
+                    await deleteAutomaticPayment(context);
                     await updateUserInfo(context);
                   },
                 ),
-                FutureBuilder(
-                  future: getServerURL(),
-                  builder: ((context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done &&
-                        snapshot.hasData) {
-                      return buildSettingsCard(
-                          context, 'Server URL', snapshot.data ?? 'Not set',
-                          onTap: openChangeServerURLDialog);
-                    } else {
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.error_outline,
-                              color: Colors.red,
-                              size: 25,
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Text(snapshot.error.toString()),
-                          ],
-                        ),
-                      );
-                    }
-                  }),
+                ToggleSettingWidget(
+                  settingName: 'Debug',
+                  currentValue: getDebug(context),
+                  onToggle: (val) => handleChangeDebug(),
+                ),
+                InkWell(
+                  onTap: () => openChangeLocalURLDialog(
+                    controller: _localServerURLTextController,
+                    refreshFunction: () => setState(() {}),
+                  ),
+                  child: buildSettingsCard(
+                    context,
+                    'Local server url',
+                    getLocalServerURL(context),
+                  ),
                 ),
               ],
             );
@@ -133,7 +122,7 @@ class _UserSettingsState extends State<UserSettings> {
       'Disable two factor authentication',
       [const Text('Are you sure to disable two factor authentication?')],
       () => {
-        disable2FA(),
+        disable2FA(context),
         showSuccessDialog(
           context,
           'Two factor disabled',
@@ -145,21 +134,41 @@ class _UserSettingsState extends State<UserSettings> {
     );
   }
 
-  void openChangeServerURLDialog() {
+  void openChangeLocalURLDialog({
+    required TextEditingController controller,
+    required void Function() refreshFunction,
+  }) {
     return showFrontendDialog2(
       context,
-      'Change server url',
-      [buildServerURLEnterWidget()],
-      () => changeServerURL(_serverURLTextController.text),
+      'Change local server url',
+      [buildLocalURLEnterWidget(controller)],
+      () => handleChangeLocalServerURL(
+        controller: controller,
+        refreshFunction: refreshFunction,
+      ),
       leftButtonText: 'Confirm',
     );
   }
 
-  Widget buildServerURLEnterWidget() {
+  void handleChangeDebug() async {
+    logOut(context);
+    flipDebug(context);
+  }
+
+  void handleChangeLocalServerURL({
+    required TextEditingController controller,
+    required void Function() refreshFunction,
+  }) {
+    () => setLocalServerURL(context, controller.text);
+    context.pop();
+    refreshFunction();
+  }
+
+  Widget buildLocalURLEnterWidget(TextEditingController controller) {
     return Form(
       key: _changeServerURLFormKey,
       child: TextFormField(
-        controller: _serverURLTextController,
+        controller: controller,
         keyboardType: TextInputType.text,
         decoration: const InputDecoration(
           contentPadding: EdgeInsets.all(14),
@@ -167,33 +176,19 @@ class _UserSettingsState extends State<UserSettings> {
             Icons.computer_rounded,
             color: Colors.indigoAccent,
           ),
-          hintText: 'Server URL...',
+          hintText: 'Local server URL...',
           hintStyle: TextStyle(color: Colors.black38),
         ),
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Please enter a server URL.';
-          } else if (value[value.length] != '/') {
+          } else if (value[value.length - 1] != '/') {
             return 'End with a \'/\'';
           }
           return null;
         },
       ),
     );
-  }
-
-  Future<String> getServerURL() async {
-    final pref = await SharedPreferences.getInstance();
-    return pref.getString('serverUrl') ?? 'Not set';
-  }
-
-  void changeServerURL(String serverURL) async {
-    if (_changeServerURLFormKey.currentState!.validate()) {
-      final pref = await SharedPreferences.getInstance();
-      final String serverURL = _serverURLTextController.text;
-      AuthService.setServerURL(pref, serverURL);
-      if (mounted) context.go('/login');
-    }
   }
 }
 

@@ -209,7 +209,7 @@ class _UserInfoState extends State<UserInfo> {
   }
 
   void handleDeleteUser() {
-    deleteUser();
+    deleteUser(context);
     context.go('/login');
   }
 
@@ -332,7 +332,7 @@ class _UserInfoState extends State<UserInfo> {
 
   void tryUpdateUser(User oldUser) async {
     try {
-      User newUser = await putUser(oldUser);
+      User newUser = await putUser(context, oldUser);
       if (mounted) setUser(context, newUser);
     } on BackendException catch (e) {
       print(e);

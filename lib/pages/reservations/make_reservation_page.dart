@@ -295,10 +295,21 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
 
   void handleRandomSpotSelection() async {
     if (compareDates(startDate, endDate)) {
-      Reservation reservation = await assignReservation(
-        widget.garageAndLicencePlate.garage,
-        startDate,
-        endDate,
+      ParkingLot parkingLot = await assignParkingLot(
+        context,
+        widget.garageAndLicencePlate.garage.id,
+        {
+          'fromDate': startDate.toUtc().toIso8601String(),
+          'toDate': endDate.toUtc().toIso8601String(),
+        },
+      );
+      Reservation reservation = Reservation(
+        id: 0,
+        licencePlate: widget.garageAndLicencePlate.licencePlate,
+        fromDate: startDate,
+        toDate: endDate,
+        parkingLot: parkingLot,
+        garage: widget.garageAndLicencePlate.garage,
       );
       if (mounted) {
         context.push('/home/reserve/confirm-reservation', extra: reservation);
@@ -322,35 +333,6 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
     } else {
       showDateErrorPopUp(context);
     }
-  }
-
-  Future<Reservation> assignReservation(
-    Garage garage,
-    DateTime startDate,
-    DateTime endDate,
-  ) async {
-    try {
-      ParkingLot parkingLot = await assignParkingLot(
-        garage.id,
-        {
-          'fromDate': startDate.toIso8601String(),
-          'toDate': endDate.toIso8601String(),
-        },
-      );
-
-      return Reservation(
-        id: 0,
-        licencePlate: widget.garageAndLicencePlate.licencePlate,
-        fromDate: startDate,
-        toDate: endDate,
-        parkingLot: parkingLot,
-        garage: garage,
-      );
-    } on BackendException catch (e) {
-      print(e);
-      showFailureDialog(context, e);
-    }
-    throw Exception();
   }
 
   bool compareDates(DateTime date, DateTime date2) {

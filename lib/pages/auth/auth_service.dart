@@ -16,8 +16,8 @@ import 'package:po_frontend/api/network/static_values.dart';
 enum LoginStatus { unAuthenticated, authenticated, verified }
 
 class AuthService {
-  static bool _isHostSet(SharedPreferences pref) {
-    return pref.getString('serverUrl') == null;
+  static bool _override(SharedPreferences pref) {
+    return pref.getBool('override') ?? false;
   }
 
   static Future<String> _tryLocalRequest() async {
@@ -43,9 +43,10 @@ class AuthService {
         'Host returned a non 200 status code to the liveliness request.');
   }
 
-  static Future<String?> _determineHost(SharedPreferences pref) async {
-    if (_isHostSet(pref) && !StaticValues.overrideServerUrl) {
-      return null;
+  static Future<String> _determineHost(SharedPreferences pref) async {
+    if (_override(pref)) {
+      return pref.getString('localServerURL') ??
+          (throw Exception('Override enabled, but no localhost specified.'));
     }
     bool debug = StaticValues.debug;
     if (debug) {
@@ -66,24 +67,27 @@ class AuthService {
       _tryLocalRequest();
     }
     throw Exception(
-        'Host returned a non 200 status code to the liveliness request.');
+      'Host returned a non 200 status code to the liveliness request.',
+    );
   }
 
   static Future<void> setServerURL(
     SharedPreferences pref,
     String serverURL,
   ) async {
-    await pref.setString('serverUrl', serverURL);
+    if (serverURL.contains('po3backend')) {
+      await pref.setString('serverUrl', serverURL);
+    } else {
+      await pref.setString('serverUrl', serverURL);
+    }
   }
 
   static Future<LoginStatus> checkLogin() async {
     final pref = await SharedPreferences.getInstance();
-    String? serverUrl = await _determineHost(pref);
-    if (serverUrl != null) {
-      AuthService.setServerURL(pref, serverUrl);
-    }
+    String serverUrl = await _determineHost(pref);
     try {
-      final response = await NetworkService.sendRequest(
+      final response = await _sendRequest(
+        serverURL: serverUrl,
         requestType: RequestType.get,
         apiSlug: StaticValues.userSlug,
         useAuthToken: true,
@@ -109,5 +113,33 @@ class AuthService {
       print(e);
       return LoginStatus.unAuthenticated;
     }
+  }
+
+  static Future<http.Response?>? _sendRequest({
+    required String serverURL,
+    required RequestType requestType,
+    required String apiSlug,
+    required bool useAuthToken,
+  }) async {
+    String url = _getURL(serverURL, apiSlug);
+    print('Sending $requestType to $url');
+    try {
+      final response = await NetworkService.createRequest(
+        requestType: requestType,
+        uri: Uri.parse(url),
+        headers: useAuthToken
+            ? await NetworkService.setAuthHeaders()
+            : NetworkService.getHeaders(),
+      );
+      return response;
+    } on TimeoutException catch (e) {
+      throw BackendException(['Request timed out: $e']);
+    } on Exception catch (e) {
+      throw BackendException(['Unknown exception occurred: $e']);
+    }
+  }
+
+  static String _getURL(String serverURL, String apiSlug) {
+    return '$serverURL$apiSlug';
   }
 }

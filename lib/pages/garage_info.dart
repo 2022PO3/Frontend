@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:ui';
+
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -5,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
-import 'package:po_frontend/utils/sized_box.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 // Project imports:
@@ -13,12 +15,14 @@ import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/garage_settings_model.dart';
 import 'package:po_frontend/api/models/opening_hour_model.dart';
 import 'package:po_frontend/api/models/price_model.dart';
+import 'package:po_frontend/api/network/static_values.dart';
 import 'package:po_frontend/api/requests/garage_requests.dart';
 import 'package:po_frontend/api/widgets/garage_opening_hours_widget.dart';
 import 'package:po_frontend/api/widgets/garage_widget.dart';
 import 'package:po_frontend/api/widgets/price_widget.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/utils/constants.dart';
+import 'package:po_frontend/utils/sized_box.dart';
 
 class GarageInfoPage extends StatefulWidget {
   const GarageInfoPage({Key? key, required this.garageId}) : super(key: key);
@@ -35,7 +39,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
     final width = MediaQuery.of(context).size.width;
 
     return FutureBuilder(
-      future: getGarageData(widget.garageId),
+      future: getGarageData(context, widget.garageId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {
@@ -136,81 +140,99 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
           horizontal: 30,
           vertical: 10,
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
           children: [
-            Container(
-              constraints: BoxConstraints(
-                maxHeight: 150,
-                maxWidth: width / 3,
-              ),
-              child: SfRadialGauge(
-                axes: <RadialAxis>[
-                  RadialAxis(
-                    startAngle: 270,
-                    endAngle: 270,
-                    minimum: 0,
-                    maximum: garage.maxSpots.toDouble(),
-                    showLabels: false,
-                    showTicks: false,
-                    axisLineStyle: const AxisLineStyle(
-                      thickness: 0.15,
-                      cornerStyle: CornerStyle.bothFlat,
-                      color: Colors.grey,
-                      thicknessUnit: GaugeSizeUnit.factor,
-                    ),
-                    pointers: <GaugePointer>[
-                      RangePointer(
-                        value: garage.occupiedLots.toDouble(),
-                        width: 0.15,
-                        sizeUnit: GaugeSizeUnit.factor,
-                        cornerStyle: garage.isFull
-                            ? CornerStyle.bothFlat
-                            : CornerStyle.bothCurve,
-                        color: color,
-                      ),
-                    ],
-                    annotations: <GaugeAnnotation>[
-                      GaugeAnnotation(
-                        angle: 90,
-                        widget: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              '$percentage%',
-                              style: TextStyle(
-                                fontSize: 35,
-                                fontWeight: FontWeight.bold,
-                                color: color,
-                              ),
-                            ),
-                            Container(
-                              decoration: const BoxDecoration(
-                                border: Border(
-                                  top: BorderSide(
-                                    width: 1,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  constraints: BoxConstraints(
+                    maxHeight: 150,
+                    maxWidth: width / 3,
+                  ),
+                  child: SfRadialGauge(
+                    axes: <RadialAxis>[
+                      RadialAxis(
+                        startAngle: 270,
+                        endAngle: 270,
+                        minimum: 0,
+                        maximum: garage.maxSpots.toDouble(),
+                        showLabels: false,
+                        showTicks: false,
+                        axisLineStyle: const AxisLineStyle(
+                          thickness: 0.15,
+                          cornerStyle: CornerStyle.bothFlat,
+                          color: Colors.grey,
+                          thicknessUnit: GaugeSizeUnit.factor,
+                        ),
+                        pointers: <GaugePointer>[
+                          RangePointer(
+                            value: garage.occupiedLots.toDouble(),
+                            width: 0.15,
+                            sizeUnit: GaugeSizeUnit.factor,
+                            cornerStyle: garage.isFull
+                                ? CornerStyle.bothFlat
+                                : CornerStyle.bothCurve,
+                            color: color,
+                          ),
+                        ],
+                        annotations: <GaugeAnnotation>[
+                          GaugeAnnotation(
+                            angle: 90,
+                            widget: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  '$percentage%',
+                                  style: TextStyle(
+                                    fontSize: 35,
+                                    fontWeight: FontWeight.bold,
+                                    color: color,
                                   ),
                                 ),
-                              ),
-                              child: const Text(
-                                'full',
-                                style: TextStyle(
-                                  fontSize: 20,
+                                Container(
+                                  decoration: const BoxDecoration(
+                                    border: Border(
+                                      top: BorderSide(
+                                        width: 1,
+                                      ),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    'full',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
-                      )
+                          )
+                        ],
+                      ),
                     ],
                   ),
+                ),
+                buildSpotNumbers(garage, color),
+              ],
+            ),
+            if (garage.nextFreeSpot != null)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Divider(
+                    indent: 10,
+                    endIndent: 10,
+                  ),
+                  Text(
+                    'Next spot becomes free at ${StaticValues.frontendDateFormat.format(garage.nextFreeSpot!)}.',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  )
                 ],
               ),
-            ),
-            buildSpotNumbers(garage, color),
           ],
         ),
       ),

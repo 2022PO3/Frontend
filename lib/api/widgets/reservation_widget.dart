@@ -7,11 +7,8 @@ import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/sized_box.dart';
 
 Widget buildReservationWidget(Reservation reservation) {
-  final bool active = (reservation.fromDate
-          .isBefore(DateTime.now().add(const Duration(hours: 1))) &&
-      DateTime.now()
-          .add(const Duration(hours: 1))
-          .isBefore(reservation.toDate));
+  final bool active = (reservation.fromDate.isBefore(DateTime.now()) &&
+      DateTime.now().isBefore(reservation.toDate));
   final bool done = DateTime.now().isAfter(reservation.toDate);
   final Color color = done ? Colors.black26 : Colors.black;
 

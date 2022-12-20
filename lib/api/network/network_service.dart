@@ -2,6 +2,9 @@
 import 'dart:async';
 import 'dart:convert';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:http/http.dart' as http;
@@ -10,19 +13,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 // Project imports:
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/env/env.dart';
+import 'package:po_frontend/utils/server_url.dart';
 
 enum RequestType { get, post, put, delete }
 
 class NetworkService {
   const NetworkService._();
 
-  static Map<String, String> _getHeaders() => {
+  static Map<String, String> getHeaders() => {
         'Content-Type': 'application/json',
         'PO3-ORIGIN': 'app',
         'PO3-APP-KEY': _encodeKey(),
       };
 
-  static Future<Map<String, String>> _setAuthHeaders() async {
+  static Future<Map<String, String>> setAuthHeaders() async {
     final userInfo = await SharedPreferences.getInstance();
     final authToken = userInfo.getString('authToken');
     return {
@@ -45,7 +49,7 @@ class NetworkService {
                 1000)
             .round(),
         'exp': (DateTime.now()
-                    .add(const Duration(seconds: 5))
+                    .add(const Duration(seconds: 15))
                     .millisecondsSinceEpoch /
                 1000)
             .round(),
@@ -86,7 +90,8 @@ class NetworkService {
   }
 
   /// Sends a request to `url` with the given `RequestType`.
-  static Future<http.Response?>? sendRequest({
+  static Future<http.Response?>? sendRequest(
+    BuildContext context, {
     required RequestType requestType,
     required String apiSlug,
     required bool useAuthToken,
@@ -94,15 +99,14 @@ class NetworkService {
     Map<String, dynamic>? queryParams,
     Map<String, dynamic>? body,
   }) async {
-    print(pk);
-    String url = setPk(requestType, await setServerUrl(apiSlug), body, pk);
+    String url = setPk(requestType, _getServerUrl(context, apiSlug), body, pk);
     String queryParamsUrl = setQueryParams(requestType, url, queryParams);
     print('Sending $requestType to $queryParamsUrl');
     try {
       final response = await createRequest(
           requestType: requestType,
           uri: Uri.parse(queryParamsUrl),
-          headers: useAuthToken ? await _setAuthHeaders() : _getHeaders(),
+          headers: useAuthToken ? await setAuthHeaders() : getHeaders(),
           body: json.encode(body));
       return response;
     } on TimeoutException catch (e) {
@@ -114,13 +118,9 @@ class NetworkService {
 
   /// Determines the `serverUrl` from the user's device memory (this is set in the loading
   /// page). If not url is set, an error will be raised.
-  static Future<String> setServerUrl(String apiSlug) async {
-    final pref = await SharedPreferences.getInstance();
-    String? serverUrl = pref.getString('serverUrl');
-    if (serverUrl == null) {
-      return 'https://po3backend.ddns.net/$apiSlug';
-    }
-    return '$serverUrl$apiSlug';
+  static String _getServerUrl(BuildContext context, String apiSlug) {
+    String serverURL = getServerURL(context);
+    return '$serverURL$apiSlug';
   }
 
   /// Adds a primary key to the request url in a GET-request when a pk is given and in a

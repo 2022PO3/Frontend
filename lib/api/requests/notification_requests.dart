@@ -12,6 +12,7 @@ Future<List<FrontendNotification>> getNotifications(
   BuildContext context,
 ) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.get,
     apiSlug: StaticValues.notificationsListSlug,
     useAuthToken: true,
@@ -26,8 +27,12 @@ Future<List<FrontendNotification>> getNotifications(
   return notifications;
 }
 
-Future<bool> putNotification(FrontendNotification notification) async {
+Future<bool> putNotification(
+  BuildContext context,
+  FrontendNotification notification,
+) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.put,
     apiSlug: StaticValues.notificationsDetailSlug,
     useAuthToken: true,
@@ -39,9 +44,11 @@ Future<bool> putNotification(FrontendNotification notification) async {
 }
 
 Future<bool> deleteNotification(
+  BuildContext context,
   FrontendNotification notification,
 ) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.delete,
     apiSlug: StaticValues.notificationsDetailSlug,
     useAuthToken: true,

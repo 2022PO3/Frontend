@@ -13,6 +13,7 @@ import 'package:po_frontend/api/network/static_values.dart';
 import 'package:po_frontend/utils/user_data.dart';
 
 Future<bool> register(
+  BuildContext context,
   String email,
   String password,
   String confirmPassword,
@@ -28,6 +29,7 @@ Future<bool> register(
     'lastName': lastName == '' ? null : lastName,
   };
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.post,
     apiSlug: StaticValues.registerSlug,
     body: body,
@@ -46,6 +48,7 @@ Future<User> login(
     'password': passwordUser,
   };
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.post,
     apiSlug: StaticValues.loginSlug,
     body: body,
@@ -68,8 +71,9 @@ Future<User> login(
   return user;
 }
 
-Future<bool> sendAuthenticationCode(String code) async {
+Future<bool> sendAuthenticationCode(BuildContext context, String code) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.post,
     apiSlug: '${StaticValues.sendAuthenticationCodeSlug}/$code',
     useAuthToken: true,
@@ -78,8 +82,9 @@ Future<bool> sendAuthenticationCode(String code) async {
   return NetworkHelper.validateResponse(response);
 }
 
-Future<void> logOut(BuildContext context) async {
+void logOut(BuildContext context) async {
   final response = await NetworkService.sendRequest(
+    context,
     requestType: RequestType.post,
     apiSlug: StaticValues.logOutSlug,
     useAuthToken: true,
@@ -87,7 +92,6 @@ Future<void> logOut(BuildContext context) async {
   if (NetworkHelper.validateResponse(response)) {
     final userInfo = await SharedPreferences.getInstance();
     userInfo.remove('authToken');
+    context.go('/login');
   }
-  // Make sure to redirect the user.
-  context.go('/login');
 }

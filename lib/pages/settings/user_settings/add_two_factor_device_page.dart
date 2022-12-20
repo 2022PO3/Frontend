@@ -44,7 +44,7 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
               refreshFunction: () => setState(() => {}),
             ),
             body: FutureBuilder(
-              future: getDevices(),
+              future: getDevices(context),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done &&
                     snapshot.hasData) {
@@ -130,7 +130,7 @@ class _AddTwoFactorDevicePageState extends State<AddTwoFactorDevicePage> {
         isLoading = true;
       });
       try {
-        String secret = await postDevice(addNameController.text);
+        String secret = await postDevice(context, addNameController.text);
         setState(() {
           isLoading = false;
         });

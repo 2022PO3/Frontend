@@ -97,7 +97,7 @@ class _NotificationWidgetState extends State<NotificationWidget> {
     if (!notification.seen) {
       notification.seen = true;
       setNotification(context, notification);
-      putNotification(notification);
+      putNotification(context, notification);
     }
   }
 
@@ -113,7 +113,7 @@ class _NotificationWidgetState extends State<NotificationWidget> {
 
   void handleDeleteNotification(FrontendNotification notification) async {
     deleteProviderNotification(context, notification);
-    deleteNotification(notification);
+    deleteNotification(context, notification);
     context.pop();
     setState(() {});
   }

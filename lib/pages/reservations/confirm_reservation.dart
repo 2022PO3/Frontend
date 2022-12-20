@@ -147,7 +147,7 @@ class _ConfirmReservationPageState extends State<ConfirmReservationPage> {
       reservation.toDate,
     )) {
       try {
-        await postReservation(reservation);
+        await postReservation(context, reservation);
         if (mounted) {
           showSuccessDialog(
             context,

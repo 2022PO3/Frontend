@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 AppBar appBar({
   String? title,
   bool refreshButton = false,
-  Function()? refreshFunction,
+  void Function()? refreshFunction,
+  IconData? actionIcon,
+  void Function()? actionFunction,
 }) {
   return AppBar(
     automaticallyImplyLeading: true,
@@ -24,7 +26,9 @@ AppBar appBar({
         : null,
     actions: refreshButton
         ? [buildIconButton(refreshFunction, Icons.refresh_rounded)]
-        : [],
+        : (actionIcon != null && actionFunction != null
+            ? [buildIconButton(actionFunction, actionIcon)]
+            : []),
   );
 }
 
