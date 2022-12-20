@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/network/static_values.dart';
+import 'package:po_frontend/api/requests/auth_requests.dart';
 
 // Project imports:
 import 'package:po_frontend/api/requests/device_requests.dart';
@@ -30,7 +31,6 @@ class UserSettings extends StatefulWidget {
 
 class _UserSettingsState extends State<UserSettings> {
   final _changeServerURLFormKey = GlobalKey<FormState>();
-  final _localServerURLTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,9 @@ class _UserSettingsState extends State<UserSettings> {
       context,
       listen: true,
     );
-    String localServerURL = StaticValues.localURL;
+    final _localServerURLTextController = TextEditingController(
+      text: getLocalServerURL(context),
+    );
     return Scaffold(
       appBar: appBar(title: 'Settings'),
       body: RefreshIndicator(
@@ -93,7 +95,10 @@ class _UserSettingsState extends State<UserSettings> {
                   },
                 ),
                 InkWell(
-                  onTap: openChangeLocalURLDialog,
+                  onTap: () => openChangeLocalURLDialog(
+                    controller: _localServerURLTextController,
+                    refreshFunction: () => setState(() {}),
+                  ),
                   child: buildSettingsCard(
                     context,
                     'Local server url',
@@ -139,31 +144,42 @@ class _UserSettingsState extends State<UserSettings> {
     );
   }
 
-  void openChangeLocalURLDialog() {
+  void openChangeLocalURLDialog({
+    required TextEditingController controller,
+    required void Function() refreshFunction,
+  }) {
     return showFrontendDialog2(
       context,
       'Change local server url',
-      [buildLocalURLEnterWidget()],
-      handleChangeLocalServerURL,
+      [buildLocalURLEnterWidget(controller)],
+      () => handleChangeLocalServerURL(
+        controller: controller,
+        refreshFunction: refreshFunction,
+      ),
       leftButtonText: 'Confirm',
     );
   }
 
   void handleChangeDebug() {
     flipDebug(context);
+    logOut(context);
     context.go('/login');
   }
 
-  void handleChangeLocalServerURL() {
-    () => setLocalServerURL(context, _localServerURLTextController.text);
+  void handleChangeLocalServerURL({
+    required TextEditingController controller,
+    required void Function() refreshFunction,
+  }) {
+    () => setLocalServerURL(context, controller.text);
     context.pop();
+    refreshFunction();
   }
 
-  Widget buildLocalURLEnterWidget() {
+  Widget buildLocalURLEnterWidget(TextEditingController controller) {
     return Form(
       key: _changeServerURLFormKey,
       child: TextFormField(
-        controller: _localServerURLTextController,
+        controller: controller,
         keyboardType: TextInputType.text,
         decoration: const InputDecoration(
           contentPadding: EdgeInsets.all(14),

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:po_frontend/api/network/static_values.dart';
+import 'package:po_frontend/utils/constants.dart';
 
 class ToggleSettingWidget extends StatelessWidget {
   const ToggleSettingWidget({
@@ -19,6 +21,7 @@ class ToggleSettingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      shape: Constants.cardBorder,
       child: Padding(
         padding: const EdgeInsets.symmetric(
           vertical: 20,

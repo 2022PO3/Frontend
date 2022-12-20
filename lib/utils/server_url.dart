@@ -16,12 +16,15 @@ void setLocalServerURL(
   BuildContext context,
   String localServerURL, {
   bool listen = false,
-}) {
+}) async {
   final LocalServerURLProvider localServerURLProvider =
       Provider.of<LocalServerURLProvider>(
     context,
     listen: listen,
   );
+  final pref = await SharedPreferences.getInstance();
+  pref.setString('localServerURL', localServerURL);
+
   return localServerURLProvider.setLocalServerURL(localServerURL);
 }
 
