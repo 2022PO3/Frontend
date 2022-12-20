@@ -2,13 +2,11 @@
 import 'dart:async';
 import 'dart:math';
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:badges/badges.dart' as badges;
+// Flutter imports:
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
 // Project imports:
 import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/licence_plate_model.dart';
@@ -23,6 +21,7 @@ import 'package:po_frontend/pages/payment_widgets/timer_widget.dart';
 import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/error_widget.dart';
 import 'package:po_frontend/utils/loading_page.dart';
+import 'package:po_frontend/utils/request_button.dart';
 import 'package:po_frontend/utils/user_data.dart';
 
 class HomePage extends StatefulWidget {
@@ -35,6 +34,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   // Save futures here to use refresh indicator
   bool isLoading = true;
+  bool showLicencePlates = true;
   late Future<List<LicencePlate>> licencePlatesFuture;
   late Future<List<Garage>> garagesFuture;
   late Future<List<FrontendNotification>> notificationsFuture;
@@ -67,9 +67,16 @@ class _HomePageState extends State<HomePage> {
       notificationsFuture,
     ]);
 
-    setState(() {
-      isLoading = false;
-    });
+    List<LicencePlate> licencePlates = await licencePlatesFuture;
+
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+        showLicencePlates = licencePlates
+            .where((element) => element.garageId != null)
+            .isNotEmpty;
+      });
+    }
 
     return futureList;
   }
@@ -80,6 +87,7 @@ class _HomePageState extends State<HomePage> {
         ? const LoadingPage()
         : LayoutBuilder(
             builder: (context, constraints) {
+              print('buildig page');
               return Scaffold(
                 drawer: constraints.maxWidth > 600
                     ? null
@@ -98,7 +106,12 @@ class _HomePageState extends State<HomePage> {
                   title: Text(
                     getUserFirstName(context),
                   ),
-                  actions: [generateNotificationsButton()],
+                  actions: [
+                    generateNotificationsButton(),
+                    RequestButtonIcon(
+                        makeRequest: getFutures,
+                        icon: Icon(Icons.refresh_rounded))
+                  ],
                 ),
                 body: Row(
                   children: [
@@ -115,24 +128,26 @@ class _HomePageState extends State<HomePage> {
                             const BouncingScrollPhysics(),
                           ),
                           slivers: [
-                            SliverPersistentHeader(
-                              pinned: true,
-                              floating: true,
-                              delegate: SimpleHeaderDelegate(
-                                child: CurrentParkingSessionsListWidget(
-                                  licencePlatesFuture: licencePlatesFuture,
-                                ),
-                                maxHeight: min(
-                                  MediaQuery.of(context).size.shortestSide /
-                                      2.5,
-                                  220,
-                                ),
-                                minHeight: min(
-                                  MediaQuery.of(context).size.shortestSide / 5,
-                                  100,
+                            if (showLicencePlates)
+                              SliverPersistentHeader(
+                                pinned: true,
+                                floating: true,
+                                delegate: SimpleHeaderDelegate(
+                                  child: CurrentParkingSessionsListWidget(
+                                    licencePlatesFuture: licencePlatesFuture,
+                                  ),
+                                  maxHeight: min(
+                                    MediaQuery.of(context).size.shortestSide /
+                                        2.5,
+                                    220,
+                                  ),
+                                  minHeight: min(
+                                    MediaQuery.of(context).size.shortestSide /
+                                        5,
+                                    100,
+                                  ),
                                 ),
                               ),
-                            ),
                             SliverToBoxAdapter(
                               child: GarageListWidget(
                                 garagesFuture: garagesFuture,
@@ -217,6 +232,43 @@ class SimpleHeaderDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   double get minExtent => minHeight;
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
+    return true;
+  }
+}
+
+class FutureHeaderDelegate<T> extends SimpleHeaderDelegate {
+  /// Delegate for a SliverPersistentHeader with a provided minimum and maximum
+  /// height. If the provided future is empty the header will not show.
+  FutureHeaderDelegate({
+    required Widget child,
+    required double minHeight,
+    required double maxHeight,
+    required this.future,
+  }) : super(child: child, minHeight: minHeight, maxHeight: maxHeight) {
+    future.then((value) => show = !isEmpty(value));
+  }
+
+  bool isEmpty(T data) {
+    switch (T) {
+      case List:
+        return (data as List).isEmpty;
+      default:
+        throw UnimplementedError(
+            'Type $T is not implemented for FutureHeaderDelegate.');
+    }
+  }
+
+  bool show = false;
+  final Future future;
+
+  @override
+  double get maxExtent => show ? super.maxExtent : 0;
+
+  @override
+  double get minExtent => show ? super.minExtent : 0;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
@@ -338,9 +390,9 @@ class _CurrentParkingSessionWidgetState
     return Card(
       margin: const EdgeInsets.all(4),
       shape: Constants.cardBorder,
-      child: SizedBox(
-        width: MediaQuery.of(context).size.shortestSide - 8,
-        child: const Center(
+      child: const SizedBox(
+        //width: MediaQuery.of(context).size.shortestSide - 8,
+        child: Center(
           child: CircularProgressIndicator(),
         ),
       ),
@@ -354,7 +406,7 @@ class _CurrentParkingSessionWidgetState
       margin: const EdgeInsets.all(4),
       shape: Constants.cardBorder,
       child: SizedBox(
-        width: MediaQuery.of(context).size.shortestSide - 8,
+        // width: MediaQuery.of(context).size.shortestSide - 8,
         child: LayoutBuilder(
           builder: (context, constraints) {
             return Column(
@@ -412,7 +464,7 @@ class _CurrentParkingSessionWidgetState
                           child: Hero(
                             tag: 'timer_${widget.licencePlate.licencePlate}',
                             child: TimerWidget(
-                              start: widget.licencePlate.updatedAt,
+                              start: widget.licencePlate.enteredAt!,
                               textStyle: TextStyle(
                                 fontSize:
                                     MediaQuery.of(context).size.shortestSide /

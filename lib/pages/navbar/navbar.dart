@@ -7,8 +7,6 @@ import 'package:go_router/go_router.dart';
 // Project imports:
 import 'package:po_frontend/api/models/user_model.dart';
 import 'package:po_frontend/api/requests/auth_requests.dart';
-import 'package:po_frontend/api/requests/garage_requests.dart';
-import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/user_data.dart';
 import '../../api/models/garage_model.dart';

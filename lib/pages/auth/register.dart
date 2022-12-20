@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 
 // Project imports:
 import 'package:po_frontend/api/requests/auth_requests.dart';
-import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/dialogs.dart';
@@ -309,7 +308,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   await Future.delayed(
                                     const Duration(seconds: 4),
                                   );
-                                  if (mounted) context.pop();
+                                  if (mounted) context.go("/login");
                                 }
                               } on BackendException catch (e) {
                                 print('Error occurred $e');

@@ -22,7 +22,9 @@ Future<List<FrontendNotification>> getNotifications(
     callBack: FrontendNotification.listFromJSON,
     response: response,
   );
-  setNotifications(context, notifications);
+  if (context.mounted) {
+    setNotifications(context, notifications);
+  }
 
   return notifications;
 }

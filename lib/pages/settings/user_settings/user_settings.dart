@@ -35,7 +35,7 @@ class _UserSettingsState extends State<UserSettings> {
       context,
       listen: true,
     );
-    final _localServerURLTextController = TextEditingController(
+    final localServerURLTextController = TextEditingController(
       text: getLocalServerURL(context),
     );
     return Scaffold(
@@ -76,7 +76,9 @@ class _UserSettingsState extends State<UserSettings> {
                   },
                   onRemove: () async {
                     await deleteAutomaticPayment(context);
-                    await updateUserInfo(context);
+                    if (context.mounted) {
+                      await updateUserInfo(context);
+                    }
                   },
                 ),
                 ToggleSettingWidget(
@@ -86,7 +88,7 @@ class _UserSettingsState extends State<UserSettings> {
                 ),
                 InkWell(
                   onTap: () => openChangeLocalURLDialog(
-                    controller: _localServerURLTextController,
+                    controller: localServerURLTextController,
                     refreshFunction: () => setState(() {}),
                   ),
                   child: buildSettingsCard(
