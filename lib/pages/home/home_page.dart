@@ -21,6 +21,7 @@ import 'package:po_frontend/pages/payment_widgets/timer_widget.dart';
 import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/error_widget.dart';
 import 'package:po_frontend/utils/loading_page.dart';
+import 'package:po_frontend/utils/request_button.dart';
 import 'package:po_frontend/utils/user_data.dart';
 
 class HomePage extends StatefulWidget {
@@ -33,6 +34,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   // Save futures here to use refresh indicator
   bool isLoading = true;
+  bool showLicencePlates = true;
   late Future<List<LicencePlate>> licencePlatesFuture;
   late Future<List<Garage>> garagesFuture;
   late Future<List<FrontendNotification>> notificationsFuture;
@@ -65,9 +67,12 @@ class _HomePageState extends State<HomePage> {
       notificationsFuture,
     ]);
 
+    List<LicencePlate> licencePlates = await licencePlatesFuture;
+
     if (mounted) {
       setState(() {
         isLoading = false;
+        showLicencePlates = licencePlates.isNotEmpty;
       });
     }
 
@@ -80,6 +85,7 @@ class _HomePageState extends State<HomePage> {
         ? const LoadingPage()
         : LayoutBuilder(
             builder: (context, constraints) {
+              print('buildig page');
               return Scaffold(
                 drawer: constraints.maxWidth > 600
                     ? null
@@ -98,7 +104,12 @@ class _HomePageState extends State<HomePage> {
                   title: Text(
                     getUserFirstName(context),
                   ),
-                  actions: [generateNotificationsButton()],
+                  actions: [
+                    generateNotificationsButton(),
+                    RequestButtonIcon(
+                        makeRequest: getFutures,
+                        icon: Icon(Icons.refresh_rounded))
+                  ],
                 ),
                 body: Row(
                   children: [
@@ -115,24 +126,26 @@ class _HomePageState extends State<HomePage> {
                             const BouncingScrollPhysics(),
                           ),
                           slivers: [
-                            SliverPersistentHeader(
-                              pinned: true,
-                              floating: true,
-                              delegate: SimpleHeaderDelegate(
-                                child: CurrentParkingSessionsListWidget(
-                                  licencePlatesFuture: licencePlatesFuture,
-                                ),
-                                maxHeight: min(
-                                  MediaQuery.of(context).size.shortestSide /
-                                      2.5,
-                                  220,
-                                ),
-                                minHeight: min(
-                                  MediaQuery.of(context).size.shortestSide / 5,
-                                  100,
+                            if (showLicencePlates)
+                              SliverPersistentHeader(
+                                pinned: true,
+                                floating: true,
+                                delegate: SimpleHeaderDelegate(
+                                  child: CurrentParkingSessionsListWidget(
+                                    licencePlatesFuture: licencePlatesFuture,
+                                  ),
+                                  maxHeight: min(
+                                    MediaQuery.of(context).size.shortestSide /
+                                        2.5,
+                                    220,
+                                  ),
+                                  minHeight: min(
+                                    MediaQuery.of(context).size.shortestSide /
+                                        5,
+                                    100,
+                                  ),
                                 ),
                               ),
-                            ),
                             SliverToBoxAdapter(
                               child: GarageListWidget(
                                 garagesFuture: garagesFuture,
@@ -189,10 +202,10 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class FutureHeaderDelegate<T> extends SliverPersistentHeaderDelegate {
+class SimpleHeaderDelegate extends SliverPersistentHeaderDelegate {
   /// Delegate for a SliverPersistentHeader with a provided minimum and maximum
-  /// height. If the provided
-  FutureHeaderDelegate({
+  /// height.
+  SimpleHeaderDelegate({
     required this.child,
     required this.minHeight,
     required this.maxHeight,
@@ -224,34 +237,36 @@ class FutureHeaderDelegate<T> extends SliverPersistentHeaderDelegate {
   }
 }
 
-class SimpleHeaderDelegate extends SliverPersistentHeaderDelegate {
+class FutureHeaderDelegate<T> extends SimpleHeaderDelegate {
   /// Delegate for a SliverPersistentHeader with a provided minimum and maximum
-  /// height.
-  SimpleHeaderDelegate({
-    required this.child,
-    required this.minHeight,
-    required this.maxHeight,
-  });
-
-  final double minHeight;
-  final double maxHeight;
-  final Widget child;
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Material(
-      color: Theme.of(context).scaffoldBackgroundColor,
-      elevation: shrinkOffset > (maxExtent - minExtent) ? 5 : 0,
-      child: child,
-    );
+  /// height. If the provided future is empty the header will not show.
+  FutureHeaderDelegate({
+    required Widget child,
+    required double minHeight,
+    required double maxHeight,
+    required this.future,
+  }) : super(child: child, minHeight: minHeight, maxHeight: maxHeight) {
+    future.then((value) => show = !isEmpty(value));
   }
 
-  @override
-  double get maxExtent => maxHeight;
+  bool isEmpty(T data) {
+    switch (T) {
+      case List:
+        return (data as List).isEmpty;
+      default:
+        throw UnimplementedError(
+            'Type $T is not implemented for FutureHeaderDelegate.');
+    }
+  }
+
+  bool show = false;
+  final Future future;
 
   @override
-  double get minExtent => minHeight;
+  double get maxExtent => show ? super.maxExtent : 0;
+
+  @override
+  double get minExtent => show ? super.minExtent : 0;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
