@@ -61,10 +61,11 @@ class Price {
 Duration parseDuration(String s) {
   List<String> parts = s.split(':');
   return Duration(
-    hours: int.parse(parts[0]),
-    minutes: int.parse(parts[1]),
-    seconds: int.parse(
-      parts[2],
-    ),
+    hours: int.tryParse(parts[0]) ?? 0,
+    minutes: int.tryParse(parts[1]) ?? 0,
+    seconds: int.tryParse(
+          parts[2],
+        ) ??
+        0,
   );
 }

@@ -67,9 +67,11 @@ class _HomePageState extends State<HomePage> {
       notificationsFuture,
     ]);
 
-    setState(() {
-      isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+      });
+    }
 
     return futureList;
   }
@@ -186,6 +188,41 @@ class _HomePageState extends State<HomePage> {
         }
       }),
     );
+  }
+}
+
+class FutureHeaderDelegate<T> extends SliverPersistentHeaderDelegate {
+  /// Delegate for a SliverPersistentHeader with a provided minimum and maximum
+  /// height. If the provided
+  FutureHeaderDelegate({
+    required this.child,
+    required this.minHeight,
+    required this.maxHeight,
+  });
+
+  final double minHeight;
+  final double maxHeight;
+  final Widget child;
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Material(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      elevation: shrinkOffset > (maxExtent - minExtent) ? 5 : 0,
+      child: child,
+    );
+  }
+
+  @override
+  double get maxExtent => maxHeight;
+
+  @override
+  double get minExtent => minHeight;
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
+    return true;
   }
 }
 
@@ -338,9 +375,9 @@ class _CurrentParkingSessionWidgetState
     return Card(
       margin: const EdgeInsets.all(4),
       shape: Constants.cardBorder,
-      child: SizedBox(
-        width: MediaQuery.of(context).size.shortestSide - 8,
-        child: const Center(
+      child: const SizedBox(
+        //width: MediaQuery.of(context).size.shortestSide - 8,
+        child: Center(
           child: CircularProgressIndicator(),
         ),
       ),
@@ -354,7 +391,7 @@ class _CurrentParkingSessionWidgetState
       margin: const EdgeInsets.all(4),
       shape: Constants.cardBorder,
       child: SizedBox(
-        width: MediaQuery.of(context).size.shortestSide - 8,
+        // width: MediaQuery.of(context).size.shortestSide - 8,
         child: LayoutBuilder(
           builder: (context, constraints) {
             return Column(
@@ -412,7 +449,7 @@ class _CurrentParkingSessionWidgetState
                           child: Hero(
                             tag: 'timer_${widget.licencePlate.licencePlate}',
                             child: TimerWidget(
-                              start: widget.licencePlate.updatedAt,
+                              start: widget.licencePlate.enteredAt,
                               textStyle: TextStyle(
                                 fontSize:
                                     MediaQuery.of(context).size.shortestSide /

@@ -66,7 +66,9 @@ Future<User> login(
 
   // Store the user model in the Provider.
   User user = userResponse[0];
-  setUser(context, user);
+  if (context.mounted) {
+    setUser(context, user);
+  }
 
   return user;
 }
@@ -92,6 +94,8 @@ void logOut(BuildContext context) async {
   if (NetworkHelper.validateResponse(response)) {
     final userInfo = await SharedPreferences.getInstance();
     userInfo.remove('authToken');
-    context.go('/login');
+    if (context.mounted) {
+      context.go('/login');
+    }
   }
 }

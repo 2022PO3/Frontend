@@ -10,7 +10,6 @@ import 'package:po_frontend/api/models/garage_model.dart';
 import 'package:po_frontend/api/models/licence_plate_model.dart';
 import 'package:po_frontend/api/models/parking_lot_model.dart';
 import 'package:po_frontend/api/models/reservation_model.dart';
-import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/requests/parking_lot_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/utils/button.dart';
@@ -51,7 +50,7 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
 
     List<String> hours = range(1, 23);
     hours.add('0');
-    const List<String> minutes = ['0', '15', '30', '45'];
+    //const List<String> minutes = ['0', '15', '30', '45'];
 
     return Scaffold(
       appBar: appBar(title: 'New reservation'),
@@ -117,9 +116,9 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
                   showTitleActions: true,
                   minTime: DateTime(2022, 11, 1),
                   maxTime: DateTime(2030, 12, 31),
-                  onConfirm: (_date) {
+                  onConfirm: (date) {
                     setState(() {
-                      startDate = _date;
+                      startDate = date;
                     });
                   },
                   currentTime: startDate,
@@ -205,9 +204,9 @@ class _MakeReservationPageState extends State<MakeReservationPage> {
                   showTitleActions: true,
                   minTime: DateTime(2022, 11, 1),
                   maxTime: DateTime(2030, 12, 31),
-                  onConfirm: (_date) {
+                  onConfirm: (date) {
                     setState(() {
-                      endDate = _date;
+                      endDate = date;
                     });
                   },
                   currentTime: endDate,

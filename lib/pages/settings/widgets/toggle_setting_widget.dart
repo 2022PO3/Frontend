@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 
 // Project imports:
-import 'package:po_frontend/api/network/static_values.dart';
 import 'package:po_frontend/utils/constants.dart';
 
 class ToggleSettingWidget extends StatelessWidget {
