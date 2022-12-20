@@ -49,7 +49,7 @@ class NetworkService {
                 1000)
             .round(),
         'exp': (DateTime.now()
-                    .add(const Duration(seconds: 5))
+                    .add(const Duration(seconds: 15))
                     .millisecondsSinceEpoch /
                 1000)
             .round(),

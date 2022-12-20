@@ -78,71 +78,75 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return isLoading
         ? const LoadingPage()
-        : LayoutBuilder(builder: (context, constraints) {
-            return Scaffold(
-              drawer: constraints.maxWidth > 600
-                  ? null
-                  : Navbar(garagesFuture: garagesFuture),
-              appBar: AppBar(
-                automaticallyImplyLeading: true,
-                flexibleSpace: Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [(Colors.indigo), (Colors.indigoAccent)],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
-                  ),
-                ),
-                title: Text(
-                  getUserFirstName(context),
-                ),
-                actions: [generateNotificationsButton()],
-              ),
-              body: Row(
-                children: [
-                  if (constraints.maxWidth > 600)
-                    Navbar(
-                      garagesFuture: garagesFuture,
-                    ),
-                  Expanded(
-                    child: RefreshIndicator(
-                      onRefresh: getFutures,
-                      child: CustomScrollView(
-                        physics: const AlwaysScrollableScrollPhysics().applyTo(
-                          const BouncingScrollPhysics(),
-                        ),
-                        slivers: [
-                          SliverPersistentHeader(
-                            pinned: true,
-                            floating: true,
-                            delegate: SimpleHeaderDelegate(
-                              child: CurrentParkingSessionsListWidget(
-                                licencePlatesFuture: licencePlatesFuture,
-                              ),
-                              maxHeight: min(
-                                MediaQuery.of(context).size.shortestSide / 2.5,
-                                220,
-                              ),
-                              minHeight: min(
-                                MediaQuery.of(context).size.shortestSide / 5,
-                                100,
-                              ),
-                            ),
-                          ),
-                          SliverToBoxAdapter(
-                            child: GarageListWidget(
-                              garagesFuture: garagesFuture,
-                            ),
-                          ),
-                        ],
+        : LayoutBuilder(
+            builder: (context, constraints) {
+              return Scaffold(
+                drawer: constraints.maxWidth > 600
+                    ? null
+                    : Navbar(garagesFuture: garagesFuture),
+                appBar: AppBar(
+                  automaticallyImplyLeading: true,
+                  flexibleSpace: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [(Colors.indigo), (Colors.indigoAccent)],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
                       ),
                     ),
                   ),
-                ],
-              ),
-            );
-          });
+                  title: Text(
+                    getUserFirstName(context),
+                  ),
+                  actions: [generateNotificationsButton()],
+                ),
+                body: Row(
+                  children: [
+                    if (constraints.maxWidth > 600)
+                      Navbar(
+                        garagesFuture: garagesFuture,
+                      ),
+                    Expanded(
+                      child: RefreshIndicator(
+                        onRefresh: getFutures,
+                        child: CustomScrollView(
+                          physics:
+                              const AlwaysScrollableScrollPhysics().applyTo(
+                            const BouncingScrollPhysics(),
+                          ),
+                          slivers: [
+                            SliverPersistentHeader(
+                              pinned: true,
+                              floating: true,
+                              delegate: SimpleHeaderDelegate(
+                                child: CurrentParkingSessionsListWidget(
+                                  licencePlatesFuture: licencePlatesFuture,
+                                ),
+                                maxHeight: min(
+                                  MediaQuery.of(context).size.shortestSide /
+                                      2.5,
+                                  220,
+                                ),
+                                minHeight: min(
+                                  MediaQuery.of(context).size.shortestSide / 5,
+                                  100,
+                                ),
+                              ),
+                            ),
+                            SliverToBoxAdapter(
+                              child: GarageListWidget(
+                                garagesFuture: garagesFuture,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
   }
 
   Widget generateNotificationsButton() {
