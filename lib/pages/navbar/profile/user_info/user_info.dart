@@ -208,8 +208,8 @@ class _UserInfoState extends State<UserInfo> {
   }
 
   void handleDeleteUser() {
-    deleteUser(context);
     context.go('/login');
+    deleteUser(context);
   }
 
   void openDeleteUserDialog() {

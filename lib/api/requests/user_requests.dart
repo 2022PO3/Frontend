@@ -58,7 +58,7 @@ Future<bool> putPassword(
   Map<String, dynamic> body = {
     'oldPassword': oldPassword,
     'newPassword': newPassword,
-    'passwordConfirmation': passwordConfirmation,
+    'newPasswordConfirmation': passwordConfirmation,
   };
   final response = await NetworkService.sendRequest(
     context,
