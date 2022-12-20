@@ -443,7 +443,7 @@ class _CurrentParkingSessionWidgetState
   }
 }
 
-enum SortByEnum { none, province, freeSpots }
+enum SortByEnum { none, province, freeSpots, custom }
 
 enum SortDirection { none, up, down }
 
@@ -563,6 +563,9 @@ class _GarageListWidgetState extends State<GarageListWidget> {
       case SortByEnum.freeSpots:
         sortText = 'Sorted by free spots';
         break;
+      case SortByEnum.custom:
+        sortText = 'Custom sorting';
+        break;
     }
     return Text(
       sortText,
@@ -598,6 +601,7 @@ class _GarageListWidgetState extends State<GarageListWidget> {
               buildRadioButton('None', SortByEnum.none),
               buildRadioButton('Province', SortByEnum.province),
               buildRadioButton('Free spots', SortByEnum.freeSpots),
+              buildRadioButton('Custom', SortByEnum.custom),
               const SizedBox(
                 height: 10,
               ),
@@ -680,6 +684,11 @@ class _GarageListWidgetState extends State<GarageListWidget> {
                 .compareTo((g2.unoccupiedLots / g2.maxSpots)))
             : garages.sort((g2, g1) => (g1.unoccupiedLots / g1.maxSpots)
                 .compareTo((g2.unoccupiedLots / g2.maxSpots)));
+        break;
+      case SortByEnum.custom:
+        up
+            ? garages.sort((g1, g2) => g2.id.compareTo(g1.id))
+            : garages.sort((g1, g2) => g1.id.compareTo(g2.id));
         break;
     }
     return garages;
