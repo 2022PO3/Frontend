@@ -308,7 +308,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   await Future.delayed(
                                     const Duration(seconds: 4),
                                   );
-                                  if (mounted) context.pop();
+                                  if (mounted) context.go("/login");
                                 }
                               } on BackendException catch (e) {
                                 print('Error occurred $e');
