@@ -72,7 +72,9 @@ class _HomePageState extends State<HomePage> {
     if (mounted) {
       setState(() {
         isLoading = false;
-        showLicencePlates = licencePlates.isNotEmpty;
+        showLicencePlates = licencePlates
+            .where((element) => element.garageId != null)
+            .isNotEmpty;
       });
     }
 
