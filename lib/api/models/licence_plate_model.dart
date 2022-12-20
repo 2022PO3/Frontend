@@ -9,6 +9,7 @@ class LicencePlate extends BaseModel {
   final DateTime? enteredAt;
   final DateTime? paidAt;
   final bool enabled;
+  final bool canLeave;
 
   LicencePlate({
     required id,
@@ -17,6 +18,7 @@ class LicencePlate extends BaseModel {
     this.enteredAt,
     this.paidAt,
     required this.enabled,
+    required this.canLeave,
   })  : assert(
           garageId == null ? enteredAt == null : enteredAt != null,
         ),
@@ -33,6 +35,7 @@ class LicencePlate extends BaseModel {
       paidAt:
           json['paidAt'] != null ? DateTime.parse(json['paidAtpaidAt']) : null,
       enabled: json['enabled'],
+      canLeave: json['canLeave'],
     );
   }
 
@@ -44,6 +47,7 @@ class LicencePlate extends BaseModel {
         'licence_plate': licencePlate,
         'garage_id': garageId,
         'enabled': enabled,
+        'canLeave': canLeave,
       };
 
   String formatLicencePlate() {

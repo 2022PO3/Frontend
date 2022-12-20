@@ -1,10 +1,8 @@
 // Flutter imports:
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:go_router/go_router.dart';
-
 // Project imports:
 import 'package:po_frontend/api/models/enums.dart';
 import 'package:po_frontend/api/models/price_model.dart';
@@ -121,11 +119,13 @@ class _PricesEditorState extends State<PricesEditor> {
                             2,
                         price: price,
                         onChanged: (price) {
+                          print(widget.prices.map((e) => null));
                           if (widget.prices
-                              .where((e) =>
-                                  e.duration == price.duration &&
-                                  e.price != price.price)
-                              .isNotEmpty) {
+                                  .where((e) =>
+                                      e.duration == price.duration &&
+                                      e.price != price.price)
+                                  .length >=
+                              2) {
                             setState(() {
                               _showSameDurationError = true;
                             });
