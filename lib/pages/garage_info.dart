@@ -251,7 +251,7 @@ class _GarageInfoPageState extends State<GarageInfoPage> {
               ),
             ),
             Text(
-            (garage.maxSpots-garage.entered).toString(),
+            (garage.maxSpots-garage.occupiedLots).toString(),
               style: TextStyle(
                 fontSize: 55,
                 color: color,
