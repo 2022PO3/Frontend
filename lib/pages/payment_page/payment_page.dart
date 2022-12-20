@@ -21,8 +21,6 @@ class PaymentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final shortestSide = MediaQuery.of(context).size.shortestSide;
-
     return Scaffold(
       appBar: kIsWeb
           ? null
@@ -150,7 +148,7 @@ class _Header extends StatelessWidget {
         Hero(
           tag: 'timer_${licencePlate.licencePlate}',
           child: TimerWidget(
-            start: licencePlate.updatedAt,
+            start: licencePlate.enteredAt,
             textStyle: TextStyle(
               fontSize: shortestSide / 20,
               fontWeight: FontWeight.w900,

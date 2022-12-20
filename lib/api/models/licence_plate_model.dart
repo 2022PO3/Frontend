@@ -6,14 +6,16 @@ import 'package:po_frontend/api/network/static_values.dart';
 class LicencePlate extends BaseModel {
   final String licencePlate;
   final int? garageId;
-  final DateTime updatedAt;
+  final DateTime enteredAt;
+  final DateTime paidAt;
   final bool enabled;
 
   LicencePlate({
     required id,
     required this.licencePlate,
     required this.garageId,
-    required this.updatedAt,
+    required this.enteredAt,
+    required this.paidAt,
     required this.enabled,
   }) : super(id: id, detailSlug: StaticValues.licencePlatesDetailSlug);
 
@@ -23,13 +25,15 @@ class LicencePlate extends BaseModel {
       id: json['id'] as int,
       licencePlate: json['licencePlate'] as String,
       garageId: json['garageId'] as int?,
-      updatedAt: DateTime.parse(json['updatedAt']),
+      enteredAt: DateTime.parse(json['enteredAt']),
+      paidAt: DateTime.parse(json['paidAt']),
       enabled: json['enabled'],
     );
   }
 
-  /// Serializes a Dart `Device`-object to a JSON-object with the attributes defined in
+  /// Serializes a Dart `LicencePlate`-object to a JSON-object with the attributes defined in
   /// the database.
+  @override
   Map<String, dynamic> toJSON() => <String, dynamic>{
         'id': id,
         'licence_plate': licencePlate,

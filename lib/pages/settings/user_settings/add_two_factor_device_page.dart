@@ -8,7 +8,6 @@ import 'package:go_router/go_router.dart';
 import 'package:po_frontend/api/models/device_model.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/requests/device_requests.dart';
-import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/api/widgets/device_widget.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/utils/dialogs.dart';

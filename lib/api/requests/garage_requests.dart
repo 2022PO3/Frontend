@@ -40,9 +40,15 @@ Future<GarageData> getGarageData(BuildContext context, int garageId) async {
     callBack: Garage.fromJSON,
     response: response,
   );
+  List<OpeningHour> openingHours = [];
+  if (context.mounted) {
+    openingHours = await getOpeningHours(context, garageId);
+  }
 
-  List<OpeningHour> openingHours = await getOpeningHours(context, garageId);
-  List<Price> prices = await getPrices(context, garageId);
+  List<Price> prices = [];
+  if (context.mounted) {
+    prices = await getPrices(context, garageId);
+  }
 
   return GarageData(
     garage: garage,

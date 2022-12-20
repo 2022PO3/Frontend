@@ -10,7 +10,6 @@ import 'package:po_frontend/api/models/user_model.dart';
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
-import 'package:po_frontend/pages/settings/widgets/editing_widgets.dart';
 import 'package:po_frontend/utils/button.dart';
 import 'package:po_frontend/utils/card.dart';
 import 'package:po_frontend/utils/constants.dart';
