@@ -2,16 +2,18 @@
 import 'dart:async';
 import 'dart:convert';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:po_frontend/utils/server_url.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'package:po_frontend/api/network/network_exception.dart';
 import 'package:po_frontend/env/env.dart';
+import 'package:po_frontend/utils/server_url.dart';
 
 enum RequestType { get, post, put, delete }
 

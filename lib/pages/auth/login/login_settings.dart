@@ -5,13 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 // Project imports:
-
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/pages/settings/widgets/toggle_setting_widget.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/server_url.dart';
 import 'package:po_frontend/utils/settings_card.dart';
 import 'package:po_frontend/utils/user_data.dart';
+
+// Project imports:
+
 
 class LoginSettings extends StatefulWidget {
   const LoginSettings({super.key});

@@ -1,6 +1,7 @@
-// Project imports:
+// Flutter imports:
 import 'package:flutter/material.dart';
 
+// Project imports:
 import '../models/price_model.dart';
 import '../network/network_helper.dart';
 import '../network/network_service.dart';

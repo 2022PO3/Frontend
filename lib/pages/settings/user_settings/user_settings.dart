@@ -4,23 +4,19 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:go_router/go_router.dart';
-import 'package:po_frontend/api/network/static_values.dart';
-import 'package:po_frontend/api/requests/auth_requests.dart';
 
 // Project imports:
+import 'package:po_frontend/api/requests/auth_requests.dart';
 import 'package:po_frontend/api/requests/device_requests.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
-import 'package:po_frontend/pages/auth/auth_service.dart';
 import 'package:po_frontend/pages/settings/user_settings/add_automatic_payment_page.dart';
-import 'package:po_frontend/utils/card.dart';
 import 'package:po_frontend/utils/constants.dart';
 import 'package:po_frontend/utils/dialogs.dart';
 import 'package:po_frontend/utils/request_button.dart';
 import 'package:po_frontend/utils/server_url.dart';
 import 'package:po_frontend/utils/settings_card.dart';
 import 'package:po_frontend/utils/user_data.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class UserSettings extends StatefulWidget {
   const UserSettings({super.key});

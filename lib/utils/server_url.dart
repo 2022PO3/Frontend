@@ -1,7 +1,12 @@
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
-import 'package:po_frontend/providers/local_server_url_provider.dart';
+
+// Package imports:
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+// Project imports:
+import 'package:po_frontend/providers/local_server_url_provider.dart';
 
 String getLocalServerURL(BuildContext context, {bool listen = false}) {
   final LocalServerURLProvider localServerURLProvider =

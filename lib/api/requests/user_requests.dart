@@ -8,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'package:po_frontend/api/models/credit_card_model.dart';
-
 import '../models/user_model.dart';
 import '../network/network_helper.dart';
 import '../network/network_service.dart';

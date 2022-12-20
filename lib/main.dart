@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_web_plugins/url_strategy.dart';
-import 'package:po_frontend/providers/local_server_url_provider.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
 import 'package:po_frontend/core/routes.dart';
 import 'package:po_frontend/pages/auth/auth_service.dart';
+import 'package:po_frontend/providers/local_server_url_provider.dart';
 import 'package:po_frontend/providers/notification_provider.dart';
 import 'providers/user_provider.dart';
 
