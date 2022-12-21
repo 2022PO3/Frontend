@@ -3,10 +3,8 @@ import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:go_router/go_router.dart';
-
 // Project imports:
 import 'package:po_frontend/api/models/enums.dart';
 import 'package:po_frontend/api/models/garage_settings_model.dart';
@@ -18,6 +16,7 @@ import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/pages/settings/garage_settings/garage_editor.dart';
 import 'package:po_frontend/pages/settings/garage_settings/garage_settings_page.dart';
 import 'package:po_frontend/pages/settings/garage_settings/prices_editor.dart';
+
 import '../../../api/models/garage_model.dart';
 import '../widgets/editing_widgets.dart';
 
@@ -31,7 +30,6 @@ class AddGaragePage extends StatefulWidget {
 }
 
 class _AddGaragePageState extends State<AddGaragePage> {
-  final ScrollController mainController = ScrollController();
   late TextStyle stepTextStyle = TextStyle(
     fontSize: MediaQuery.of(context).size.shortestSide / 20,
     fontWeight: FontWeight.w600,
@@ -99,195 +97,192 @@ class _AddGaragePageState extends State<AddGaragePage> {
     return Scaffold(
       appBar: appBar(title: 'Add new garage'),
       body: SafeArea(
-        child: Scrollbar(
-          controller: mainController,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: EditableField(
-                  fieldName: 'Garage Name',
-                  currentValue: garage.name,
-                  showFieldName: false,
-                  valueTextStyle: TextStyle(
-                    fontWeight: FontWeight.w900,
-                    fontSize: shortestSide / 12,
-                  ),
-                  onEdit: (garageName) async {
-                    nameEditingController.text = garageName;
-                    setState(
-                      () {
-                        garage = garage.copyWith(
-                          name: garageName,
-                        );
-                      },
-                    );
-                  },
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: EditableField(
+                fieldName: 'Garage Name',
+                currentValue: garage.name,
+                showFieldName: false,
+                valueTextStyle: TextStyle(
+                  fontWeight: FontWeight.w900,
+                  fontSize: shortestSide / 12,
                 ),
+                onEdit: (garageName) async {
+                  nameEditingController.text = garageName;
+                  setState(
+                    () {
+                      garage = garage.copyWith(
+                        name: garageName,
+                      );
+                    },
+                  );
+                },
               ),
-              Expanded(
-                child: Stepper(
-                  controlsBuilder:
-                      (BuildContext context, ControlsDetails details) {
-                    return Row(
-                      children: [
-                        if (details.currentStep < 4)
-                          ElevatedButton(
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all(
-                                const StadiumBorder(),
-                              ),
+            ),
+            Expanded(
+              child: Stepper(
+                controlsBuilder:
+                    (BuildContext context, ControlsDetails details) {
+                  return Row(
+                    children: [
+                      if (details.currentStep < 4)
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            shape: MaterialStateProperty.all(
+                              const StadiumBorder(),
                             ),
-                            onPressed: canGoToStep(details.currentStep + 1)
-                                ? details.onStepContinue
-                                : null,
-                            child: const Text('Continue'),
                           ),
-                        if (details.currentStep > 0 && details.currentStep < 4)
-                          TextButton(
-                            onPressed: details.onStepCancel,
-                            child: const Text('Back'),
-                          ),
-                      ],
-                    );
-                  },
-                  physics: const BouncingScrollPhysics(),
-                  type: StepperType.vertical,
-                  currentStep: stepIndex,
-                  onStepCancel: () {
-                    if (stepIndex > 0) {
-                      setState(() {
-                        stepIndex -= 1;
-                      });
-                    }
-                  },
-                  onStepContinue: () {
+                          onPressed: canGoToStep(details.currentStep + 1)
+                              ? details.onStepContinue
+                              : null,
+                          child: const Text('Continue'),
+                        ),
+                      if (details.currentStep > 0 && details.currentStep < 4)
+                        TextButton(
+                          onPressed: details.onStepCancel,
+                          child: const Text('Back'),
+                        ),
+                    ],
+                  );
+                },
+                physics: const BouncingScrollPhysics(),
+                type: StepperType.vertical,
+                currentStep: stepIndex,
+                onStepCancel: () {
+                  if (stepIndex > 0) {
                     setState(() {
-                      stepIndex += 1;
+                      stepIndex -= 1;
                     });
-                  },
-                  onStepTapped: (int index) {
-                    while (index >= 0) {
-                      // Go to tapped index or to the step preventing it.
-                      if (canGoToStep(index)) {
-                        setState(() {
-                          stepIndex = index;
-                        });
-                        return;
-                      }
-                      index -= 1;
+                  }
+                },
+                onStepContinue: () {
+                  setState(() {
+                    stepIndex += 1;
+                  });
+                },
+                onStepTapped: (int index) {
+                  while (index >= 0) {
+                    // Go to tapped index or to the step preventing it.
+                    if (canGoToStep(index)) {
+                      setState(() {
+                        stepIndex = index;
+                      });
+                      return;
                     }
-                  },
-                  steps: <Step>[
-                    Step(
-                      title: Text('Enter garage name', style: stepTextStyle),
-                      content: Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: TextFormField(
-                          controller: nameEditingController,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Garage name',
+                    index -= 1;
+                  }
+                },
+                steps: <Step>[
+                  Step(
+                    title: Text('Enter garage name', style: stepTextStyle),
+                    content: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: TextFormField(
+                        controller: nameEditingController,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Garage name',
+                        ),
+                        onChanged: (garageName) {
+                          setState(() {
+                            garage = garage.copyWith(name: garageName);
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  Step(
+                    title: Text('Set garage location', style: stepTextStyle),
+                    content: LocationEditorWidget(
+                      showTitle: false,
+                      original: garage.garageSettings.location,
+                      currentValue: garage.garageSettings.location,
+                      onChanged: (location) => setState(() {
+                        garage = garage.copyWith(
+                          garageSettings: garage.garageSettings.copyWith(
+                            location: location,
                           ),
-                          onChanged: (garageName) {
-                            setState(() {
-                              garage = garage.copyWith(name: garageName);
-                            });
-                          },
-                        ),
-                      ),
+                        );
+                      }),
+                      onConfirm: (location) async {},
                     ),
-                    Step(
-                      title: Text('Set garage location', style: stepTextStyle),
-                      content: LocationEditorWidget(
-                        showTitle: false,
-                        original: garage.garageSettings.location,
-                        currentValue: garage.garageSettings.location,
-                        onChanged: (location) => setState(() {
-                          garage = garage.copyWith(
-                            garageSettings: garage.garageSettings.copyWith(
-                              location: location,
-                            ),
-                          );
-                        }),
-                        onConfirm: (location) async {},
-                      ),
+                  ),
+                  Step(
+                    title: Text(
+                      'Edit Details',
+                      style: stepTextStyle,
                     ),
-                    Step(
-                      title: Text(
-                        'Edit Details',
-                        style: stepTextStyle,
-                      ),
-                      content: GarageDetailsEditorWidget(
-                        showTitle: false,
-                        original: garage.garageSettings,
-                        currentValue: garage.garageSettings,
-                        onChanged: (settings) => setState(() {
-                          garage = garage.copyWith(garageSettings: settings);
-                        }),
-                        onConfirm: (location) async {},
-                      ),
+                    content: GarageDetailsEditorWidget(
+                      showTitle: false,
+                      original: garage.garageSettings,
+                      currentValue: garage.garageSettings,
+                      onChanged: (settings) => setState(() {
+                        garage = garage.copyWith(garageSettings: settings);
+                      }),
+                      onConfirm: (location) async {},
                     ),
-                    Step(
-                      title: Text(
-                        'Add prices',
-                        style: stepTextStyle,
-                      ),
-                      content: PricesEditor(
-                        prices: prices,
-                        onPriceChanged: (Price price) {
-                          if (price.id == -1) {
-                            // Give the price a unique id
-                            if (prices.isEmpty) {
-                              price = price.copyWith(id: 0);
-                            } else if (prices.length == 1) {
-                              price = price.copyWith(id: prices.single.id + 1);
-                            } else {
-                              int maxId = prices
-                                  .map((e) => e.id)
-                                  .reduce((a, b) => max(a, b));
-                              price = price.copyWith(id: maxId + 1);
-                            }
+                  ),
+                  Step(
+                    title: Text(
+                      'Add prices',
+                      style: stepTextStyle,
+                    ),
+                    content: PricesEditor(
+                      prices: prices,
+                      onPriceChanged: (Price price) {
+                        if (price.id == -1) {
+                          // Give the price a unique id
+                          if (prices.isEmpty) {
+                            price = price.copyWith(id: 0);
+                          } else if (prices.length == 1) {
+                            price = price.copyWith(id: prices.single.id + 1);
+                          } else {
+                            int maxId = prices
+                                .map((e) => e.id)
+                                .reduce((a, b) => max(a, b));
+                            price = price.copyWith(id: maxId + 1);
                           }
-                          setState(() {
-                            prices.removeWhere((e) => e.id == price.id);
-                            prices.add(price);
-                            prices.sort(
-                                (a, b) => b.duration.compareTo(a.duration));
-                          });
-                        },
-                        onDelete: (price) {
-                          setState(() {
-                            prices.remove(price);
-                          });
-                        },
-                        onValutaChanged: (valuta) {
-                          setState(() {
-                            prices = prices
-                                .map((e) => e.copyWith(valuta: valuta))
-                                .toList();
-                          });
-                        },
+                        }
+                        setState(() {
+                          prices.removeWhere((e) => e.id == price.id);
+                          prices.add(price);
+                          prices
+                              .sort((a, b) => b.duration.compareTo(a.duration));
+                        });
+                      },
+                      onDelete: (price) {
+                        setState(() {
+                          prices.remove(price);
+                        });
+                      },
+                      onValutaChanged: (valuta) {
+                        setState(() {
+                          prices = prices
+                              .map((e) => e.copyWith(valuta: valuta))
+                              .toList();
+                        });
+                      },
+                    ),
+                  ),
+                  Step(
+                    title: Text(
+                      'Create your garage',
+                      style: stepTextStyle,
+                    ),
+                    content: Align(
+                      alignment: Alignment.centerLeft,
+                      child: CreateGarageButton(
+                        garage: garage,
+                        prices: prices,
                       ),
                     ),
-                    Step(
-                      title: Text(
-                        'Create your garage',
-                        style: stepTextStyle,
-                      ),
-                      content: Align(
-                        alignment: Alignment.centerLeft,
-                        child: CreateGarageButton(
-                          garage: garage,
-                          prices: prices,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
