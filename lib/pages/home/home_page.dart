@@ -357,31 +357,34 @@ class CurrentParkingSessionWidget extends StatelessWidget {
       elevation: 10,
       margin: const EdgeInsets.all(4),
       shape: Constants.cardBorder,
-      child: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Icon(
-                  Icons.check_circle,
-                  color: Colors.green,
-                  size: 50,
+      child: LayoutBuilder(builder: (context, constraints) {
+        return Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (constraints.maxHeight > 100)
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.check_circle,
+                      color: Colors.green,
+                      size: 50,
+                    ),
+                  ),
+                Text(
+                  'You can leave the garage with ${licencePlate.formatLicencePlate()}',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
-              ),
-              Text(
-                'You can leave the garage with ${licencePlate.formatLicencePlate()}',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 
