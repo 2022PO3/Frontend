@@ -157,10 +157,10 @@ packages:
     dependency: transitive
     description:
       name: code_builder
-      sha256: "02ce3596b459c666530f045ad6f96209474e8fee6e4855940a3cee65fb872ec5"
+      sha256: "0d43dd1288fd145de1ecc9a3948ad4a6d5a82f0a14c4fdd0892260787d975cbe"
       url: "https://pub.dev"
     source: hosted
-    version: "4.3.0"
+    version: "4.4.0"
   collection:
     dependency: transitive
     description:
@@ -406,10 +406,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: "6d1607d76bb3a6ef52947ddae870948b9fd5bc7a5d1ef992ec4bed2fc2006fc3"
+      sha256: "788a89932142b0059c319e3153e73308e0fc8bbab78e9a66b0128423090c4e01"
       url: "https://pub.dev"
     source: hosted
-    version: "5.2.4"
+    version: "6.0.0"
   graphs:
     dependency: transitive
     description:
@@ -470,10 +470,10 @@ packages:
     dependency: transitive
     description:
       name: js
-      sha256: "5528c2f391ededb7775ec1daa69e65a2d61276f7552de2b5f7b8d34ee9fd4ab7"
+      sha256: "323b7c70073cccf6b9b8d8b334be418a3293cfb612a560dc2737160a37bf61bd"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.5"
+    version: "0.6.6"
   json_annotation:
     dependency: transitive
     description:
@@ -968,5 +968,5 @@ packages:
     source: hosted
     version: "3.1.1"
 sdks:
-  dart: ">=2.19.0-0 <4.0.0"
+  dart: ">=2.19.0-345.0.dev <4.0.0"
   flutter: ">=3.3.0"
