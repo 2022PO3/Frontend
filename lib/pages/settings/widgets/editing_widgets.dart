@@ -190,9 +190,7 @@ class _EditorDialogState<T> extends State<EditorDialog<T>> {
                   )
                 ],
               ),
-              LayoutBuilder(builder: (context, constraints) {
-                return _typeBuilder();
-              }),
+              _typeBuilder(),
               Row(
                 children: [
                   const Spacer(),

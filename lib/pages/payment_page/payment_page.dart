@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:po_frontend/api/models/licence_plate_model.dart';
 import 'package:po_frontend/pages/payment_widgets/pay_button.dart';
 
-import '../../api/models/garage_model.dart';
 import '../payment_widgets/payment_overview.dart';
 import '../payment_widgets/timer_widget.dart';
 
@@ -13,11 +12,9 @@ class PaymentPage extends StatelessWidget {
   const PaymentPage({
     Key? key,
     required this.licencePlate,
-    required this.garage,
   }) : super(key: key);
 
   final LicencePlate licencePlate;
-  final Garage garage;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +32,6 @@ class PaymentPage extends StatelessWidget {
             children: [
               const Spacer(),
               _Header(
-                garage: garage,
                 licencePlate: licencePlate,
               ),
               //const Divider(),
@@ -50,7 +46,6 @@ class PaymentPage extends StatelessWidget {
               const Spacer(),
               _CompletionButtons(
                 licencePlate: licencePlate,
-                garage: garage,
               ),
               const Spacer(),
             ],
@@ -67,11 +62,9 @@ class _CompletionButtons extends StatelessWidget {
 
   const _CompletionButtons({
     required this.licencePlate,
-    required this.garage,
   });
 
   final LicencePlate licencePlate;
-  final Garage garage;
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +92,6 @@ class _CompletionButtons extends StatelessWidget {
           flex: 4,
           child: PayButton(
             licencePlate: licencePlate,
-            garage: garage,
           ),
         ),
         const Spacer(),
@@ -113,11 +105,8 @@ class _Header extends StatelessWidget {
   /// timer counting how long the user has parked in the garage.
 
   const _Header({
-    required this.garage,
     required this.licencePlate,
   });
-
-  final Garage garage;
   final LicencePlate licencePlate;
 
   @override

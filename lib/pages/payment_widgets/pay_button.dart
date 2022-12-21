@@ -1,8 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 
-// Project imports:
-import '../../api/models/garage_model.dart';
 import '../../api/models/licence_plate_model.dart';
 import '../../api/requests/payment_requests.dart';
 import '../../utils/request_button.dart';
@@ -15,18 +13,15 @@ class PayPreviewButton extends StatelessWidget {
   const PayPreviewButton({
     super.key,
     required this.licencePlate,
-    required this.garage,
   });
 
   final LicencePlate licencePlate;
-  final Garage garage;
 
   void onPressed(BuildContext context) {
     Navigator.of(context).push(
       ScaleRoute(
         page: PaymentPage(
           licencePlate: licencePlate,
-          garage: garage,
         ),
       ),
     );
@@ -53,11 +48,9 @@ class PayButton extends StatelessWidget {
   const PayButton({
     super.key,
     required this.licencePlate,
-    required this.garage,
   });
 
   final LicencePlate licencePlate;
-  final Garage garage;
 
   @override
   Widget build(BuildContext context) {

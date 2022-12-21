@@ -32,8 +32,7 @@ class LicencePlate extends BaseModel {
       garageId: json['garageId'] as int?,
       enteredAt:
           json['enteredAt'] != null ? DateTime.parse(json['enteredAt']) : null,
-      paidAt:
-          json['paidAt'] != null ? DateTime.parse(json['paidAtpaidAt']) : null,
+      paidAt: json['paidAt'] != null ? DateTime.parse(json['paidAt']) : null,
       enabled: json['enabled'],
       canLeave: json['canLeave'],
     );
