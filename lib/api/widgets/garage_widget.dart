@@ -102,7 +102,7 @@ class GarageWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          garage.unoccupiedLots.toString(),
+                          (garage.maxSpots-garage.occupiedLots).toString(),
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,

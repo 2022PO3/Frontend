@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 // Project imports:
 import 'package:po_frontend/api/network/network_exception.dart';
+import 'package:po_frontend/api/requests/auth_requests.dart';
 import 'package:po_frontend/api/requests/user_requests.dart';
 import 'package:po_frontend/core/app_bar.dart';
 import 'package:po_frontend/utils/button.dart';
@@ -396,8 +397,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       try {
         await putPassword(
           context,
-          newPassword,
           oldPassword,
+          newPassword,
           passwordConfirmation,
         );
         if (mounted) {
@@ -409,7 +410,10 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
           await Future.delayed(
             const Duration(seconds: 2),
           );
-          if (mounted) context.pop();
+          if (mounted) {
+            logOut(context);
+            context.push('/login');
+          }
         }
       } on BackendException catch (e) {
         print('Error occurred $e');

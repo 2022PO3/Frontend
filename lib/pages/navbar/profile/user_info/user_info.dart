@@ -128,10 +128,10 @@ class _UserInfoState extends State<UserInfo> {
                     ),
                   ],
                 ),
-                UserField(
+                const UserField(
                   fieldName: 'Favourite garage name',
                   fieldNameValue: 'QPark Leuven',
-                  onButtonPressed: openDeleteUserDialog,
+                  onButtonPressed: null,
                 ),
                 if (getUserStrikes(context) != 0)
                   Column(
@@ -208,8 +208,8 @@ class _UserInfoState extends State<UserInfo> {
   }
 
   void handleDeleteUser() {
-    deleteUser(context);
     context.go('/login');
+    deleteUser(context);
   }
 
   void openDeleteUserDialog() {
@@ -308,7 +308,7 @@ class _UserInfoState extends State<UserInfo> {
                     if (mounted) {
                       context.pop();
                     }
-                    newFirstNameTextController.clear();
+                    textController.clear();
                   } on BackendException catch (e) {
                     print('Error occurred $e');
                     showFailureDialog(context, e);
