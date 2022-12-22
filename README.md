@@ -1,4 +1,7 @@
-# Frontend
+# Depreciation notice
+As of the 22nd of December 2022, this project is no longer actively maintained.
+
+## Frontend
 
 This is our P&O3 client-side application written in Dart, with the Flutter framework.
 
